@@ -1,4 +1,4 @@
-import { Task } from '$prisma/client';
+import { Task } from '$/types';
 
 export type Methods = {
   patch: {

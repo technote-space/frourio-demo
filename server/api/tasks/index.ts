@@ -1,4 +1,4 @@
-import { Task } from '$prisma/client';
+import { Task } from '$/types';
 
 export type Methods = {
   get: {
@@ -11,6 +11,7 @@ export type Methods = {
   }
   post: {
     reqBody: Pick<Task, 'label'>
+    status: 201
     resBody: Task
   }
 }
