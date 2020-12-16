@@ -8,8 +8,8 @@ import UserBanner from '~/components/UserBanner';
 
 const Home = () => {
   const { data: tasks, error, revalidate } = useAspidaSWR(apiClient.tasks);
-  const [label, setLabel]                        = useState('');
-  const inputLabel                               = useCallback(
+  const [label, setLabel]                  = useState('');
+  const inputLabel                         = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => setLabel(e.target.value),
     [],
   );
@@ -36,9 +36,6 @@ const Home = () => {
     revalidate();
   }, []);
 
-  if (error) return <div>failed to load</div>;
-  if (!tasks) return <div>loading...</div>;
-
   return (
     <div className={styles.container}>
       <Head>
@@ -55,7 +52,9 @@ const Home = () => {
 
         <p className={styles.description}>frourio-todo-app</p>
 
-        <div>
+        {error && <div>failed to load</div>}
+        {!error && !tasks && <div>loading...</div>}
+        {!error && tasks && <div>
           <form style={{ textAlign: 'center' }} onSubmit={createTask}>
             <input value={label} type="text" onChange={inputLabel}/>
             <input type="submit" value="ADD"/>
@@ -80,7 +79,7 @@ const Home = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </div>}
       </main>
 
       <footer className={styles.footer}>
