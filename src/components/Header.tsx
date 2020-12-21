@@ -8,7 +8,7 @@ import styles from '~/styles/components/Header.module.scss';
 const Header: FC = () => {
   const { authToken } = useStoreContext();
   const { dispatch }  = useDispatchContext();
-  const onClick       = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
+  const handleClick   = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
 
   return useMemo(() =>
     <Flex
@@ -23,7 +23,7 @@ const Header: FC = () => {
       {authToken && <Flex
         mr={5}
         display={{ base: 'block' }}
-        onClick={onClick}
+        onClick={handleClick}
         className={styles.menu}
       >
         <svg
