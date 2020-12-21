@@ -1,5 +1,5 @@
 import { defineController } from './$relay';
-import type { list, create } from '$/domains/guests';
+import { list, create } from '$/domains/guests';
 
 export default defineController(({ list, create }), ({ list, create }) => ({
   get: async({ query }) => list(query?.page, query?.orderBy),

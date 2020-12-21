@@ -1,4 +1,11 @@
 import { depend } from 'velona';
+import {
+  getReservations,
+  getReservation,
+  createReservation,
+  updateReservation,
+  deleteReservation,
+} from '$/repositories/reservation';
 import { getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type {
@@ -6,13 +13,6 @@ import type {
   CreateReservationData,
   UpdateReservationData,
   ReservationOrderByInput,
-} from '$/repositories/reservation';
-import type {
-  getReservations,
-  getReservation,
-  createReservation,
-  updateReservation,
-  deleteReservation,
 } from '$/repositories/reservation';
 
 export const PER_PAGE = 10;

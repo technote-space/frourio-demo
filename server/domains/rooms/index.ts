@@ -1,8 +1,8 @@
 import { depend } from 'velona';
+import { getRooms, getRoom, createRoom, updateRoom, deleteRoom } from '$/repositories/room';
 import { getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type { Room, CreateRoomData, UpdateRoomData, RoomOrderByInput } from '$/repositories/room';
-import type { getRooms, getRoom, createRoom, updateRoom, deleteRoom } from '$/repositories/room';
 
 export const PER_PAGE = 10;
 

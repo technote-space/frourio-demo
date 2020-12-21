@@ -1,7 +1,8 @@
 import { depend } from 'velona';
+import { getAdmin, getAdminId } from '$/repositories/admin';
 import type { FastifyInstance } from 'fastify';
 import type { AuthHeader, BodyResponse } from '$/types';
-import type { Admin, getAdmin, getAdminId } from '$/repositories/admin';
+import type { Admin } from '$/repositories/admin';
 
 export const get = depend(
   { getAdmin, getAdminId },

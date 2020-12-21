@@ -1,5 +1,5 @@
 import { defineController } from './$relay';
-import type { get, update, remove } from '$/domains/rooms';
+import { get, update, remove } from '$/domains/rooms';
 
 export default defineController(({ get, update, remove }), ({ get, update, remove }) => ({
   get: async({ params }) => get(params.roomId),

@@ -1,6 +1,6 @@
 import controller from '$/api/admin/controller';
 import { getAdmin, getAdminId } from '$/repositories/admin';
-import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/utils/test-helper';
+import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
 import { get } from '$/domains/admin';
 
 test('dependency injection into controller', async() => {

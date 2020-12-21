@@ -5,7 +5,7 @@ const useAuthToken = (): string | undefined => {
   const router        = useRouter();
   const { authToken } = useStoreContext();
   if (!authToken) {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && router.route !== '/login') {
       router.replace('/login').then();
     }
   }

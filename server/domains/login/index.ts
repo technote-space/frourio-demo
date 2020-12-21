@@ -1,9 +1,9 @@
 import { depend } from 'velona';
 import { validateUser } from '$/repositories/admin';
+import { createAuthorizationPayload } from '$/utils';
 import type { LoginBody } from '$/domains/login/validators';
 import type { FastifyInstance } from 'fastify';
 import type { BasicResponse } from '$/types';
-import type { createAuthorizationPayload } from '$/utils';
 
 export const login = depend(
   { createAuthorizationPayload },
