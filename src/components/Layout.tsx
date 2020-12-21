@@ -10,7 +10,9 @@ const Layout: FC = ({ children }: PropsWithChildren<{}>) => {
     <Header/>
     <Sidebar/>
     <main className={styles.main}>
-      {children}
+      <div className={styles.contents}>
+        {children}
+      </div>
     </main>
     <Footer/>
   </div>;

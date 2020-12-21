@@ -39,4 +39,7 @@ export type BodyResponse<T> = BasicResponse & {
 
 export type ContextState = {
   authToken?: string;
+  name?: string;
+  icon?: string;
+  isSidebarOpen: boolean;
 };

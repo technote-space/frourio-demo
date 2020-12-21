@@ -1,10 +1,11 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import AuthenticatedPage, { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import useAspidaSWR from '@aspida/swr';
 import { apiClient } from '~/utils/apiClient';
 import styles from '~/styles/pages/Guests.module.scss';
 
 const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
+  console.log('page::Guests');
   const { data: guests, error } = useAspidaSWR(apiClient.rooms, { headers: authHeader });
   return <div className={styles.wrap}>
     {error && <div>failed to load</div>}

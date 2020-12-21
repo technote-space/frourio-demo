@@ -1,17 +1,22 @@
-import { FC } from 'react';
+import type { FC } from 'react';
+import { useMemo } from 'react';
+import { Flex, Text } from '@chakra-ui/react';
 import styles from '~/styles/components/Footer.module.scss';
 
 const Footer: FC = () => {
-  return <div className={styles.wrap}>
-    <a
-      href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Powered by{' '}
-      <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo}/>
-    </a>
-  </div>;
+  return <Flex
+    wrap="wrap"
+    padding="1rem"
+    bg="teal.500"
+    color="white"
+    alignItems="center"
+    justifyContent="center"
+    className={styles.wrap}
+  >
+    <Text m={1}>{(new Date()).getFullYear()}</Text>
+    <Text m={1}>-</Text>
+    <Text m={1} fontWeight="bold">予約システム</Text>
+  </Flex>;
 };
 
 export default Footer;

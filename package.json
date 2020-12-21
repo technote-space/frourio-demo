@@ -29,7 +29,10 @@
   "dependencies": {
     "@aspida/axios": "^1.1.1",
     "@aspida/swr": "^1.1.1",
+    "@chakra-ui/icons": "^1.0.2",
     "@chakra-ui/react": "^1.0.4",
+    "@chakra-ui/theme": "^1.2.2",
+    "@chakra-ui/theme-tools": "^1.0.2",
     "@emotion/react": "^11.1.2",
     "@emotion/styled": "^11.0.0",
     "axios": "^0.21.0",

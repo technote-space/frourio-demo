@@ -7,6 +7,7 @@ const CommonPage: (WrappedComponent: FC) => FC = WrappedComponent => {
     <WrappedComponent {...props}/>
   </Layout>;
   Component.displayName = getDisplayName('CommonPage', WrappedComponent);
+  console.log(Component.displayName);
   return Component;
 };
 
