@@ -1,15 +1,42 @@
-export type Task = {
-  id: number
-  label: string
-  done: boolean
-}
-
-export type UserInfo = {
-  id: string
-  name: string
-  icon: string
-}
+import type { HttpStatusOk } from 'aspida';
 
 export type AuthHeader = {
-  authorization: string
-}
+  authorization: string;
+};
+
+export type AuthorizationPayload = {
+  id: number;
+  roles: string[];
+};
+
+export type HttpStatusNo =
+  HttpStatusOk
+  | 301
+  | 302
+  | 400
+  | 401
+  | 402
+  | 403
+  | 404
+  | 405
+  | 406
+  | 409
+  | 500
+  | 501
+  | 502
+  | 503
+  | 504
+  | 505
+
+export type BasicResponse = {
+  status: HttpStatusNo;
+  headers?: AuthHeader;
+};
+
+export type BodyResponse<T> = BasicResponse & {
+  body: T
+};
+
+export type ContextState = {
+  authToken?: string;
+};

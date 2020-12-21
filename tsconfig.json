@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
+      "~/*": ["./src/*"],
       "$/*": ["./server/*"],
       "$prisma/*": ["./server/node_modules/.prisma/*"]
     },
@@ -21,6 +21,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "noImplicitAny": false,
     "strict": false
   },
   "exclude": ["node_modules", "server"],

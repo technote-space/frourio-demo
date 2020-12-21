@@ -7,8 +7,74 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Task {
-  id    Int     @id @default(autoincrement())
-  label String
-  done  Boolean @default(false)
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  icon      String?
+  roles     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Guest {
+  id           Int           @id @default(autoincrement())
+  detail       GuestDetail?
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model GuestDetail {
+  id        Int      @id @default(autoincrement())
+  guest     Guest    @relation(fields: [guestId], references: [id])
+  guestId   Int
+  name      String
+  nameKana  String
+  zipCode   String
+  address   String
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id           Int           @id @default(autoincrement())
+  name         String
+  number       Int
+  price        Int
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Reservation {
+  id        Int                @id @default(autoincrement())
+  guest     Guest              @relation(fields: [guestId], references: [id])
+  guestId   Int
+  room      Room               @relation(fields: [roomId], references: [id])
+  roomId    Int
+  detail    ReservationDetail?
+  checkin   DateTime
+  checkout  DateTime
+  status    String             @default("reserved")
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+model ReservationDetail {
+  id            Int         @id @default(autoincrement())
+  reservationId Int
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  number        Int?
+  payment       Int?
+  roomName      String?
+  guestName     String?
+  guestNameKana String?
+  guestZipCode  String?
+  guestAddress  String?
+  guestPhone    String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
