@@ -10,7 +10,9 @@ import server from './$server';
 const fastify = Fastify();
 
 fastify.register(helmet);
-fastify.register(cors);
+fastify.register(cors, {
+  exposedHeaders: ['Authorization'],
+});
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, 'public'),
   prefix: BASE_PATH,

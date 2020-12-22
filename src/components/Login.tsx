@@ -9,11 +9,15 @@ import { addDisplayName } from '~/utils/component';
 import styles from '~/styles/components/Login.module.scss';
 
 const Login: FC = () => {
-  const { dispatch } = useDispatchContext();
+  const { dispatch }  = useDispatchContext();
+
   const handleSubmit = useCallback((values, actions) => {
-    console.log(values);
     apiClient.login.post({ body: { email: values.email, pass: values.password } }).then(data => {
-      console.log(data);
+      if (data?.headers?.authorization) {
+        dispatch({ type: 'AUTH_TOKEN', authToken: data?.headers?.authorization });
+      } else {
+        actions.setSubmitting(false);
+      }
     }).catch(() => {
       actions.setSubmitting(false);
     });
@@ -50,7 +54,7 @@ const Login: FC = () => {
                 isRequired={setting.isRequired} p={4}
               >
                 <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
-                <setting.component {...{ ...field, id: setting.id }}/>
+                <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
                 <FormErrorMessage>{form.errors[setting.id]}</FormErrorMessage>
               </FormControl>}
           </Field>)}

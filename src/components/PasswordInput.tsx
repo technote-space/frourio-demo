@@ -6,6 +6,7 @@ type Props = {
   id?: string;
   placeholder?: string;
   value?: string;
+  disabled?: boolean;
 }
 
 const PasswordInput: FC<Props> = (props: Props) => {
@@ -21,11 +22,11 @@ const PasswordInput: FC<Props> = (props: Props) => {
         {...props}
       />
       <InputRightElement width="4.5rem">
-        <Button h="1.75rem" size="sm" onClick={handleClick}>
+        <Button h="1.75rem" size="sm" onClick={handleClick} disabled={props.disabled}>
           {show ? 'Hide' : 'Show'}
         </Button>
       </InputRightElement>
-    </InputGroup>, [show, props.value]);
+    </InputGroup>, [show, props.value, props.disabled]);
 };
 
 export default PasswordInput;
