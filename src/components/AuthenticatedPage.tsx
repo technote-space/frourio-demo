@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import CommonPage from '~/components/CommonPage';
 import Login from '~/components/Login';
-import { getDisplayName } from '~/utils/component';
+import { addDisplayName } from '~/utils/component';
 import { useStoreContext } from '~/store';
 
 export type AuthenticatedPageProps = {
@@ -9,18 +9,13 @@ export type AuthenticatedPageProps = {
   authHeader: { authorization: string };
 }
 
-const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => {
-  const Component: FC   = props => {
-    const { authToken } = useStoreContext();
+const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => CommonPage(addDisplayName('AuthenticatedPage', props => {
+  const { authToken } = useStoreContext();
 
-    return <>
-      {!authToken && <Login {...props} />}
-      {authToken && <WrappedComponent authToken={authToken} authHeader={{ authorization: authToken }} {...props} />}
-    </>;
-  };
-  Component.displayName = getDisplayName('AuthenticatedPage', WrappedComponent);
-
-  return CommonPage(Component);
-};
+  return <>
+    {!authToken && <Login {...props} />}
+    {authToken && <WrappedComponent authToken={authToken} authHeader={{ authorization: authToken }} {...props} />}
+  </>;
+}, WrappedComponent));
 
 export default AuthenticatedPage;
