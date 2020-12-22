@@ -11,7 +11,7 @@ export class AdminSeeder extends Seeder {
     await this.adminFactory.create({
       name: 'Test User',
       email: 'test@example.com',
-      password: bcrypt.hashSync('test12345', 10),
+      password: bcrypt.hashSync('test1234', 10),
     });
   }
 }

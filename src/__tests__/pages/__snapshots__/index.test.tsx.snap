@@ -5,32 +5,141 @@ exports[`Index page matches snapshot 1`] = `
   <div
     class="wrap"
   >
-    <div
-      class="wrap"
-    />
-    <div
-      class="wrap"
+    <nav
+      class="wrap css-1cehapq"
     >
-      Sidebar
-    </div>
+      <div
+        class="css-k008qs"
+      >
+        <h1
+          class="chakra-heading css-0"
+        >
+          <a
+            href="/"
+          >
+            Home
+          </a>
+        </h1>
+      </div>
+    </nav>
     <main
       class="main"
-    />
-    <div
-      class="wrap"
     >
-      <a
-        href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        rel="noopener noreferrer"
-        target="_blank"
+      <div
+        class="contents"
       >
-        Powered by 
-        <img
-          alt="Vercel Logo"
-          class="logo"
-          src="/vercel.svg"
-        />
-      </a>
+        <div
+          class="wrap"
+        >
+          <form
+            action="#"
+          >
+            <div
+              class="chakra-form-control css-19r5kv9"
+              role="group"
+            >
+              <label
+                class="chakra-form__label css-1ig2arj"
+                for="email"
+                id="field-2-label"
+              >
+                Email address
+                <span
+                  aria-hidden="true"
+                  class="chakra-form__required-indicator css-0"
+                  role="presentation"
+                >
+                  *
+                </span>
+              </label>
+              <input
+                aria-describedby="field-2-feedback"
+                aria-required="true"
+                class="chakra-input css-0"
+                id="email"
+                name="email"
+                placeholder="Enter email address"
+                required=""
+                type="email"
+                value=""
+              />
+            </div>
+            <div
+              class="chakra-form-control css-19r5kv9"
+              role="group"
+            >
+              <label
+                class="chakra-form__label css-1ig2arj"
+                for="password"
+                id="field-3-label"
+              >
+                Password
+                <span
+                  aria-hidden="true"
+                  class="chakra-form__required-indicator css-0"
+                  role="presentation"
+                >
+                  *
+                </span>
+              </label>
+              <div
+                class="chakra-input__group css-4302v8"
+              >
+                <input
+                  aria-describedby="field-3-feedback"
+                  aria-required="true"
+                  class="chakra-input css-1n0hj84"
+                  id="password"
+                  name="password"
+                  placeholder="Enter password"
+                  required=""
+                  type="password"
+                  value=""
+                />
+                <div
+                  class="chakra-input__right-element css-1feb43d"
+                >
+                  <button
+                    class="chakra-button css-d5t03s"
+                    type="button"
+                  >
+                    Show
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="login"
+            >
+              <button
+                class="chakra-button css-5e9er3"
+                type="submit"
+              >
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <div
+      class="wrap css-1e2vcjg"
+    >
+      <p
+        class="chakra-text css-13d3w74"
+      >
+        2020
+      </p>
+      <p
+        class="chakra-text css-13d3w74"
+      >
+        -
+      </p>
+      <p
+        class="chakra-text css-kkrfg5"
+      >
+        予約システム
+      </p>
     </div>
   </div>
 </DocumentFragment>

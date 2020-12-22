@@ -14,7 +14,7 @@ export const login = depend(
     }
 
     return {
-      status: 201,
+      status: 204,
       headers: { authorization: fastify.jwt.sign(await createAuthorizationPayload(id)) },
     };
   },
