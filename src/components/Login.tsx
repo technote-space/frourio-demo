@@ -5,6 +5,7 @@ import { useDispatchContext } from '~/store';
 import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
 import PasswordInput from '~/components/PasswordInput';
 import { apiClient } from '~/utils/apiClient';
+import { getDisplayName } from '~/utils/component';
 import styles from '~/styles/components/Login.module.scss';
 
 const Login: FC = () => {
@@ -23,14 +24,14 @@ const Login: FC = () => {
       id: 'email',
       isRequired: true,
       label: 'Email address',
-      component: field => <Input type="email" placeholder="Enter email address" {...field}/>,
+      component: getDisplayName('Email', props => <Input type="email" placeholder="Enter email address" {...props}/>),
       initialValue: '',
     },
     {
       id: 'password',
       isRequired: true,
       label: 'Password',
-      component: field => <PasswordInput {...field}/>,
+      component: getDisplayName('Password', props => <PasswordInput {...props}/>),
       initialValue: '',
     },
   ];
@@ -49,7 +50,7 @@ const Login: FC = () => {
                 isRequired={setting.isRequired} p={4}
               >
                 <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
-                {setting.component({ ...field, id: setting.id })}
+                <setting.component {...{ ...field, id: setting.id }}/>
                 <FormErrorMessage>{form.errors[setting.id]}</FormErrorMessage>
               </FormControl>}
           </Field>)}

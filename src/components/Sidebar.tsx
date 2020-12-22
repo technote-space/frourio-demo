@@ -10,7 +10,6 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { useStoreContext, useDispatchContext } from '~/store';
-import styles from '~/styles/components/Sidebar.module.scss';
 
 const Sidebar: FC = () => {
   const { isSidebarOpen, authToken, icon, name } = useStoreContext();

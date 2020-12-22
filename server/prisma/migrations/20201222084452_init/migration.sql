@@ -61,7 +61,8 @@ CREATE TABLE "Reservation" (
 CREATE TABLE "ReservationDetail" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "reservationId" INTEGER NOT NULL,
-    "number" INTEGER,
+    "number" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
     "payment" INTEGER,
     "roomName" TEXT,
     "guestName" TEXT,

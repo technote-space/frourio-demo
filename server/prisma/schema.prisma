@@ -67,7 +67,8 @@ model ReservationDetail {
   id            Int         @id @default(autoincrement())
   reservationId Int
   reservation   Reservation @relation(fields: [reservationId], references: [id])
-  number        Int?
+  number        Int
+  amount        Int
   payment       Int?
   roomName      String?
   guestName     String?

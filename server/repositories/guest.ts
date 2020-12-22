@@ -12,7 +12,7 @@ export type UpdateGuestArgs = Prisma.GuestUpdateArgs;
 export type DeleteGuestArgs = Prisma.GuestDeleteArgs;
 export type GuestOrderByInput = Prisma.GuestOrderByInput;
 export type GuestWhereInput = Prisma.GuestWhereInput;
-export type { Guest } from '@prisma/client';
+export type { Guest, GuestDetail } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
