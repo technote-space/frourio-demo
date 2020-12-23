@@ -1,9 +1,7 @@
-import type { AuthHeader } from '$/types';
 import type { Guest, CreateGuestData, GuestOrderByInput } from '$/repositories/guest';
 
 export type Methods = {
   get: {
-    reqHeaders: AuthHeader;
     query?: {
       page?: number;
       orderBy?: GuestOrderByInput;
@@ -11,7 +9,6 @@ export type Methods = {
     resBody: Guest[];
   };
   post: {
-    reqHeaders: AuthHeader;
     reqBody: CreateGuestData;
     resBody: Guest;
   }

@@ -32,4 +32,6 @@ export const verifyAdmin                = async(request: FastifyRequest, roles?:
     // @ts-ignore
     throw new createError('FST_UNAUTHORIZED', 'Unauthorized', 401);
   }
+
+  request.requestContext.set('user', payload);
 };

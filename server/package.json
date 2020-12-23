@@ -19,10 +19,12 @@
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
     "fastify": "^3.9.2",
+    "fastify-cookie": "^5.0.2",
     "fastify-cors": "^5.1.0",
     "fastify-helmet": "^5.0.3",
     "fastify-jwt": "^2.2.0",
     "fastify-multipart": "^3.3.1",
+    "fastify-request-context": "^2.1.2",
     "fastify-static": "^3.3.0"
   },
   "devDependencies": {

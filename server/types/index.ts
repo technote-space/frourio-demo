@@ -30,8 +30,11 @@ export type HttpStatusNo =
 
 export type BasicResponse = {
   status: HttpStatusNo;
-  headers?: AuthHeader;
 };
+
+export type LoginResponse = BasicResponse & {
+  headers?: AuthHeader;
+}
 
 export type BodyResponse<T> = BasicResponse & {
   body: T

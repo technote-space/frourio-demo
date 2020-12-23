@@ -5,8 +5,6 @@ import { API_ORIGIN, BASE_PATH } from '$/service/envValues';
 import { ensureNotNull } from '$/utils';
 import 'fastify-jwt';
 import type { Prisma } from '@prisma/client';
-import type { AuthHeader, AuthorizationPayload } from '$/types';
-import type { FastifyInstance } from 'fastify';
 
 export type FindAdminArgs = Prisma.FindFirstAdminArgs;
 export type CreateAdminData = Prisma.AdminCreateInput;
@@ -78,18 +76,4 @@ export const deleteAdmin = depend(
     where: { id },
     ...args,
   })),
-);
-
-export const getAdminId = depend(
-  { getAdmin },
-  async({ getAdmin }, headers: AuthHeader, fastify: FastifyInstance): Promise<number> | never => {
-    const id = (fastify.jwt.decode(headers.authorization) as AuthorizationPayload).id;
-
-    // TODO: cache admin
-    if (!id || !await getAdmin(id)) {
-      throw new Error();
-    }
-
-    return id;
-  },
 );
