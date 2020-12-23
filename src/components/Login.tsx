@@ -1,28 +1,24 @@
 import type { FC } from 'react';
 import { useEffect, useCallback, useMemo } from 'react';
-import { useCookies } from 'react-cookie';
+import { parseCookies, setCookie } from 'nookies';
 import { Formik, Form, Field } from 'formik';
-import { addDays } from 'date-fns';
 import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
-import { useDispatchContext } from '~/store';
 import PasswordInput from '~/components/PasswordInput';
 import { apiClient } from '~/utils/apiClient';
 import { addDisplayName } from '~/utils/component';
 import styles from '~/styles/components/Login.module.scss';
 
 const Login: FC = () => {
-  const { dispatch }               = useDispatchContext();
-  const [{ authToken }, setCookie] = useCookies(['authToken']);
-
+  const cookies      = parseCookies();
   const setAuthToken = token => {
-    setCookie('authToken', token, {
-      expires: addDays(new Date(), 30),
+    setCookie(null, 'authToken', token, {
+      maxAge: 30 * 24 * 60 * 60,
     });
-    dispatch({ type: 'AUTH_TOKEN', authToken: token });
   };
+
   useEffect(() => {
-    if (authToken) {
-      setAuthToken(authToken);
+    if (cookies.authToken) {
+      setAuthToken(cookies.authToken);
     }
   }, []);
 

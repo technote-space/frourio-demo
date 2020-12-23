@@ -1,20 +1,14 @@
 import type { FC } from 'react';
+import { parseCookies } from 'nookies';
 import CommonPage from '~/components/CommonPage';
 import Login from '~/components/Login';
 import { addDisplayName } from '~/utils/component';
-import { useStoreContext } from '~/store';
 
-export type AuthenticatedPageProps = {
-  authToken: string;
-  authHeader: { authorization: string };
-}
-
-const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => CommonPage(addDisplayName('AuthenticatedPage', props => {
-  const { authToken } = useStoreContext();
-
+const AuthenticatedPage: (WrappedComponent: FC) => FC = WrappedComponent => CommonPage(addDisplayName<FC>('AuthenticatedPage', props => {
+  const cookies = parseCookies();
   return <>
-    {!authToken && <Login {...props} />}
-    {authToken && <WrappedComponent authToken={authToken} authHeader={{ authorization: authToken }} {...props} />}
+    {!cookies.authToken && <Login {...props} />}
+    {cookies.authToken && <WrappedComponent {...props} />}
   </>;
 }, WrappedComponent));
 

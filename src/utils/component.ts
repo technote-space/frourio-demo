@@ -1,9 +1,8 @@
 import type { FC } from 'react';
-import { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 
-export const getDisplayName = (prefix: string, Component: FC) => `${prefix}(${Component.displayName || Component.name || 'Component'})`;
+export const getDisplayName = <T extends FC = FC>(prefix: string, Component: T) => `${prefix}(${Component.displayName || Component.name || 'Component'})`;
 
-export const addDisplayName = (prefix: string, Component: FC, WrappedComponent?: FC) => {
+export const addDisplayName = <T extends FC = FC, U extends FC = FC>(prefix: string, Component: T, WrappedComponent?: U) => {
   Component.displayName = getDisplayName(prefix, WrappedComponent ?? Component);
   return Component;
 };

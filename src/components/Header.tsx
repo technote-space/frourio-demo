@@ -2,13 +2,14 @@ import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { Heading, Flex } from '@chakra-ui/react';
-import { useStoreContext, useDispatchContext } from '~/store';
+import { parseCookies } from 'nookies';
+import { useDispatchContext } from '~/store';
 import styles from '~/styles/components/Header.module.scss';
 
 const Header: FC = () => {
-  const { authToken } = useStoreContext();
-  const { dispatch }  = useDispatchContext();
-  const handleClick   = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
+  const { dispatch } = useDispatchContext();
+  const handleClick  = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
+  const cookies      = parseCookies();
 
   return useMemo(() =>
     <Flex
@@ -20,7 +21,7 @@ const Header: FC = () => {
       alignItems="center"
       className={styles.wrap}
     >
-      {authToken && <Flex
+      {cookies.authToken && <Flex
         mr={5}
         display={{ base: 'block' }}
         onClick={handleClick}
@@ -44,7 +45,7 @@ const Header: FC = () => {
           </Link>
         </Heading>
       </Flex>
-    </Flex>, [authToken]);
+    </Flex>, [cookies.authToken]);
 };
 
 export default Header;

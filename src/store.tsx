@@ -1,9 +1,8 @@
 import React, { useReducer, createContext, useContext, useMemo } from 'react';
 import type { FC, Dispatch } from 'react';
-import { ContextState } from '$/types';
+import { ContextState } from '~/types';
 
 const initialState: ContextState = {
-  authToken: undefined,
   name: undefined,
   icon: undefined,
   isSidebarOpen: false,
@@ -14,8 +13,6 @@ const reducer = (store, action) => {
   switch (action.type) {
     case 'INIT':
       return initialState;
-    case 'AUTH_TOKEN':
-      return { ...store, authToken: action.authToken };
     case 'OPEN_SIDEBAR':
       return { ...store, isSidebarOpen: true };
     case 'CLOSE_SIDEBAR':

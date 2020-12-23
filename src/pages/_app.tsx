@@ -24,15 +24,25 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({ colors, breakpoints });
 
-const MyApp: FC<AppProps> = ({ Component, pageProps }: PropsWithChildren<AppProps>) =>
-  <ChakraProvider theme={theme}>
-    <StoreContextProvider>
-      <Head>
-        <title>frourio-todo-app</title>
-        <link rel="icon" href="/favicon.png"/>
-      </Head>
-      <Component {...pageProps} />
-    </StoreContextProvider>
-  </ChakraProvider>;
+const SafeHydrate: FC = ({ children }) => {
+  return (
+    <div suppressHydrationWarning>
+      {typeof window === 'undefined' ? null : children}
+    </div>
+  );
+};
+
+const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) =>
+  <SafeHydrate>
+    <ChakraProvider theme={theme}>
+      <StoreContextProvider>
+        <Head>
+          <title>frourio-todo-app</title>
+          <link rel="icon" href="/favicon.png"/>
+        </Head>
+        <Component {...pageProps} />
+      </StoreContextProvider>
+    </ChakraProvider>
+  </SafeHydrate>;
 
 export default MyApp;

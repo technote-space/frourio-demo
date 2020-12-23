@@ -39,10 +39,3 @@ export type LoginResponse = BasicResponse & {
 export type BodyResponse<T> = BasicResponse & {
   body: T
 };
-
-export type ContextState = {
-  authToken?: string;
-  name?: string;
-  icon?: string;
-  isSidebarOpen: boolean;
-};
