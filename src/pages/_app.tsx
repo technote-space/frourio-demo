@@ -24,7 +24,7 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({ colors, breakpoints });
 
-const SafeHydrate: FC = ({ children }) => {
+const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
   return (
     <div suppressHydrationWarning>
       {typeof window === 'undefined' ? null : children}

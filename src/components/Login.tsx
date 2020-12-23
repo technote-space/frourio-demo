@@ -3,13 +3,15 @@ import { useEffect, useCallback, useMemo } from 'react';
 import { parseCookies, setCookie } from 'nookies';
 import { Formik, Form, Field } from 'formik';
 import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import PasswordInput from '~/components/PasswordInput';
-import { apiClient } from '~/utils/apiClient';
+import { getClient } from '~/utils/api';
 import { addDisplayName } from '~/utils/component';
 import styles from '~/styles/components/Login.module.scss';
 
 const Login: FC = () => {
   const cookies      = parseCookies();
+  const toast        = useToast();
   const setAuthToken = token => {
     setCookie(null, 'authToken', token, {
       maxAge: 30 * 24 * 60 * 60,
@@ -23,14 +25,21 @@ const Login: FC = () => {
   }, []);
 
   const handleSubmit = useCallback((values, actions) => {
-    apiClient.login.post({ body: { email: values.email, pass: values.password } }).then(data => {
+    getClient(false).login.post({ body: { email: values.email, pass: values.password } }).then(data => {
       if (data?.headers?.authorization) {
         setAuthToken(data?.headers?.authorization);
       } else {
         actions.setSubmitting(false);
       }
-    }).catch(() => {
+    }).catch(error => {
       actions.setSubmitting(false);
+      toast({
+        title: 'Login failed',
+        description: error.message,
+        status: 'warning',
+        duration: 4000,
+        isClosable: true,
+      });
     });
   }, []);
 
