@@ -1,15 +1,15 @@
 import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
-import Link from 'next/link';
 import { Heading, Flex } from '@chakra-ui/react';
 import { useCookies } from 'react-cookie';
 import { useDispatchContext } from '~/store';
 import styles from '~/styles/components/Header.module.scss';
 
 const Header: FC = () => {
-  const { dispatch }    = useDispatchContext();
-  const [{ authToken }] = useCookies(['authToken']);
-  const handleClick     = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
+  const { dispatch }      = useDispatchContext();
+  const [{ authToken }]   = useCookies(['authToken']);
+  const handleClickToggle = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
+  const handleClickHome   = useCallback(() => dispatch({ type: 'PAGE', page: 'dashboard' }), []);
 
   return useMemo(() =>
     <Flex
@@ -24,7 +24,7 @@ const Header: FC = () => {
       {authToken && <Flex
         mr={5}
         display={{ base: 'block' }}
-        onClick={handleClick}
+        onClick={handleClickToggle}
         className={styles.menu}
       >
         <svg
@@ -40,9 +40,7 @@ const Header: FC = () => {
       </Flex>}
       <Flex>
         <Heading as="h1" size="lg">
-          <Link href="/">
-            <a>Home</a>
-          </Link>
+          <div onClick={handleClickHome} className={styles.home}>Home</div>
         </Heading>
       </Flex>
     </Flex>, [authToken]);
