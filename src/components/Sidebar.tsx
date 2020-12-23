@@ -13,7 +13,7 @@ import { List, ListItem, ListIcon, Divider, Flex, Text } from '@chakra-ui/react'
 import { useCookies } from 'react-cookie';
 import clsx from 'clsx';
 import { useStoreContext, useDispatchContext } from '~/store';
-import pages from '~/_pages';
+import pages, { PageKeys } from '~/_pages';
 import styles from '~/styles/components/Sidebar.module.scss';
 
 const Sidebar: FC = () => {
@@ -21,6 +21,26 @@ const Sidebar: FC = () => {
   const { dispatch }                               = useDispatchContext();
   const [{ authToken }]                            = useCookies(['authToken']);
   const onClose                                    = useCallback(() => dispatch({ type: 'CLOSE_SIDEBAR' }), []);
+
+  const MappedListItem: FC<{ slug: string, page: typeof pages[PageKeys] }> = ({ slug, page }) => {
+    const handleClick = useCallback(() => {
+      dispatch({ type: 'PAGE', page: slug });
+      dispatch({ type: 'CLOSE_SIDEBAR' });
+    }, []);
+
+    return useMemo(() => <ListItem
+      key={slug}
+      className={clsx(styles.item, slug === _page ? styles.active : '')}
+      onClick={handleClick}
+      bg="teal.500"
+      p={3}
+    >
+      <Flex fontSize="lg" alignItems="center">
+        <ListIcon as={page.icon} color="green.500"/>
+        <Text variant="span" ml={2}>{page.label}</Text>
+      </Flex>
+    </ListItem>, [_page, page.label]);
+  };
 
   return useMemo(() =>
     <Drawer placement='left' onClose={onClose} isOpen={isSidebarOpen && !!authToken}>
@@ -44,20 +64,7 @@ const Sidebar: FC = () => {
           </>}
           <DrawerBody>
             <List spacing={1}>
-              {Object.entries(pages).map(([key, page]) => <ListItem
-                key={key}
-                className={clsx(styles.item, key === _page ? styles.active : '')}
-                onClick={() => {
-                  console.log(key);
-                }}
-                bg="teal.500"
-                p={3}
-              >
-                <Flex fontSize="lg" alignItems="center">
-                  <ListIcon as={page.icon} color="green.500"/>
-                  <Text variant="span" ml={2}>{page.label}</Text>
-                </Flex>
-              </ListItem>)}
+              {Object.entries(pages).map(([key, page]) => <MappedListItem key={key} slug={key} page={page}/>)}
             </List>
           </DrawerBody>
         </DrawerContent>
