@@ -1,18 +1,20 @@
 import type { FC, ReactElement } from 'react';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
-import { useStoreContext } from '~/store';
+import { useStoreContext, useDispatchContext } from '~/store';
 import pages from '~/_pages';
 
 const Switcher: FC = () => {
   const [, setCookie]           = useCookies(['authToken']);
   const { page }                = useStoreContext();
+  const { dispatch }            = useDispatchContext();
   const [nextPage, setNextPage] = useState<ReactElement | null>(null);
   const pageInstances           = useRef<{ [key: string]: ReactElement }>({});
 
   useEffect(() => {
     if (page === 'logout') {
-      setCookie('authToken', undefined);
+      setCookie('authToken', '');
+      dispatch({ type: 'SET_ADMIN', admin: {} });
       return;
     }
 
