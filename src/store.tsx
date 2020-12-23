@@ -17,6 +17,8 @@ const reducer = (store, action) => {
   switch (action.type) {
     case 'INIT':
       return initialState;
+    case 'SET_ADMIN':
+      return { ...store, name: action.admin.name, icon: action.admin.icon };
     case 'OPEN_SIDEBAR':
       return { ...store, isSidebarOpen: true };
     case 'CLOSE_SIDEBAR':

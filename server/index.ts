@@ -14,6 +14,8 @@ const fastify = Fastify();
 fastify.register(helmet);
 fastify.register(cors, {
   exposedHeaders: ['Authorization'],
+  credentials: true,
+  origin: ['http://localhost:3000'],
 });
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, 'public'),

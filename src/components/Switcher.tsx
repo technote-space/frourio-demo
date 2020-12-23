@@ -11,19 +11,18 @@ const Switcher: FC = () => {
   const pageInstances           = useRef<{ [key: string]: ReactElement }>({});
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    if (page && page in pages) {
-      if (!(page in pageInstances.current)) {
-        const Component: FC         = pages[page].page;
-        pageInstances.current[page] = <Component/>;
-      }
-
-      setNextPage(pageInstances.current[page]);
+    if (page === 'logout') {
+      setCookie('authToken', undefined);
       return;
     }
 
-    // logout
-    setCookie('authToken', undefined);
+    window.scrollTo(0, 0);
+    if (!(page in pageInstances.current)) {
+      const Component: FC         = pages[page].page;
+      pageInstances.current[page] = <Component/>;
+    }
+
+    setNextPage(pageInstances.current[page]);
   }, [page]);
 
   return useMemo(() => nextPage, [nextPage]);

@@ -2,6 +2,7 @@ import { Icon } from '@chakra-ui/react';
 import { MdDashboard, MdPeople } from 'react-icons/md';
 import { FaBed } from 'react-icons/fa';
 import { BsCalendar } from 'react-icons/bs';
+import { FiLogOut } from 'react-icons/fi';
 import Dashboard from '~/_pages/dashboard';
 import Guests from '~/_pages/guests';
 import Reservations from '~/_pages/reservations';
@@ -29,6 +30,11 @@ const pages = {
     page: Reservations,
     icon: addDisplayName('ReservationsIcon', () => <Icon as={BsCalendar}/>),
   },
+  logout: {
+    label: 'Logout',
+    page: null,
+    icon: addDisplayName('LogoutIcon', () => <Icon as={FiLogOut}/>)
+  }
 } as const;
 
 export type PageKeys = keyof typeof pages;

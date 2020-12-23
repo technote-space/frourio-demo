@@ -9,5 +9,5 @@ export type ContextState = {
     message?: string;
     isOpen: boolean;
   };
-  page: PageKeys | 'logout';
+  page: PageKeys;
 };
