@@ -4,7 +4,8 @@ import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 import { extendTheme } from '@chakra-ui/react';
-import '~/styles/globals.css';
+import LoadingModal from '~/components/LoadingModal';
+import '~/styles/globals.scss';
 import { StoreContextProvider } from '~/store';
 
 const colors = {
@@ -40,6 +41,7 @@ const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) =>
           <title>frourio-todo-app</title>
           <link rel="icon" href="/favicon.png"/>
         </Head>
+        <LoadingModal/>
         <Component {...pageProps} />
       </StoreContextProvider>
     </ChakraProvider>

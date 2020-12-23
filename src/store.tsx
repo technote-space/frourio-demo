@@ -6,6 +6,10 @@ const initialState: ContextState = {
   name: undefined,
   icon: undefined,
   isSidebarOpen: false,
+  loadingModal: {
+    isOpen: false,
+  },
+  page: 'dashboard',
 };
 
 const reducer = (store, action) => {
@@ -17,6 +21,10 @@ const reducer = (store, action) => {
       return { ...store, isSidebarOpen: true };
     case 'CLOSE_SIDEBAR':
       return { ...store, isSidebarOpen: false };
+    case 'LOADING_MODAL':
+      return { ...store, loadingModal: action.loadingModal };
+    case 'PAGE':
+      return { ...store, page: action.page };
     default:
       return store;
   }

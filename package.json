@@ -39,13 +39,15 @@
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.12.2",
+    "date-fns": "^2.16.1",
     "dayjs": "^1.9.7",
     "formik": "^2.2.6",
     "framer-motion": "^3.1.1",
     "next": "^10.0.4",
-    "nookies": "^2.5.0",
     "react": "^17.0.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.1.0",
     "swr": "^0.3.11"
   },
   "devDependencies": {

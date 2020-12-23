@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { useEffect, useCallback, useMemo } from 'react';
-import { parseCookies, setCookie } from 'nookies';
+import { useCookies } from 'react-cookie';
 import { Formik, Form, Field } from 'formik';
+import { addDays } from 'date-fns';
 import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
 import PasswordInput from '~/components/PasswordInput';
@@ -10,17 +11,17 @@ import { addDisplayName } from '~/utils/component';
 import styles from '~/styles/components/Login.module.scss';
 
 const Login: FC = () => {
-  const cookies      = parseCookies();
-  const toast        = useToast();
-  const setAuthToken = token => {
-    setCookie(null, 'authToken', token, {
-      maxAge: 30 * 24 * 60 * 60,
+  const [{ authToken }, setCookie] = useCookies(['authToken']);
+  const toast                      = useToast();
+  const setAuthToken               = token => {
+    setCookie('authToken', token, {
+      expires: addDays(new Date(), 30),
     });
   };
 
   useEffect(() => {
-    if (cookies.authToken) {
-      setAuthToken(cookies.authToken);
+    if (authToken) {
+      setAuthToken(authToken);
     }
   }, []);
 

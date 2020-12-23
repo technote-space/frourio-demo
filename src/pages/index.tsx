@@ -1,8 +1,8 @@
-import Dashboard from '~/pages/dashboard';
+import Switcher from '~/components/Switcher';
 
 const Index = () => {
   console.log('page::Index');
-  return <Dashboard/>;
+  return <Switcher/>;
 };
 
 export default Index;

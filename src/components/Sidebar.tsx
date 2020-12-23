@@ -9,17 +9,17 @@ import {
   DrawerCloseButton,
   Image,
 } from '@chakra-ui/react';
-import { parseCookies } from 'nookies';
+import { useCookies } from 'react-cookie';
 import { useStoreContext, useDispatchContext } from '~/store';
 
 const Sidebar: FC = () => {
   const { isSidebarOpen, icon, name } = useStoreContext();
   const { dispatch }                  = useDispatchContext();
+  const [{ authToken }]               = useCookies(['authToken']);
   const onClose                       = useCallback(() => dispatch({ type: 'CLOSE_SIDEBAR' }), []);
-  const cookies                       = parseCookies();
 
   return useMemo(() =>
-    <Drawer placement='left' onClose={onClose} isOpen={isSidebarOpen && !!cookies.authToken}>
+    <Drawer placement='left' onClose={onClose} isOpen={isSidebarOpen && !!authToken}>
       <DrawerOverlay>
         <DrawerContent>
           <DrawerCloseButton/>
@@ -41,7 +41,7 @@ const Sidebar: FC = () => {
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
-    </Drawer>, [isSidebarOpen, cookies.authToken, name, icon]);
+    </Drawer>, [isSidebarOpen, authToken, name, icon]);
 };
 
 export default Sidebar;

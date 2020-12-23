@@ -7,8 +7,10 @@ const Providers = ({ children }: { children: ReactChild }) => <StoreContextProvi
   <SWRConfig value={{ dedupingInterval: 0 }}>{children}</SWRConfig>
 </StoreContextProvider>;
 
-const customRender = (ui, options = {}) =>
-  render(ui, { wrapper: Providers, ...options });
+const customRender = (ui, options = {}) => {
+  window.scrollTo = jest.fn();
+  return render(ui, { wrapper: Providers, ...options });
+};
 
 export * from '@testing-library/react';
 
