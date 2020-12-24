@@ -31,7 +31,7 @@ export const getReservation = depend(
 
 export const createReservation = depend(
   { prisma: prisma as { reservation: { create: typeof prisma.reservation.create } } },
-  async({ prisma }, data: CreateReservationData, args?: CreateReservationArgs) => prisma.reservation.create({
+  async({ prisma }, data: CreateReservationData, args?: Partial<CreateReservationArgs>) => prisma.reservation.create({
     data,
     ...args,
   }),
@@ -39,7 +39,7 @@ export const createReservation = depend(
 
 export const updateReservation = depend(
   { prisma: prisma as { reservation: { update: typeof prisma.reservation.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateReservationData, args?: UpdateReservationArgs) => prisma.reservation.update({
+  async({ prisma }, id: number | undefined, data: UpdateReservationData, args?: Partial<UpdateReservationArgs>) => prisma.reservation.update({
     data,
     where: { id },
     ...args,
@@ -48,7 +48,7 @@ export const updateReservation = depend(
 
 export const deleteReservation = depend(
   { prisma: prisma as { reservation: { delete: typeof prisma.reservation.delete } } },
-  async({ prisma }, id: number | undefined, args?: DeleteReservationArgs) => prisma.reservation.delete({
+  async({ prisma }, id: number | undefined, args?: Partial<DeleteReservationArgs>) => prisma.reservation.delete({
     where: { id },
     ...args,
   }),

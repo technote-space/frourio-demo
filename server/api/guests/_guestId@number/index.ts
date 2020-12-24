@@ -1,18 +1,18 @@
 import type { AuthHeader } from '$/types';
-import type { Guest, UpdateGuestData } from '$/repositories/guest';
+import type { GuestWithDetail, UpdateGuestData } from '$/repositories/guest';
 
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    resBody: Guest;
+    resBody: GuestWithDetail;
   };
   patch: {
     reqHeaders: AuthHeader;
     reqBody: UpdateGuestData;
-    resBody: Guest;
+    resBody: GuestWithDetail;
   };
   delete: {
     reqHeaders: AuthHeader;
-    resBody: Guest;
+    resBody: GuestWithDetail;
   }
 }

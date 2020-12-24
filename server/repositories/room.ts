@@ -31,7 +31,7 @@ export const getRoom = depend(
 
 export const createRoom = depend(
   { prisma: prisma as { room: { create: typeof prisma.room.create } } },
-  async({ prisma }, data: CreateRoomData, args?: CreateRoomArgs) => prisma.room.create({
+  async({ prisma }, data: CreateRoomData, args?: Partial<CreateRoomArgs>) => prisma.room.create({
     data,
     ...args,
   }),
@@ -39,7 +39,7 @@ export const createRoom = depend(
 
 export const updateRoom = depend(
   { prisma: prisma as { room: { update: typeof prisma.room.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateRoomData, args?: UpdateRoomArgs) => prisma.room.update({
+  async({ prisma }, id: number | undefined, data: UpdateRoomData, args?: Partial<UpdateRoomArgs>) => prisma.room.update({
     data,
     where: { id },
     ...args,
@@ -48,7 +48,7 @@ export const updateRoom = depend(
 
 export const deleteRoom = depend(
   { prisma: prisma as { room: { delete: typeof prisma.room.delete } } },
-  async({ prisma }, id: number | undefined, args?: DeleteRoomArgs) => prisma.room.delete({
+  async({ prisma }, id: number | undefined, args?: Partial<DeleteRoomArgs>) => prisma.room.delete({
     where: { id },
     ...args,
   }),
