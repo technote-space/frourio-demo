@@ -9,7 +9,7 @@ import {
   DrawerCloseButton,
   Image,
 } from '@chakra-ui/react';
-import { List, ListItem, ListIcon, Divider, Flex, Text } from '@chakra-ui/react';
+import { List, ListItem, ListIcon, Divider, Flex, Text, Stack } from '@chakra-ui/react';
 import { useCookies } from 'react-cookie';
 import clsx from 'clsx';
 import { useStoreContext, useDispatchContext } from '~/store';
@@ -52,13 +52,17 @@ const Sidebar: FC = () => {
           <DrawerCloseButton/>
           {(icon || name) && <>
             <DrawerHeader>
-              {icon && <Image
-                borderRadius="full"
-                boxSize="150px"
-                src={icon}
-                alt={name ?? 'admin'}
-              />}
-              {name}
+              <Stack direction="row" align="center">
+                {icon && <Image
+                  borderRadius="full"
+                  boxSize="50px"
+                  src={icon}
+                  alt={name ?? 'admin'}
+                />}
+                <Text>
+                  {name}
+                </Text>
+              </Stack>
             </DrawerHeader>
             <Divider/>
           </>}

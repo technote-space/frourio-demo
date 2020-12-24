@@ -12,6 +12,7 @@ export class AdminSeeder extends Seeder {
       name: 'Test User',
       email: 'test@example.com',
       password: bcrypt.hashSync('test1234', 10),
+      icon: 'dummy.svg',
     });
   }
 }
