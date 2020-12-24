@@ -7,7 +7,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Image,
+  Avatar,
 } from '@chakra-ui/react';
 import { List, ListItem, ListIcon, Divider, Flex, Text, Stack } from '@chakra-ui/react';
 import { useCookies } from 'react-cookie';
@@ -54,11 +54,10 @@ const Sidebar: FC = () => {
           {(icon || name) && <>
             <DrawerHeader>
               <Stack direction="row" align="center">
-                {icon && <Image
-                  borderRadius="full"
-                  boxSize="50px"
+                {icon && <Avatar
+                  size="lg"
                   src={icon}
-                  alt={name ?? 'admin'}
+                  name={name ?? 'admin'}
                 />}
                 <Text>
                   {name}
