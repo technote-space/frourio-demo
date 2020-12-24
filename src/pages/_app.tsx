@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 import { extendTheme } from '@chakra-ui/react';
+import { CookiesProvider } from 'react-cookie';
 import LoadingModal from '~/components/LoadingModal';
 import '~/styles/globals.scss';
 import { StoreContextProvider } from '~/store';
@@ -36,14 +37,16 @@ const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
 const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) =>
   <SafeHydrate>
     <ChakraProvider theme={theme}>
-      <StoreContextProvider>
-        <Head>
-          <title>frourio-todo-app</title>
-          <link rel="icon" href="/favicon.png"/>
-        </Head>
-        <LoadingModal/>
-        <Component {...pageProps} />
-      </StoreContextProvider>
+      <CookiesProvider>
+        <StoreContextProvider>
+          <Head>
+            <title>frourio-todo-app</title>
+            <link rel="icon" href="/favicon.png"/>
+          </Head>
+          <LoadingModal/>
+          <Component {...pageProps} />
+        </StoreContextProvider>
+      </CookiesProvider>
     </ChakraProvider>
   </SafeHydrate>;
 

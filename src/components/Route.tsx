@@ -4,8 +4,8 @@ import { useCookies } from 'react-cookie';
 import { useStoreContext, useDispatchContext } from '~/store';
 import pages from '~/_pages';
 
-const Switcher: FC = () => {
-  const [, setCookie]           = useCookies(['authToken']);
+const Route: FC = () => {
+  const [, , removeCookie]      = useCookies(['authToken']);
   const { page }                = useStoreContext();
   const { dispatch }            = useDispatchContext();
   const [nextPage, setNextPage] = useState<ReactElement | null>(null);
@@ -13,8 +13,8 @@ const Switcher: FC = () => {
 
   useEffect(() => {
     if (page === 'logout') {
-      setCookie('authToken', '');
-      dispatch({ type: 'SET_ADMIN', admin: {} });
+      removeCookie('authToken');
+      dispatch({ type: 'LOGOUT' });
       return;
     }
 
@@ -30,4 +30,4 @@ const Switcher: FC = () => {
   return useMemo(() => nextPage, [nextPage]);
 };
 
-export default Switcher;
+export default Route;

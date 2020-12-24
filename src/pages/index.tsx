@@ -1,8 +1,9 @@
-import Switcher from '~/components/Switcher';
+import Route from '~/components/Route';
 
 const Index = () => {
   console.log('page::Index');
-  return <Switcher/>;
+
+  return <Route/>;
 };
 
 export default Index;

@@ -1,12 +1,15 @@
 import type { FC } from 'react';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
-import useAspidaSWR from '@aspida/swr';
+import useFetch from '~/hooks/useFetch';
+import { useDispatchContext } from '~/store';
 import { getClient } from '~/utils/api';
 import styles from '~/styles/pages/Rooms.module.scss';
 
 const Rooms: FC = () => {
   console.log('page::Rooms');
-  const { data: rooms, error } = useAspidaSWR(getClient().rooms);
+
+  const { dispatch }           = useDispatchContext();
+  const { data: rooms, error } = useFetch(dispatch, [], getClient().rooms);
   return <div className={styles.wrap}>
     {error && <div>failed to load</div>}
     {!error && !rooms && <div>loading...</div>}

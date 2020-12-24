@@ -10,6 +10,7 @@ const initialState: ContextState = {
     isOpen: false,
   },
   page: 'dashboard',
+  prevPage: undefined,
 };
 
 const reducer = (store, action) => {
@@ -26,7 +27,13 @@ const reducer = (store, action) => {
     case 'LOADING_MODAL':
       return { ...store, loadingModal: action.loadingModal };
     case 'PAGE':
-      return { ...store, page: action.page };
+      if ('logout' === store.page) {
+        return { ...store, page: action.page };
+      }
+
+      return { ...store, prevPage: store.page, page: action.page };
+    case 'LOGOUT':
+      return { ...store, name: undefined, icon: undefined, page: store.prevPage };
     default:
       return store;
   }

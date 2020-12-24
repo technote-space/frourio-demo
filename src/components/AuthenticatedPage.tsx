@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { getClient } from '~/utils/api';
+import { getClient, handleAuthError } from '~/utils/api';
 import CommonPage from '~/components/CommonPage';
 import Login from '~/components/Login';
 import { useStoreContext, useDispatchContext } from '~/store';
@@ -15,8 +15,8 @@ const AuthenticatedPage: (WrappedComponent: FC) => FC = WrappedComponent => Comm
   useEffect(() => {
     if (authToken && !name) {
       (async() => {
-        const admin = await getClient().admin.get();
-        dispatch({ type: 'SET_ADMIN', admin: admin.body });
+        const admin = await handleAuthError(dispatch, {}, getClient().admin.get);
+        dispatch({ type: 'SET_ADMIN', admin });
       })();
     }
   }, [authToken, name]);

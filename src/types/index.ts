@@ -10,4 +10,5 @@ export type ContextState = {
     isOpen: boolean;
   };
   page: PageKeys;
+  prevPage?: PageKeys;
 };
