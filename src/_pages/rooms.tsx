@@ -1,15 +1,15 @@
 import type { FC } from 'react';
-import AuthenticatedPage from '~/components/AuthenticatedPage';
+import AuthenticatedPage, { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
-import { getClient } from '~/utils/api';
+import { client } from '~/utils/api';
 import styles from '~/styles/pages/Rooms.module.scss';
 
-const Rooms: FC = () => {
+const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Rooms');
 
   const { dispatch }           = useDispatchContext();
-  const { data: rooms, error } = useFetch(dispatch, [], getClient().rooms);
+  const { data: rooms, error } = useFetch(dispatch, [], client.rooms, { headers: authHeader });
   return <div className={styles.wrap}>
     {error && <div>failed to load</div>}
     {!error && !rooms && <div>loading...</div>}

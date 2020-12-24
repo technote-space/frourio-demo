@@ -6,7 +6,7 @@ import { addDays } from 'date-fns';
 import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
 import PasswordInput from '~/components/PasswordInput';
-import { getClient } from '~/utils/api';
+import { client } from '~/utils/api';
 import { addDisplayName } from '~/utils/component';
 import styles from '~/styles/components/Login.module.scss';
 
@@ -26,9 +26,9 @@ const Login: FC = () => {
   }, []);
 
   const handleSubmit = useCallback((values, actions) => {
-    getClient(false).login.post({ body: { email: values.email, pass: values.password } }).then(data => {
+    client.login.post({ body: { email: values.email, pass: values.password } }).then(data => {
       if (data?.headers?.authorization) {
-        setAuthToken(data?.headers?.authorization);
+        setAuthToken(data.headers.authorization);
       } else {
         actions.setSubmitting(false);
       }

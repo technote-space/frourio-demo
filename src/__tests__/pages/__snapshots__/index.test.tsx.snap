@@ -15,11 +15,11 @@ exports[`Index page matches snapshot 1`] = `
           <h1
             class="chakra-heading css-0"
           >
-            <a
-              href="/"
+            <div
+              class="home"
             >
               Home
-            </a>
+            </div>
           </h1>
         </div>
       </nav>

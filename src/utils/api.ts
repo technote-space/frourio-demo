@@ -3,18 +3,7 @@ import type { AspidaResponse } from 'aspida';
 import api from '$/api/$api';
 import { AxiosError } from 'axios';
 
-const clients: { [key: string]: ReturnType<typeof api> } = {};
-
-export const getClient = (withCredentials = true) => {
-  const key = `${withCredentials}`;
-  if (!(key in clients)) {
-    clients[key] = api(aspida(undefined, {
-      withCredentials,
-    }));
-  }
-
-  return clients[key];
-};
+export const client = api(aspida());
 
 const isAxiosError = (target: any): target is AxiosError => {
   return typeof target === 'object' &&
@@ -23,20 +12,20 @@ const isAxiosError = (target: any): target is AxiosError => {
     'response' in target;
 };
 
-export const handleAuthError = async <T, U, V, O>(
+export const handleAuthError = async <T, U, V, API extends (...args: Array<any>) => Promise<AspidaResponse<T, U, V>>>(
   dispatch: ((value: { type: string; [key: string]: any }) => void),
   fallback: Partial<T>,
-  api: (option?: O) => Promise<AspidaResponse<T, U, V>>,
-  option?: O,
+  api: API,
+  ...option: Parameters<API>
 ): Promise<Partial<T>> | never => {
   try {
-    const result = await api(option);
+    const result = await api(...option);
     console.log(result);
 
     return result.body;
   } catch (error) {
     if (isAxiosError(error)) {
-      if (error.response && 401 === error.response.status) {
+      if (error.response && (400 === error.response.status || 401 === error.response.status)) {
         dispatch({ type: 'PAGE', page: 'logout' });
         return fallback;
       }
