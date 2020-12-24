@@ -2,6 +2,7 @@ import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
 import { ensureNotNull } from '$/utils';
 import type { Prisma } from '@prisma/client';
+import { SearchGuestArgs } from '$/repositories/guest';
 
 export type SearchReservationArgs = Prisma.FindManyReservationArgs;
 export type FindReservationArgs = Prisma.FindFirstReservationArgs;
@@ -18,12 +19,12 @@ const prisma = new PrismaClient();
 
 export const getReservations = depend(
   { prisma: prisma as { reservation: { findMany: typeof prisma.reservation.findMany } } },
-  async({ prisma }, args?: SearchReservationArgs) => prisma.reservation.findMany(args),
+  async <T>({ prisma }, args?: Prisma.Subset<T, SearchReservationArgs>) => prisma.reservation.findMany(args),
 );
 
 export const getReservation = depend(
   { prisma: prisma as { reservation: { findFirst: typeof prisma.reservation.findFirst } } },
-  async({ prisma }, id: number | undefined, args?: FindReservationArgs) => ensureNotNull(await prisma.reservation.findFirst({
+  async <T>({ prisma }, id: number | undefined, args?: Prisma.Subset<T, FindReservationArgs>) => ensureNotNull(await prisma.reservation.findFirst({
     where: { id },
     ...args,
   })),
@@ -31,7 +32,7 @@ export const getReservation = depend(
 
 export const createReservation = depend(
   { prisma: prisma as { reservation: { create: typeof prisma.reservation.create } } },
-  async({ prisma }, data: CreateReservationData, args?: CreateReservationArgs) => prisma.reservation.create({
+  async <T>({ prisma }, data: CreateReservationData, args?: Prisma.Subset<T, CreateReservationArgs>) => prisma.reservation.create({
     data,
     ...args,
   }),
@@ -39,7 +40,7 @@ export const createReservation = depend(
 
 export const updateReservation = depend(
   { prisma: prisma as { reservation: { update: typeof prisma.reservation.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateReservationData, args?: UpdateReservationArgs) => prisma.reservation.update({
+  async <T>({ prisma }, id: number | undefined, data: UpdateReservationData, args?: Prisma.Subset<T, UpdateReservationArgs>) => prisma.reservation.update({
     data,
     where: { id },
     ...args,
@@ -48,7 +49,7 @@ export const updateReservation = depend(
 
 export const deleteReservation = depend(
   { prisma: prisma as { reservation: { delete: typeof prisma.reservation.delete } } },
-  async({ prisma }, id: number | undefined, args?: DeleteReservationArgs) => prisma.reservation.delete({
+  async <T>({ prisma }, id: number | undefined, args?: Prisma.Subset<T, DeleteReservationArgs>) => prisma.reservation.delete({
     where: { id },
     ...args,
   }),

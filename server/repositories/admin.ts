@@ -5,6 +5,7 @@ import { API_ORIGIN, BASE_PATH } from '$/service/envValues';
 import { ensureNotNull } from '$/utils';
 import 'fastify-jwt';
 import type { Prisma } from '@prisma/client';
+import { SearchGuestArgs } from '$/repositories/guest';
 
 export type FindAdminArgs = Prisma.FindFirstAdminArgs;
 export type CreateAdminData = Prisma.AdminCreateInput;
@@ -40,7 +41,7 @@ export const validateUser = depend(
 
 export const getAdmin = depend(
   { prisma: prisma as { admin: { findFirst: typeof prisma.admin.findFirst } } },
-  async({ prisma }, id: number, args?: FindAdminArgs) => filterAdmin(await prisma.admin.findFirst({
+  async <T>({ prisma }, id: number, args?: Prisma.Subset<T, FindAdminArgs>) => filterAdmin(await prisma.admin.findFirst({
     ...args,
     where: { id },
   })),
@@ -76,7 +77,7 @@ export const updateAdmin = depend(
 
 export const deleteAdmin = depend(
   { prisma: prisma as { admin: { delete: typeof prisma.admin.delete } } },
-  async({ prisma }, id: number | undefined, args?: DeleteAdminArgs) => filterAdmin(await prisma.admin.delete({
+  async <T>({ prisma }, id: number | undefined, args?: Prisma.Subset<T, DeleteAdminArgs>) => filterAdmin(await prisma.admin.delete({
     where: { id },
     ...args,
   })),
