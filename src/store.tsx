@@ -1,5 +1,6 @@
-import React, { useReducer, createContext, useContext, useMemo } from 'react';
+import React, { useReducer, createContext, useContext, useMemo, useEffect } from 'react';
 import type { FC, Dispatch } from 'react';
+import { useToast } from '@chakra-ui/react';
 import { ContextState } from '~/types';
 
 const initialState: ContextState = {
@@ -11,6 +12,7 @@ const initialState: ContextState = {
   },
   page: 'dashboard',
   prevPage: undefined,
+  toasts: [],
 };
 
 const reducer = (store, action) => {
@@ -34,6 +36,10 @@ const reducer = (store, action) => {
       return { ...store, prevPage: store.page, page: action.page };
     case 'LOGOUT':
       return { ...store, name: undefined, icon: undefined, page: store.prevPage };
+    case 'TOAST':
+      return { ...store, toasts: store.toasts.concat(action.toasts) };
+    case 'CLEAR_TOAST':
+      return { ...store, toasts: [] };
     default:
       return store;
   }
@@ -52,6 +58,16 @@ const useDispatchContext = (): DispatchContextType => {
 
 const StoreContextProvider: FC = ({ children }) => {
   const [store, dispatch] = useReducer(reducer, initialState);
+  const toast             = useToast();
+
+  useEffect(() => {
+    console.log(store);
+    if (store.toasts.length) {
+      store.toasts.forEach(option => toast(option));
+      dispatch({ type: 'CLEAR_TOAST' });
+    }
+  }, [store.toasts]);
+
   return useMemo(
     () =>
       <StoreContext.Provider value={{ ...store }}>

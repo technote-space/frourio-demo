@@ -3,13 +3,14 @@ import { useCallback, useMemo } from 'react';
 import { Heading, Flex } from '@chakra-ui/react';
 import { useCookies } from 'react-cookie';
 import { useDispatchContext } from '~/store';
+import { openSidebar, changePage } from '~/utils/actions';
 import styles from '~/styles/components/Header.module.scss';
 
 const Header: FC = () => {
   const { dispatch }      = useDispatchContext();
   const [{ authToken }]   = useCookies(['authToken']);
-  const handleClickToggle = useCallback(() => dispatch({ type: 'OPEN_SIDEBAR' }), []);
-  const handleClickHome   = useCallback(() => dispatch({ type: 'PAGE', page: 'dashboard' }), []);
+  const handleClickToggle = useCallback(() => openSidebar(dispatch), []);
+  const handleClickHome   = useCallback(() => changePage(dispatch, 'dashboard'), []);
 
   return useMemo(() =>
     <Flex

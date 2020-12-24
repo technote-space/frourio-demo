@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
 import { useStoreContext, useDispatchContext } from '~/store';
 import pages from '~/_pages';
+import { logout } from '~/utils/actions';
 
 const Route: FC = () => {
   const [, , removeCookie]      = useCookies(['authToken']);
@@ -14,7 +15,7 @@ const Route: FC = () => {
   useEffect(() => {
     if (page === 'logout') {
       removeCookie('authToken');
-      dispatch({ type: 'LOGOUT' });
+      logout(dispatch);
       return;
     }
 

@@ -4,15 +4,16 @@ import { useCookies } from 'react-cookie';
 import { Formik, Form, Field } from 'formik';
 import { addDays } from 'date-fns';
 import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/react';
 import PasswordInput from '~/components/PasswordInput';
-import { client } from '~/utils/api';
 import { addDisplayName } from '~/utils/component';
+import { client } from '~/utils/api';
+import { createWarningToast } from '~/utils/actions';
+import { useDispatchContext } from '~/store';
 import styles from '~/styles/components/Login.module.scss';
 
 const Login: FC = () => {
+  const { dispatch }               = useDispatchContext();
   const [{ authToken }, setCookie] = useCookies(['authToken']);
-  const toast                      = useToast();
   const setAuthToken               = token => {
     setCookie('authToken', token, {
       expires: addDays(new Date(), 30),
@@ -34,10 +35,9 @@ const Login: FC = () => {
       }
     }).catch(error => {
       actions.setSubmitting(false);
-      toast({
+      createWarningToast(dispatch, {
         title: 'Login failed',
         description: error.message,
-        status: 'warning',
         duration: 4000,
         isClosable: true,
       });

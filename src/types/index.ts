@@ -1,4 +1,5 @@
-import { PageKeys } from '~/_pages';
+import type { UseToastOptions } from '@chakra-ui/react';
+import type { PageKeys } from '~/_pages';
 
 export type ContextState = {
   name?: string;
@@ -11,4 +12,5 @@ export type ContextState = {
   };
   page: PageKeys;
   prevPage?: PageKeys;
+  toasts: UseToastOptions[];
 };

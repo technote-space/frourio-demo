@@ -5,6 +5,7 @@ import { client, handleAuthError } from '~/utils/api';
 import CommonPage from '~/components/CommonPage';
 import Login from '~/components/Login';
 import { useStoreContext, useDispatchContext } from '~/store';
+import { setAdmin } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 
 export type AuthenticatedPageProps = {
@@ -22,7 +23,7 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     if (authToken && !name) {
       (async() => {
         const admin = await handleAuthError(dispatch, {}, client.admin.get, { headers: authHeader });
-        dispatch({ type: 'SET_ADMIN', admin });
+        setAdmin(dispatch, admin);
       })();
     }
   }, [authToken, name]);
