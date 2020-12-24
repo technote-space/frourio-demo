@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useMemo } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
-import styles from '~/styles/components/Footer.module.scss';
+import styles from '~/styles/components/Layout/Footer.module.scss';
 
 const Footer: FC = () => {
   return useMemo(() =>

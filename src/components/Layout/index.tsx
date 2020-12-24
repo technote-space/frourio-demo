@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import Header from '~/components/Header';
-import Footer from '~/components/Footer';
-import Sidebar from '~/components/Sidebar';
+import Header from './Header';
+import Footer from './Footer';
+import Sidebar from './Sidebar';
 import styles from '~/styles/layouts/Common.module.scss';
 import { PropsWithChildren } from 'react';
 

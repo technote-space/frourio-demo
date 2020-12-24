@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { client, handleAuthError } from '~/utils/api';
-import CommonPage from '~/components/CommonPage';
+import CommonPage from './CommonPage';
 import Login from '~/components/Login';
 import { useStoreContext, useDispatchContext } from '~/store';
 import { setAdmin } from '~/utils/actions';

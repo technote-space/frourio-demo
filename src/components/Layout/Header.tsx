@@ -4,7 +4,7 @@ import { Heading, Flex } from '@chakra-ui/react';
 import { useCookies } from 'react-cookie';
 import { useDispatchContext } from '~/store';
 import { openSidebar, changePage } from '~/utils/actions';
-import styles from '~/styles/components/Header.module.scss';
+import styles from '~/styles/components/Layout/Header.module.scss';
 
 const Header: FC = () => {
   const { dispatch }      = useDispatchContext();

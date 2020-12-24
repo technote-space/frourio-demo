@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import AuthenticatedPage, { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
+import { AuthenticatedPage } from '~/components/Page';
+import type { AuthenticatedPageProps } from '~/components/Page';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client } from '~/utils/api';

@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import AuthenticatedPage, { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
+import { AuthenticatedPage } from '~/components/Page';
+import type { AuthenticatedPageProps } from '~/components/Page';
 import styles from '~/styles/pages/Dashboard.module.scss';
 
 const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {

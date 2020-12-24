@@ -3,10 +3,10 @@ import { MdDashboard, MdPeople } from 'react-icons/md';
 import { FaBed } from 'react-icons/fa';
 import { BsCalendar } from 'react-icons/bs';
 import { FiLogOut } from 'react-icons/fi';
-import Dashboard from '~/_pages/dashboard';
-import Guests from '~/_pages/guests';
-import Reservations from '~/_pages/reservations';
-import Rooms from '~/_pages/rooms';
+import Dashboard from './dashboard';
+import Guests from './guests';
+import Reservations from './reservations';
+import Rooms from './rooms';
 import { addDisplayName } from '~/utils/component';
 
 const pages = {
@@ -33,8 +33,8 @@ const pages = {
   logout: {
     label: 'Logout',
     page: null,
-    icon: addDisplayName('LogoutIcon', () => <Icon as={FiLogOut}/>)
-  }
+    icon: addDisplayName('LogoutIcon', () => <Icon as={FiLogOut}/>),
+  },
 } as const;
 
 export type PageKeys = keyof typeof pages;

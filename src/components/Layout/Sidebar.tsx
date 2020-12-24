@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { useStoreContext, useDispatchContext } from '~/store';
 import pages, { PageKeys } from '~/_pages';
 import { closeSidebar, changePage } from '~/utils/actions';
-import styles from '~/styles/components/Sidebar.module.scss';
+import styles from '~/styles/components/Layout/Sidebar.module.scss';
 
 const Sidebar: FC = () => {
   const { isSidebarOpen, icon, name, page: _page } = useStoreContext();

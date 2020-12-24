@@ -40,6 +40,13 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
       }
     }
 
+    createErrorToast(dispatch, {
+      title: 'Error',
+      description: error.message,
+      duration: 6000,
+      isClosable: true,
+    });
+
     throw error;
   }
 };
