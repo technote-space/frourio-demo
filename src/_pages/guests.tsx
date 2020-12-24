@@ -10,12 +10,12 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
   console.log('page::Guests');
 
   const { dispatch }            = useDispatchContext();
-  const { data: guests, error } = useFetch(dispatch, [], client.rooms, { headers: authHeader });
+  const { data: guests, error } = useFetch(dispatch, [], client.guests, { headers: authHeader });
   return <div className={styles.wrap}>
     {error && <div>failed to load</div>}
     {!error && !guests && <div>loading...</div>}
     {!error && guests && guests.map(guest => <div key={guest.id}>
-      {guest.id}
+      {JSON.stringify(guest)}
     </div>)}
   </div>;
 };

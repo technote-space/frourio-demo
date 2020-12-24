@@ -15,7 +15,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
     {error && <div>failed to load</div>}
     {!error && !reservations && <div>loading...</div>}
     {!error && reservations && reservations.map(reservation => <div key={reservation.id}>
-      {reservation.guestId}/{reservation.roomId}/{reservation.status}
+      {JSON.stringify(reservation)}
     </div>)}
   </div>;
 };

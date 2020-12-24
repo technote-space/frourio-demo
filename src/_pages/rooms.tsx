@@ -15,7 +15,7 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
     {error && <div>failed to load</div>}
     {!error && !rooms && <div>loading...</div>}
     {!error && rooms && rooms.map(room => <div key={room.id}>
-      {room.name}/{room.number}/{room.price}
+      {JSON.stringify(room)}
     </div>)}
   </div>;
 };
