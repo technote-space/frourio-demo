@@ -24,6 +24,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
 
     return result.body;
   } catch (error) {
+    console.log(error);
     if (isAxiosError(error)) {
       if (error.response && (400 === error.response.status || 401 === error.response.status)) {
         dispatch({ type: 'PAGE', page: 'logout' });
