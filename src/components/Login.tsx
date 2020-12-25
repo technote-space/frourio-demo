@@ -56,7 +56,7 @@ const Login: FC = () => {
     });
   }, []);
 
-  const settings = [
+  const settings = useMemo(() => [
     {
       id: 'email',
       isRequired: true,
@@ -71,7 +71,7 @@ const Login: FC = () => {
       component: addDisplayName('Password', props => <PasswordInput {...props}/>),
       initialValue: '',
     },
-  ];
+  ], []);
 
   return useMemo(() =>
     <div className={classes.wrap}>

@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { client, handleAuthError } from '~/utils/api';
-import CommonPage from './CommonPage';
 import Login from '~/components/Login';
 import { useStoreContext, useDispatchContext } from '~/store';
 import { setAdmin } from '~/utils/actions';
@@ -13,7 +12,7 @@ export type AuthenticatedPageProps = {
   authHeader: { authorization: string };
 }
 
-const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => CommonPage(addDisplayName<FC>('AuthenticatedPage', props => {
+const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
   const [{ authToken }] = useCookies(['authToken']);
   const { name }        = useStoreContext();
   const { dispatch }    = useDispatchContext();
@@ -32,6 +31,6 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     {!authToken && <Login {...props} />}
     {authToken && <WrappedComponent authToken={authToken} authHeader={authHeader} {...props} />}
   </div>;
-}, WrappedComponent));
+}, WrappedComponent);
 
 export default AuthenticatedPage;

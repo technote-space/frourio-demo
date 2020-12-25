@@ -5,6 +5,7 @@ import useTheme from '~/hooks/useTheme';
 import { useStoreContext } from '~/store';
 import LoadingModal from '~/components/LoadingModal';
 import SnackbarWrapper from '~/components/SnackbarWrapper';
+import Layout from '~/components/Layout';
 
 const Index = () => {
   console.log('page::Index');
@@ -17,7 +18,9 @@ const Index = () => {
     <ThemeProvider theme={theme}>
       <LoadingModal/>
       <SnackbarWrapper/>
-      <Route/>
+      <Layout>
+        <Route/>
+      </Layout>
     </ThemeProvider>
   </StylesProvider>;
 };

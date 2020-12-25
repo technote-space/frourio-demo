@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useMemo } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -14,10 +15,10 @@ const useStyles = makeStyles(() => createStyles({
 const CircleBar: FC = () => {
   const classes = useStyles();
 
-  return (
+  return useMemo(() =>
     <div className={classes.root}>
       <CircularProgress/>
-    </div>
+    </div>, [classes],
   );
 };
 

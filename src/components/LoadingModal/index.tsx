@@ -50,7 +50,7 @@ const LoadingModal = () => {
           <CircleBar/>
         </div>
       </Fade>
-    </Modal>, [loadingModal],
+    </Modal>, [classes, loadingModal],
   );
 };
 

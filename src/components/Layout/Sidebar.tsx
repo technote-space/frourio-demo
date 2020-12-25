@@ -1,14 +1,23 @@
 import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
-import { Drawer, Button, List, ListItem, ListItemIcon, ListItemText, Divider, Avatar } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Avatar } from '@material-ui/core';
 import { useCookies } from 'react-cookie';
 import clsx from 'clsx';
 import { useStoreContext, useDispatchContext } from '~/store';
 import pages, { PageKeys } from '~/_pages';
 import { closeSidebar, changePage } from '~/utils/actions';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles({
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '1rem',
+  },
+  avatar: {
+    background: 'white',
+    marginRight: '1rem',
+  },
   item: {
     cursor: 'pointer',
     opacity: '0.6',
@@ -19,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   active: {
     opacity: 1,
   },
-}));
+});
 
 const Sidebar: FC = () => {
   const classes                                    = useStyles();
@@ -49,18 +58,21 @@ const Sidebar: FC = () => {
   return useMemo(() =>
     <Drawer anchor='left' onClose={onClose} open={isSidebarOpen && !!authToken}>
       {(icon || name) && <>
-        {icon && <Avatar
-          src={icon}
-          alt={name ?? 'admin'}
-        />}
-        {name}
+        <div className={classes.drawerHeader}>
+          {icon && <Avatar
+            className={classes.avatar}
+            src={icon}
+            alt={name ?? 'admin'}
+          />}
+          {name}
+        </div>
         <Divider/>
       </>}
       <List>
         {Object.entries(pages).map(([key, page]) =>
           <MappedListItem key={key} slug={key as PageKeys} page={page}/>)}
       </List>
-    </Drawer>, [isSidebarOpen, authToken, name, icon]);
+    </Drawer>, [classes, isSidebarOpen, authToken, name, icon]);
 };
 
 export default Sidebar;

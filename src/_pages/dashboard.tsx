@@ -1,10 +1,9 @@
 import type { FC } from 'react';
-import { AuthenticatedPage } from '~/components/Page';
-import type { AuthenticatedPageProps } from '~/components/Page';
+import AuthenticatedPage from '~/components/AuthenticatedPage';
+import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client } from '~/utils/api';
-import styles from '~/styles/pages/Dashboard.module.scss';
 
 const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Dashboard');
@@ -15,7 +14,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const dailySales   = useFetch(dispatch, [], client.dashboard.sales.daily, { headers: authHeader });
   const monthlySales = useFetch(dispatch, [], client.dashboard.sales.monthly, { headers: authHeader });
 
-  return <div className={styles.wrap}>
+  return <div>
     {JSON.stringify(checkins.data)}
     {JSON.stringify(checkouts.data)}
     {JSON.stringify(dailySales.data)}
