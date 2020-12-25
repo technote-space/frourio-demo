@@ -7,14 +7,6 @@ export class GuestSeeder extends Seeder {
   }
 
   public async run(): Promise<void> {
-    await (await this.guestFactory.createMany(10)).each(async guest => {
-      await this.guestDetailFactory.create({
-        guest: {
-          connect: {
-            id: guest.id,
-          },
-        },
-      });
-    });
+    await this.guestFactory.createMany(10);
   }
 }
