@@ -201,7 +201,7 @@ const useTheme = (themeColor?: 'light' | 'dark'): Theme => {
           },
         },
       },
-    }), [colorMode, fgColor, bgColor],
+    }), [colorMode],
   );
 };
 

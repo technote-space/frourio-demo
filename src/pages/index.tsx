@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import Route from '~/components/Route';
@@ -14,7 +15,7 @@ const Index = () => {
   const themeObject    = useTheme(themeColor);
   const theme          = responsiveFontSizes(createMuiTheme(themeObject));
 
-  return <StylesProvider injectFirst>
+  return useMemo(() => <StylesProvider injectFirst>
     <ThemeProvider theme={theme}>
       <LoadingModal/>
       <SnackbarWrapper/>
@@ -22,7 +23,7 @@ const Index = () => {
         <Route/>
       </Layout>
     </ThemeProvider>
-  </StylesProvider>;
+  </StylesProvider>, [theme.palette.type]);
 };
 
 export default Index;
