@@ -4,15 +4,13 @@ import { getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type { Room, CreateRoomData, UpdateRoomData, RoomOrderByInput } from '$/repositories/room';
 
-export const PER_PAGE = 10;
-
 export const list = depend(
   { getRooms },
-  async({ getRooms }, page?: number, orderBy?: RoomOrderByInput): Promise<BodyResponse<Room[]>> => ({
+  async({ getRooms }, pageSize?: number, pageIndex?: number, orderBy?: RoomOrderByInput): Promise<BodyResponse<Room[]>> => ({
     status: 200,
     body: await getRooms({
-      skip: getSkip(PER_PAGE, page),
-      take: PER_PAGE,
+      skip: getSkip(pageSize ?? 10, pageIndex),
+      take: pageSize ?? 10,
       orderBy,
     }),
   }),

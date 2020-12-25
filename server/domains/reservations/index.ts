@@ -15,15 +15,13 @@ import type {
   ReservationOrderByInput,
 } from '$/repositories/reservation';
 
-export const PER_PAGE = 10;
-
 export const list = depend(
   { getReservations },
-  async({ getReservations }, page?: number, orderBy?: ReservationOrderByInput): Promise<BodyResponse<Reservation[]>> => ({
+  async({ getReservations }, pageSize?: number, pageIndex?: number, orderBy?: ReservationOrderByInput): Promise<BodyResponse<Reservation[]>> => ({
     status: 200,
     body: await getReservations({
-      skip: getSkip(PER_PAGE, page),
-      take: PER_PAGE,
+      skip: getSkip(pageSize ?? 10, pageIndex),
+      take: pageSize ?? 10,
       orderBy,
     }),
   }),

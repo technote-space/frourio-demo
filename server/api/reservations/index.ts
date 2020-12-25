@@ -5,7 +5,8 @@ export type Methods = {
   get: {
     reqHeaders: AuthHeader;
     query?: {
-      page?: number;
+      pageSize?: number;
+      pageIndex?: number;
       orderBy?: ReservationOrderByInput;
     };
     resBody: Reservation[];

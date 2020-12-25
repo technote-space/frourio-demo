@@ -4,15 +4,13 @@ import { getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type { GuestWithDetail, CreateGuestData, UpdateGuestData, GuestOrderByInput } from '$/repositories/guest';
 
-export const PER_PAGE = 10;
-
 export const list = depend(
   { getGuests },
-  async({ getGuests }, page?: number, orderBy?: GuestOrderByInput): Promise<BodyResponse<GuestWithDetail[]>> => ({
+  async({ getGuests }, pageSize?: number, pageIndex?: number, orderBy?: GuestOrderByInput): Promise<BodyResponse<GuestWithDetail[]>> => ({
     status: 200,
     body: await getGuests({
-      skip: getSkip(PER_PAGE, page),
-      take: PER_PAGE,
+      skip: getSkip(pageSize ?? 10, pageIndex),
+      take: pageSize ?? 10,
       orderBy,
       include: {
         detail: true,
