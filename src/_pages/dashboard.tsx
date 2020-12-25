@@ -10,28 +10,16 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   console.log('page::Dashboard');
 
   const { dispatch } = useDispatchContext();
-  const {
-          data: checkins,
-          error: checkinsError,
-        }            = useFetch(dispatch, [], client.dashboard.checkin, { headers: authHeader });
-  const {
-          data: checkouts,
-          error: checkoutsError,
-        }            = useFetch(dispatch, [], client.dashboard.checkout, { headers: authHeader });
-  const {
-          data: dailySales,
-          error: dailySalesError,
-        }            = useFetch(dispatch, [], client.dashboard.sales.daily, { headers: authHeader });
-  const {
-          data: monthlySales,
-          error: monthlySalesError,
-        }            = useFetch(dispatch, [], client.dashboard.sales.monthly, { headers: authHeader });
+  const checkins     = useFetch(dispatch, [], client.dashboard.checkin, { headers: authHeader });
+  const checkouts    = useFetch(dispatch, [], client.dashboard.checkout, { headers: authHeader });
+  const dailySales   = useFetch(dispatch, [], client.dashboard.sales.daily, { headers: authHeader });
+  const monthlySales = useFetch(dispatch, [], client.dashboard.sales.monthly, { headers: authHeader });
 
   return <div className={styles.wrap}>
-    {JSON.stringify(checkins)}
-    {JSON.stringify(checkouts)}
-    {JSON.stringify(dailySales)}
-    {JSON.stringify(monthlySales)}
+    {JSON.stringify(checkins.data)}
+    {JSON.stringify(checkouts.data)}
+    {JSON.stringify(dailySales.data)}
+    {JSON.stringify(monthlySales.data)}
   </div>;
 };
 
