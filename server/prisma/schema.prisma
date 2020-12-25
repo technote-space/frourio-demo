@@ -20,23 +20,14 @@ model Admin {
 
 model Guest {
   id           Int           @id @default(autoincrement())
-  detail       GuestDetail?
+  name         String
+  nameKana     String
+  zipCode      String
+  address      String
+  phone        String
   reservations Reservation[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-}
-
-model GuestDetail {
-  id        Int      @id @default(autoincrement())
-  guest     Guest    @relation(fields: [guestId], references: [id])
-  guestId   Int
-  name      String
-  nameKana  String
-  zipCode   String
-  address   String
-  phone     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Room {
@@ -55,6 +46,8 @@ model Reservation {
   guestId   Int
   room      Room               @relation(fields: [roomId], references: [id])
   roomId    Int
+  number    Int
+  amount    Int
   detail    ReservationDetail?
   checkin   DateTime
   checkout  DateTime
@@ -67,8 +60,6 @@ model ReservationDetail {
   id            Int         @id @default(autoincrement())
   reservationId Int
   reservation   Reservation @relation(fields: [reservationId], references: [id])
-  number        Int
-  amount        Int
   payment       Int?
   roomName      String?
   guestName     String?

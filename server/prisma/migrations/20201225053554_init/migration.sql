@@ -13,23 +13,13 @@ CREATE TABLE "Admin" (
 -- CreateTable
 CREATE TABLE "Guest" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "GuestDetail" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "guestId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "nameKana" TEXT NOT NULL,
     "zipCode" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-
-    FOREIGN KEY ("guestId") REFERENCES "Guest"("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
@@ -47,6 +37,8 @@ CREATE TABLE "Reservation" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "guestId" INTEGER NOT NULL,
     "roomId" INTEGER NOT NULL,
+    "number" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
     "checkin" DATETIME NOT NULL,
     "checkout" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'reserved',
@@ -61,8 +53,6 @@ CREATE TABLE "Reservation" (
 CREATE TABLE "ReservationDetail" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "reservationId" INTEGER NOT NULL,
-    "number" INTEGER NOT NULL,
-    "amount" INTEGER NOT NULL,
     "payment" INTEGER,
     "roomName" TEXT,
     "guestName" TEXT,
@@ -78,9 +68,6 @@ CREATE TABLE "ReservationDetail" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Admin.email_unique" ON "Admin"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "GuestDetail_guestId_unique" ON "GuestDetail"("guestId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ReservationDetail_reservationId_unique" ON "ReservationDetail"("reservationId");

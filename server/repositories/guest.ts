@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
 import { ensureNotNull } from '$/utils';
-import type { Prisma, Guest, GuestDetail } from '@prisma/client';
+import type { Prisma, Guest } from '@prisma/client';
 
 export type SearchGuestArgs = Prisma.FindManyGuestArgs;
 export type FindGuestArgs = Prisma.FindFirstGuestArgs;
@@ -12,10 +12,7 @@ export type UpdateGuestArgs = Prisma.GuestUpdateArgs;
 export type DeleteGuestArgs = Prisma.GuestDeleteArgs;
 export type GuestOrderByInput = Prisma.GuestOrderByInput;
 export type GuestWhereInput = Prisma.GuestWhereInput;
-export type { Guest, GuestDetail };
-export type GuestWithDetail = Guest & {
-  detail: GuestDetail;
-}
+export type { Guest };
 
 const prisma = new PrismaClient();
 
