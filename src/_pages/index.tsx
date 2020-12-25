@@ -1,8 +1,10 @@
-import { Icon } from '@chakra-ui/react';
-import { MdDashboard, MdPeople } from 'react-icons/md';
-import { FaBed } from 'react-icons/fa';
-import { BsCalendar } from 'react-icons/bs';
-import { FiLogOut } from 'react-icons/fi';
+import {
+  Dashboard as DashboardIcon,
+  People as PeopleIcon,
+  Hotel as HotelIcon,
+  Today as TodayIcon,
+  ExitToApp as LogoutIcon,
+} from '@material-ui/icons';
 import Dashboard from './dashboard';
 import Guests from './guests';
 import Reservations from './reservations';
@@ -13,27 +15,27 @@ const pages = {
   dashboard: {
     label: 'Dashboard',
     page: Dashboard,
-    icon: addDisplayName('DashboardIcon', () => <Icon as={MdDashboard}/>),
+    icon: DashboardIcon,
   },
   rooms: {
     label: 'Rooms',
     page: Rooms,
-    icon: addDisplayName('RoomsIcon', () => <Icon as={FaBed}/>),
+    icon: HotelIcon,
   },
   guests: {
     label: 'Guests',
     page: Guests,
-    icon: addDisplayName('GuestsIcon', () => <Icon as={MdPeople}/>),
+    icon: PeopleIcon,
   },
   reservations: {
     label: 'Reservations',
     page: Reservations,
-    icon: addDisplayName('ReservationsIcon', () => <Icon as={BsCalendar}/>),
+    icon: TodayIcon,
   },
   logout: {
     label: 'Logout',
     page: null,
-    icon: addDisplayName('LogoutIcon', () => <Icon as={FiLogOut}/>),
+    icon: LogoutIcon,
   },
 } as const;
 

@@ -1,9 +1,9 @@
-import React, { useReducer, createContext, useContext, useMemo, useEffect } from 'react';
+import React, { useReducer, createContext, useContext, useMemo } from 'react';
 import type { FC, Dispatch } from 'react';
-import { useToast } from '@chakra-ui/react';
 import { ContextState } from '~/types';
 
 const initialState: ContextState = {
+  themeColor: undefined,
   name: undefined,
   icon: undefined,
   isSidebarOpen: false,
@@ -12,7 +12,12 @@ const initialState: ContextState = {
   },
   page: 'dashboard',
   prevPage: undefined,
-  toasts: [],
+  title: undefined,
+  notice: {
+    open: false,
+    message: '',
+    variant: 'success',
+  },
 };
 
 const reducer = (store, action) => {
@@ -34,12 +39,18 @@ const reducer = (store, action) => {
       }
 
       return { ...store, prevPage: store.page, page: action.page };
+    case 'TITLE':
+      return { ...store, title: action.title };
     case 'LOGOUT':
-      return { ...store, name: undefined, icon: undefined, page: store.prevPage };
-    case 'TOAST':
-      return { ...store, toasts: store.toasts.concat(action.toasts) };
-    case 'CLEAR_TOAST':
-      return { ...store, toasts: [] };
+      return { ...store, name: undefined, icon: undefined, page: store.prevPage, title: undefined };
+    case 'SET_NOTICE':
+      return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice } };
+    case 'SET_ERROR':
+      return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'error' }, ...action.notice } };
+    case 'SET_WARNING':
+      return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'warning' }, ...action.notice } };
+    case 'CLOSE_NOTICE':
+      return { ...store, notice: { ...store.notice, ...{ open: false } } };
     default:
       return store;
   }
@@ -58,15 +69,6 @@ const useDispatchContext = (): DispatchContextType => {
 
 const StoreContextProvider: FC = ({ children }) => {
   const [store, dispatch] = useReducer(reducer, initialState);
-  const toast             = useToast();
-
-  useEffect(() => {
-    console.log(store);
-    if (store.toasts.length) {
-      store.toasts.forEach(option => toast(option));
-      dispatch({ type: 'CLEAR_TOAST' });
-    }
-  }, [store.toasts]);
 
   return useMemo(
     () =>

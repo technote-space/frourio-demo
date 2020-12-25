@@ -1,50 +1,49 @@
 import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
-import { Heading, Flex } from '@chakra-ui/react';
+import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 import { useCookies } from 'react-cookie';
 import { useDispatchContext } from '~/store';
 import { openSidebar, changePage } from '~/utils/actions';
-import styles from '~/styles/components/Layout/Header.module.scss';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+    cursor: 'pointer',
+  },
+}));
 
 const Header: FC = () => {
+  const classes           = useStyles();
   const { dispatch }      = useDispatchContext();
   const [{ authToken }]   = useCookies(['authToken']);
   const handleClickToggle = useCallback(() => openSidebar(dispatch), []);
   const handleClickHome   = useCallback(() => changePage(dispatch, 'dashboard'), []);
 
   return useMemo(() =>
-    <Flex
-      as="nav"
-      wrap="wrap"
-      padding="1rem"
-      bg="teal.500"
-      color="white"
-      alignItems="center"
-      className={styles.wrap}
-    >
-      {authToken && <Flex
-        mr={5}
-        display={{ base: 'block' }}
-        onClick={handleClickToggle}
-        className={styles.menu}
-      >
-        <svg
-          fill="white"
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <title>Menu</title>
-          <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/>
-        </svg>
-      </Flex>}
-      <Flex>
-        <Heading as="h1" size="lg">
-          <div onClick={handleClickHome} className={styles.home}>Home</div>
-        </Heading>
-      </Flex>
-    </Flex>, [authToken]);
+    <AppBar position="static" className={classes.root}>
+      <Toolbar>
+        {authToken && <IconButton
+          edge="start"
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+          onClick={handleClickToggle}>
+          <MenuIcon/>
+        </IconButton>}
+        <Typography variant="h6" className={classes.title} onClick={handleClickHome}>
+          Home
+        </Typography>
+      </Toolbar>
+    </AppBar>, [classes, authToken]);
 };
 
 export default Header;

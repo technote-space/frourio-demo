@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useState, useCallback, useMemo } from 'react';
-import { Input, InputGroup, InputRightElement, Button } from '@chakra-ui/react';
+import { Input, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 type Props = {
   id?: string;
@@ -9,24 +10,39 @@ type Props = {
   disabled?: boolean;
 }
 
+const useStyles = makeStyles({
+  wrap: {
+    display: 'flex',
+  },
+  input: {
+    flexGrow: 1,
+    marginTop: 16,
+  },
+  toggle: {
+    marginLeft: '.5rem',
+    alignSelf: 'center',
+  },
+});
+
 const PasswordInput: FC<Props> = (props: Props) => {
+  const classes         = useStyles();
   const [show, setShow] = useState(false);
   const handleClick     = useCallback(() => setShow(!show), [show]);
 
   return useMemo(() =>
-    <InputGroup size="md">
+    <div className={classes.wrap}>
       <Input
-        pr="4.5rem"
+        className={classes.input}
         type={show ? 'text' : 'password'}
         placeholder="Enter password"
         {...props}
       />
-      <InputRightElement width="4.5rem">
-        <Button h="1.75rem" size="sm" onClick={handleClick} disabled={props.disabled}>
+      <div className={classes.toggle}>
+        <Button size="small" onClick={handleClick} disabled={props.disabled}>
           {show ? 'Hide' : 'Show'}
         </Button>
-      </InputRightElement>
-    </InputGroup>, [show, props.value, props.disabled]);
+      </div>
+    </div>, [show, props.value, props.disabled]);
 };
 
 export default PasswordInput;

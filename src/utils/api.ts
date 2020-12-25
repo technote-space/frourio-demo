@@ -2,7 +2,7 @@ import aspida from '@aspida/axios';
 import type { AspidaResponse } from 'aspida';
 import { AxiosError } from 'axios';
 import api from '$/api/$api';
-import { changePage, createErrorToast } from '~/utils/actions';
+import { changePage, setError } from '~/utils/actions';
 
 export const client = api(aspida());
 
@@ -29,23 +29,13 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
     if (isAxiosError(error)) {
       console.log(error.response);
       if (error.response && (400 === error.response.status || 401 === error.response.status)) {
-        createErrorToast(dispatch, {
-          title: error.response.data.error,
-          description: error.response.data.message,
-          duration: 6000,
-          isClosable: true,
-        });
+        setError(dispatch, error.response.data.message);
         changePage(dispatch, 'logout');
         return fallback;
       }
     }
 
-    createErrorToast(dispatch, {
-      title: 'Error',
-      description: error.message,
-      duration: 6000,
-      isClosable: true,
-    });
+    setError(dispatch, error.message);
 
     throw error;
   }

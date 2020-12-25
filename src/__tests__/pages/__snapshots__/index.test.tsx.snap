@@ -6,23 +6,47 @@ exports[`Index page matches snapshot 1`] = `
     <div
       class="wrap"
     >
-      <nav
-        class="wrap css-1cehapq"
+      <div
+        class="makeStyles-root-11"
       >
-        <div
-          class="css-k008qs"
+        <header
+          class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary MuiPaper-elevation4"
         >
-          <h1
-            class="chakra-heading css-0"
+          <div
+            class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
           >
-            <div
-              class="home"
+            <button
+              aria-label="menu"
+              class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-12 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+              tabindex="0"
+              type="button"
             >
-              Home
-            </div>
-          </h1>
-        </div>
-      </nav>
+              <span
+                class="MuiIconButton-label"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+            <h6
+              class="MuiTypography-root makeStyles-title-13 MuiTypography-h6"
+            >
+              News
+            </h6>
+          </div>
+        </header>
+      </div>
       <main
         class="main"
       >
@@ -37,87 +61,124 @@ exports[`Index page matches snapshot 1`] = `
                 action="#"
               >
                 <div
-                  class="chakra-form-control css-19r5kv9"
-                  role="group"
+                  class="MuiFormControl-root"
                 >
                   <label
-                    class="chakra-form__label css-1ig2arj"
+                    class="MuiFormLabel-root Mui-required"
                     for="email"
-                    id="field-2-label"
                   >
                     Email address
                     <span
                       aria-hidden="true"
-                      class="chakra-form__required-indicator css-0"
-                      role="presentation"
+                      class="MuiFormLabel-asterisk"
                     >
-                      *
+                       *
                     </span>
                   </label>
-                  <input
-                    aria-describedby="field-2-feedback"
-                    aria-required="true"
-                    class="chakra-input css-0"
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    required=""
-                    type="email"
-                    value=""
+                  <div
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                  >
+                    <input
+                      aria-invalid="false"
+                      class="MuiInputBase-input MuiInput-input"
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      required=""
+                      type="email"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="makeStyles-error-17"
                   />
                 </div>
                 <div
-                  class="chakra-form-control css-19r5kv9"
-                  role="group"
+                  class="MuiFormControl-root"
                 >
                   <label
-                    class="chakra-form__label css-1ig2arj"
+                    class="MuiFormLabel-root Mui-required"
                     for="password"
-                    id="field-3-label"
                   >
                     Password
                     <span
                       aria-hidden="true"
-                      class="chakra-form__required-indicator css-0"
-                      role="presentation"
+                      class="MuiFormLabel-asterisk"
                     >
-                      *
+                       *
                     </span>
                   </label>
-                  <div
-                    class="chakra-input__group css-4302v8"
-                  >
-                    <input
-                      aria-describedby="field-3-feedback"
-                      aria-required="true"
-                      class="chakra-input css-1n0hj84"
-                      id="password"
-                      name="password"
-                      placeholder="Enter password"
-                      required=""
-                      type="password"
-                      value=""
-                    />
+                  <div>
                     <div
-                      class="chakra-input__right-element css-1feb43d"
+                      class="MuiFormControl-root MuiTextField-root"
+                    >
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input"
+                          id="password"
+                          name="password"
+                          placeholder="Enter password"
+                          type="password"
+                          value=""
+                        />
+                        <fieldset
+                          aria-hidden="true"
+                          class="PrivateNotchedOutline-root-19 MuiOutlinedInput-notchedOutline"
+                          style="padding-left: 8px;"
+                        >
+                          <legend
+                            class="PrivateNotchedOutline-legend-20"
+                            style="width: 0.01px;"
+                          >
+                            <span>
+                              ​
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <div
+                      class="makeStyles-toggle-18"
                     >
                       <button
-                        class="chakra-button css-d5t03s"
+                        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+                        tabindex="0"
                         type="button"
                       >
-                        Show
+                        <span
+                          class="MuiButton-label"
+                        >
+                          Show
+                        </span>
+                        <span
+                          class="MuiTouchRipple-root"
+                        />
                       </button>
                     </div>
                   </div>
+                  <div
+                    class="makeStyles-error-17"
+                  />
                 </div>
                 <div
                   class="login"
                 >
                   <button
-                    class="chakra-button css-5e9er3"
+                    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+                    tabindex="0"
                     type="submit"
                   >
-                    Login
+                    <span
+                      class="MuiButton-label"
+                    >
+                      Login
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
                   </button>
                 </div>
               </form>
@@ -125,25 +186,18 @@ exports[`Index page matches snapshot 1`] = `
           </div>
         </div>
       </main>
-      <div
-        class="wrap css-1e2vcjg"
-      >
-        <p
-          class="chakra-text css-13d3w74"
+      <footer>
+        <div
+          class="makeStyles-wrap-23"
         >
-          2020
-        </p>
-        <p
-          class="chakra-text css-13d3w74"
-        >
-          -
-        </p>
-        <p
-          class="chakra-text css-kkrfg5"
-        >
-          予約システム
-        </p>
-      </div>
+          <div>
+            2020 — 
+            <strong>
+              予約システム
+            </strong>
+          </div>
+        </div>
+      </footer>
     </div>
   </div>
 </DocumentFragment>

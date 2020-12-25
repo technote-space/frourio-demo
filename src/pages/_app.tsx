@@ -1,30 +1,10 @@
-import { FC, PropsWithChildren } from 'react';
-import { AppProps } from 'next/app';
-import Head from 'next/head';
-import { ChakraProvider } from '@chakra-ui/react';
-import { createBreakpoints } from '@chakra-ui/theme-tools';
-import { extendTheme } from '@chakra-ui/react';
+import type { FC, PropsWithChildren } from 'react';
+import type { AppProps } from 'next/app';
+
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { CookiesProvider } from 'react-cookie';
-import LoadingModal from '~/components/LoadingModal';
-import '~/styles/globals.scss';
+import Head from '~/components/Head';
 import { StoreContextProvider } from '~/store';
-
-const colors = {
-  brand: {
-    900: '#1a365d',
-    800: '#153e75',
-    700: '#2a69ac',
-  },
-};
-
-const breakpoints = createBreakpoints({
-  sm: '30em',
-  md: '48em',
-  lg: '62em',
-  xl: '80em',
-});
-
-const theme = extendTheme({ colors, breakpoints });
 
 const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
   return (
@@ -34,20 +14,14 @@ const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
   );
 };
 
-const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) =>
-  <SafeHydrate>
-    <ChakraProvider theme={theme}>
-      <CookiesProvider>
-        <StoreContextProvider>
-          <Head>
-            <title>frourio-todo-app</title>
-            <link rel="icon" href="/favicon.png"/>
-          </Head>
-          <LoadingModal/>
-          <Component {...pageProps} />
-        </StoreContextProvider>
-      </CookiesProvider>
-    </ChakraProvider>
-  </SafeHydrate>;
+const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHydrate>
+  <CookiesProvider>
+    <StoreContextProvider>
+      <Head/>
+      <CssBaseline/>
+      <Component {...pageProps} />
+    </StoreContextProvider>
+  </CookiesProvider>
+</SafeHydrate>;
 
 export default MyApp;

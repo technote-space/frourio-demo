@@ -3,15 +3,32 @@ import { useEffect, useCallback, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
 import { Formik, Form, Field } from 'formik';
 import { addDays } from 'date-fns';
-import { FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Button } from '@material-ui/core';
 import PasswordInput from '~/components/PasswordInput';
 import { addDisplayName } from '~/utils/component';
 import { client } from '~/utils/api';
-import { createWarningToast } from '~/utils/actions';
+import { setWarning } from '~/utils/actions';
 import { useDispatchContext } from '~/store';
-import styles from '~/styles/components/Login.module.scss';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  wrap: {
+    padding: '10px',
+    border: 'solid #7f7f7f',
+  },
+  login: {
+    textAlign: 'center',
+  },
+  error: {
+    color: 'red',
+  },
+  input: {
+    margin: '1rem',
+  },
+});
 
 const Login: FC = () => {
+  const classes                    = useStyles();
   const { dispatch }               = useDispatchContext();
   const [{ authToken }, setCookie] = useCookies(['authToken']);
   const setAuthToken               = token => {
@@ -35,12 +52,7 @@ const Login: FC = () => {
       }
     }).catch(error => {
       actions.setSubmitting(false);
-      createWarningToast(dispatch, {
-        title: 'Login failed',
-        description: error.message,
-        duration: 4000,
-        isClosable: true,
-      });
+      setWarning(dispatch, error.message);
     });
   }, []);
 
@@ -62,7 +74,7 @@ const Login: FC = () => {
   ];
 
   return useMemo(() =>
-    <div className={styles.wrap}>
+    <div className={classes.wrap}>
       <Formik
         initialValues={Object.assign({}, ...settings.map(setting => ({ [setting.id]: setting.initialValue })))}
         onSubmit={handleSubmit}
@@ -71,21 +83,20 @@ const Login: FC = () => {
           {settings.map(setting => <Field name={setting.id} key={setting.id}>
             {({ field, form }) =>
               <FormControl
-                isInvalid={form.errors[setting.id] && form.touched[setting.id]}
-                isRequired={setting.isRequired} p={4}
+                error={form.errors[setting.id] && form.touched[setting.id]}
+                required={setting.isRequired}
+                className={classes.input}
               >
                 <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
                 <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
-                <FormErrorMessage>{form.errors[setting.id]}</FormErrorMessage>
+                <div className={classes.error}>{form.errors[setting.id]}</div>
               </FormControl>}
           </Field>)}
-          <div className={styles.login}>
+          <div className={classes.login}>
             <Button
-              colorScheme="teal"
-              size="md"
-              mt={4}
+              size="medium"
               type="submit"
-              isLoading={props.isSubmitting}
+              disabled={props.isSubmitting}
             >
               Login
             </Button>

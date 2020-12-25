@@ -1,23 +1,29 @@
 import type { FC } from 'react';
 import { useMemo } from 'react';
-import { Flex, Text } from '@chakra-ui/react';
-import styles from '~/styles/components/Layout/Footer.module.scss';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  footer: {
+    width: '100%',
+  },
+  wrap: {
+    display: 'flex',
+    padding: '1rem',
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+}));
 
 const Footer: FC = () => {
-  return useMemo(() =>
-    <Flex
-      wrap="wrap"
-      padding="1rem"
-      bg="teal.500"
-      color="white"
-      alignItems="center"
-      justifyContent="center"
-      className={styles.wrap}
-    >
-      <Text m={1}>{(new Date()).getFullYear()}</Text>
-      <Text m={1}>-</Text>
-      <Text m={1} fontWeight="bold">予約システム</Text>
-    </Flex>, []);
+  const classes = useStyles();
+
+  return useMemo(() => <footer className={classes.footer}>
+    <div className={classes.wrap}>
+      {(new Date()).getFullYear()} — <strong>予約システム</strong>
+    </div>
+  </footer>, [classes]);
 };
 
 export default Footer;

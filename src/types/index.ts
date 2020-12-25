@@ -1,7 +1,7 @@
-import type { UseToastOptions } from '@chakra-ui/react';
 import type { PageKeys } from '~/_pages';
 
 export type ContextState = {
+  themeColor?: 'light' | 'dark';
   name?: string;
   icon?: string;
   isSidebarOpen: boolean;
@@ -12,5 +12,10 @@ export type ContextState = {
   };
   page: PageKeys;
   prevPage?: PageKeys;
-  toasts: UseToastOptions[];
+  title?: string;
+  notice: {
+    open: boolean,
+    message: string,
+    variant: 'error' | 'info' | 'success' | 'warning',
+  }
 };
