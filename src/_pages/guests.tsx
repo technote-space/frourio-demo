@@ -24,7 +24,6 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
     </>;
   }, []);
   const columns: Array<Column<Guest>> = useMemo(() => [
-    { title: 'ID', field: 'id', editable: 'never' },
     { title: 'Name', field: 'name', editable: 'never' },
     { title: 'Name(Kana)', field: 'nameKana', editable: 'never' },
     { title: 'Zip Code', field: 'zipCode', editable: 'never' },
