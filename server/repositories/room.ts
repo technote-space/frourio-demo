@@ -21,6 +21,11 @@ export const getRooms = depend(
   async({ prisma }, args?: SearchRoomArgs) => prisma.room.findMany(args),
 );
 
+export const getRoomCount = depend(
+  { prisma: prisma as { room: { count: typeof prisma.room.count } } },
+  async({ prisma }, args?: Omit<SearchRoomArgs, 'select' | 'include'>) => prisma.room.count(args),
+);
+
 export const getRoom = depend(
   { prisma: prisma as { room: { findFirst: typeof prisma.room.findFirst } } },
   async({ prisma }, id: number | undefined, args?: FindRoomArgs) => ensureNotNull(await prisma.room.findFirst({

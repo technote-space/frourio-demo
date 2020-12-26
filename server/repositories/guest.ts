@@ -21,6 +21,11 @@ export const getGuests = depend(
   async({ prisma }, args?: SearchGuestArgs) => prisma.guest.findMany(args),
 );
 
+export const getGuestCount = depend(
+  { prisma: prisma as { guest: { count: typeof prisma.guest.count } } },
+  async({ prisma }, args?: Omit<SearchGuestArgs, 'select' | 'include'>) => prisma.guest.count(args),
+);
+
 export const getGuest = depend(
   { prisma: prisma as { guest: { findFirst: typeof prisma.guest.findFirst } } },
   async({ prisma }, id: number | undefined, args?: FindGuestArgs) => ensureNotNull(await prisma.guest.findFirst({

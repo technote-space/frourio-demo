@@ -21,6 +21,11 @@ export const getReservations = depend(
   async({ prisma }, args?: SearchReservationArgs) => prisma.reservation.findMany(args),
 );
 
+export const getReservationCount = depend(
+  { prisma: prisma as { reservation: { count: typeof prisma.reservation.count } } },
+  async({ prisma }, args?: Omit<SearchReservationArgs, 'select' | 'include'>) => prisma.reservation.count(args),
+);
+
 export const getReservation = depend(
   { prisma: prisma as { reservation: { findFirst: typeof prisma.reservation.findFirst } } },
   async({ prisma }, id: number | undefined, args?: FindReservationArgs) => ensureNotNull(await prisma.reservation.findFirst({
