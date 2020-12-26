@@ -25,8 +25,6 @@ export const list = depend(
     const where      = getWhere<Reservation>(query?.search, [
       'guestName',
       'guestNameKana',
-      'guestZipCode',
-      'guestAddress',
       'guestPhone',
       'roomName',
     ], [

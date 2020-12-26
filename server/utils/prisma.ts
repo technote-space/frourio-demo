@@ -8,7 +8,7 @@ type ModelWhere<T extends object> = {
       T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
         never
 };
-type Where<T extends object> = ModelWhere<T> & {
+type Where<T extends object> = ModelWhere<T> | {
   AND?: Prisma.Enumerable<Where<T>>;
   OR?: Prisma.Enumerable<Where<T>>;
   NOT?: Prisma.Enumerable<Where<T>>;
@@ -35,7 +35,7 @@ export const getWhere = <T extends object>(search: string | undefined, stringKey
   }
 
   return {
-    AND: Object.assign({}, ...words.map(word => {
+    AND: words.map(word => {
       const conditions: ModelWhere<T>[] = [];
       if (numberKeys.length && /^\d+$/.test(word)) {
         conditions.push(...numberKeys.map(key => ({
@@ -51,7 +51,7 @@ export const getWhere = <T extends object>(search: string | undefined, stringKey
       return {
         OR: conditions,
       };
-    })),
+    }),
   };
 };
 
@@ -63,5 +63,5 @@ export const getOrderBy = <T extends object>(_orderBy: Column<T> | undefined, or
 
   return {
     [orderBy.field]: orderDirection,
-  } as OrderBy<T>;
+  };
 };
