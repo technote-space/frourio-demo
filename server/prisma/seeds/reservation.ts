@@ -23,13 +23,6 @@ export class ReservationSeeder extends Seeder {
           },
         },
       });
-      await this.reservationDetailFactory.create({
-        reservation: {
-          connect: {
-            id: reservation.id,
-          },
-        },
-      });
     }, Promise.resolve());
   }
 }

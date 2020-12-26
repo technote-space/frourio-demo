@@ -36,12 +36,19 @@ CREATE TABLE "Room" (
 CREATE TABLE "Reservation" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "guestId" INTEGER NOT NULL,
+    "guestName" TEXT,
+    "guestNameKana" TEXT,
+    "guestZipCode" TEXT,
+    "guestAddress" TEXT,
+    "guestPhone" TEXT,
     "roomId" INTEGER NOT NULL,
+    "roomName" TEXT,
     "number" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
     "checkin" DATETIME NOT NULL,
     "checkout" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'reserved',
+    "payment" INTEGER,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
 
@@ -49,25 +56,5 @@ CREATE TABLE "Reservation" (
     FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
-CREATE TABLE "ReservationDetail" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "reservationId" INTEGER NOT NULL,
-    "payment" INTEGER,
-    "roomName" TEXT,
-    "guestName" TEXT,
-    "guestNameKana" TEXT,
-    "guestZipCode" TEXT,
-    "guestAddress" TEXT,
-    "guestPhone" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-
-    FOREIGN KEY ("reservationId") REFERENCES "Reservation"("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "Admin.email_unique" ON "Admin"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ReservationDetail_reservationId_unique" ON "ReservationDetail"("reservationId");

@@ -12,7 +12,7 @@ export type UpdateReservationArgs = Prisma.ReservationUpdateArgs;
 export type DeleteReservationArgs = Prisma.ReservationDeleteArgs;
 export type ReservationOrderByInput = Prisma.ReservationOrderByInput;
 export type ReservationWhereInput = Prisma.ReservationWhereInput;
-export type { Reservation, ReservationDetail } from '@prisma/client';
+export type { Reservation } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
