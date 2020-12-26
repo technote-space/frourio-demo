@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: technote-space/auto-cancel-redundant-workflow@v1
+        with:
+          EXCLUDE_MERGED: 'true'
       - uses: actions/checkout@v2
       - name: setup Node.js
         uses: actions/setup-node@v1
