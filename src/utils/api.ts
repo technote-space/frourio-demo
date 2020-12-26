@@ -33,10 +33,14 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
         changePage(dispatch, 'logout');
         return fallback;
       }
+
+      if (error.response) {
+        setError(dispatch, error.response.data.message);
+        throw error;
+      }
     }
 
     setError(dispatch, error.message);
-
     throw error;
   }
 };
