@@ -39,3 +39,11 @@ export type LoginResponse = BasicResponse & {
 export type BodyResponse<T> = BasicResponse & {
   body: T
 };
+
+export const ReservationStatus = {
+  reserved: 'Reserved',
+  canceled: 'Canceled',
+  checkin: 'Checkin',
+  checkout: 'Checkout',
+} as const;
+export type ReservationStatus = keyof typeof ReservationStatus;

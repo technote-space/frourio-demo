@@ -9,6 +9,7 @@ import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
 import { client, handleAuthError } from '~/utils/api';
 import pages from '.';
+import { ReservationStatus } from '$/types';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
@@ -24,16 +25,17 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
     </>;
   }, []);
   const columns: Array<Column<Reservation>> = useMemo(() => [
-    { title: 'Guest Name', field: 'guestName', editable: 'never' },
-    { title: 'Guest Name(Kana)', field: 'guestNameKana', editable: 'never' },
-    { title: 'Guest Phone number', field: 'guestPhone', editable: 'never' },
-    { title: 'Room name', field: 'roomName', editable: 'never' },
-    { title: 'Number', field: 'number', editable: 'never' },
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: 'Guest Name', field: 'guestName', editable: 'onAdd' },
+    { title: 'Guest Name(Kana)', field: 'guestNameKana', editable: 'onAdd' },
+    { title: 'Guest Phone number', field: 'guestPhone', editable: 'onAdd' },
+    { title: 'Room name', field: 'roomName', editable: 'onAdd' },
+    { title: 'Number', field: 'number', type: 'numeric' },
     { title: 'Amount', field: 'amount', editable: 'never' },
-    { title: 'Checkin', field: 'checkin', editable: 'never' },
-    { title: 'Checkout', field: 'checkout', editable: 'never' },
-    { title: 'Status', field: 'status', editable: 'never' },
-    { title: 'Payment', field: 'payment', editable: 'never' },
+    { title: 'Checkin', field: 'checkin', type: 'datetime' },
+    { title: 'Checkout', field: 'checkout', type: 'datetime' },
+    { title: 'Status', field: 'status', lookup: ReservationStatus },
+    { title: 'Payment', field: 'payment', type: 'numeric' },
   ], []);
 
   const fetchData    = useCallback(async(query: Query<Reservation>): Promise<QueryResult<Reservation>> => handleAuthError(dispatch, {
@@ -41,19 +43,17 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
     page: 0,
     totalCount: 0,
   }, client.reservations.get, { headers: authHeader, query }), []);
-  const handleAdd    = useCallback(async newData => {
-    console.log('Add!');
-    console.log(newData);
-  }, []);
-  const handleUpdate = useCallback(async(newData, oldData) => {
-    console.log('Update!');
-    console.log(newData);
-    console.log(oldData);
-  }, []);
-  const handleDelete = useCallback(async oldData => {
-    console.log('Delete!');
-    console.log(oldData);
-  }, []);
+  const handleAdd    = useCallback(async newData => handleAuthError(dispatch, {}, client.reservations.post, {
+    headers: authHeader,
+    body: newData,
+  }), []);
+  const handleUpdate = useCallback(async(newData, oldData) => handleAuthError(dispatch, {}, client.reservations._reservationId(oldData.id).patch, {
+    headers: authHeader,
+    body: newData,
+  }), []);
+  const handleDelete = useCallback(async oldData => handleAuthError(dispatch, {}, client.reservations._reservationId(oldData.id).delete, {
+    headers: authHeader,
+  }), []);
 
   return useMemo(() => <div>
     <MaterialTable

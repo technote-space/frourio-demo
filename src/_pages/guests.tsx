@@ -24,11 +24,12 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
     </>;
   }, []);
   const columns: Array<Column<Guest>> = useMemo(() => [
-    { title: 'Name', field: 'name', editable: 'never' },
-    { title: 'Name(Kana)', field: 'nameKana', editable: 'never' },
-    { title: 'Zip Code', field: 'zipCode', editable: 'never' },
-    { title: 'Address', field: 'address', editable: 'never' },
-    { title: 'Phone number', field: 'phone', editable: 'never' },
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: 'Name', field: 'name' },
+    { title: 'Name(Kana)', field: 'nameKana' },
+    { title: 'Zip Code', field: 'zipCode' },
+    { title: 'Address', field: 'address' },
+    { title: 'Phone number', field: 'phone' },
   ], []);
 
   const fetchData    = useCallback(async(query: Query<Guest>): Promise<QueryResult<Guest>> => handleAuthError(dispatch, {
@@ -36,19 +37,17 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
     page: 0,
     totalCount: 0,
   }, client.guests.get, { headers: authHeader, query }), []);
-  const handleAdd    = useCallback(async newData => {
-    console.log('Add!');
-    console.log(newData);
-  }, []);
-  const handleUpdate = useCallback(async(newData, oldData) => {
-    console.log('Update!');
-    console.log(newData);
-    console.log(oldData);
-  }, []);
-  const handleDelete = useCallback(async oldData => {
-    console.log('Delete!');
-    console.log(oldData);
-  }, []);
+  const handleAdd    = useCallback(async newData => handleAuthError(dispatch, {}, client.guests.post, {
+    headers: authHeader,
+    body: newData,
+  }), []);
+  const handleUpdate = useCallback(async(newData, oldData) => handleAuthError(dispatch, {}, client.guests._guestId(oldData.id).patch, {
+    headers: authHeader,
+    body: newData,
+  }), []);
+  const handleDelete = useCallback(async oldData => handleAuthError(dispatch, {}, client.guests._guestId(oldData.id).delete, {
+    headers: authHeader,
+  }), []);
 
   return useMemo(() => <div>
     <MaterialTable

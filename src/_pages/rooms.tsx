@@ -24,9 +24,10 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
     </>;
   }, []);
   const columns: Array<Column<Room>> = useMemo(() => [
-    { title: 'Name', field: 'name', editable: 'never' },
-    { title: 'Number', field: 'number', editable: 'never' },
-    { title: 'Price', field: 'price', editable: 'never' },
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: 'Name', field: 'name' },
+    { title: 'Number', field: 'number', type: 'numeric' },
+    { title: 'Price', field: 'price', type: 'numeric' },
   ], []);
 
   const fetchData    = useCallback(async(query: Query<Room>): Promise<QueryResult<Room>> => handleAuthError(dispatch, {
@@ -34,19 +35,17 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
     page: 0,
     totalCount: 0,
   }, client.rooms.get, { headers: authHeader, query }), []);
-  const handleAdd    = useCallback(async newData => {
-    console.log('Add!');
-    console.log(newData);
-  }, []);
-  const handleUpdate = useCallback(async(newData, oldData) => {
-    console.log('Update!');
-    console.log(newData);
-    console.log(oldData);
-  }, []);
-  const handleDelete = useCallback(async oldData => {
-    console.log('Delete!');
-    console.log(oldData);
-  }, []);
+  const handleAdd    = useCallback(async newData => handleAuthError(dispatch, {}, client.rooms.post, {
+    headers: authHeader,
+    body: newData,
+  }), []);
+  const handleUpdate = useCallback(async(newData, oldData) => handleAuthError(dispatch, {}, client.rooms._roomId(oldData.id).patch, {
+    headers: authHeader,
+    body: newData,
+  }), []);
+  const handleDelete = useCallback(async oldData => handleAuthError(dispatch, {}, client.rooms._roomId(oldData.id).delete, {
+    headers: authHeader,
+  }), []);
 
   return useMemo(() => <div>
     <MaterialTable
