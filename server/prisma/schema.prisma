@@ -44,14 +44,14 @@ model Reservation {
   id            Int     @id @default(autoincrement())
   guest         Guest   @relation(fields: [guestId], references: [id])
   guestId       Int
-  guestName     String?
-  guestNameKana String?
-  guestZipCode  String?
-  guestAddress  String?
-  guestPhone    String?
+  guestName     String
+  guestNameKana String
+  guestZipCode  String
+  guestAddress  String
+  guestPhone    String
   room          Room    @relation(fields: [roomId], references: [id])
   roomId        Int
-  roomName      String?
+  roomName      String
   number        Int
   amount        Int
   checkin       DateTime

@@ -11,17 +11,25 @@ export class ReservationSeeder extends Seeder {
     const guests = await this.guestFactory.list();
     await [...Array(100)].reduce(async prev => {
       await prev;
+      const guest       = guests.random();
+      const room        = rooms.random();
       const reservation = await this.reservationFactory.create({
-        room: {
-          connect: {
-            id: rooms.random().id,
-          },
-        },
         guest: {
           connect: {
-            id: guests.random().id,
+            id: guest.id,
           },
         },
+        guestName: guest.name,
+        guestNameKana: guest.nameKana,
+        guestZipCode: guest.zipCode,
+        guestAddress: guest.address,
+        guestPhone: guest.phone,
+        room: {
+          connect: {
+            id: room.id,
+          },
+        },
+        roomName: room.name,
       });
     }, Promise.resolve());
   }
