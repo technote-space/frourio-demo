@@ -1,25 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
 import type { ReactElement } from 'react';
 import type { Column, Query, QueryResult, Options } from 'material-table';
-import type { ApiModels } from '~/utils/api';
+import type { DataTableApiModels } from '~/utils/api';
 import { useMemo, useCallback } from 'react';
 import MaterialTable from 'material-table';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
 import { getDataTableApi, handleAuthError } from '~/utils/api';
-import { AspidaResponse } from 'aspida';
 import pages from '~/_pages';
 
-export type ApiType = {
-  get: (option?: any) => Promise<AspidaResponse<any, any, any>>;
-  post: (option?: any) => Promise<AspidaResponse<any, any, any>>;
-  detail: (id: number) => {
-    patch: (option?: any) => Promise<AspidaResponse<any, any, any>>;
-    delete: (option?: any) => Promise<AspidaResponse<any, any, any>>;
-  }
-};
 type Props<T extends object> = {
-  page: ApiModels;
+  page: DataTableApiModels;
   columns: Column<T>[];
   authHeader: { authorization: string };
   options?: Options<T>;

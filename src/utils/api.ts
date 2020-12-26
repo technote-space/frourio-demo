@@ -1,5 +1,4 @@
 import type { AspidaResponse } from 'aspida';
-import type { ApiType } from '~/components/DataTable';
 import type { ApiInstance } from '$/api/$api';
 import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
@@ -47,16 +46,24 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
   }
 };
 
-export type ApiModels = {
+export type DataTableApi = {
+  get: (option?: any) => Promise<AspidaResponse<any, any, any>>;
+  post: (option?: any) => Promise<AspidaResponse<any, any, any>>;
+  detail: (id: number) => {
+    patch: (option?: any) => Promise<AspidaResponse<any, any, any>>;
+    delete: (option?: any) => Promise<AspidaResponse<any, any, any>>;
+  }
+};
+export type DataTableApiModels = {
   [key in keyof ApiInstance]: ApiInstance[key] extends {
     get,
     post,
   } ? key : never
 }[keyof ApiInstance]
-export const getDataTableApi = <T extends string>(model: ApiModels): ApiType => ({
+export const getDataTableApi = (model: DataTableApiModels): DataTableApi => ({
   ...client[model],
   detail: id => ({
-    patch: client[`_${model}Id`].patch,
-    delete: client[`_${model}Id`].delete,
+    patch: client[`_${model}Id`](id).patch,
+    delete: client[`_${model}Id`](id).delete,
   }),
 });

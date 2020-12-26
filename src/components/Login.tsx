@@ -103,7 +103,7 @@ const Login: FC = () => {
           </div>
         </Form>)}
       </Formik>
-    </div>, []);
+    </div>, [classes]);
 };
 
 export default Login;
