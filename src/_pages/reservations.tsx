@@ -15,7 +15,8 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
       { title: 'Guest Name', field: 'guestName', hidden: true },
       { title: 'Room Name', field: 'roomName', hidden: true },
       {
-        title: 'Guest', field: 'guestId', editable: 'onAdd', render: data => {
+        // eslint-disable-next-line react/display-name
+        title: 'Guest', field: 'guestId', editable: 'onAdd', render: (data) => {
           console.log(data);
           return <a onClick={() => {
             console.log('Click!!');
@@ -24,7 +25,8 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         },
       },
       {
-        title: 'Room', field: 'roomId', editable: 'onAdd', render: data => {
+        // eslint-disable-next-line react/display-name
+        title: 'Room', field: 'roomId', editable: 'onAdd', render: (data) => {
           console.log(data);
           return <a onClick={() => {
             console.log('Click!!');

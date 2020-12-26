@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
 import type { ReactElement } from 'react';
 import type { Column, Query, QueryResult, Options } from 'material-table';
 import type { ApiModels } from '~/utils/api';

@@ -21,7 +21,7 @@
     "start:client": "next start",
     "start:server": "npm start --prefix server",
     "cover": "jest --coverage",
-    "test": "npm run lint && npm run build:types && jest",
+    "test": "npm run lint && npm run build:types && npm run cover",
     "typecheck": "npm run build:types && tsc --noEmit && tsc --noEmit -p server",
     "update": "run-s update:*",
     "update:front": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
