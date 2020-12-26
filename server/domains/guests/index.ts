@@ -1,19 +1,37 @@
 import { depend } from 'velona';
-import { getGuests, getGuest, createGuest, updateGuest, deleteGuest } from '$/repositories/guest';
-import { getSkip } from '$/utils';
+import { getGuests, getGuestCount, getGuest, createGuest, updateGuest, deleteGuest } from '$/repositories/guest';
+import { getSkip, getCurrentPage } from '$/utils';
+import { getWhere, getOrderBy } from '$/utils/prisma';
 import type { BodyResponse } from '$/types';
 import type { Guest, CreateGuestData, UpdateGuestData, GuestOrderByInput } from '$/repositories/guest';
+import type { Query, QueryResult } from 'material-table';
 
 export const list = depend(
-  { getGuests },
-  async({ getGuests }, pageSize?: number, pageIndex?: number, orderBy?: GuestOrderByInput): Promise<BodyResponse<Guest[]>> => ({
-    status: 200,
-    body: await getGuests({
-      skip: getSkip(pageSize ?? 10, pageIndex),
-      take: pageSize ?? 10,
+  { getGuests, getGuestCount },
+  async({ getGuests }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
+    const pageSize   = query?.pageSize ?? 10;
+    const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);
+    const totalCount = await getGuestCount({
+      where,
+    });
+    const page       = getCurrentPage(pageSize, totalCount, query?.page);
+    const data       = await getGuests({
+      skip: getSkip(pageSize, page),
+      take: pageSize,
+      where,
       orderBy,
-    }),
-  }),
+    });
+
+    return {
+      status: 200,
+      body: {
+        data,
+        page,
+        totalCount,
+      },
+    };
+  },
 );
 
 export const get = depend(

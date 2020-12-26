@@ -14,7 +14,18 @@ export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T 
   return item;
 };
 
-export const getSkip = (perPage: number, page?: number): number => (page ?? 0) * perPage;
+export const getSkip        = (perPage: number, page?: number): number => (page ?? 0) * perPage;
+export const getCurrentPage = (perPage: number, totalCount: number, page?: number): number => {
+  const skip = getSkip(perPage, page);
+  if (skip >= totalCount) {
+    if (totalCount <= 0) {
+      return 0;
+    }
+    return Math.floor((totalCount - 1) / perPage);
+  }
+
+  return page ?? 0;
+};
 
 export const createHash   = (data: string): string => bcrypt.hashSync(data, 10);
 export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);

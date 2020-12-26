@@ -11,7 +11,7 @@ export const getFastify = (user?: AuthorizationPayload): FastifyInstance => {
   fastify.register(fastifyJwt, { secret: 'test secret' });
   fastify.register(fastifyRequestContextPlugin);
 
-  fastify.jwt = {
+  fastify.jwt            = {
     ...fastify.jwt,
     sign: jest.fn((payload: SignPayloadType) => JSON.stringify(payload)),
     decode: jest.fn((token: string) => JSON.parse(token)),

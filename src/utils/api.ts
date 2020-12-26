@@ -15,10 +15,10 @@ const isAxiosError = (target: any): target is AxiosError => {
 
 export const handleAuthError = async <T, U, V, API extends (...args: Array<any>) => Promise<AspidaResponse<T, U, V>>>(
   dispatch: ((value: { type: string; [key: string]: any }) => void),
-  fallback: Partial<T>,
+  fallback: T,
   api: API,
   ...option: Parameters<API>
-): Promise<Partial<T>> | never => {
+): Promise<T> | never => {
   try {
     const result = await api(...option);
     console.log(result);

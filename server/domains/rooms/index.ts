@@ -1,19 +1,37 @@
 import { depend } from 'velona';
-import { getRooms, getRoom, createRoom, updateRoom, deleteRoom } from '$/repositories/room';
-import { getSkip } from '$/utils';
+import { getRooms, getRoomCount, getRoom, createRoom, updateRoom, deleteRoom } from '$/repositories/room';
+import { getCurrentPage, getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type { Room, CreateRoomData, UpdateRoomData, RoomOrderByInput } from '$/repositories/room';
+import type { Query, QueryResult } from 'material-table';
+import { getWhere, getOrderBy } from '../../utils/prisma';
 
 export const list = depend(
-  { getRooms },
-  async({ getRooms }, pageSize?: number, pageIndex?: number, orderBy?: RoomOrderByInput): Promise<BodyResponse<Room[]>> => ({
-    status: 200,
-    body: await getRooms({
-      skip: getSkip(pageSize ?? 10, pageIndex),
-      take: pageSize ?? 10,
+  { getRooms, getRoomCount },
+  async({ getRooms }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
+    const pageSize   = query?.pageSize ?? 10;
+    const where      = getWhere<Room>(query?.search, ['name'], ['price', 'number']);
+    const orderBy    = getOrderBy<Room>(query?.orderBy, query?.orderDirection);
+    const totalCount = await getRoomCount({
+      where,
+    });
+    const page       = getCurrentPage(pageSize, totalCount, query?.page);
+    const data       = await getRooms({
+      skip: getSkip(pageSize, page),
+      take: pageSize,
+      where,
       orderBy,
-    }),
-  }),
+    });
+
+    return {
+      status: 200,
+      body: {
+        data,
+        page,
+        totalCount,
+      },
+    };
+  },
 );
 
 export const get = depend(

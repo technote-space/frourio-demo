@@ -1,15 +1,12 @@
 import type { AuthHeader } from '$/types';
 import type { Reservation, CreateReservationData, ReservationOrderByInput } from '$/repositories/reservation';
+import type { Query, QueryResult } from 'material-table';
 
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: {
-      pageSize?: number;
-      pageIndex?: number;
-      orderBy?: ReservationOrderByInput;
-    };
-    resBody: Reservation[];
+    query?: Query<Reservation>;
+    resBody: QueryResult<Reservation>;
   };
   post: {
     reqHeaders: AuthHeader;

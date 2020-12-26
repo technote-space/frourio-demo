@@ -1,15 +1,12 @@
 import type { AuthHeader } from '$/types';
 import type { Room, CreateRoomData, RoomOrderByInput } from '$/repositories/room';
+import type { Query, QueryResult } from 'material-table';
 
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: {
-      pageSize?: number;
-      pageIndex?: number;
-      orderBy?: RoomOrderByInput;
-    };
-    resBody: Room[];
+    query?: Query<Room>;
+    resBody: QueryResult<Room>;
   };
   post: {
     reqHeaders: AuthHeader;
