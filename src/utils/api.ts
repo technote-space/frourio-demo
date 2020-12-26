@@ -1,5 +1,7 @@
-import aspida from '@aspida/axios';
 import type { AspidaResponse } from 'aspida';
+import type { ApiType } from '~/components/DataTable';
+import type { ApiInstance } from '$/api/$api';
+import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
 import api from '$/api/$api';
 import { changePage, setError } from '~/utils/actions';
@@ -44,3 +46,17 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
     throw error;
   }
 };
+
+export type ApiModels = {
+  [key in keyof ApiInstance]: ApiInstance[key] extends {
+    get,
+    post,
+  } ? key : never
+}[keyof ApiInstance]
+export const getDataTableApi = <T extends string>(model: ApiModels): ApiType => ({
+  ...client[model],
+  detail: id => ({
+    patch: client[`_${model}Id`].patch,
+    delete: client[`_${model}Id`].delete,
+  }),
+});

@@ -9,7 +9,6 @@ import Dashboard from './dashboard';
 import Guests from './guests';
 import Reservations from './reservations';
 import Rooms from './rooms';
-import { addDisplayName } from '~/utils/component';
 
 const pages = {
   dashboard: {
