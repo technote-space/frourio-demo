@@ -42,15 +42,15 @@ model Room {
 
 model Reservation {
   id            Int     @id @default(autoincrement())
-  guest         Guest   @relation(fields: [guestId], references: [id])
-  guestId       Int
+  guest         Guest?  @relation(fields: [guestId], references: [id])
+  guestId       Int?
   guestName     String
   guestNameKana String
   guestZipCode  String
   guestAddress  String
   guestPhone    String
-  room          Room    @relation(fields: [roomId], references: [id])
-  roomId        Int
+  room          Room?   @relation(fields: [roomId], references: [id])
+  roomId        Int?
   roomName      String
   number        Int
   amount        Int

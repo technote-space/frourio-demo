@@ -35,13 +35,13 @@ CREATE TABLE "Room" (
 -- CreateTable
 CREATE TABLE "Reservation" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "guestId" INTEGER NOT NULL,
+    "guestId" INTEGER,
     "guestName" TEXT NOT NULL,
     "guestNameKana" TEXT NOT NULL,
     "guestZipCode" TEXT NOT NULL,
     "guestAddress" TEXT NOT NULL,
     "guestPhone" TEXT NOT NULL,
-    "roomId" INTEGER NOT NULL,
+    "roomId" INTEGER,
     "roomName" TEXT NOT NULL,
     "number" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
@@ -52,8 +52,8 @@ CREATE TABLE "Reservation" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
 
-    FOREIGN KEY ("guestId") REFERENCES "Guest"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY ("guestId") REFERENCES "Guest"("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateIndex
