@@ -6,7 +6,8 @@ import { useMemo, useCallback } from 'react';
 import MaterialTable from 'material-table';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
-import { getDataTableApi, handleAuthError } from '~/utils/api';
+import { getDataTableApi, handleAuthError, processUpdateData } from '~/utils/api';
+import { setNotice, setError } from '~/utils/actions';
 import pages from '~/_pages';
 
 type Props<T extends object> = {
@@ -32,17 +33,26 @@ const DataTable = <T extends object, >({ page, columns, authHeader, options }: P
     page: 0,
     totalCount: 0,
   }, api.get, { headers: authHeader, query }), []);
-  const handleAdd    = useCallback(async newData => handleAuthError(dispatch, {}, api.post, {
-    headers: authHeader,
-    body: newData,
-  }), []);
-  const handleUpdate = useCallback(async(newData, oldData) => handleAuthError(dispatch, {}, api.detail(oldData.id).patch, {
-    headers: authHeader,
-    body: newData,
-  }), []);
-  const handleDelete = useCallback(async oldData => handleAuthError(dispatch, {}, api.detail(oldData.id).delete, {
-    headers: authHeader,
-  }), []);
+  const handleAdd    = useCallback(async newData => {
+    await handleAuthError(dispatch, {}, api.post, {
+      headers: authHeader,
+      body: newData,
+    });
+    setNotice(dispatch, '追加しました。');
+  }, []);
+  const handleUpdate = useCallback(async(newData, oldData) => {
+    await handleAuthError(dispatch, {}, api.detail(oldData.id).patch, {
+      headers: authHeader,
+      body: processUpdateData(newData),
+    });
+    setNotice(dispatch, '更新しました。');
+  }, []);
+  const handleDelete = useCallback(async oldData => {
+    await handleAuthError(dispatch, {}, api.detail(oldData.id).delete, {
+      headers: authHeader,
+    });
+    setNotice(dispatch, '削除しました。');
+  }, []);
 
   return useMemo(() => <div>
     <MaterialTable

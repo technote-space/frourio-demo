@@ -18,9 +18,6 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
       { title: 'Phone number', field: 'phone' },
     ]}
     authHeader={authHeader}
-    options={{
-      pageSize: 10,
-    }}
   />, []);
 };
 

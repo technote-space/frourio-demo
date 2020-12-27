@@ -42,9 +42,6 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
       { title: 'Payment', field: 'payment', type: 'numeric' },
     ]}
     authHeader={authHeader}
-    options={{
-      pageSize: 10,
-    }}
   />, []);
 };
 

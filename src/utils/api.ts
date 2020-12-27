@@ -2,6 +2,7 @@ import type { AspidaResponse } from 'aspida';
 import type { ApiInstance } from '$/api/$api';
 import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
+import { singular } from 'pluralize';
 import api from '$/api/$api';
 import { changePage, setError } from '~/utils/actions';
 
@@ -63,7 +64,18 @@ export type DataTableApiModels = {
 export const getDataTableApi = (model: DataTableApiModels): DataTableApi => ({
   ...client[model],
   detail: id => ({
-    patch: client[`_${model}Id`](id).patch,
-    delete: client[`_${model}Id`](id).delete,
+    patch: client[model][`_${singular(model)}Id`](id).patch,
+    delete: client[model][`_${singular(model)}Id`](id).delete,
   }),
 });
+
+export const processUpdateData = <T extends Partial<{
+  id,
+  updatedAt,
+  createdAt,
+}>>(data: T): Omit<T, 'id' | 'updatedAt' | 'createdAt'> => {
+  delete data.id;
+  delete data.updatedAt;
+  delete data.createdAt;
+  return data;
+};
