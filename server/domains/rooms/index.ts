@@ -2,7 +2,7 @@ import { depend } from 'velona';
 import { getRooms, getRoomCount, getRoom, createRoom, updateRoom, deleteRoom } from '$/repositories/room';
 import { getCurrentPage, getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
-import type { Room, CreateRoomData, UpdateRoomData, RoomOrderByInput } from '$/repositories/room';
+import type { Room, CreateRoomData, UpdateRoomData } from '$/repositories/room';
 import type { Query, QueryResult } from 'material-table';
 import { getWhere, getOrderBy } from '../../utils/prisma';
 

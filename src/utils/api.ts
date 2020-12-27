@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AspidaResponse } from 'aspida';
 import type { ApiInstance } from '$/api/$api';
 import aspida from '@aspida/axios';

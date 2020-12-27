@@ -13,7 +13,6 @@ import type {
   Reservation,
   CreateReservationData,
   UpdateReservationData,
-  ReservationOrderByInput,
 } from '$/repositories/reservation';
 import type { Query, QueryResult } from 'material-table';
 import { getWhere, getOrderBy } from '../../utils/prisma';

@@ -1,5 +1,5 @@
 import type { AuthHeader } from '$/types';
-import type { Reservation, CreateReservationData, ReservationOrderByInput } from '$/repositories/reservation';
+import type { Reservation, CreateReservationData } from '$/repositories/reservation';
 import type { Query, QueryResult } from 'material-table';
 
 export type Methods = {

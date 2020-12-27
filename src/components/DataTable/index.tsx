@@ -7,7 +7,7 @@ import MaterialTable from 'material-table';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
 import { getDataTableApi, handleAuthError, processUpdateData } from '~/utils/api';
-import { setNotice, setError } from '~/utils/actions';
+import { setNotice } from '~/utils/actions';
 import pages from '~/_pages';
 
 type Props<T extends object> = {

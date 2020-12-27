@@ -1,5 +1,5 @@
 import type { AuthHeader } from '$/types';
-import type { Guest, CreateGuestData, GuestOrderByInput } from '$/repositories/guest';
+import type { Guest, CreateGuestData } from '$/repositories/guest';
 import type { Query, QueryResult } from 'material-table';
 
 export type Methods = {

@@ -3,7 +3,7 @@ import { getGuests, getGuestCount, getGuest, createGuest, updateGuest, deleteGue
 import { getSkip, getCurrentPage } from '$/utils';
 import { getWhere, getOrderBy } from '$/utils/prisma';
 import type { BodyResponse } from '$/types';
-import type { Guest, CreateGuestData, UpdateGuestData, GuestOrderByInput } from '$/repositories/guest';
+import type { Guest, CreateGuestData, UpdateGuestData } from '$/repositories/guest';
 import type { Query, QueryResult } from 'material-table';
 
 export const list = depend(

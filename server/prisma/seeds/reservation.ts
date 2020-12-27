@@ -11,9 +11,9 @@ export class ReservationSeeder extends Seeder {
     const guests = await this.guestFactory.list();
     await [...Array(100)].reduce(async prev => {
       await prev;
-      const guest       = guests.random();
-      const room        = rooms.random();
-      const reservation = await this.reservationFactory.create({
+      const guest = guests.random();
+      const room  = rooms.random();
+      await this.reservationFactory.create({
         guest: {
           connect: {
             id: guest.id,

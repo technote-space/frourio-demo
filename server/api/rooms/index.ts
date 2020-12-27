@@ -1,5 +1,5 @@
 import type { AuthHeader } from '$/types';
-import type { Room, CreateRoomData, RoomOrderByInput } from '$/repositories/room';
+import type { Room, CreateRoomData } from '$/repositories/room';
 import type { Query, QueryResult } from 'material-table';
 
 export type Methods = {
