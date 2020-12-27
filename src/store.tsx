@@ -44,10 +44,22 @@ const reducer = (store, action) => {
     case 'LOGOUT':
       return { ...store, name: undefined, icon: undefined, page: store.prevPage, title: undefined };
     case 'SET_NOTICE':
+      if (!action.notice.message) {
+        return store;
+      }
+
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice } };
     case 'SET_ERROR':
+      if (!action.notice.message) {
+        return store;
+      }
+
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'error' }, ...action.notice } };
     case 'SET_WARNING':
+      if (!action.notice.message) {
+        return store;
+      }
+
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'warning' }, ...action.notice } };
     case 'CLOSE_NOTICE':
       return { ...store, notice: { ...store.notice, ...{ open: false } } };
