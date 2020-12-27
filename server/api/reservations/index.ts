@@ -1,6 +1,7 @@
 import type { AuthHeader } from '$/types';
-import type { Reservation, CreateReservationData } from '$/repositories/reservation';
+import type { Reservation } from '$/repositories/reservation';
 import type { Query, QueryResult } from 'material-table';
+import type { ReservationBody } from '$/domains/reservations/validators';
 
 export type Methods = {
   get: {
@@ -10,7 +11,7 @@ export type Methods = {
   };
   post: {
     reqHeaders: AuthHeader;
-    reqBody: CreateReservationData;
+    reqBody: ReservationBody;
     resBody: Reservation;
   }
 }

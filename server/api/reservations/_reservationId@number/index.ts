@@ -1,5 +1,6 @@
 import type { AuthHeader } from '$/types';
-import type { Reservation, UpdateReservationData } from '$/repositories/reservation';
+import type { Reservation } from '$/repositories/reservation';
+import type { ReservationBody } from '$/domains/reservations/validators';
 
 export type Methods = {
   get: {
@@ -8,7 +9,7 @@ export type Methods = {
   };
   patch: {
     reqHeaders: AuthHeader;
-    reqBody: UpdateReservationData;
+    reqBody: ReservationBody;
     resBody: Reservation;
   };
   delete: {

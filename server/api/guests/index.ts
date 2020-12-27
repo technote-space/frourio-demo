@@ -1,6 +1,7 @@
 import type { AuthHeader } from '$/types';
-import type { Guest, CreateGuestData } from '$/repositories/guest';
+import type { Guest } from '$/repositories/guest';
 import type { Query, QueryResult } from 'material-table';
+import type { GuestBody } from '$/domains/guests/validators';
 
 export type Methods = {
   get: {
@@ -10,7 +11,7 @@ export type Methods = {
   };
   post: {
     reqHeaders: AuthHeader;
-    reqBody: CreateGuestData;
+    reqBody: GuestBody;
     resBody: Guest;
   }
 }

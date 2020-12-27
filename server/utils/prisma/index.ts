@@ -1,6 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { Prisma } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 import { Column } from 'material-table';
+
+export type Models = {
+  [key in keyof PrismaClient]: PrismaClient[key] extends {
+    findUnique,
+    findFirst,
+    findMany,
+    create,
+    delete,
+    update,
+    deleteMany,
+    updateMany,
+    upsert,
+    findOne,
+    count,
+  } ? key : never
+}[keyof PrismaClient]
 
 type ModelWhere<T extends object> = {
   [key in keyof T]?: T[key] extends number ? (Prisma.IntFilter | number) :

@@ -7,15 +7,14 @@ import {
   updateReservation,
   deleteReservation,
 } from '$/repositories/reservation';
+import { getGuest } from '$/repositories/guest';
+import { getRoom } from '$/repositories/room';
 import { getCurrentPage, getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
-import type {
-  Reservation,
-  CreateReservationData,
-  UpdateReservationData,
-} from '$/repositories/reservation';
+import type { Reservation } from '$/repositories/reservation';
 import type { Query, QueryResult } from 'material-table';
-import { getWhere, getOrderBy } from '../../utils/prisma';
+import type { ReservationBody } from '$/domains/reservations/validators';
+import { getWhere, getOrderBy } from '$/utils/prisma';
 
 export const list = depend(
   { getReservations, getReservationCount },
@@ -61,11 +60,40 @@ export const get = depend(
   }),
 );
 
+const getData = async(data: ReservationBody) => {
+  const guest = await getGuest(data.guestId);
+  const room  = await getRoom(data.roomId);
+  return {
+    guest: {
+      connect: {
+        id: data.guestId,
+      },
+    },
+    guestName: guest.name,
+    guestNameKana: guest.nameKana,
+    guestZipCode: guest.zipCode,
+    guestAddress: guest.address,
+    guestPhone: guest.phone,
+    room: {
+      connect: {
+        id: data.roomId,
+      },
+    },
+    roomName: room.name,
+    number: data.number,
+    amount: data.number * room.price,
+    checkin: data.checkin,
+    checkout: data.checkout,
+    status: data.status ?? 'reserved',
+    payment: data.payment,
+  };
+};
+
 export const create = depend(
   { createReservation },
-  async({ createReservation }, data: CreateReservationData): Promise<BodyResponse<Reservation>> => ({
+  async({ createReservation }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
     status: 201,
-    body: await createReservation(data),
+    body: await createReservation(await getData(data)),
   }),
 );
 
@@ -79,8 +107,8 @@ export const remove = depend(
 
 export const update = depend(
   { updateReservation },
-  async({ updateReservation }, id: number, data: UpdateReservationData): Promise<BodyResponse<Reservation>> => ({
+  async({ updateReservation }, id: number, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
     status: 200,
-    body: await updateReservation(id, data),
+    body: await updateReservation(id, await getData(data)),
   }),
 );

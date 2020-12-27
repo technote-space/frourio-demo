@@ -1,6 +1,7 @@
 import type { AuthHeader } from '$/types';
-import type { Room, CreateRoomData } from '$/repositories/room';
+import type { Room } from '$/repositories/room';
 import type { Query, QueryResult } from 'material-table';
+import type { RoomBody } from '$/domains/rooms/validators';
 
 export type Methods = {
   get: {
@@ -10,7 +11,7 @@ export type Methods = {
   };
   post: {
     reqHeaders: AuthHeader;
-    reqBody: CreateRoomData;
+    reqBody: RoomBody;
     resBody: Room;
   }
 }

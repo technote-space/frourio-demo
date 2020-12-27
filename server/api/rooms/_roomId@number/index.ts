@@ -1,5 +1,6 @@
 import type { AuthHeader } from '$/types';
-import type { Room, UpdateRoomData } from '$/repositories/room';
+import type { Room } from '$/repositories/room';
+import type { RoomBody } from '$/domains/rooms/validators';
 
 export type Methods = {
   get: {
@@ -8,7 +9,7 @@ export type Methods = {
   };
   patch: {
     reqHeaders: AuthHeader;
-    reqBody: UpdateRoomData;
+    reqBody: RoomBody;
     resBody: Room;
   };
   delete: {

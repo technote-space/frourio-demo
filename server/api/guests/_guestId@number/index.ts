@@ -1,5 +1,6 @@
 import type { AuthHeader } from '$/types';
-import type { Guest, UpdateGuestData } from '$/repositories/guest';
+import type { Guest } from '$/repositories/guest';
+import type { GuestBody } from '$/domains/guests/validators';
 
 export type Methods = {
   get: {
@@ -8,7 +9,7 @@ export type Methods = {
   };
   patch: {
     reqHeaders: AuthHeader;
-    reqBody: UpdateGuestData;
+    reqBody: GuestBody;
     resBody: Guest;
   };
   delete: {
