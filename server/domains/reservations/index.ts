@@ -7,8 +7,10 @@ import {
   updateReservation,
   deleteReservation,
 } from '$/repositories/reservation';
-import { getGuest } from '$/repositories/guest';
-import { getRoom } from '$/repositories/room';
+import { getGuest, getGuests, getGuestCount } from '$/repositories/guest';
+import type { Guest } from '$/repositories/guest';
+import { getRoom, getRooms, getRoomCount } from '$/repositories/room';
+import type { Room } from '$/repositories/room';
 import { getCurrentPage, getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
@@ -111,4 +113,74 @@ export const update = depend(
     status: 200,
     body: await updateReservation(id, await getData(data)),
   }),
+);
+
+export const searchGuest = depend(
+  { getGuests, getGuestCount },
+  async({ getGuests }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
+    const pageSize   = query?.pageSize ?? 10;
+    const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);
+    const totalCount = await getGuestCount({
+      where,
+    });
+    const page       = getCurrentPage(pageSize, totalCount, query?.page);
+    const data       = await getGuests({
+      select: {
+        id: true,
+        name: true,
+        nameKana: true,
+        zipCode: true,
+        address: true,
+        phone: true,
+        reservations: {
+          take: 3,
+          orderBy: {
+            checkin: 'desc',
+          },
+        },
+      },
+      skip: getSkip(pageSize, page),
+      take: pageSize,
+      where,
+      orderBy,
+    });
+
+    return {
+      status: 200,
+      body: {
+        data,
+        page,
+        totalCount,
+      },
+    };
+  },
+);
+
+export const searchRoom = depend(
+  { getRooms, getRoomCount },
+  async({ getRooms }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
+    const pageSize   = query?.pageSize ?? 10;
+    const where      = getWhere<Room>(query?.search, ['name'], ['price', 'number']);
+    const orderBy    = getOrderBy<Room>(query?.orderBy, query?.orderDirection);
+    const totalCount = await getRoomCount({
+      where,
+    });
+    const page       = getCurrentPage(pageSize, totalCount, query?.page);
+    const data       = await getRooms({
+      skip: getSkip(pageSize, page),
+      take: pageSize,
+      where,
+      orderBy,
+    });
+
+    return {
+      status: 200,
+      body: {
+        data,
+        page,
+        totalCount,
+      },
+    };
+  },
 );

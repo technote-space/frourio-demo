@@ -42,7 +42,7 @@ export type BodyResponse<T> = BasicResponse & {
 
 export const ReservationStatus = {
   reserved: 'Reserved',
-  canceled: 'Canceled',
+  canceled: 'Cancelled',
   checkin: 'Checkin',
   checkout: 'Checkout',
 } as const;
