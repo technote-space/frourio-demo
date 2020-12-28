@@ -6,7 +6,7 @@ export class GuestBody {
 
   @Length(1, 100)
   @Matches(/^[ァ-ヴー・　\s]+$/, { // eslint-disable-line no-irregular-whitespace
-    message: 'This value is not kana',
+    message: 'This value is not katakana',
   })
   nameKana: string;
 

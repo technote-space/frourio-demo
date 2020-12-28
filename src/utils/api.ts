@@ -9,7 +9,7 @@ import { changePage, setError } from '~/utils/actions';
 
 export const client = api(aspida());
 
-const isAxiosError = (target: any): target is AxiosError => {
+export const isAxiosError = (target: any): target is AxiosError => {
   return typeof target === 'object' &&
     'config' in target &&
     'request' in target &&
