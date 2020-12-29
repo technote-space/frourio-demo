@@ -49,7 +49,7 @@ type Props<T extends object> = {
 
 const SearchTable = <T extends {
   id: number;
-}, >({ model, api, columns, authHeader, searchText, props }: Props<T>): ReactElement => {
+}, >({ model, api, columns, authHeader, searchText, props: editFieldProps }: Props<T>): ReactElement => {
   const classes      = useStyles();
   const { dispatch } = useDispatchContext();
 
@@ -74,18 +74,18 @@ const SearchTable = <T extends {
     tooltip: 'Select',
     onClick: (event, data) => {
       if ('id' in data) {
-        props.onChange(data);
+        editFieldProps.onChange(data);
       }
       setOpen(false);
     },
-  }], [props.onChange]);
+  }], []);
   const fetchData  = useCallback(async(query: Query<T>): Promise<QueryResult<T>> => handleAuthError(dispatch, {
     data: [] as T[],
     page: 0,
     totalCount: 0,
   }, api, { headers: authHeader, query }), []);
 
-  const cell     = useMemo(() => <FormControl error={Boolean(props.error)}>
+  const cell     = useMemo(() => <FormControl error={Boolean(editFieldProps.error)}>
     <Link
       component="button"
       variant="body2"
@@ -93,8 +93,8 @@ const SearchTable = <T extends {
     >
       {searchText || 'Select'}
     </Link>
-    {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
-  </FormControl>, [searchText, props.helperText]);
+    {editFieldProps.helperText && <FormHelperText>{editFieldProps.helperText}</FormHelperText>}
+  </FormControl>, [searchText, editFieldProps.helperText]);
   const editCell = useMemo(() => <Dialog open={open} onClose={handleClose}>
     <DialogTitle disableTypography className={classes.root}>
       <Typography variant="h6" className={classes.title}>
@@ -115,7 +115,7 @@ const SearchTable = <T extends {
         searchText,
       }}
     />
-  </Dialog>, [classes, open, searchText, props.onChange]);
+  </Dialog>, [classes, open, searchText]);
   return <>
     {cell}
     {editCell}
