@@ -47,27 +47,41 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     const data = args.object as any;
     if (!('roomId' in data) || typeof data['roomId'] !== 'number') {
+      this.reason = 'The room is not selected.';
+      return false;
+    }
+
+    if (!('checkin' in data) || !('checkout' in data)) {
+      this.reason = 'The date and time of your stay have not been specified.';
       return false;
     }
 
     const checkin  = new Date(data['checkin']);
     const checkout = new Date(data['checkout']);
-    if (checkin.getDate() >= checkout.getDate()) {
-      this.reason = 'The checkin time must be before the checkout time.';
+    if (checkin.getFullYear() >= checkout.getFullYear() && checkin.getMonth() >= checkout.getMonth() && checkin.getDate() >= checkout.getDate()) {
+      this.reason = 'The checkout time must be after the checkin time.';
       return false;
     }
 
-    const prisma      = new PrismaClient();
-    const reservation = await prisma.reservation.findFirst({
-      where: {
-        roomId: Number(data['roomId']),
-        checkin: {
-          lt: checkout,
-        },
-        checkout: {
-          gt: checkin,
-        },
+    console.log(data);
+    console.log(args);
+    const prisma = new PrismaClient();
+    const where  = {
+      roomId: Number(data['roomId']),
+      checkin: {
+        lt: checkout,
       },
+      checkout: {
+        gt: checkin,
+      },
+    };
+    if ('id' in data) {
+      where['id'] = {
+        not: Number(data['id']),
+      };
+    }
+    const reservation = await prisma.reservation.findFirst({
+      where,
     });
     if (reservation) {
       this.reason = 'This period is already reserved.';

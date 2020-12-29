@@ -8,7 +8,7 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
   console.log('page::Guests');
 
   return useMemo(() => <DataTable
-    page={'guests'}
+    model={'guests'}
     columns={[
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
       { title: 'Name', field: 'name' },

@@ -4,34 +4,51 @@ import { useMemo } from 'react';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
+import { client } from '~/utils/api';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
 
   return useMemo(() => <DataTable
-    page={'reservations'}
+    model={'reservations'}
     columns={[
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-      { title: 'Guest Name', field: 'guestName', hidden: true },
-      { title: 'Room Name', field: 'roomName', hidden: true },
       {
-        // eslint-disable-next-line react/display-name
-        title: 'Guest', field: 'guestId', editable: 'onAdd', type: 'numeric', render: (data) => {
-          console.log(data);
-          return <a onClick={() => {
-            console.log('Click!!');
-            console.log(data.guestId);
-          }}>{data.guestName}</a>;
+        title: 'Guest', field: 'guestId', type: 'search',
+        search: {
+          model: 'guests',
+          api: client.reservations.search.guests.get,
+          columns: [
+            { title: 'Name', field: 'name' },
+            { title: 'Name(Kana)', field: 'nameKana' },
+            { title: 'Zip Code', field: 'zipCode' },
+            { title: 'Address', field: 'address' },
+            { title: 'Phone number', field: 'phone' },
+          ],
+          render: data => data['guestName'],
+          process: data => ({
+            ...data,
+            guestId: data['id'],
+            guestName: data['name'],
+          }),
         },
       },
       {
-        // eslint-disable-next-line react/display-name
-        title: 'Room', field: 'roomId', editable: 'onAdd', type: 'numeric', render: (data) => {
-          console.log(data);
-          return <a onClick={() => {
-            console.log('Click!!');
-            console.log(data.roomId);
-          }}>{data.roomName}</a>;
+        title: 'Room', field: 'roomId', type: 'search',
+        search: {
+          model: 'rooms',
+          api: client.reservations.search.rooms.get,
+          columns: [
+            { title: 'Name', field: 'name' },
+            { title: 'Number', field: 'number', type: 'numeric' },
+            { title: 'Price', field: 'price', type: 'numeric' },
+          ],
+          render: data => data['roomName'],
+          process: data => ({
+            ...data,
+            roomId: data['id'],
+            roomName: data['name'],
+          }),
         },
       },
       { title: 'Number', field: 'number', type: 'numeric' },

@@ -81,3 +81,8 @@ export const getOrderBy = <T extends object>(_orderBy: Column<T> | undefined, or
     [orderBy.field]: orderDirection,
   };
 };
+
+export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(data: T): Omit<T, 'id'> => {
+  delete data.id;
+  return data;
+};

@@ -2,6 +2,7 @@ import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
 import { ensureNotNull } from '$/utils';
 import type { Prisma, Guest } from '@prisma/client';
+import { dropId } from '$/utils/prisma';
 
 export type SearchGuestArgs = Prisma.FindManyGuestArgs;
 export type FindGuestArgs = Prisma.FindFirstGuestArgs;
@@ -45,7 +46,7 @@ export const createGuest = depend(
 export const updateGuest = depend(
   { prisma: prisma as { guest: { update: typeof prisma.guest.update } } },
   async({ prisma }, id: number | undefined, data: UpdateGuestData, args?: Partial<UpdateGuestArgs>) => prisma.guest.update({
-    data,
+    data: dropId(data),
     where: { id },
     ...args,
   }),

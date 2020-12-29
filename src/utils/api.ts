@@ -71,11 +71,9 @@ export const getDataTableApi = (model: DataTableApiModels): DataTableApi => ({
 });
 
 export const processUpdateData = <T extends Partial<{
-  id,
   updatedAt,
   createdAt,
-}>>(data: T): Omit<T, 'id' | 'updatedAt' | 'createdAt'> => {
-  delete data.id;
+}>>(data: T): Omit<T, 'updatedAt' | 'createdAt'> => {
   delete data.updatedAt;
   delete data.createdAt;
   return data;
