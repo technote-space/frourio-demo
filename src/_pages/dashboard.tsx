@@ -1,30 +1,80 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Query, QueryResult } from 'material-table';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import MaterialTable from 'material-table';
-import { IconButton } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { KeyboardDatePicker } from '@material-ui/pickers';
 import { differenceInCalendarDays } from 'date-fns';
 import HomeIcon from '@material-ui/icons/Home';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { red } from '@material-ui/core/colors';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
 import useTableIcons from '~/hooks/useTableIcons';
 import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
-import * as React from 'react';
+import { getWord } from '~/utils';
+import clsx from 'clsx';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  dateWrap: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  date: {
+    width: 'auto',
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+  cancel: {
+    backgroundColor: red['600'],
+  },
+}));
 
 const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Dashboard');
 
-  const { dispatch }    = useDispatchContext();
-  const tableIcons      = useTableIcons();
-  const [date, setDate] = useState<Date>(new Date());
-  const dailySales      = useFetch(dispatch, [], client.dashboard.sales.daily, { headers: authHeader });
-  const monthlySales    = useFetch(dispatch, [], client.dashboard.sales.monthly, { headers: authHeader });
+  const classes          = useStyles();
+  const { dispatch }     = useDispatchContext();
+  const tableIcons       = useTableIcons();
+  const [date, setDate]  = useState<Date>(new Date());
+  const dailySales       = useFetch(dispatch, [], client.dashboard.sales.daily, { headers: authHeader });
+  const monthlySales     = useFetch(dispatch, [], client.dashboard.sales.monthly, { headers: authHeader });
+  const checkinTableRef  = useRef<any>();
+  const checkoutTableRef = useRef<any>();
+  const handleDateChange = useCallback(value => {
+    setDate(value);
+    if (checkinTableRef.current?.onQueryChange) {
+      checkinTableRef.current.onQueryChange();
+    }
+    if (checkoutTableRef.current?.onQueryChange) {
+      checkoutTableRef.current.onQueryChange();
+    }
+  }, []);
 
+
+  console.log(date);
+  const selectDate    = useMemo(() => <div className={classes.dateWrap}>
+    <KeyboardDatePicker
+      className={classes.date}
+      disableToolbar
+      variant="inline"
+      format="yyyy/MM/dd"
+      margin="normal"
+      label="Date"
+      value={date}
+      onChange={handleDateChange}
+      KeyboardButtonProps={{
+        'aria-label': 'change date',
+      }}
+    />
+  </div>, [classes, date]);
   const checkinTable  = useMemo(() => <MaterialTable
+    tableRef={checkinTableRef}
     icons={tableIcons}
     title={'Checkin'}
     columns={[
@@ -43,17 +93,17 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       {
         // eslint-disable-next-line react/display-name
         title: 'Checkin', render: data => {
-          return <IconButton>
-            <HomeIcon/>
-          </IconButton>;
+          return <Button className={classes.button} startIcon={<HomeIcon/>}>
+            Checkin
+          </Button>;
         },
       },
       {
         // eslint-disable-next-line react/display-name
         title: 'Cancel', render: data => {
-          return <IconButton>
-            <CancelIcon/>
-          </IconButton>;
+          return <Button className={clsx(classes.button, classes.cancel)} startIcon={<CancelIcon/>}>
+            Cancel
+          </Button>;
         },
       },
     ]}
@@ -65,8 +115,9 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     options={{
       emptyRowsWhenPaging: false,
     }}
-  />, []);
+  />, [date]);
   const checkoutTable = useMemo(() => <MaterialTable
+    tableRef={checkoutTableRef}
     icons={tableIcons}
     title={'Checkout'}
     columns={[
@@ -84,9 +135,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       {
         // eslint-disable-next-line react/display-name
         title: 'Checkout', render: data => {
-          return <IconButton>
-            <HomeIcon/>
-          </IconButton>;
+          return <Button className={classes.button} startIcon={<HomeIcon/>}>Checkout</Button>;
         },
       },
     ]}
@@ -98,9 +147,10 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     options={{
       emptyRowsWhenPaging: false,
     }}
-  />, []);
+  />, [date]);
 
   return <div>
+    {selectDate}
     {checkinTable}
     {checkoutTable}
     {JSON.stringify(dailySales.data)}

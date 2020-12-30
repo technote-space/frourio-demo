@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import { ThemeProvider, StylesProvider } from '@material-ui/styles';
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ja } from 'date-fns/locale';
 import Route from '~/components/Route';
 import useTheme from '~/hooks/useTheme';
 import { useStoreContext } from '~/store';
@@ -20,7 +23,9 @@ const Index = () => {
       <LoadingModal/>
       <SnackbarWrapper/>
       <Layout>
-        <Route/>
+        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
+          <Route/>
+        </MuiPickersUtilsProvider>
       </Layout>
     </ThemeProvider>
   </StylesProvider>, [theme.palette.type]);
