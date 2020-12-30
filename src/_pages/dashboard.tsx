@@ -170,6 +170,12 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         {
           // eslint-disable-next-line react/display-name
           title: 'Cancel', align: 'center', render: data => {
+            if (data.status === 'cancel') {
+              return <Button className={classes.button} disabled>
+                キャンセル済み
+              </Button>;
+            }
+
             return <Button
               className={clsx(classes.button, classes.cancel)}
               startIcon={<CancelIcon/>}
