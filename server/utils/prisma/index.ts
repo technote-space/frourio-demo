@@ -24,10 +24,13 @@ type ModelWhere<T extends object> = {
       T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
         never
 };
-type Where<T extends object> = ModelWhere<T> | {
-  AND?: Prisma.Enumerable<Where<T>>;
-  OR?: Prisma.Enumerable<Where<T>>;
-  NOT?: Prisma.Enumerable<Where<T>>;
+type WhereRec<T extends object> = ModelWhere<T> | {
+  AND?: Prisma.Enumerable<WhereRec<T>>;
+  OR?: Prisma.Enumerable<WhereRec<T>>;
+  NOT?: Prisma.Enumerable<WhereRec<T>>;
+};
+type Where<T extends object> = {
+  AND: Array<WhereRec<T>>;
 };
 type OrderBy<T extends object> = {
   [key in keyof T]?: Prisma.SortOrder
@@ -35,22 +38,32 @@ type OrderBy<T extends object> = {
 type TypeKey<T, type> = {
   [key in keyof T]: NonNullable<T[key]> extends type ? key : never
 }[keyof T];
+type DateConstraint<T extends object> = {
+  date?: Date;
+  key: keyof T;
+}
 
-export const getWhere = <T extends object>(search: string | undefined, stringKeys: TypeKey<T, string>[], numberKeys: TypeKey<T, number>[]): Where<T> | undefined => {
-  if (!search) {
-    return undefined;
+export const getWhere = <T extends object>(
+  search: string | undefined,
+  stringKeys: TypeKey<T, string>[],
+  numberKeys: TypeKey<T, number>[],
+  date?: DateConstraint<T>,
+): Where<T> | undefined => {
+  let dateConstraint;
+  if (date?.date) {
+    dateConstraint = { [date.key]: getDateConstraint(date.date) };
   }
 
-  if (!stringKeys.length && !numberKeys.length) {
-    return undefined;
+  if (!search || (!stringKeys.length && !numberKeys.length)) {
+    return dateConstraint ? { AND: dateConstraint } : undefined;
   }
 
   const words = [...new Set(search.split(' ').filter(word => word))];
   if (!words.length) {
-    return undefined;
+    return dateConstraint ? { AND: dateConstraint } : undefined;
   }
 
-  return {
+  const where = {
     AND: words.map(word => {
       const conditions: ModelWhere<T>[] = [];
       if (numberKeys.length && /^\d+$/.test(word)) {
@@ -69,6 +82,11 @@ export const getWhere = <T extends object>(search: string | undefined, stringKey
       };
     }),
   };
+  if (dateConstraint) {
+    where.AND.push(dateConstraint);
+  }
+
+  return where;
 };
 
 export const getOrderBy = <T extends object>(_orderBy: Column<T> | undefined, orderDirection: 'asc' | 'desc' | undefined): OrderBy<T> | undefined => {
@@ -79,6 +97,17 @@ export const getOrderBy = <T extends object>(_orderBy: Column<T> | undefined, or
 
   return {
     [orderBy.field]: orderDirection,
+  };
+};
+
+export const getDateConstraint = (date: Date) => {
+  const start = new Date(date.valueOf());
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start.valueOf());
+  end.setDate(end.getDate() + 1);
+  return {
+    gte: start,
+    lt: end,
   };
 };
 
