@@ -1,6 +1,15 @@
 import { defineController } from './$relay';
-import { getCheckoutGuests } from '$/domains/dashboard';
+import { getCheckout } from '$/domains/dashboard';
 
-export default defineController(({ getCheckoutGuests }), ({ getCheckoutGuests }) => ({
-  get: async({ query }) => getCheckoutGuests(query?.day),
+export default defineController(({ getCheckout }), ({ getCheckout }) => ({
+  get: async({ query }) => {
+    if (!query) {
+      return getCheckout();
+    }
+
+    return getCheckout(
+      typeof query.query === 'string' ? JSON.parse(query.query) : query.query,
+      typeof query.date === 'string' ? new Date(query.date) : query.date,
+    );
+  },
 }));

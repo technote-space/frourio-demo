@@ -12,9 +12,7 @@ export const list = depend(
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<Room>(query?.search, ['name'], ['price', 'number']);
     const orderBy    = getOrderBy<Room>(query?.orderBy, query?.orderDirection);
-    const totalCount = await getRoomCount({
-      where,
-    });
+    const totalCount = await getRoomCount({ where });
     const page       = getCurrentPage(pageSize, totalCount, query?.page);
     const data       = await getRooms({
       skip: getSkip(pageSize, page),

@@ -12,9 +12,7 @@ export const list = depend(
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
     const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);
-    const totalCount = await getGuestCount({
-      where,
-    });
+    const totalCount = await getGuestCount({ where });
     const page       = getCurrentPage(pageSize, totalCount, query?.page);
     const data       = await getGuests({
       skip: getSkip(pageSize, page),

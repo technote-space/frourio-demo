@@ -1,12 +1,14 @@
 import type { AuthHeader } from '$/types';
-import type { Guest } from '$/repositories/guest';
+import type { CheckoutReservation } from '$/domains/dashboard';
+import type { Query, QueryResult } from 'material-table';
 
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
     query?: {
-      day?: Date;
+      query?: Query<CheckoutReservation>;
+      date?: Date;
     };
-    resBody: Guest[];
+    resBody: QueryResult<CheckoutReservation>;
   }
 }

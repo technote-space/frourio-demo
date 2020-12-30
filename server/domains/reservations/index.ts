@@ -40,9 +40,7 @@ export const list = depend(
       'payment',
     ]);
     const orderBy    = getOrderBy<ListReservation>(query?.orderBy, query?.orderDirection);
-    const totalCount = await getReservationCount({
-      where,
-    });
+    const totalCount = await getReservationCount({ where });
     const page       = getCurrentPage(pageSize, totalCount, query?.page);
     const data       = await getReservations({
       skip: getSkip(pageSize, page),
