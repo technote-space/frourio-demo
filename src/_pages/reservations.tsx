@@ -5,6 +5,7 @@ import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
 import { client } from '~/utils/api';
+import { getDays } from '$/utils/common';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
@@ -51,8 +52,29 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           }),
         },
       },
-      { title: 'Number', field: 'number', type: 'numeric' },
-      { title: 'Amount', field: 'amount', editable: 'never' },
+      {
+        title: 'Number',
+        field: 'number',
+        type: 'numeric',
+        render: data => `${data['number']}/${data['room']['number']}`,
+      },
+      {
+        title: 'Amount',
+        field: 'amount',
+        editable: 'never',
+        // eslint-disable-next-line react/display-name
+        render: data => {
+          const diff   = getDays(new Date(data['checkin']), new Date(data['checkout']));
+          const amount = data['room']['price'] * data['number'] * diff;
+
+          return <>
+            <div>{data['amount']}</div>
+            <div style={{
+              whiteSpace: 'nowrap',
+            }}>{`(${amount} = ${data['room']['price']} * ${data['number']}person * ${diff}days)`}</div>
+          </>;
+        },
+      },
       { title: 'Checkin', field: 'checkin', type: 'datetime' },
       { title: 'Checkout', field: 'checkout', type: 'datetime' },
       { title: 'Status', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
