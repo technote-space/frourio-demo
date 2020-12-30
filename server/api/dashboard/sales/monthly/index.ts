@@ -5,7 +5,7 @@ export type Methods = {
   get: {
     reqHeaders: AuthHeader;
     query?: {
-      year?: number;
+      date?: Date;
     };
     resBody: MonthlySales[];
   }

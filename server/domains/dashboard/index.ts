@@ -1,5 +1,16 @@
 import { depend } from 'velona';
 import {
+  startOfMonth,
+  startOfYear,
+  endOfMonth,
+  endOfYear,
+  eachMonthOfInterval,
+  eachDayOfInterval,
+  addDays,
+  format,
+  parse,
+} from 'date-fns';
+import {
   getReservations,
   getReservationCount,
   getReservation,
@@ -112,12 +123,79 @@ export const getCheckout = depend(
   },
 );
 
-export const getMonthlySales = async(year?: number): Promise<BodyResponse<MonthlySales[]>> => ({
-  status: 200,
-  body: [],
-});
 
-export const getDailySales = async(year?: number, month?: number): Promise<BodyResponse<DailySales[]>> => ({
-  status: 200,
-  body: [],
-});
+export const getMonthlySales = depend(
+  { getReservations },
+  async({ getReservations }, date: Date): Promise<BodyResponse<MonthlySales[]>> => {
+    const reservations = await getReservations({
+      select: {
+        amount: true,
+        checkout: true,
+      },
+      where: {
+        status: 'checkout',
+        checkout: {
+          gte: startOfYear(date),
+          lt: endOfYear(date),
+        },
+      },
+    });
+
+    const months = eachMonthOfInterval({
+      start: startOfYear(date),
+      end: endOfYear(date),
+    }).map(month => format(month, 'yyyy-MM'));
+
+    const sales: Record<string, number> = Object.assign({}, ...months.map(month => ({ [month]: 0 })));
+    reservations.forEach(reservation => {
+      const key = format(reservation.checkout, 'yyyy-MM');
+      sales[key] += reservation.amount;
+    });
+
+    return {
+      status: 200,
+      body: Object.entries(sales).map(([month, sales]) => ({
+        month: parse(month, 'yyyy-MM', new Date()),
+        sales,
+      })),
+    };
+  },
+);
+
+export const getDailySales = depend(
+  { getReservations },
+  async({ getReservations }, date: Date): Promise<BodyResponse<DailySales[]>> => {
+    const reservations = await getReservations({
+      select: {
+        amount: true,
+        checkout: true,
+      },
+      where: {
+        status: 'checkout',
+        checkout: {
+          gte: startOfMonth(date),
+          lt: endOfMonth(date),
+        },
+      },
+    });
+
+    const days = eachDayOfInterval({
+      start: startOfMonth(date),
+      end: endOfMonth(date),
+    }).map(day => format(day, 'yyyy-MM-dd'));
+
+    const sales: Record<string, number> = Object.assign({}, ...days.map(day => ({ [day]: 0 })));
+    reservations.forEach(reservation => {
+      const key = format(reservation.checkout, 'yyyy-MM-dd');
+      sales[key] += reservation.amount;
+    });
+
+    return {
+      status: 200,
+      body: Object.entries(sales).map(([day, sales]) => ({
+        day: parse(day, 'yyyy-MM-dd', new Date()),
+        sales,
+      })),
+    };
+  },
+);
