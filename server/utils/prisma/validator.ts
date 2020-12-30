@@ -72,6 +72,9 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
       checkout: {
         gt: checkin,
       },
+      status: {
+        not: 'Reserved',
+      },
     };
     if ('id' in data) {
       where['id'] = {

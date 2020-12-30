@@ -35,7 +35,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       { title: 'Room name', field: 'roomName' },
       {
         // eslint-disable-next-line react/display-name
-        title: 'Days', render: data => {
+        title: 'Nights', render: data => {
           const nights = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
           return `${nights}${getWord('night', nights)}`;
         },
