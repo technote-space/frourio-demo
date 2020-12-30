@@ -20,20 +20,20 @@ export class Factory<T, U> {
     return this;
   }
 
-  public async create(override?: Partial<U>): Promise<T> {
+  public async create(override?: Partial<U>, ...params: any[]): Promise<T> {
     const create = this.prisma[this.type].create as (any) => Promise<any>;
     return create({
       data: {
-        ...getDefines()[this.type](Faker),
+        ...getDefines()[this.type](Faker, params),
         ...override,
       } as U,
     });
   }
 
-  public async createMany(number: number, override?: Partial<U>): Promise<FactoryItems<T>> {
+  public async createMany(number: number, override?: Partial<U>, ...params: any[]): Promise<FactoryItems<T>> {
     return new FactoryItems<T>(await [...Array(number)].reduce(async prev => {
       const acc = await prev;
-      return acc.concat(await this.create(override));
+      return acc.concat(await this.create(override, ...params));
     }, Promise.resolve([] as T[])));
   }
 

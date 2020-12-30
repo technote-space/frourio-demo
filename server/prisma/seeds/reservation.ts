@@ -30,7 +30,7 @@ export class ReservationSeeder extends Seeder {
           },
         },
         roomName: room.name,
-      });
+      }, room);
     }, Promise.resolve());
   }
 }

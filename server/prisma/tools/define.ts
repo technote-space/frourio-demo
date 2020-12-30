@@ -1,7 +1,7 @@
 import Faker from 'faker';
 import { DelegateTypes } from './factory';
 
-type Callback<T> = (faker: Faker.FakerStatic) => Partial<T>;
+type Callback<T> = (faker: Faker.FakerStatic, ...params: any[]) => Partial<T>;
 export const define = <T>(type: DelegateTypes, callback: Callback<T>) => {
   defines[type] = callback;
 };
