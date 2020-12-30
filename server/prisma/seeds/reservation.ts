@@ -9,7 +9,7 @@ export class ReservationSeeder extends Seeder {
   public async run(): Promise<void> {
     const rooms  = await this.roomFactory.list();
     const guests = await this.guestFactory.list();
-    await [...Array(100)].reduce(async prev => {
+    await [...Array(1000)].reduce(async prev => {
       await prev;
       const guest = guests.random();
       const room  = rooms.random();
