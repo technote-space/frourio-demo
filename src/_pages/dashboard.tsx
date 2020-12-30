@@ -4,13 +4,13 @@ import type { Query, QueryResult } from 'material-table';
 import { useState, useMemo } from 'react';
 import MaterialTable from 'material-table';
 import { IconButton } from '@material-ui/core';
+import { differenceInCalendarDays } from 'date-fns';
 import HomeIcon from '@material-ui/icons/Home';
 import CancelIcon from '@material-ui/icons/Cancel';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
-import { getDays } from '$/utils/common';
 import useTableIcons from '~/hooks/useTableIcons';
 import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
 import * as React from 'react';
@@ -36,7 +36,8 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       {
         // eslint-disable-next-line react/display-name
         title: 'Days', render: data => {
-          return getDays(new Date(data['checkin']), new Date(data['checkout']));
+          const nights = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
+          return `${nights}${getWord('night', nights)}`;
         },
       },
       {

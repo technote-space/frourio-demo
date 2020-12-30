@@ -13,7 +13,6 @@ import { handleAuthError } from '~/utils/api';
 import pages from '~/_pages';
 import { SvgIconComponent } from '@material-ui/icons';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import * as React from 'react';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {

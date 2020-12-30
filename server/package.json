@@ -17,6 +17,7 @@
   "dependencies": {
     "@prisma/client": "^2.13.1",
     "class-validator": "^0.12.2",
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "fastify": "^3.9.2",
     "fastify-cors": "^5.1.0",

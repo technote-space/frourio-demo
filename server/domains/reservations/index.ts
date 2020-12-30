@@ -1,4 +1,5 @@
 import { depend } from 'velona';
+import { differenceInCalendarDays } from 'date-fns';
 import {
   getReservations,
   getReservationCount,
@@ -11,7 +12,6 @@ import { getGuest, getGuests, getGuestCount } from '$/repositories/guest';
 import type { Guest } from '$/repositories/guest';
 import { getRoom, getRooms, getRoomCount } from '$/repositories/room';
 import type { Room } from '$/repositories/room';
-import { getDays } from '$/utils/common';
 import { getCurrentPage, getSkip } from '$/utils';
 import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
@@ -81,7 +81,7 @@ const getData = async(data: ReservationBody) => {
   const room     = await getRoom(data.roomId);
   const checkin  = new Date(data.checkin);
   const checkout = new Date(data.checkout);
-  const days     = getDays(checkin, checkout);
+  const nights   = differenceInCalendarDays(checkout, checkin);
   return {
     guest: {
       connect: {
@@ -100,7 +100,7 @@ const getData = async(data: ReservationBody) => {
     },
     roomName: room.name,
     number: data.number,
-    amount: data.number * room.price * days,
+    amount: data.number * room.price * nights,
     checkin,
     checkout,
     status: data.status ?? 'reserved',

@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import { useMemo } from 'react';
+import { differenceInCalendarDays } from 'date-fns';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
 import { client } from '~/utils/api';
-import { getDays } from '$/utils/common';
 import { getWord } from '~/utils';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
@@ -65,7 +65,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         editable: 'never',
         // eslint-disable-next-line react/display-name
         render: data => {
-          const diff   = getDays(new Date(data['checkin']), new Date(data['checkout']));
+          const diff   = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
           const amount = data['room']['price'] * data['number'] * diff;
 
           return <>
