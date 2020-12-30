@@ -12,5 +12,5 @@ export default defineController(({ getCheckout, checkout }), ({ getCheckout }) =
       typeof query.date === 'string' ? new Date(query.date) : query.date,
     );
   },
-  patch: async({ body }) => checkout(body.id),
+  patch: async({ body }) => checkout(body.id, body.payment),
 }));

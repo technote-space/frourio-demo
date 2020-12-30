@@ -73,12 +73,17 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       checkoutTableRef.current.onQueryChange();
     }
   };
+  const refreshSales              = () => {
+    dailySales.revalidate().then();
+    monthlySales.revalidate().then();
+  };
   const handleDateChange          = useCallback(value => {
     setDate(value);
     refreshTables();
   }, []);
   const handleSalesDateChange     = useCallback(value => {
     setSalesDate(value);
+    refreshSales();
   }, []);
 
   const selectDate      = useMemo(() => <div className={classes.dateWrap}>
@@ -174,6 +179,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
                   body: { id: data.id },
                 });
                 refreshTables();
+                refreshSales();
               }}
             >
               キャンセル
@@ -221,6 +227,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
                     body: { id: data.id },
                   });
                   refreshTables();
+                  refreshSales();
                 }}
               >
                 チェックアウト

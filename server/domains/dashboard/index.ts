@@ -222,13 +222,14 @@ export const checkin = depend(
 
 export const checkout = depend(
   { updateReservation },
-  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
+  async({ updateReservation }, id: number, payment?: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id);
     if (reservation && reservation.status === 'checkin') {
       return {
         status: 200,
         body: await updateReservation(id, {
           status: 'checkout',
+          payment: payment ?? reservation.amount,
         }),
       };
     }

@@ -2,7 +2,7 @@ import type { AuthHeader } from '$/types';
 import type { CheckoutReservation } from '$/domains/dashboard';
 import type { Query, QueryResult } from 'material-table';
 import { Reservation } from '$/repositories/reservation';
-import { ReservationStatusBody } from '$/domains/dashboard/validators';
+import { CheckoutBody } from '$/domains/dashboard/validators';
 
 export type Methods = {
   get: {
@@ -15,7 +15,7 @@ export type Methods = {
   };
   patch: {
     reqHeaders: AuthHeader;
-    reqBody: ReservationStatusBody;
+    reqBody: CheckoutBody;
     resBody: Reservation;
   }
 }
