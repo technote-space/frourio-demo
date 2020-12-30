@@ -6,6 +6,7 @@ import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
 import { client } from '~/utils/api';
 import { getDays } from '$/utils/common';
+import { getWord } from '~/utils';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
@@ -71,7 +72,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
             <div>{data['amount']}</div>
             <div style={{
               whiteSpace: 'nowrap',
-            }}>{`(${amount} = ${data['room']['price']} * ${data['number']}person * ${diff}days)`}</div>
+            }}>{`(${amount} = ${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('day', diff)})`}</div>
           </>;
         },
       },

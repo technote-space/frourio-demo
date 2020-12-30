@@ -2,6 +2,8 @@ import Faker from 'faker';
 import type { PrismaClient } from '@prisma/client';
 import { getDefines } from './define';
 
+Faker.locale = 'ja';
+
 export type DelegateTypes = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {
     findMany;
