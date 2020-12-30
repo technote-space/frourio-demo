@@ -1,6 +1,8 @@
 import type { AuthHeader } from '$/types';
 import type { CheckinReservation } from '$/domains/dashboard';
 import type { Query, QueryResult } from 'material-table';
+import type { Reservation } from '$/repositories/reservation';
+import type { ReservationStatusBody } from '$/domains/dashboard/validators';
 
 export type Methods = {
   get: {
@@ -10,5 +12,10 @@ export type Methods = {
       date?: Date;
     };
     resBody: QueryResult<CheckinReservation>;
+  };
+  patch: {
+    reqHeaders: AuthHeader;
+    reqBody: ReservationStatusBody;
+    resBody: Reservation;
   }
 }

@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     margin: theme.spacing(2, 0),
   },
   button: {
-    margin: theme.spacing(1),
+    whiteSpace: 'nowrap',
+    letterSpacing: 0,
   },
   cancel: {
     backgroundColor: red['600'],
@@ -64,14 +65,17 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   });
   const checkinTableRef           = useRef<any>();
   const checkoutTableRef          = useRef<any>();
-  const handleDateChange          = useCallback(value => {
-    setDate(value);
+  const refreshTables             = () => {
     if (checkinTableRef.current?.onQueryChange) {
       checkinTableRef.current.onQueryChange();
     }
     if (checkoutTableRef.current?.onQueryChange) {
       checkoutTableRef.current.onQueryChange();
     }
+  };
+  const handleDateChange          = useCallback(value => {
+    setDate(value);
+    refreshTables();
   }, []);
   const handleSalesDateChange     = useCallback(value => {
     setSalesDate(value);
@@ -128,17 +132,51 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         },
         {
           // eslint-disable-next-line react/display-name
-          title: 'Checkin', render: data => {
-            return <Button className={classes.button} startIcon={<HomeIcon/>}>
-              Checkin
-            </Button>;
+          title: 'Checkin', align: 'center', render: data => {
+            if (data.status === 'reserved') {
+              return <Button
+                className={classes.button}
+                startIcon={<HomeIcon/>}
+                onClick={async() => {
+                  await client.dashboard.checkin.patch({
+                    headers: authHeader,
+                    body: { id: data.id },
+                  });
+                  refreshTables();
+                }}
+              >
+                チェックイン
+              </Button>;
+            }
+            if (data.status === 'checkin') {
+              return <Button className={classes.button} disabled>
+                チェックイン済み
+              </Button>;
+            }
+            if (data.status === 'checkout') {
+              return <Button className={classes.button} disabled>
+                チェックアウト済み
+              </Button>;
+            }
+
+            return '';
           },
         },
         {
           // eslint-disable-next-line react/display-name
-          title: 'Cancel', render: data => {
-            return <Button className={clsx(classes.button, classes.cancel)} startIcon={<CancelIcon/>}>
-              Cancel
+          title: 'Cancel', align: 'center', render: data => {
+            return <Button
+              className={clsx(classes.button, classes.cancel)}
+              startIcon={<CancelIcon/>}
+              onClick={async() => {
+                await client.dashboard.cancel.patch({
+                  headers: authHeader,
+                  body: { id: data.id },
+                });
+                refreshTables();
+              }}
+            >
+              キャンセル
             </Button>;
           },
         },
@@ -172,8 +210,29 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         },
         {
           // eslint-disable-next-line react/display-name
-          title: 'Checkout', render: data => {
-            return <Button className={classes.button} startIcon={<HomeIcon/>}>Checkout</Button>;
+          title: 'Checkout', align: 'center', render: data => {
+            if (data.status === 'checkin') {
+              return <Button
+                className={classes.button}
+                startIcon={<HomeIcon/>}
+                onClick={async() => {
+                  await client.dashboard.checkout.patch({
+                    headers: authHeader,
+                    body: { id: data.id },
+                  });
+                  refreshTables();
+                }}
+              >
+                チェックアウト
+              </Button>;
+            }
+            if (data.status === 'checkout') {
+              return <Button className={classes.button} disabled>
+                チェックアウト済み
+              </Button>;
+            }
+
+            return '';
           },
         },
       ]}

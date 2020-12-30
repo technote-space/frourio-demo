@@ -12,11 +12,9 @@ import {
 } from 'date-fns';
 import {
   getReservations,
-  getReservationCount,
   getReservation,
-  createReservation,
+  getReservationCount,
   updateReservation,
-  deleteReservation,
 } from '$/repositories/reservation';
 import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
@@ -198,4 +196,57 @@ export const getDailySales = depend(
       })),
     };
   },
+);
+
+export const checkin = depend(
+  { getReservation, updateReservation },
+  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
+    const reservation = await getReservation(id);
+    if (reservation && reservation.status === 'reserved') {
+      return {
+        status: 200,
+        body: await updateReservation(id, {
+          status: 'checkin',
+        }),
+      };
+    }
+
+    return {
+      status: 400,
+      body: {
+        message: 'Not found or invalid status.',
+      },
+    };
+  },
+);
+
+export const checkout = depend(
+  { updateReservation },
+  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
+    const reservation = await getReservation(id);
+    if (reservation && reservation.status === 'checkin') {
+      return {
+        status: 200,
+        body: await updateReservation(id, {
+          status: 'checkout',
+        }),
+      };
+    }
+
+    return {
+      status: 400,
+      body: {
+        message: 'Not found or invalid status.',
+      },
+    };
+  },
+);
+export const cancel   = depend(
+  { updateReservation },
+  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => ({
+    status: 200,
+    body: await updateReservation(id, {
+      status: 'cancel',
+    }),
+  }),
 );

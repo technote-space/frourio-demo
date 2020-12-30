@@ -17,7 +17,7 @@ define<ReservationCreateInput>('reservation', ((faker, params) => {
   let payment: number | undefined;
   const now    = new Date();
   if (faker.random.number(1000) < 50) {
-    status = 'canceled';
+    status = 'cancelled';
   } else {
     if (isBefore(now, checkin)) {
       status = 'reserved';

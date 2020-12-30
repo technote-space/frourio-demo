@@ -6,6 +6,7 @@ export class ReservationBody {
   @IsInt()
   @IsPositive()
   @IsOptional()
+  @IsIdExists('reservation')
   id?: number;
 
   @IsNotEmpty()

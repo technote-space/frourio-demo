@@ -9,10 +9,7 @@ export type AuthorizationPayload = {
   roles: string[];
 };
 
-export type HttpStatusNo =
-  HttpStatusOk
-  | 301
-  | 302
+export type HttpStatusNg =
   | 400
   | 401
   | 402
@@ -28,6 +25,12 @@ export type HttpStatusNo =
   | 504
   | 505
 
+export type HttpStatusRedirect =
+  | 301
+  | 302
+
+export type HttpStatusNo = HttpStatusOk | HttpStatusRedirect | HttpStatusNg
+
 export type BasicResponse = {
   status: HttpStatusNo;
 };
@@ -36,13 +39,18 @@ export type LoginResponse = BasicResponse & {
   headers?: AuthHeader;
 }
 
-export type BodyResponse<T> = BasicResponse & {
+export type BodyResponse<T> = (BasicResponse & {
   body: T
-};
+}) | {
+  status: HttpStatusNg;
+  body?: {
+    message: string;
+  } & Record<string, any>;
+}
 
 export const ReservationStatus = {
   reserved: 'Reserved',
-  canceled: 'Cancelled',
+  cancelled: 'Cancelled',
   checkin: 'Checkin',
   checkout: 'Checkout',
 } as const;
