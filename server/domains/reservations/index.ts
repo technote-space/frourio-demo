@@ -18,11 +18,18 @@ import type { Query, QueryResult } from 'material-table';
 import type { ReservationBody } from '$/domains/reservations/validators';
 import { getWhere, getOrderBy } from '$/utils/prisma';
 
+export type ListReservation = Reservation & {
+  room: {
+    number: number;
+    price: number;
+  }
+}
+
 export const list = depend(
   { getReservations, getReservationCount },
-  async({ getReservations }, query?: Query<Reservation>): Promise<BodyResponse<QueryResult<Reservation>>> => {
+  async({ getReservations }, query?: Query<ListReservation>): Promise<BodyResponse<QueryResult<ListReservation>>> => {
     const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<Reservation>(query?.search, [
+    const where      = getWhere<ListReservation>(query?.search, [
       'guestName',
       'guestNameKana',
       'guestPhone',
@@ -31,7 +38,7 @@ export const list = depend(
       'amount',
       'payment',
     ]);
-    const orderBy    = getOrderBy<Reservation>(query?.orderBy, query?.orderDirection);
+    const orderBy    = getOrderBy<ListReservation>(query?.orderBy, query?.orderDirection);
     const totalCount = await getReservationCount({
       where,
     });
@@ -41,7 +48,15 @@ export const list = depend(
       take: pageSize,
       where,
       orderBy,
-    });
+      include: {
+        room: {
+          select: {
+            number: true,
+            price: true,
+          },
+        },
+      },
+    }) as ListReservation[];
 
     return {
       status: 200,
