@@ -51,7 +51,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
       return false;
     }
 
-    if (!('checkin' in data) || !('checkout' in data)) {
+    if (!('checkin' in data) || !('checkout' in data) || !data['checkin'] || !data['checkout']) {
       this.reason = 'The date and time of your stay have not been specified.';
       return false;
     }
@@ -63,8 +63,6 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
       return false;
     }
 
-    console.log(data);
-    console.log(args);
     const prisma = new PrismaClient();
     const where  = {
       roomId: Number(data['roomId']),
