@@ -17,7 +17,6 @@ import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
 import useTableIcons from '~/hooks/useTableIcons';
 import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
-import { getWord } from '~/utils';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
@@ -140,7 +139,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       variant="inline"
       format="yyyy/MM/dd"
       margin="normal"
-      label="Date"
+      label="日付"
       value={date}
       onChange={handleDateChange}
       KeyboardButtonProps={{
@@ -155,7 +154,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       variant="inline"
       format="yyyy/MM"
       margin="normal"
-      label="Date"
+      label="選択"
       value={salesDate}
       onChange={handleSalesDateChange}
       KeyboardButtonProps={{
@@ -168,23 +167,28 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <MaterialTable
       tableRef={checkinTableRef}
       icons={tableIcons}
-      title={'Checkin'}
+      title='チェックイン'
       columns={[
         { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-        { title: 'Guest name', field: 'guestName' },
-        { title: 'Guest name(Kana)', field: 'guestNameKana' },
-        { title: 'Guest phone number', field: 'guestPhone' },
-        { title: 'Room name', field: 'roomName' },
+        { title: '名前', field: 'guestName' },
+        { title: 'かな名', field: 'guestNameKana' },
+        { title: '電話番号', field: 'guestPhone' },
+        { title: '部屋名', field: 'roomName' },
         {
+          title: '泊数',
+          sorting: false,
           // eslint-disable-next-line react/display-name
-          title: 'Nights', render: data => {
+          render: data => {
             const nights = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
-            return `${nights}${getWord('night', nights)}`;
+            return `${nights}泊`;
           },
         },
         {
+          title: 'チェックイン',
+          align: 'center',
+          sorting: false,
           // eslint-disable-next-line react/display-name
-          title: 'Checkin', align: 'center', render: data => {
+          render: data => {
             if (data.status === 'reserved') {
               return <Button
                 className={classes.button}
@@ -215,8 +219,11 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
           },
         },
         {
+          title: 'キャンセル',
+          align: 'center',
+          sorting: false,
           // eslint-disable-next-line react/display-name
-          title: 'Cancel', align: 'center', render: data => {
+          render: data => {
             if (data.status === 'cancelled') {
               return <Button className={classes.button} disabled>
                 キャンセル済み
@@ -240,6 +247,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }, client.dashboard.checkin.get, { headers: authHeader, query: { query, date } })}
       options={{
         emptyRowsWhenPaging: false,
+        draggable: false,
       }}
     />
   </div>, [date]);
@@ -247,22 +255,25 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <MaterialTable
       tableRef={checkoutTableRef}
       icons={tableIcons}
-      title={'Checkout'}
+      title='チェックアウト'
       columns={[
         { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-        { title: 'Guest name', field: 'guestName' },
-        { title: 'Guest name(Kana)', field: 'guestNameKana' },
-        { title: 'Room name', field: 'roomName' },
+        { title: '名前', field: 'guestName' },
+        { title: 'かな名', field: 'guestNameKana' },
+        { title: '部屋名', field: 'roomName' },
         {
+          title: 'チェックアウト時間',
+          sorting: false,
           // eslint-disable-next-line react/display-name
-          title: 'Checkout time', render: data => {
+          render: data => {
             const checkout = new Date(data['checkout']);
             return `${('0' + checkout.getHours()).slice(-2)}:${('0' + checkout.getMinutes()).slice(-2)}`;
           },
         },
         {
+          title: '請求額',
           // eslint-disable-next-line react/display-name
-          title: 'Amount', render: data => {
+          render: data => {
             if (!data['room']) {
               return data['amount'];
             }
@@ -273,13 +284,16 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
               <div>¥{data['amount']}</div>
               <div style={{
                 whiteSpace: 'nowrap',
-              }}>{`(${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('night', diff)} = ${amount})`}</div>
+              }}>{`(${data['room']['price']} * ${data['number']}人 * ${diff}泊 = ${amount})`}</div>
             </>;
           },
         },
         {
+          title: 'チェックイン',
+          align: 'center',
+          sorting: false,
           // eslint-disable-next-line react/display-name
-          title: 'Checkout', align: 'center', render: data => {
+          render: data => {
             if (data.status === 'reserved') {
               return <Button className={classes.button} disabled>
                 未チェックイン
@@ -317,16 +331,17 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }, client.dashboard.checkout.get, { headers: authHeader, query: { query, date } })}
       options={{
         emptyRowsWhenPaging: false,
+        draggable: false,
       }}
     />
   </div>, [date]);
   const dailySalesBar   = useMemo(() => <div className={classes.chart}>
     <Bar
       data={{
-        labels: dailySales.data?.map(item => format(new Date(item.day), 'yyyy-MM-dd')) ?? [],
+        labels: dailySales.data?.map(item => format(new Date(item.day), 'd')) ?? [],
         datasets: [
           {
-            label: 'Daily sales',
+            label: dailySales.data?.length ? `日別売上（${format(new Date(dailySales.data[0].day), 'yyyy年M月')}）` : '日別売上',
             data: dailySales.data?.map(item => item.sales) ?? [],
             borderColor: 'rgba(0,128,0)',
             backgroundColor: 'rgba(64,128,64)',
@@ -350,10 +365,10 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const monthlySalesBar = useMemo(() => <div className={classes.chart}>
     <Bar
       data={{
-        labels: monthlySales.data?.map(item => format(new Date(item.month), 'yyyy-MM')) ?? [],
+        labels: monthlySales.data?.map(item => format(new Date(item.month), 'M月')) ?? [],
         datasets: [
           {
-            label: 'Monthly sales',
+            label: monthlySales.data?.length ? `月別売上（${format(new Date(monthlySales.data[0].month), 'yyyy年')}）` : '月別売上',
             data: monthlySales.data?.map(item => item.sales) ?? [],
             borderColor: 'rgba(0,0,255)',
             backgroundColor: 'rgba(128,128,255)',

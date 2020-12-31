@@ -167,9 +167,7 @@ const useTheme = (themeColor?: 'light' | 'dark'): Theme => {
           },
         },
         MuiFormControl: {
-          root: {
-            width: '-webkit-fill-available',
-          },
+          root: {},
         },
         MuiContainer: {
           root: {

@@ -24,15 +24,17 @@ exports[`Index page matches snapshot 1`] = `
       <div
         class="makeStyles-contents-8"
       >
-        <div>
+        <div
+          class="makeStyles-wrap-18"
+        >
           <div
-            class="makeStyles-wrap-18"
+            class="makeStyles-wrap-19"
           >
             <form
               action="#"
             >
               <div
-                class="MuiFormControl-root makeStyles-input-21"
+                class="MuiFormControl-root makeStyles-input-22"
               >
                 <label
                   class="MuiFormLabel-root Mui-required"
@@ -61,11 +63,11 @@ exports[`Index page matches snapshot 1`] = `
                   />
                 </div>
                 <div
-                  class="makeStyles-error-20"
+                  class="makeStyles-error-21"
                 />
               </div>
               <div
-                class="MuiFormControl-root makeStyles-input-21"
+                class="MuiFormControl-root makeStyles-input-22"
               >
                 <label
                   class="MuiFormLabel-root Mui-required"
@@ -80,10 +82,10 @@ exports[`Index page matches snapshot 1`] = `
                   </span>
                 </label>
                 <div
-                  class="makeStyles-wrap-22"
+                  class="makeStyles-wrap-23"
                 >
                   <div
-                    class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-23 MuiInputBase-formControl MuiInput-formControl"
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-24 MuiInputBase-formControl MuiInput-formControl"
                   >
                     <input
                       aria-invalid="false"
@@ -97,7 +99,7 @@ exports[`Index page matches snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="makeStyles-toggle-24"
+                    class="makeStyles-toggle-25"
                   >
                     <button
                       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
@@ -116,11 +118,11 @@ exports[`Index page matches snapshot 1`] = `
                   </div>
                 </div>
                 <div
-                  class="makeStyles-error-20"
+                  class="makeStyles-error-21"
                 />
               </div>
               <div
-                class="makeStyles-login-19"
+                class="makeStyles-login-20"
               >
                 <button
                   class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -148,7 +150,7 @@ exports[`Index page matches snapshot 1`] = `
       <div
         class="makeStyles-wrap-17"
       >
-        2020 — 
+        2021 — 
         <strong>
           予約システム
         </strong>

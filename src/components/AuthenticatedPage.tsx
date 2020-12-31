@@ -6,6 +6,13 @@ import Login from '~/components/Login';
 import { useStoreContext, useDispatchContext } from '~/store';
 import { setAdmin } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  wrap: {
+    width: '100%',
+  },
+});
 
 export type AuthenticatedPageProps = {
   authToken: string;
@@ -13,6 +20,7 @@ export type AuthenticatedPageProps = {
 }
 
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
+  const classes         = useStyles();
   const [{ authToken }] = useCookies(['authToken']);
   const { name }        = useStoreContext();
   const { dispatch }    = useDispatchContext();
@@ -27,7 +35,7 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     }
   }, [authToken, name]);
 
-  return <div suppressHydrationWarning>
+  return <div className={classes.wrap}>
     {!authToken && <Login {...props} />}
     {authToken && <WrappedComponent authToken={authToken} authHeader={authHeader} {...props} />}
   </div>;
