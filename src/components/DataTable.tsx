@@ -19,11 +19,10 @@ type Model = Record<string, any> & {
   id: number;
 }
 
-type EditTypes<T extends Model> = Pick<Column<T>, 'type'>['type'] | 'search';
-type DataTableColumn<T extends Model> = Omit<Column<T>, 'type' | 'field'> & {
-  type?: EditTypes<T>;
+type SearchColumn<T extends Model> = Omit<Column<T>, 'field' | 'type'> & {
   field: keyof T;
-  search?: {
+  type: 'search';
+  search: {
     model: DataTableApiModels;
     api: (option?: any) => Promise<AspidaResponse<any, any, any>>,
     columns: {
@@ -41,7 +40,10 @@ type DataTableColumn<T extends Model> = Omit<Column<T>, 'type' | 'field'> & {
     render?: (rowData: T) => string;
     process?: (rowData: T) => T;
   }
-};
+}
+type DataTableColumn<T extends Model> = (Omit<Column<T>, 'field'> & {
+  field: keyof T;
+}) | SearchColumn<T>;
 type EditData = {
   [model: string]: {
     [id: number]: any
@@ -92,9 +94,9 @@ const controlValidationEditField = <T extends Model>(
   })}/>;
 });
 
-const getRenderText = <T extends Model>(rowData: T, render: ((rowData: T) => string) | undefined, column: DataTableColumn<T>, editData: EditData): string => {
+const getRenderText = <T extends Model>(rowData: T, render: ((rowData: T) => string) | undefined, column: SearchColumn<T>, editData: EditData): string => {
   const id    = rowData[column.field];
-  const model = column.search?.model;
+  const model = column.search.model;
   const data  = model && model in editData && id in editData[model] ? editData[model][id] : rowData;
   if (!render) {
     return String(data[column.field]);
@@ -121,18 +123,14 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
   }, []);
   const columns                                 = useMemo(() => columnsEx.map(column => {
     if (column.type === 'search') {
-      const search = column.search;
-      if (!search?.model || !search?.api || !search.columns) {
-        throw Error('Not implemented required properties.');
-      }
-
+      const search                               = column.search;
       const editData: EditData                   = {};
       const editComponent: FC<EditFieldProps<T>> = (props) => {
         const onChange = (value: T) => {
           if (search.model) {
             editData[search.model] = {
               ...editData[search.model],
-              [value.id]: search?.process ? search.process(value) : value,
+              [value.id]: search.process ? search.process(value) : value,
             };
           }
           props.onChange(value.id);
@@ -145,14 +143,14 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
             { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
             ...search.columns,
           ]}
-          searchText={getRenderText(props.rowData, search?.render, column, editData)}
+          searchText={getRenderText(props.rowData, search.render, column, editData)}
           authHeader={authHeader}
           props={{ ...props, onChange }}
         />;
       };
-      const render                               = (data: T) => getRenderText(data, search?.render, column, editData);
+      const render                               = (data: T) => getRenderText(data, search.render, column, editData);
       const validate                             = (data: T) => {
-        const isValid = !!getRenderText(data, search?.render, column, editData);
+        const isValid = !!getRenderText(data, search.render, column, editData);
         return {
           isValid,
           helperText: isValid ? undefined : (pages[search.model].label + 'is not selected'),
