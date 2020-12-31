@@ -5,6 +5,7 @@ import type { DataTableApiModels } from '~/utils/api';
 import type { ValidationError } from 'class-validator';
 import type { AspidaResponse } from 'aspida';
 import { useMemo, useCallback, useState } from 'react';
+import { Grid } from '@material-ui/core';
 import MaterialTable, { MTableEditField } from 'material-table';
 import SearchTable from '~/components/Search';
 import { useDispatchContext } from '~/store';
@@ -13,7 +14,6 @@ import { getDataTableApi, handleAuthError, processUpdateData, isAxiosError } fro
 import { setNotice } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import pages from '~/_pages';
-import * as React from 'react';
 
 type Model = Record<string, any> & {
   id: number;
@@ -42,20 +42,17 @@ type DataTableColumn<T extends Model> = Omit<Column<T>, 'type' | 'field'> & {
     process?: (rowData: T) => T;
   }
 };
-
 type EditData = {
   [model: string]: {
     [id: number]: any
   }
 };
-
 type Props<T extends Model> = {
   model: DataTableApiModels;
   columns: DataTableColumn<T>[];
   authHeader: { authorization: string };
   options?: Options<T>;
 }
-
 type EditFieldProps<T extends Model> = {
   columnDef: Column<T>;
   onChange: ((value: any) => void);
@@ -113,7 +110,14 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const title                                   = useMemo(() => {
     const Icon = pages[model].icon;
-    return <Icon/>;
+    return <Grid container direction="row" alignItems="center" spacing={1}>
+      <Grid item>
+        <Icon/>
+      </Grid>
+      <Grid item>
+        {pages[model].label}
+      </Grid>
+    </Grid>;
   }, []);
   const columns                                 = useMemo(() => columnsEx.map(column => {
     if (column.type === 'search') {
@@ -122,7 +126,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
         throw Error('Not implemented required properties.');
       }
 
-      const editData: EditData = {};
+      const editData: EditData                   = {};
       const editComponent: FC<EditFieldProps<T>> = (props) => {
         const onChange = (value: T) => {
           if (search.model) {
