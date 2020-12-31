@@ -121,6 +121,7 @@ export const getWhere = <T extends object>(
     return mergeConstraints(undefined, dateConstraint, additional);
   }
 
+  // eslint-disable-next-line no-irregular-whitespace
   const words = [...new Set(search.split(/[\s　]/).filter(word => word))];
   if (!words.length) {
     return mergeConstraints(undefined, dateConstraint, additional);

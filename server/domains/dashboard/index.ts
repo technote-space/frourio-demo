@@ -25,7 +25,7 @@ import { getCurrentPage, getSkip } from '$/utils';
 
 export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
 export type CheckoutReservation =
-  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount'>
+  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount' | 'payment'>
   & {
   room?: {
     number: number;
@@ -119,6 +119,7 @@ export const getCheckout = depend(
         number: true,
         status: true,
         amount: true,
+        payment: true,
         room: {
           select: {
             number: true,
@@ -145,7 +146,7 @@ export const getMonthlySales = depend(
   async({ getReservations }, date: Date): Promise<BodyResponse<MonthlySales[]>> => {
     const reservations = await getReservations({
       select: {
-        amount: true,
+        payment: true,
         checkout: true,
       },
       where: {
@@ -165,7 +166,7 @@ export const getMonthlySales = depend(
     const sales: Record<string, number> = Object.assign({}, ...months.map(month => ({ [month]: 0 })));
     reservations.forEach(reservation => {
       const key = format(reservation.checkout, 'yyyy-MM');
-      sales[key] += reservation.amount;
+      sales[key] += reservation.payment ?? 0;
     });
 
     return {
@@ -183,7 +184,7 @@ export const getDailySales = depend(
   async({ getReservations }, date: Date): Promise<BodyResponse<DailySales[]>> => {
     const reservations = await getReservations({
       select: {
-        amount: true,
+        payment: true,
         checkout: true,
       },
       where: {
@@ -203,7 +204,7 @@ export const getDailySales = depend(
     const sales: Record<string, number> = Object.assign({}, ...days.map(day => ({ [day]: 0 })));
     reservations.forEach(reservation => {
       const key = format(reservation.checkout, 'yyyy-MM-dd');
-      sales[key] += reservation.amount;
+      sales[key] += reservation.payment ?? 0;
     });
 
     return {
