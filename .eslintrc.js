@@ -5,8 +5,9 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:aspida/recommended',
   ],
-  plugins: ['@typescript-eslint', 'react'],
+  plugins: ['@typescript-eslint', 'react', 'aspida'],
   parser: '@typescript-eslint/parser',
   env: {
     browser: true,
