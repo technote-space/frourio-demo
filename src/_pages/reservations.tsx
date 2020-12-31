@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import { useMemo } from 'react';
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays, startOfToday, addDays, addHours } from 'date-fns';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
@@ -69,7 +69,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
             return data['amount'];
           }
 
-          const diff   = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
+          const diff = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
           const amount = data['room']['price'] * data['number'] * diff;
           return <>
             <div>¥{data['amount']}</div>
@@ -80,8 +80,20 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         },
         filtering: false,
       },
-      { title: 'チェックイン', field: 'checkin', type: 'datetime', filtering: false },
-      { title: 'チェックアウト', field: 'checkout', type: 'datetime', filtering: false },
+      {
+        title: 'チェックイン',
+        field: 'checkin',
+        type: 'datetime',
+        filtering: false,
+        initialEditValue: addHours(startOfToday(), 15),
+      },
+      {
+        title: 'チェックアウト',
+        field: 'checkout',
+        type: 'datetime',
+        filtering: false,
+        initialEditValue: addHours(addDays(startOfToday(), 3), 10),
+      },
       { title: 'ステータス', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
       { title: '支払額', field: 'payment', type: 'numeric', filtering: false },
     ]}
