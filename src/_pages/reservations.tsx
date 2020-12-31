@@ -73,7 +73,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           const diff   = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
           const amount = data['room']['price'] * data['number'] * diff;
           return <>
-            <div>{data['amount']}</div>
+            <div>¥{data['amount']}</div>
             <div style={{
               whiteSpace: 'nowrap',
             }}>{`(${amount} = ${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('night', diff)})`}</div>

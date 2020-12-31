@@ -3,7 +3,8 @@ import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Query, QueryResult } from 'material-table';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import MaterialTable from 'material-table';
-import { Button, Card, CardContent, Grid } from '@material-ui/core';
+import { Button, Card, CardContent, Grid, Typography, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { differenceInCalendarDays, format } from 'date-fns';
 import HomeIcon from '@material-ui/icons/Home';
@@ -34,9 +35,19 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   table: {
     margin: theme.spacing(2, 0),
   },
+  buttonGroup: {
+    margin: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'center',
+  },
   button: {
     whiteSpace: 'nowrap',
     letterSpacing: 0,
+    backgroundColor: theme.palette.primary.main,
+  },
+  dialogButton: {
+    margin: theme.spacing(0, 1),
+    minWidth: '6rem',
   },
   cancel: {
     backgroundColor: red['600'],
@@ -50,22 +61,25 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Dashboard');
 
-  const classes                   = useStyles();
-  const { dispatch }              = useDispatchContext();
-  const tableIcons                = useTableIcons();
-  const [date, setDate]           = useState<Date>(new Date());
-  const [salesDate, setSalesDate] = useState<Date>(new Date());
-  const dailySales                = useFetch(dispatch, [], client.dashboard.sales.daily, {
+  const classes                     = useStyles();
+  const { dispatch }                = useDispatchContext();
+  const tableIcons                  = useTableIcons();
+  const [date, setDate]             = useState<Date>(new Date());
+  const [salesDate, setSalesDate]   = useState<Date>(new Date());
+  const [cancelId, setCancelId]     = useState<number | undefined>();
+  const [checkoutId, setCheckoutId] = useState<number | undefined>();
+  const [amount, setAmount]         = useState<number | undefined>();
+  const dailySales                  = useFetch(dispatch, [], client.dashboard.sales.daily, {
     headers: authHeader,
     query: { date: salesDate },
   });
-  const monthlySales              = useFetch(dispatch, [], client.dashboard.sales.monthly, {
+  const monthlySales                = useFetch(dispatch, [], client.dashboard.sales.monthly, {
     headers: authHeader,
     query: { date: salesDate },
   });
-  const checkinTableRef           = useRef<any>();
-  const checkoutTableRef          = useRef<any>();
-  const refreshTables             = () => {
+  const checkinTableRef             = useRef<any>();
+  const checkoutTableRef            = useRef<any>();
+  const refreshTables               = () => {
     if (checkinTableRef.current?.onQueryChange) {
       checkinTableRef.current.onQueryChange();
     }
@@ -73,17 +87,50 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       checkoutTableRef.current.onQueryChange();
     }
   };
-  const refreshSales              = () => {
+  const refreshSales                = () => {
     dailySales.revalidate().then();
     monthlySales.revalidate().then();
   };
-  const handleDateChange          = useCallback(value => {
+  const handleDateChange            = useCallback(value => {
     setDate(value);
     refreshTables();
   }, []);
-  const handleSalesDateChange     = useCallback(value => {
+  const handleSalesDateChange       = useCallback(value => {
     setSalesDate(value);
     refreshSales();
+  }, []);
+  const handleCloseCancel           = useCallback(() => {
+    setCancelId(undefined);
+  }, []);
+  const handleCancel                = useCallback(async() => {
+    if (cancelId) {
+      await client.dashboard.cancel.patch({
+        headers: authHeader,
+        body: { id: cancelId },
+      });
+      setCancelId(undefined);
+      refreshTables();
+      refreshSales();
+    }
+  }, [cancelId]);
+  const handleCloseCheckout         = useCallback(() => {
+    setCheckoutId(undefined);
+    setAmount(undefined);
+  }, []);
+  const handleCheckout              = useCallback(async() => {
+    if (checkoutId) {
+      await client.dashboard.checkout.patch({
+        headers: authHeader,
+        body: { id: checkoutId, payment: amount },
+      });
+      refreshTables();
+      refreshSales();
+      setCheckoutId(undefined);
+      setAmount(undefined);
+    }
+  }, [checkoutId, amount]);
+  const handleChangeAmount          = useCallback(event => {
+    setAmount(Number(event.target.value));
   }, []);
 
   const selectDate      = useMemo(() => <div className={classes.dateWrap}>
@@ -170,7 +217,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         {
           // eslint-disable-next-line react/display-name
           title: 'Cancel', align: 'center', render: data => {
-            if (data.status === 'cancel') {
+            if (data.status === 'cancelled') {
               return <Button className={classes.button} disabled>
                 キャンセル済み
               </Button>;
@@ -179,14 +226,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
             return <Button
               className={clsx(classes.button, classes.cancel)}
               startIcon={<CancelIcon/>}
-              onClick={async() => {
-                await client.dashboard.cancel.patch({
-                  headers: authHeader,
-                  body: { id: data.id },
-                });
-                refreshTables();
-                refreshSales();
-              }}
+              onClick={() => setCancelId(data.id)}
             >
               キャンセル
             </Button>;
@@ -230,7 +270,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
             const diff   = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
             const amount = data['room']['price'] * data['number'] * diff;
             return <>
-              <div>{data['amount']}</div>
+              <div>¥{data['amount']}</div>
               <div style={{
                 whiteSpace: 'nowrap',
               }}>{`(${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('night', diff)} = ${amount})`}</div>
@@ -249,19 +289,18 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
               return <Button
                 className={classes.button}
                 startIcon={<HomeIcon/>}
-                onClick={async() => {
-                  await client.dashboard.checkout.patch({
-                    headers: authHeader,
-                    body: { id: data.id },
-                  });
-                  refreshTables();
-                  refreshSales();
-                }}
+                onClick={() => setCheckoutId(data.id)}
               >
                 チェックアウト
               </Button>;
             }
             if (data.status === 'checkout') {
+              if (data.payment !== data.amount) {
+                return <Button className={classes.button} disabled>
+                  チェックアウト済み (¥{data.payment})
+                </Button>;
+              }
+
               return <Button className={classes.button} disabled>
                 チェックアウト済み
               </Button>;
@@ -335,8 +374,50 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [monthlySales.data]);
+  const cancelDialog    = useMemo(() => <Dialog
+    onClose={handleCloseCancel}
+    maxWidth="xs"
+    open={cancelId !== undefined}
+  >
+    <DialogTitle>キャンセル</DialogTitle>
+    <DialogContent dividers>
+      <Typography>
+        本当にキャンセルしてもよろしいですか？
+      </Typography>
+      <div className={classes.buttonGroup}>
+        <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCancel}>
+          はい
+        </Button>
+        <Button className={clsx(classes.button, classes.cancel, classes.dialogButton)} onClick={handleCloseCancel}>
+          閉じる
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>, [classes, cancelId]);
+  const checkoutDialog  = useMemo(() => <Dialog
+    onClose={handleCloseCheckout}
+    maxWidth="xs"
+    open={checkoutId !== undefined}
+  >
+    <DialogTitle>チェックアウト</DialogTitle>
+    <DialogContent dividers>
+      <div className={classes.buttonGroup}>
+        <TextField type="number" value={amount} onChange={handleChangeAmount}/>
+        <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCheckout}>
+          確定
+        </Button>
+      </div>
+      <div className={classes.buttonGroup}>
+        <Button className={clsx(classes.button, classes.cancel, classes.dialogButton)} onClick={handleCloseCheckout}>
+          閉じる
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>, [classes, checkoutId, amount]);
 
-  return <div>
+  return <>
+    {cancelDialog}
+    {checkoutDialog}
     <Card className={classes.card}>
       <CardContent>
         {selectDate}
@@ -357,7 +438,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         </Grid>
       </CardContent>
     </Card>
-  </div>;
+  </>;
 };
 
 export default AuthenticatedPage(Dashboard);
