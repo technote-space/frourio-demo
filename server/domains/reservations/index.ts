@@ -20,7 +20,7 @@ import type { ReservationBody } from '$/domains/reservations/validators';
 import { getWhere, getOrderBy } from '$/utils/prisma';
 
 export type ListReservation = Reservation & {
-  room: {
+  room?: {
     number: number;
     price: number;
   }

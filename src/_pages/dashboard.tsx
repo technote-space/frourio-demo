@@ -222,7 +222,29 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         },
         {
           // eslint-disable-next-line react/display-name
+          title: 'Amount', render: data => {
+            if (!data['room']) {
+              return data['amount'];
+            }
+
+            const diff   = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
+            const amount = data['room']['price'] * data['number'] * diff;
+            return <>
+              <div>{data['amount']}</div>
+              <div style={{
+                whiteSpace: 'nowrap',
+              }}>{`(${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('night', diff)} = ${amount})`}</div>
+            </>;
+          },
+        },
+        {
+          // eslint-disable-next-line react/display-name
           title: 'Checkout', align: 'center', render: data => {
+            if (data.status === 'reserved') {
+              return <Button className={classes.button} disabled>
+                未チェックイン
+              </Button>;
+            }
             if (data.status === 'checkin') {
               return <Button
                 className={classes.button}

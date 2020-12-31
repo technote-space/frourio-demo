@@ -24,7 +24,14 @@ import { getWhere, getOrderBy } from '$/utils/prisma';
 import { getCurrentPage, getSkip } from '$/utils';
 
 export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
-export type CheckoutReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'status' | 'amount'>;
+export type CheckoutReservation =
+  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount'>
+  & {
+  room?: {
+    number: number;
+    price: number;
+  }
+};
 
 export const getCheckin = depend(
   { getReservations, getReservationCount },
@@ -105,10 +112,17 @@ export const getCheckout = depend(
         roomName: true,
         checkin: true,
         checkout: true,
+        number: true,
         status: true,
         amount: true,
+        room: {
+          select: {
+            number: true,
+            price: true,
+          },
+        },
       },
-    });
+    }) as CheckoutReservation[];
 
     return {
       status: 200,
