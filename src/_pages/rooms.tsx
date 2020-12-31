@@ -11,9 +11,9 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
     model={'rooms'}
     columns={[
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-      { title: 'Name', field: 'name' },
-      { title: 'Number', field: 'number', type: 'numeric' },
-      { title: 'Price', field: 'price', type: 'numeric' },
+      { title: '部屋名', field: 'name' },
+      { title: '人数', field: 'number', type: 'numeric' },
+      { title: '１泊料金', field: 'price', type: 'numeric' },
     ]}
     authHeader={authHeader}
   />, []);
