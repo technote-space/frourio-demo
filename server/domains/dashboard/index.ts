@@ -96,6 +96,10 @@ export const getCheckout = depend(
     ], [], {
       date,
       key: 'checkout',
+    }, {
+      status: {
+        not: 'cancelled',
+      },
     });
     const orderBy    = getOrderBy<CheckoutReservation>(query?.orderBy, query?.orderDirection);
     const totalCount = await getReservationCount({ where });
