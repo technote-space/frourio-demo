@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsPositive, IsDateString, IsEnum, Min, IsInt, IsOptional } from 'class-validator';
-import { IsIdExists, IsWithinLimit, IsReservable } from '$/utils/prisma/validator';
+import { IsIdExists, IsWithinLimit, IsReservable } from '$/repositories/utils/validator';
 import { ReservationStatus } from '$/types';
 
 export class ReservationBody {

@@ -20,7 +20,7 @@ import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import type { DailySales, MonthlySales } from '$/domains/dashboard/types';
 import type { Query, QueryResult } from 'material-table';
-import { getWhere, getOrderBy } from '$/utils/prisma';
+import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/utils';
 
 export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
@@ -261,7 +261,7 @@ export const cancel   = depend(
   async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => ({
     status: 200,
     body: await updateReservation(id, {
-      status: 'cancel',
+      status: 'cancelled',
     }),
   }),
 );

@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { getGuests, getGuestCount, getGuest, createGuest, updateGuest, deleteGuest } from '$/repositories/guest';
 import { getSkip, getCurrentPage } from '$/utils';
-import { getWhere, getOrderBy } from '$/utils/prisma';
+import { getWhere, getOrderBy } from '$/repositories/utils';
 import type { BodyResponse } from '$/types';
 import type { Guest, CreateGuestData, UpdateGuestData } from '$/repositories/guest';
 import type { Query, QueryResult } from 'material-table';

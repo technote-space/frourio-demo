@@ -17,7 +17,7 @@ import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import type { Query, QueryResult } from 'material-table';
 import type { ReservationBody } from '$/domains/reservations/validators';
-import { getWhere, getOrderBy } from '$/utils/prisma';
+import { getWhere, getOrderBy, getFilterConstraints } from '$/repositories/utils';
 
 export type ListReservation = Reservation & {
   room?: {

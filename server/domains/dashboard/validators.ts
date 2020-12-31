@@ -1,5 +1,5 @@
 import { IsPositive, IsInt, Min, IsOptional } from 'class-validator';
-import { IsIdExists, IsWithinLimit, IsReservable } from '$/utils/prisma/validator';
+import { IsIdExists } from '$/repositories/utils/validator';
 
 class ReservationStatusBody {
   @IsInt()

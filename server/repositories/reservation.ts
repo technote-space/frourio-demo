@@ -2,7 +2,7 @@ import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
 import { ensureNotNull } from '$/utils';
 import type { Prisma } from '@prisma/client';
-import { dropId } from '$/utils/prisma';
+import { dropId } from '$/repositories/utils';
 
 export type SearchReservationArgs = Prisma.FindManyReservationArgs;
 export type FindReservationArgs = Prisma.FindFirstReservationArgs;
