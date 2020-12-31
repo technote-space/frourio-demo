@@ -16,7 +16,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
     columns={[
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
       {
-        title: 'Guest', field: 'guestId', type: 'search',
+        title: 'Guest', field: 'guestId', type: 'search', filtering: false,
         search: {
           model: 'guests',
           api: client.reservations.search.guests.get,
@@ -36,7 +36,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         },
       },
       {
-        title: 'Room', field: 'roomId', type: 'search',
+        title: 'Room', field: 'roomId', type: 'search', filtering: false,
         search: {
           model: 'rooms',
           api: client.reservations.search.rooms.get,
@@ -58,6 +58,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         field: 'number',
         type: 'numeric',
         render: data => `${data['number']}/${data['room']['number']}`,
+        filtering: false,
       },
       {
         title: 'Amount',
@@ -78,13 +79,17 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
             }}>{`(${amount} = ${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('night', diff)})`}</div>
           </>;
         },
+        filtering: false,
       },
-      { title: 'Checkin', field: 'checkin', type: 'datetime' },
-      { title: 'Checkout', field: 'checkout', type: 'datetime' },
+      { title: 'Checkin', field: 'checkin', type: 'datetime', filtering: false },
+      { title: 'Checkout', field: 'checkout', type: 'datetime', filtering: false },
       { title: 'Status', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
-      { title: 'Payment', field: 'payment', type: 'numeric' },
+      { title: 'Payment', field: 'payment', type: 'numeric', filtering: false },
     ]}
     authHeader={authHeader}
+    options={{
+      filtering: true,
+    }}
   />, []);
 };
 

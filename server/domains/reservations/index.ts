@@ -38,7 +38,7 @@ export const list = depend(
     ], [
       'amount',
       'payment',
-    ]);
+    ], undefined, ...getFilterConstraints(query?.filters));
     const orderBy    = getOrderBy<ListReservation>(query?.orderBy, query?.orderDirection);
     const totalCount = await getReservationCount({ where });
     const page       = getCurrentPage(pageSize, totalCount, query?.page);
