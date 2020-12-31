@@ -158,6 +158,8 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
       };
 
       return {
+        filtering: false,
+        sorting: false,
         ...column,
         type: 'string',
         editComponent,
@@ -237,6 +239,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
     }}
     options={{
       emptyRowsWhenPaging: false,
+      draggable: false,
       ...options,
     }}
     components={{

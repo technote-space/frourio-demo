@@ -6,7 +6,6 @@ import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
 import { client } from '~/utils/api';
-import { getWord } from '~/utils';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
@@ -16,7 +15,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
     columns={[
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
       {
-        title: 'Guest', field: 'guestId', type: 'search', filtering: false,
+        title: '名前', field: 'guestId', type: 'search',
         search: {
           model: 'guests',
           api: client.reservations.search.guests.get,
@@ -36,7 +35,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         },
       },
       {
-        title: 'Room', field: 'roomId', type: 'search', filtering: false,
+        title: '部屋名', field: 'roomId', type: 'search',
         search: {
           model: 'rooms',
           api: client.reservations.search.rooms.get,
@@ -54,14 +53,14 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         },
       },
       {
-        title: 'Number',
+        title: '人数',
         field: 'number',
         type: 'numeric',
         render: data => `${data['number']}/${data['room']['number']}`,
         filtering: false,
       },
       {
-        title: 'Amount',
+        title: '請求額',
         field: 'amount',
         editable: 'never',
         // eslint-disable-next-line react/display-name
@@ -76,15 +75,15 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
             <div>¥{data['amount']}</div>
             <div style={{
               whiteSpace: 'nowrap',
-            }}>{`(${amount} = ${data['room']['price']} * ${data['number']}${getWord('person', data['number'])} * ${diff}${getWord('night', diff)})`}</div>
+            }}>{`(${amount} = ${data['room']['price']} * ${data['number']}人 * ${diff}泊)`}</div>
           </>;
         },
         filtering: false,
       },
-      { title: 'Checkin', field: 'checkin', type: 'datetime', filtering: false },
-      { title: 'Checkout', field: 'checkout', type: 'datetime', filtering: false },
-      { title: 'Status', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
-      { title: 'Payment', field: 'payment', type: 'numeric', filtering: false },
+      { title: 'チェックイン', field: 'checkin', type: 'datetime', filtering: false },
+      { title: 'チェックアウト', field: 'checkout', type: 'datetime', filtering: false },
+      { title: 'ステータス', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
+      { title: '支払額', field: 'payment', type: 'numeric', filtering: false },
     ]}
     authHeader={authHeader}
     options={{
