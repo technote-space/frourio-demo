@@ -12,27 +12,27 @@ import Rooms from './rooms';
 
 const pages = {
   dashboard: {
-    label: 'Dashboard',
+    label: 'ダッシュボード',
     page: Dashboard,
     icon: DashboardIcon,
   },
   rooms: {
-    label: 'Rooms',
+    label: '部屋',
     page: Rooms,
     icon: HotelIcon,
   },
   guests: {
-    label: 'Guests',
+    label: '宿泊客',
     page: Guests,
     icon: PeopleIcon,
   },
   reservations: {
-    label: 'Reservations',
+    label: '予約',
     page: Reservations,
     icon: TodayIcon,
   },
   logout: {
-    label: 'Logout',
+    label: 'ログアウト',
     page: null,
     icon: LogoutIcon,
   },

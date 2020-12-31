@@ -49,9 +49,9 @@ export type BodyResponse<T> = (BasicResponse & {
 }
 
 export const ReservationStatus = {
-  reserved: 'Reserved',
-  cancelled: 'Cancelled',
-  checkin: 'Checkin',
-  checkout: 'Checkout',
+  reserved: '予約済み',
+  cancelled: 'キャンセル',
+  checkin: 'チェックイン',
+  checkout: 'チェックアウト',
 } as const;
 export type ReservationStatus = keyof typeof ReservationStatus;
