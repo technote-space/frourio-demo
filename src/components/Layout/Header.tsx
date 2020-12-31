@@ -40,7 +40,7 @@ const Header: FC = () => {
           <MenuIcon/>
         </IconButton>}
         <Typography variant="h6" className={classes.title} onClick={handleClickHome}>
-          Home
+          予約システム
         </Typography>
       </Toolbar>
     </AppBar>, [classes, authToken]);

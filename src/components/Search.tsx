@@ -90,7 +90,7 @@ const SearchTable = <T extends {
       variant="body2"
       onClick={handleClickField}
     >
-      {searchText || 'Select'}
+      {searchText || '選択'}
     </Link>
     {editFieldProps.helperText && <FormHelperText>{editFieldProps.helperText}</FormHelperText>}
   </FormControl>, [searchText, editFieldProps.helperText]);

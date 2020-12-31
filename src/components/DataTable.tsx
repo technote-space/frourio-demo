@@ -150,10 +150,8 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
       };
       const render                               = (data: T) => getRenderText(data, search.render, column, editData);
       const validate                             = (data: T) => {
-        const isValid = !!getRenderText(data, search.render, column, editData);
         return {
-          isValid,
-          helperText: isValid ? undefined : (pages[search.model].label + 'is not selected'),
+          isValid: !!getRenderText(data, search.render, column, editData),
         };
       };
 
