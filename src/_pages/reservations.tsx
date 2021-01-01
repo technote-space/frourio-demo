@@ -20,11 +20,11 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           model: 'guests',
           api: client.reservations.search.guests.get,
           columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Name(Kana)', field: 'nameKana' },
-            { title: 'Zip Code', field: 'zipCode' },
-            { title: 'Address', field: 'address' },
-            { title: 'Phone number', field: 'phone' },
+            { title: '名前', field: 'name' },
+            { title: 'かな名', field: 'nameKana' },
+            { title: '郵便番号', field: 'zipCode' },
+            { title: '住所', field: 'address' },
+            { title: '電話番号', field: 'phone' },
           ],
           render: data => data['guestName'],
           process: data => ({
@@ -40,9 +40,9 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           model: 'rooms',
           api: client.reservations.search.rooms.get,
           columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Number', field: 'number', type: 'numeric' },
-            { title: 'Price', field: 'price', type: 'numeric' },
+            { title: '部屋名', field: 'name' },
+            { title: '人数', field: 'number', type: 'numeric' },
+            { title: '１泊料金', field: 'price', type: 'numeric' },
           ],
           render: data => data['roomName'],
           process: data => ({
