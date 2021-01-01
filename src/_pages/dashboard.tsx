@@ -179,7 +179,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
           sorting: false,
           // eslint-disable-next-line react/display-name
           render: data => {
-            const nights = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
+            const nights = differenceInCalendarDays(new Date(data.checkout), new Date(data.checkin));
             return `${nights}泊`;
           },
         },
@@ -266,7 +266,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
           sorting: false,
           // eslint-disable-next-line react/display-name
           render: data => {
-            const checkout = new Date(data['checkout']);
+            const checkout = new Date(data.checkout);
             return `${('0' + checkout.getHours()).slice(-2)}:${('0' + checkout.getMinutes()).slice(-2)}`;
           },
         },
@@ -274,22 +274,22 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
           title: '請求額',
           // eslint-disable-next-line react/display-name
           render: data => {
-            if (!data['room']) {
-              return data['amount'];
+            if (!data.room) {
+              return data.amount;
             }
 
-            const diff   = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
-            const amount = data['room']['price'] * data['number'] * diff;
+            const diff   = differenceInCalendarDays(new Date(data.checkout), new Date(data.checkin));
+            const amount = data.room.price * data.number * diff;
             return <>
-              <div>¥{data['amount']}</div>
+              <div>¥{data.amount}</div>
               <div style={{
                 whiteSpace: 'nowrap',
-              }}>{`(${data['room']['price']} * ${data['number']}人 * ${diff}泊 = ${amount})`}</div>
+              }}>{`(${data.room.price} * ${data.number}人 * ${diff}泊 = ${amount})`}</div>
             </>;
           },
         },
         {
-          title: 'チェックイン',
+          title: 'チェックアウト',
           align: 'center',
           sorting: false,
           // eslint-disable-next-line react/display-name
@@ -303,7 +303,10 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
               return <Button
                 className={classes.button}
                 startIcon={<HomeIcon/>}
-                onClick={() => setCheckoutId(data.id)}
+                onClick={() => {
+                  setCheckoutId(data.id);
+                  setAmount(data.amount);
+                }}
               >
                 チェックアウト
               </Button>;
