@@ -7,7 +7,7 @@ import type { AspidaResponse } from 'aspida';
 import { useMemo, useCallback, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import MaterialTable, { MTableEditField } from 'material-table';
-import SearchTable from '~/components/Search';
+import SearchTable from '~/components/SearchTable';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
 import { getDataTableApi, handleAuthError, processUpdateData, isAxiosError } from '~/utils/api';
@@ -123,7 +123,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
   }, []);
   const columns                                 = useMemo(() => columnsEx.map(column => {
     if (column.type === 'search') {
-      const search                               = column.search;
+      const { search, ...rest } = column;
       const editData: EditData                   = {};
       const editComponent: FC<EditFieldProps<T>> = (props) => {
         const onChange = (value: T) => {
@@ -135,7 +135,6 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
           }
           props.onChange(value.id);
         };
-
         return <SearchTable
           model={search.model}
           api={search.api}
@@ -158,7 +157,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
       return {
         filtering: false,
         sorting: false,
-        ...column,
+        ...rest,
         type: 'string',
         editComponent,
         render,

@@ -106,7 +106,11 @@ const SearchTable = <T extends {
     <MaterialTable
       icons={tableIcons}
       title={icon}
-      columns={columns}
+      columns={columns.map(col => {
+        const colClone = { ...col };
+        delete colClone['tableData'];
+        return colClone;
+      })}
       data={fetchData}
       actions={actions}
       options={{
