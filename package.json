@@ -5,7 +5,7 @@
   "scripts": {
     "setup": "run-p setup:*",
     "setup:install": "yarn install && cd server && yarn --cwd server install",
-    "setup:db": "npx cpy-cli --no-overwrite --rename=.env server/prisma/.env.example server/prisma/ && npx del-cli server/prisma/dev.db && yarn migrate:dev && yarn migrate:seed",
+    "setup:db": "yarn --cwd server setup && yarn migrate:seed",
     "dev": "npm run migrate:dev && run-p dev:*",
     "dev:client": "next dev -p 3000",
     "dev:server": "npm run dev --prefix server",

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "setup": "npx cpy-cli --no-overwrite --rename=.env .env.example ./ && npx cpy-cli --no-overwrite --rename=.env prisma/.env.example prisma/ && npx del-cli prisma/dev.db && yarn migrate:dev",
     "dev": "npm run migrate:dev && run-p dev:*",
     "dev:server": "webpack --watch --mode=development",
     "dev:frourio": "frourio --watch",
