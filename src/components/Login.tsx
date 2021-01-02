@@ -3,7 +3,7 @@ import { useEffect, useCallback, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
 import { Formik, Form, Field } from 'formik';
 import { addDays } from 'date-fns';
-import { FormControl, FormLabel, Input, Button } from '@material-ui/core';
+import { Card, CardContent, FormControl, FormLabel, Input, Button } from '@material-ui/core';
 import PasswordInput from '~/components/PasswordInput';
 import { addDisplayName } from '~/utils/component';
 import { client } from '~/utils/api';
@@ -13,8 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   wrap: {
-    padding: '10px',
-    border: 'solid #7f7f7f',
+    display: 'flex',
+    justifyContent: 'center',
   },
   login: {
     textAlign: 'center',
@@ -75,34 +75,38 @@ const Login: FC = () => {
 
   return useMemo(() =>
     <div className={classes.wrap}>
-      <Formik
-        initialValues={Object.assign({}, ...settings.map(setting => ({ [setting.id]: setting.initialValue })))}
-        onSubmit={handleSubmit}
-      >
-        {((props) => <Form onSubmit={props.handleSubmit}>
-          {settings.map(setting => <Field name={setting.id} key={setting.id}>
-            {({ field, form }) =>
-              <FormControl
-                error={form.errors[setting.id] && form.touched[setting.id]}
-                required={setting.isRequired}
-                className={classes.input}
-              >
-                <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
-                <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
-                <div className={classes.error}>{form.errors[setting.id]}</div>
-              </FormControl>}
-          </Field>)}
-          <div className={classes.login}>
-            <Button
-              size="medium"
-              type="submit"
-              disabled={props.isSubmitting}
-            >
-              Login
-            </Button>
-          </div>
-        </Form>)}
-      </Formik>
+      <Card>
+        <CardContent>
+          <Formik
+            initialValues={Object.assign({}, ...settings.map(setting => ({ [setting.id]: setting.initialValue })))}
+            onSubmit={handleSubmit}
+          >
+            {((props) => <Form onSubmit={props.handleSubmit}>
+              {settings.map(setting => <Field name={setting.id} key={setting.id}>
+                {({ field, form }) =>
+                  <FormControl
+                    error={form.errors[setting.id] && form.touched[setting.id]}
+                    required={setting.isRequired}
+                    className={classes.input}
+                  >
+                    <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
+                    <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
+                    <div className={classes.error}>{form.errors[setting.id]}</div>
+                  </FormControl>}
+              </Field>)}
+              <div className={classes.login}>
+                <Button
+                  size="medium"
+                  type="submit"
+                  disabled={props.isSubmitting}
+                >
+                  Login
+                </Button>
+              </div>
+            </Form>)}
+          </Formik>
+        </CardContent>
+      </Card>
     </div>, [classes]);
 };
 
