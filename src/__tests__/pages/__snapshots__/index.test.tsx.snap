@@ -30,116 +30,124 @@ exports[`Index page matches snapshot 1`] = `
           <div
             class="makeStyles-wrap-19"
           >
-            <form
-              action="#"
+            <div
+              class="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
             >
               <div
-                class="MuiFormControl-root makeStyles-input-22"
+                class="MuiCardContent-root"
               >
-                <label
-                  class="MuiFormLabel-root Mui-required"
-                  for="email"
-                >
-                  Email address
-                  <span
-                    aria-hidden="true"
-                    class="MuiFormLabel-asterisk"
-                  >
-                     *
-                  </span>
-                </label>
-                <div
-                  class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                >
-                  <input
-                    aria-invalid="false"
-                    class="MuiInputBase-input MuiInput-input"
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    required=""
-                    type="email"
-                    value=""
-                  />
-                </div>
-                <div
-                  class="makeStyles-error-21"
-                />
-              </div>
-              <div
-                class="MuiFormControl-root makeStyles-input-22"
-              >
-                <label
-                  class="MuiFormLabel-root Mui-required"
-                  for="password"
-                >
-                  Password
-                  <span
-                    aria-hidden="true"
-                    class="MuiFormLabel-asterisk"
-                  >
-                     *
-                  </span>
-                </label>
-                <div
-                  class="makeStyles-wrap-23"
+                <form
+                  action="#"
                 >
                   <div
-                    class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-24 MuiInputBase-formControl MuiInput-formControl"
+                    class="MuiFormControl-root makeStyles-input-22"
                   >
-                    <input
-                      aria-invalid="false"
-                      class="MuiInputBase-input MuiInput-input"
-                      id="password"
-                      name="password"
-                      placeholder="Enter password"
-                      required=""
-                      type="password"
-                      value=""
+                    <label
+                      class="MuiFormLabel-root Mui-required"
+                      for="email"
+                    >
+                      Email address
+                      <span
+                        aria-hidden="true"
+                        class="MuiFormLabel-asterisk"
+                      >
+                         *
+                      </span>
+                    </label>
+                    <div
+                      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    >
+                      <input
+                        aria-invalid="false"
+                        class="MuiInputBase-input MuiInput-input"
+                        id="email"
+                        name="email"
+                        placeholder="Enter email address"
+                        required=""
+                        type="email"
+                        value=""
+                      />
+                    </div>
+                    <div
+                      class="makeStyles-error-21"
                     />
                   </div>
                   <div
-                    class="makeStyles-toggle-25"
+                    class="MuiFormControl-root makeStyles-input-22"
+                  >
+                    <label
+                      class="MuiFormLabel-root Mui-required"
+                      for="password"
+                    >
+                      Password
+                      <span
+                        aria-hidden="true"
+                        class="MuiFormLabel-asterisk"
+                      >
+                         *
+                      </span>
+                    </label>
+                    <div
+                      class="makeStyles-wrap-23"
+                    >
+                      <div
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-24 MuiInputBase-formControl MuiInput-formControl"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiInput-input"
+                          id="password"
+                          name="password"
+                          placeholder="Enter password"
+                          required=""
+                          type="password"
+                          value=""
+                        />
+                      </div>
+                      <div
+                        class="makeStyles-toggle-25"
+                      >
+                        <button
+                          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+                          tabindex="0"
+                          type="button"
+                        >
+                          <span
+                            class="MuiButton-label"
+                          >
+                            Show
+                          </span>
+                          <span
+                            class="MuiTouchRipple-root"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="makeStyles-error-21"
+                    />
+                  </div>
+                  <div
+                    class="makeStyles-login-20"
                   >
                     <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
                       tabindex="0"
-                      type="button"
+                      type="submit"
                     >
                       <span
                         class="MuiButton-label"
                       >
-                        Show
+                        Login
                       </span>
                       <span
                         class="MuiTouchRipple-root"
                       />
                     </button>
                   </div>
-                </div>
-                <div
-                  class="makeStyles-error-21"
-                />
+                </form>
               </div>
-              <div
-                class="makeStyles-login-20"
-              >
-                <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-                  tabindex="0"
-                  type="submit"
-                >
-                  <span
-                    class="MuiButton-label"
-                  >
-                    Login
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
