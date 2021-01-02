@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "setup": "run-p setup:*",
+    "setup:install": "yarn install && cd server && yarn --cwd server install",
+    "setup:db": "npx cpy-cli --no-overwrite --rename=.env server/prisma/.env.example server/prisma/ && npx del-cli server/prisma/dev.db && yarn migrate:dev && yarn migrate:seed",
     "dev": "npm run migrate:dev && run-p dev:*",
     "dev:client": "next dev -p 3000",
     "dev:server": "npm run dev --prefix server",
@@ -16,7 +19,7 @@
     "migrate:init": "npm run migrate:init --prefix server",
     "migrate:dev": "npm run migrate:dev --prefix server",
     "migrate:reset": "npm run migrate:reset --prefix server",
-    "migrate:seed": "npm run migrate:reset && yarn ts-node ./server/prisma/seeds/seeder.ts",
+    "migrate:seed": "yarn ts-node ./server/prisma/seeds/seeder.ts",
     "start": "run-p start:*",
     "start:client": "next start",
     "start:server": "npm start --prefix server",
