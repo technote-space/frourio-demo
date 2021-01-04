@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import { getAdmin } from '$/repositories/admin';
 import type { FastifyRequest } from 'fastify';
 import type { AuthorizationPayload } from '$/types';
-import 'fastify-request-context';
 
 export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T | never => {
   if (!item) {
@@ -44,6 +43,4 @@ export const verifyAdmin                = async(request: FastifyRequest, roles?:
     // @ts-ignore
     throw new createError('FST_UNAUTHORIZED', 'Unauthorized', 401);
   }
-
-  request.requestContext.set('user', payload);
 };

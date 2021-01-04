@@ -6,7 +6,6 @@ import {
   endOfYear,
   eachMonthOfInterval,
   eachDayOfInterval,
-  addDays,
   format,
   parse,
 } from 'date-fns';

@@ -22,9 +22,9 @@ test('dependency injection into controller', async() => {
         },
       }),
     }),
-  })(getFastify({ id: 123, roles: [] }));
+  })(getFastify());
 
-  const res = await injectedController.get({ headers: getAuthorizationHeader(123) });
+  const res = await injectedController.get({ headers: getAuthorizationHeader(123), user: { id: 123, roles: [] } });
   expect(res.body).toEqual(expect.objectContaining({
     id: 123,
     name: 'test name',
