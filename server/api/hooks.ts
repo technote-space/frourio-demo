@@ -7,6 +7,5 @@ export type AdditionalRequest = {
 }
 
 export default defineHooks(() => ({
-  onRequest: (request, reply) =>
-    verifyAdmin(request).catch((err) => reply.send(err)),
+  onRequest: (request, reply) => verifyAdmin(request).catch(error => reply.send(error)),
 }));
