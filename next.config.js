@@ -19,4 +19,12 @@ module.exports = withBundleAnalyzer(withTranspileModules({
       },
     ];
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /jspdf|moment/,
+      use: 'null-loader'
+    });
+
+    return config;
+  },
 }));
