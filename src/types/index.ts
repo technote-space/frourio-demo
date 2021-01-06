@@ -1,7 +1,6 @@
 import type { PageKeys } from '~/_pages';
 
 export type ContextState = {
-  themeColor?: 'light' | 'dark';
   name?: string;
   icon?: string;
   isSidebarOpen: boolean;

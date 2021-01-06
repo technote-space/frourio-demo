@@ -3,7 +3,6 @@ import type { FC, Dispatch } from 'react';
 import { ContextState } from '~/types';
 
 const initialState: ContextState = {
-  themeColor: undefined,
   name: undefined,
   icon: undefined,
   isSidebarOpen: false,

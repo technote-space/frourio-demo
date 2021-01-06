@@ -250,7 +250,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         draggable: false,
       }}
     />
-  </div>, [date]);
+  </div>, [classes, date]);
   const checkoutTable   = useMemo(() => <div className={classes.table}>
     <MaterialTable
       tableRef={checkoutTableRef}
@@ -337,7 +337,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         draggable: false,
       }}
     />
-  </div>, [date]);
+  </div>, [classes, date]);
   const dailySalesBar   = useMemo(() => <div className={classes.chart}>
     <Bar
       data={{
@@ -364,7 +364,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         },
       }}
     />
-  </div>, [dailySales.data]);
+  </div>, [classes, dailySales.data]);
   const monthlySalesBar = useMemo(() => <div className={classes.chart}>
     <Bar
       data={{
@@ -391,7 +391,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         },
       }}
     />
-  </div>, [monthlySales.data]);
+  </div>, [classes, monthlySales.data]);
   const cancelDialog    = useMemo(() => <Dialog
     onClose={handleCloseCancel}
     maxWidth="xs"
