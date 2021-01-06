@@ -162,6 +162,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       label="日付"
       value={date}
       onChange={handleDateChange}
+      autoOk
     />
   </div>, [classes, date]);
   const selectSalesDate  = useMemo(() => <div className={classes.condition}>
@@ -175,6 +176,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       value={salesDate}
       onChange={handleSalesDateChange}
       views={['year', 'month']}
+      autoOk
     />
   </div>, [classes, salesDate]);
   const selectTargetRoom = useMemo(() => <div className={classes.condition}>
