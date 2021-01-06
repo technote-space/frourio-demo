@@ -35,7 +35,6 @@ const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
     setOpen(false);
   }, []);
   const fetchEvents     = useCallback((info, successCallback) => {
-    console.log(info);
     handleAuthError(dispatch, [] as Array<RoomStatusEvent>, client.rooms.calendar.get, {
       headers: authHeader,
       query: {

@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@material-ui/pickers';
 import { differenceInCalendarDays, format } from 'date-fns';
 import HomeIcon from '@material-ui/icons/Home';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -114,11 +114,9 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   }, []);
   const handleSalesDateChange       = useCallback(value => {
     setSalesDate(value);
-    refreshSales();
   }, []);
   const handleSelectRoom            = useCallback(value => {
     setRoomId(Number(value.target.value));
-    refreshSales();
   }, []);
   const handleCloseCancel           = useCallback(() => {
     setCancelId(undefined);
@@ -155,7 +153,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   }, []);
 
   const selectDate       = useMemo(() => <div className={classes.condition}>
-    <KeyboardDatePicker
+    <DatePicker
       className={classes.date}
       disableToolbar
       variant="inline"
@@ -164,13 +162,10 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       label="日付"
       value={date}
       onChange={handleDateChange}
-      KeyboardButtonProps={{
-        'aria-label': 'change date',
-      }}
     />
   </div>, [classes, date]);
   const selectSalesDate  = useMemo(() => <div className={classes.condition}>
-    <KeyboardDatePicker
+    <DatePicker
       className={classes.date}
       disableToolbar
       variant="inline"
@@ -179,9 +174,6 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       label="選択"
       value={salesDate}
       onChange={handleSalesDateChange}
-      KeyboardButtonProps={{
-        'aria-label': 'change date',
-      }}
       views={['year', 'month']}
     />
   </div>, [classes, salesDate]);

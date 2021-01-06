@@ -12,11 +12,9 @@ const useFetch = <API extends Record<string, any> & {
   get: (option?: any) => Promise<AspidaResponse<any, any, any>>;
   $get: (option?: any) => Promise<any>;
   $path: (option?: any) => string;
-}>(dispatch: ((value: { type: string; [key: string]: any }) => void), fallback: PromiseType<ReturnType<API['$get']>>, api: API, ...option: Options<API['$get']>): Res<API['$get']> | never => {
-  return useAspidaSWR({
-    $get: option => handleAuthError(dispatch, fallback, api.get, option),
-    $path: api.$path,
-  } as API, ...option);
-};
+}>(dispatch: ((value: { type: string; [key: string]: any }) => void), fallback: PromiseType<ReturnType<API['$get']>>, api: API, ...option: Options<API['$get']>): Res<API['$get']> | never => useAspidaSWR({
+  $get: option => handleAuthError(dispatch, fallback, api.get, option),
+  $path: api.$path,
+} as API, ...option);
 
 export default useFetch;
