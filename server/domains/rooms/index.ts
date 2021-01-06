@@ -4,7 +4,20 @@ import { getCurrentPage, getSkip } from '$/service/pages';
 import type { BodyResponse } from '$/types';
 import type { Room, CreateRoomData, UpdateRoomData } from '$/repositories/room';
 import type { Query, QueryResult } from 'material-table';
+import { format } from 'date-fns';
 import { getWhere, getOrderBy } from '$/repositories/utils';
+import { getReservations } from '../../repositories/reservation';
+
+export type RoomStatusEvent = {
+  title: string;
+  start: string;
+  end: string;
+  allDay: true;
+  displayEventTime: false;
+  startEditable: false;
+  durationEditable: false;
+  resourceEditable: false;
+}
 
 export const list = depend(
   { getRooms, getRoomCount },
@@ -63,3 +76,43 @@ export const update = depend(
     body: await updateRoom(id, data),
   }),
 );
+
+export const getStatusCalendarEvents = depend(
+  { getReservations },
+  async(
+    { getReservations },
+    roomId: number,
+    start: Date,
+    end: Date,
+  ): Promise<BodyResponse<Array<RoomStatusEvent>>> => {
+    const reservations = await getReservations({
+      where: {
+        roomId,
+        checkin: {
+          lt: end,
+        },
+        checkout: {
+          gt: start,
+        },
+        status: {
+          not: 'cancelled',
+        },
+      },
+    });
+
+    return {
+      status: 200,
+      body: reservations.map(reservation => ({
+        title: reservation.guestName,
+        start: format(reservation.checkin, 'yyyy-MM-dd'),
+        end: format(reservation.checkout, 'yyyy-MM-dd'),
+        allDay: true,
+        displayEventTime: false,
+        startEditable: false,
+        durationEditable: false,
+        resourceEditable: false,
+      })),
+    };
+  },
+);
+

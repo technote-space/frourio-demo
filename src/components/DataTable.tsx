@@ -41,9 +41,13 @@ type SearchColumn<T extends Model> = Omit<Column<T>, 'field' | 'type'> & {
     process?: (rowData: T) => T;
   }
 }
+type CustomColumn<T extends Model> = Omit<Column<T>, 'field' | 'editable' | 'render'> & {
+  editable: 'never';
+  render: Required<Pick<Column<T>, 'render'>['render']>;
+}
 type DataTableColumn<T extends Model> = (Omit<Column<T>, 'field'> & {
   field: keyof T;
-}) | SearchColumn<T>;
+}) | SearchColumn<T> | CustomColumn<T>;
 type EditData = {
   [model: string]: {
     [id: number]: any
@@ -123,7 +127,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
   }, []);
   const columns                                 = useMemo(() => columnsEx.map(column => {
     if (column.type === 'search') {
-      const { search, ...rest } = column;
+      const { search, ...rest }                  = column;
       const editData: EditData                   = {};
       const editComponent: FC<EditFieldProps<T>> = (props) => {
         const onChange = (value: T) => {
@@ -162,6 +166,15 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
         editComponent,
         render,
         validate,
+      } as Column<T>;
+    }
+
+    if (!('field' in column) && column.editable === 'never') {
+      return {
+        filtering: false,
+        searchable: false,
+        sorting: false,
+        ...column,
       } as Column<T>;
     }
 

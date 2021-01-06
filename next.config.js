@@ -1,4 +1,8 @@
-module.exports = {
+const withTM = require('next-transpile-modules')([
+  '@fullcalendar',
+]);
+
+module.exports = withTM({
   target: 'serverless',
   async rewrites() {
     return [
@@ -12,4 +16,4 @@ module.exports = {
       },
     ];
   },
-};
+});
