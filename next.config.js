@@ -1,8 +1,11 @@
-const withTM = require('next-transpile-modules')([
+const withTranspileModules = require('next-transpile-modules')([
   '@fullcalendar',
 ]);
+const withBundleAnalyzer   = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
-module.exports = withTM({
+module.exports = withBundleAnalyzer(withTranspileModules({
   target: 'serverless',
   async rewrites() {
     return [
@@ -16,4 +19,4 @@ module.exports = withTM({
       },
     ];
   },
-});
+}));
