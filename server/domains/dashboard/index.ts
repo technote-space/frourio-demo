@@ -1,3 +1,8 @@
+import type { BodyResponse } from '$/types';
+import type { Reservation } from '$/repositories/reservation';
+import type { Room } from '$/repositories/room';
+import type { DailySales, MonthlySales } from '$/domains/dashboard/types';
+import type { Query, QueryResult } from 'material-table';
 import { depend } from 'velona';
 import {
   startOfMonth,
@@ -15,10 +20,7 @@ import {
   getReservationCount,
   updateReservation,
 } from '$/repositories/reservation';
-import type { BodyResponse } from '$/types';
-import type { Reservation } from '$/repositories/reservation';
-import type { DailySales, MonthlySales } from '$/domains/dashboard/types';
-import type { Query, QueryResult } from 'material-table';
+import { getRooms } from '$/repositories/room';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/service/pages';
 
@@ -31,6 +33,7 @@ export type CheckoutReservation =
     price: number;
   }
 };
+export type SelectableRoom = Pick<Room, 'id' | 'name'>;
 
 export const getCheckin = depend(
   { getReservations, getReservationCount },
@@ -139,83 +142,6 @@ export const getCheckout = depend(
   },
 );
 
-
-export const getMonthlySales = depend(
-  { getReservations },
-  async({ getReservations }, date: Date): Promise<BodyResponse<MonthlySales[]>> => {
-    const reservations = await getReservations({
-      select: {
-        payment: true,
-        checkout: true,
-      },
-      where: {
-        status: 'checkout',
-        checkout: {
-          gte: startOfYear(date),
-          lt: endOfYear(date),
-        },
-      },
-    });
-
-    const months = eachMonthOfInterval({
-      start: startOfYear(date),
-      end: endOfYear(date),
-    }).map(month => format(month, 'yyyy-MM'));
-
-    const sales: Record<string, number> = Object.assign({}, ...months.map(month => ({ [month]: 0 })));
-    reservations.forEach(reservation => {
-      const key = format(reservation.checkout, 'yyyy-MM');
-      sales[key] += reservation.payment ?? 0;
-    });
-
-    return {
-      status: 200,
-      body: Object.entries(sales).map(([month, sales]) => ({
-        month: parse(month, 'yyyy-MM', new Date()),
-        sales,
-      })),
-    };
-  },
-);
-
-export const getDailySales = depend(
-  { getReservations },
-  async({ getReservations }, date: Date): Promise<BodyResponse<DailySales[]>> => {
-    const reservations = await getReservations({
-      select: {
-        payment: true,
-        checkout: true,
-      },
-      where: {
-        status: 'checkout',
-        checkout: {
-          gte: startOfMonth(date),
-          lt: endOfMonth(date),
-        },
-      },
-    });
-
-    const days = eachDayOfInterval({
-      start: startOfMonth(date),
-      end: endOfMonth(date),
-    }).map(day => format(day, 'yyyy-MM-dd'));
-
-    const sales: Record<string, number> = Object.assign({}, ...days.map(day => ({ [day]: 0 })));
-    reservations.forEach(reservation => {
-      const key = format(reservation.checkout, 'yyyy-MM-dd');
-      sales[key] += reservation.payment ?? 0;
-    });
-
-    return {
-      status: 200,
-      body: Object.entries(sales).map(([day, sales]) => ({
-        day: parse(day, 'yyyy-MM-dd', new Date()),
-        sales,
-      })),
-    };
-  },
-);
-
 export const checkin = depend(
   { getReservation, updateReservation },
   async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
@@ -268,4 +194,95 @@ export const cancel   = depend(
       status: 'cancelled',
     }),
   }),
+);
+
+export const getSelectableRooms = depend(
+  { getRooms },
+  async({ getRooms }): Promise<BodyResponse<SelectableRoom[]>> => {
+    return {
+      status: 200,
+      body: (await getRooms()).map(room => ({
+        id: room.id,
+        name: room.name,
+      })),
+    };
+  },
+);
+
+export const getMonthlySales = depend(
+  { getReservations },
+  async({ getReservations }, date: Date, roomId?: number): Promise<BodyResponse<MonthlySales[]>> => {
+    const reservations = await getReservations({
+      select: {
+        payment: true,
+        checkout: true,
+      },
+      where: {
+        status: 'checkout',
+        checkout: {
+          gte: startOfYear(date),
+          lt: endOfYear(date),
+        },
+        roomId,
+      },
+    });
+
+    const months = eachMonthOfInterval({
+      start: startOfYear(date),
+      end: endOfYear(date),
+    }).map(month => format(month, 'yyyy-MM'));
+
+    const sales: Record<string, number> = Object.assign({}, ...months.map(month => ({ [month]: 0 })));
+    reservations.forEach(reservation => {
+      const key = format(reservation.checkout, 'yyyy-MM');
+      sales[key] += reservation.payment ?? 0;
+    });
+
+    return {
+      status: 200,
+      body: Object.entries(sales).map(([month, sales]) => ({
+        month: parse(month, 'yyyy-MM', new Date()),
+        sales,
+      })),
+    };
+  },
+);
+
+export const getDailySales = depend(
+  { getReservations },
+  async({ getReservations }, date: Date, roomId?: number): Promise<BodyResponse<DailySales[]>> => {
+    const reservations = await getReservations({
+      select: {
+        payment: true,
+        checkout: true,
+      },
+      where: {
+        status: 'checkout',
+        checkout: {
+          gte: startOfMonth(date),
+          lt: endOfMonth(date),
+        },
+        roomId,
+      },
+    });
+
+    const days = eachDayOfInterval({
+      start: startOfMonth(date),
+      end: endOfMonth(date),
+    }).map(day => format(day, 'yyyy-MM-dd'));
+
+    const sales: Record<string, number> = Object.assign({}, ...days.map(day => ({ [day]: 0 })));
+    reservations.forEach(reservation => {
+      const key = format(reservation.checkout, 'yyyy-MM-dd');
+      sales[key] += reservation.payment ?? 0;
+    });
+
+    return {
+      status: 200,
+      body: Object.entries(sales).map(([day, sales]) => ({
+        day: parse(day, 'yyyy-MM-dd', new Date()),
+        sales,
+      })),
+    };
+  },
 );

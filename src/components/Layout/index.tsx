@@ -22,8 +22,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   contents: {
     width: '100%',
-    padding: '10px',
-    margin: '10px',
+    margin: theme.spacing(0, 2),
     display: 'flex',
     justifyContent: 'space-around',
   },

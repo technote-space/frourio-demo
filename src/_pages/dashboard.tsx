@@ -3,7 +3,18 @@ import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Query, QueryResult } from 'material-table';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import MaterialTable from 'material-table';
-import { Button, Card, CardContent, Grid, Typography, TextField } from '@material-ui/core';
+import {
+  FormControl,
+  InputLabel,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { differenceInCalendarDays, format } from 'date-fns';
@@ -24,9 +35,14 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {
     margin: theme.spacing(2, 0),
   },
-  dateWrap: {
+  wrapCondition: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  condition: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: theme.spacing(1),
   },
   date: {
     width: 'auto',
@@ -65,17 +81,19 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const tableIcons                  = useTableIcons();
   const [date, setDate]             = useState<Date>(new Date());
   const [salesDate, setSalesDate]   = useState<Date>(new Date());
+  const [roomId, setRoomId]         = useState<number>(0);
   const [cancelId, setCancelId]     = useState<number | undefined>();
   const [checkoutId, setCheckoutId] = useState<number | undefined>();
   const [amount, setAmount]         = useState<number | undefined>();
   const dailySales                  = useFetch(dispatch, [], client.dashboard.sales.daily, {
     headers: authHeader,
-    query: { date: salesDate },
+    query: { date: salesDate, roomId: roomId ? roomId : undefined },
   });
   const monthlySales                = useFetch(dispatch, [], client.dashboard.sales.monthly, {
     headers: authHeader,
-    query: { date: salesDate },
+    query: { date: salesDate, roomId: roomId ? roomId : undefined },
   });
+  const selectableRooms             = useFetch(dispatch, [], client.dashboard.rooms, { headers: authHeader });
   const checkinTableRef             = useRef<any>();
   const checkoutTableRef            = useRef<any>();
   const refreshTables               = () => {
@@ -96,6 +114,10 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   }, []);
   const handleSalesDateChange       = useCallback(value => {
     setSalesDate(value);
+    refreshSales();
+  }, []);
+  const handleSelectRoom            = useCallback(value => {
+    setRoomId(Number(value.target.value));
     refreshSales();
   }, []);
   const handleCloseCancel           = useCallback(() => {
@@ -132,7 +154,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     setAmount(Number(event.target.value));
   }, []);
 
-  const selectDate      = useMemo(() => <div className={classes.dateWrap}>
+  const selectDate       = useMemo(() => <div className={classes.condition}>
     <KeyboardDatePicker
       className={classes.date}
       disableToolbar
@@ -147,7 +169,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, date]);
-  const selectSalesDate = useMemo(() => <div className={classes.dateWrap}>
+  const selectSalesDate  = useMemo(() => <div className={classes.condition}>
     <KeyboardDatePicker
       className={classes.date}
       disableToolbar
@@ -163,7 +185,18 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       views={['year', 'month']}
     />
   </div>, [classes, salesDate]);
-  const checkinTable    = useMemo(() => <div className={classes.table}>
+  const selectTargetRoom = useMemo(() => <div className={classes.condition}>
+    <FormControl variant="outlined" margin="normal">
+      <InputLabel>部屋</InputLabel>
+      <Select value={roomId} onChange={handleSelectRoom}>
+        <MenuItem value="0">
+          <em>None</em>
+        </MenuItem>
+        {selectableRooms.data?.map(room => <MenuItem key={room.id} value={room.id}>{room.name}</MenuItem>)}
+      </Select>
+    </FormControl>
+  </div>, [classes, roomId, selectableRooms.data]);
+  const checkinTable     = useMemo(() => <div className={classes.table}>
     <MaterialTable
       tableRef={checkinTableRef}
       icons={tableIcons}
@@ -251,7 +284,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, date]);
-  const checkoutTable   = useMemo(() => <div className={classes.table}>
+  const checkoutTable    = useMemo(() => <div className={classes.table}>
     <MaterialTable
       tableRef={checkoutTableRef}
       icons={tableIcons}
@@ -338,7 +371,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, date]);
-  const dailySalesBar   = useMemo(() => <div className={classes.chart}>
+  const dailySalesBar    = useMemo(() => <div className={classes.chart}>
     <Bar
       data={{
         labels: dailySales.data?.map(item => format(new Date(item.day), 'd')) ?? [],
@@ -365,7 +398,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, dailySales.data]);
-  const monthlySalesBar = useMemo(() => <div className={classes.chart}>
+  const monthlySalesBar  = useMemo(() => <div className={classes.chart}>
     <Bar
       data={{
         labels: monthlySales.data?.map(item => format(new Date(item.month), 'M月')) ?? [],
@@ -392,7 +425,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, monthlySales.data]);
-  const cancelDialog    = useMemo(() => <Dialog
+  const cancelDialog     = useMemo(() => <Dialog
     onClose={handleCloseCancel}
     maxWidth="xs"
     open={cancelId !== undefined}
@@ -412,7 +445,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       </div>
     </DialogContent>
   </Dialog>, [classes, cancelId]);
-  const checkoutDialog  = useMemo(() => <Dialog
+  const checkoutDialog   = useMemo(() => <Dialog
     onClose={handleCloseCheckout}
     maxWidth="xs"
     open={checkoutId !== undefined}
@@ -438,14 +471,19 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     {checkoutDialog}
     <Card className={classes.card}>
       <CardContent>
-        {selectDate}
+        <div className={classes.wrapCondition}>
+          {selectDate}
+        </div>
         {checkinTable}
         {checkoutTable}
       </CardContent>
     </Card>
     <Card className={classes.card}>
       <CardContent>
-        {selectSalesDate}
+        <div className={classes.wrapCondition}>
+          {selectTargetRoom}
+          {selectSalesDate}
+        </div>
         <Grid container spacing={2}>
           <Grid item sm={12} md={6}>
             {dailySalesBar}

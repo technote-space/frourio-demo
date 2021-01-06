@@ -6,6 +6,7 @@ export type Methods = {
     reqHeaders: AuthHeader;
     query?: {
       date?: Date;
+      roomId?: number;
     };
     resBody: MonthlySales[];
   }
