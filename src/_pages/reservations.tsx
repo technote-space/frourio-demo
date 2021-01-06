@@ -95,7 +95,13 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         initialEditValue: addHours(addDays(startOfToday(), 3), 10),
       },
       { title: 'ステータス', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
-      { title: '支払額', field: 'payment', type: 'numeric', filtering: false },
+      {
+        title: '支払額',
+        field: 'payment',
+        type: 'numeric',
+        filtering: false,
+        render: data => data.payment ? `¥${data.payment}` : '',
+      },
     ]}
     authHeader={authHeader}
     options={{

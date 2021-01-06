@@ -103,7 +103,7 @@ export const getStatusCalendarEvents = depend(
     return {
       status: 200,
       body: reservations.map(reservation => ({
-        title: reservation.guestName,
+        title: `${reservation.guestName} (${reservation.number}人)`,
         start: format(reservation.checkin, 'yyyy-MM-dd'),
         end: format(reservation.checkout, 'yyyy-MM-dd'),
         allDay: true,

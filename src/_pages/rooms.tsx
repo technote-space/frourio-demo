@@ -14,9 +14,9 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
       { title: '部屋名', field: 'name' },
       { title: '最大人数', field: 'number', type: 'numeric' },
-      { title: '１泊料金', field: 'price', type: 'numeric' },
+      { title: '料金(円/人泊)', field: 'price', type: 'numeric', render: data => `¥${data.price}` },
       {
-        title: 'ステータス',
+        title: '利用状況',
         editable: 'never',
         render: (data) => <RoomStatusCalendar roomId={data.id} authHeader={authHeader}/>,
       },
