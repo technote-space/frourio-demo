@@ -18,3 +18,5 @@ export type ContextState = {
     variant: 'error' | 'info' | 'success' | 'warning',
   }
 };
+
+export type MaybeUndefined<T> = undefined extends T ? undefined : never;

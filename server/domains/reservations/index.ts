@@ -25,6 +25,7 @@ export type ListReservation = Reservation & {
     price: number;
   }
 }
+export type SelectedRoom = Pick<Room, 'id' | 'number' | 'price'>;
 
 export const list = depend(
   { getReservations, getReservationCount },
@@ -197,6 +198,22 @@ export const searchRoom = depend(
         data,
         page,
         totalCount,
+      },
+    };
+  },
+);
+
+export const getSelectedRoom = depend(
+  { getRoom },
+  async({ getRoom }, roomId: number): Promise<BodyResponse<SelectedRoom>> => {
+    const room = await getRoom(roomId);
+
+    return {
+      status: 200,
+      body: {
+        id: room.id,
+        number: room.number,
+        price: room.price,
       },
     };
   },

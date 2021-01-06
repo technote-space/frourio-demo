@@ -15,7 +15,7 @@ import { setNotice } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import pages from '~/_pages';
 
-type Model = Record<string, any> & {
+export type Model = Record<string, any> & {
   id: number;
 }
 

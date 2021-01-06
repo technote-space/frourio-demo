@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AspidaResponse } from 'aspida';
 import type { ApiInstance } from '$/api/$api';
+import type { MaybeUndefined } from '~/types';
 import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
 import { singular } from 'pluralize';
@@ -21,7 +22,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
   fallback: T,
   api: API,
   ...option: Parameters<API>
-): Promise<T> | never => {
+): Promise<T | MaybeUndefined<T>> | never => {
   try {
     const result = await api(...option);
     console.log(result);
@@ -34,6 +35,10 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
       if (error.response && 401 === error.response.status) {
         setError(dispatch, error.response.data.message);
         changePage(dispatch, 'logout');
+        if (!fallback) {
+          return undefined as MaybeUndefined<T>;
+        }
+
         return fallback;
       }
 

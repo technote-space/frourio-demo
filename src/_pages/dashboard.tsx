@@ -26,6 +26,7 @@ import AuthenticatedPage from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
+import { getPriceCalc } from '~/utils/calc';
 import useTableIcons from '~/hooks/useTableIcons';
 import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
 import clsx from 'clsx';
@@ -305,13 +306,11 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
               return data.amount;
             }
 
-            const diff   = differenceInCalendarDays(new Date(data.checkout), new Date(data.checkin));
-            const amount = data.room.price * data.number * diff;
             return <>
               <div>¥{data.amount}</div>
               <div style={{
                 whiteSpace: 'nowrap',
-              }}>{`(${data.room.price} * ${data.number}人 * ${diff}泊 = ${amount})`}</div>
+              }}>{`(${getPriceCalc(data.room.price, data.number, data.checkin, data.checkout, data.amount)})`}</div>
             </>;
           },
         },

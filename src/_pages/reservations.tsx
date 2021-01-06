@@ -1,11 +1,16 @@
 import type { FC } from 'react';
+import type { EditComponentProps } from 'material-table';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
+import type { Model } from '~/components/DataTable';
 import { useMemo } from 'react';
-import { differenceInCalendarDays, startOfToday, addDays, addHours } from 'date-fns';
+import { startOfToday, addDays, addHours } from 'date-fns';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
-import { ReservationStatus } from '$/types';
 import DataTable from '~/components/DataTable';
+import InputNumber from '~/components/reservations/InputNumber';
+import DisplayAmount from '~/components/reservations/DisplayAmount';
+import { ReservationStatus } from '$/types';
 import { client } from '~/utils/api';
+import { getPriceCalc } from '~/utils/calc';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
@@ -41,8 +46,8 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           api: client.reservations.search.rooms.get,
           columns: [
             { title: '部屋名', field: 'name' },
-            { title: '人数', field: 'number', type: 'numeric' },
-            { title: '１泊料金', field: 'price', type: 'numeric' },
+            { title: '最大人数', field: 'number', type: 'numeric' },
+            { title: '料金(円/人泊)', field: 'price', type: 'numeric' },
           ],
           render: data => data['roomName'],
           process: data => ({
@@ -58,27 +63,37 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         type: 'numeric',
         render: data => `${data['number']}/${data['room']['number']}`,
         filtering: false,
+        // eslint-disable-next-line react/display-name
+        editComponent: (props: EditComponentProps<Model>) => <InputNumber
+          authHeader={authHeader}
+          roomId={props.rowData['roomId']}
+          value={props.value}
+          onChange={props.onChange}
+        />,
+        validate: data => data['number'] > 0,
       },
       {
         title: '請求額',
         field: 'amount',
-        editable: 'never',
         // eslint-disable-next-line react/display-name
         render: data => {
           if (!data['room']) {
             return data['amount'];
           }
 
-          const diff = differenceInCalendarDays(new Date(data['checkout']), new Date(data['checkin']));
-          const amount = data['room']['price'] * data['number'] * diff;
           return <>
             <div>¥{data['amount']}</div>
             <div style={{
               whiteSpace: 'nowrap',
-            }}>{`(${amount} = ${data['room']['price']} * ${data['number']}人 * ${diff}泊)`}</div>
+            }}>{`(${getPriceCalc(data['room']['price'], data['number'], data['checkin'], data['checkout'], data['amount'])})`}</div>
           </>;
         },
         filtering: false,
+        // eslint-disable-next-line react/display-name
+        editComponent: (props: EditComponentProps<Model>) => <DisplayAmount
+          authHeader={authHeader}
+          rowData={props.rowData}
+        />,
       },
       {
         title: 'チェックイン',
@@ -99,8 +114,10 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         title: '支払額',
         field: 'payment',
         type: 'numeric',
+        editable: 'onUpdate',
         filtering: false,
-        render: data => data.payment ? `¥${data.payment}` : '',
+        // eslint-disable-next-line react/display-name
+        render: data => data['payment'] ? `¥${data['payment']}` : '',
       },
     ]}
     authHeader={authHeader}
