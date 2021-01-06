@@ -1,6 +1,6 @@
 import { depend } from 'velona';
 import { validateUser } from '$/repositories/admin';
-import { createAuthorizationPayload } from '$/utils';
+import { createAuthorizationPayload } from '$/service/auth';
 import type { LoginBody } from '$/domains/login/validators';
 import type { FastifyInstance } from 'fastify';
 import type { LoginResponse } from '$/types';

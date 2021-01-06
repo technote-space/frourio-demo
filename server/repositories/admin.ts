@@ -1,8 +1,8 @@
 import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
-import { createHash, validateHash } from '$/utils';
+import { createHash, validateHash } from '$/service/auth';
 import { API_ORIGIN, BASE_PATH } from '$/service/envValues';
-import { ensureNotNull } from '$/utils';
+import { ensureNotNull } from '$/repositories/utils';
 import 'fastify-jwt';
 import type { Prisma } from '@prisma/client';
 

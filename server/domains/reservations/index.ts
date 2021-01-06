@@ -12,7 +12,7 @@ import { getGuest, getGuests, getGuestCount } from '$/repositories/guest';
 import type { Guest } from '$/repositories/guest';
 import { getRoom, getRooms, getRoomCount } from '$/repositories/room';
 import type { Room } from '$/repositories/room';
-import { getCurrentPage, getSkip } from '$/utils';
+import { getCurrentPage, getSkip } from '$/service/pages';
 import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import type { Query, QueryResult } from 'material-table';

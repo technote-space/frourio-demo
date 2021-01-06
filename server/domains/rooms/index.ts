@@ -1,6 +1,6 @@
 import { depend } from 'velona';
 import { getRooms, getRoomCount, getRoom, createRoom, updateRoom, deleteRoom } from '$/repositories/room';
-import { getCurrentPage, getSkip } from '$/utils';
+import { getCurrentPage, getSkip } from '$/service/pages';
 import type { BodyResponse } from '$/types';
 import type { Room, CreateRoomData, UpdateRoomData } from '$/repositories/room';
 import type { Query, QueryResult } from 'material-table';

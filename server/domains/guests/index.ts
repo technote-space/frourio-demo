@@ -1,6 +1,6 @@
 import { depend } from 'velona';
 import { getGuests, getGuestCount, getGuest, createGuest, updateGuest, deleteGuest } from '$/repositories/guest';
-import { getSkip, getCurrentPage } from '$/utils';
+import { getSkip, getCurrentPage } from '$/service/pages';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import type { BodyResponse } from '$/types';
 import type { Guest, CreateGuestData, UpdateGuestData } from '$/repositories/guest';

@@ -20,7 +20,7 @@ import type { Reservation } from '$/repositories/reservation';
 import type { DailySales, MonthlySales } from '$/domains/dashboard/types';
 import type { Query, QueryResult } from 'material-table';
 import { getWhere, getOrderBy } from '$/repositories/utils';
-import { getCurrentPage, getSkip } from '$/utils';
+import { getCurrentPage, getSkip } from '$/service/pages';
 
 export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
 export type CheckoutReservation =

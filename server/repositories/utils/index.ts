@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { Prisma, PrismaClient } from '@prisma/client';
 import type { Column, Query, Filter } from 'material-table';
+import createError from 'fastify-error';
 
 export type Models = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {
@@ -17,7 +18,6 @@ export type Models = {
     count,
   } ? key : never
 }[keyof PrismaClient]
-
 type ModelWhere<T extends object> = {
   [key in keyof T]?: T[key] extends number ? (Prisma.IntFilter | number) :
     T[key] extends string ? (Prisma.StringFilter | string) :
@@ -42,6 +42,17 @@ type DateConstraint<T extends object> = {
   date?: Date;
   key: keyof T;
 }
+type MaybeUndefined<T> = undefined extends T ? undefined : never;
+
+export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T | never => {
+  if (!item) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    throw new createError('FST_TARGET_NOT_FOUND', errorMessage, 404);
+  }
+
+  return item;
+};
 
 const mergeConstraints = <T extends object>(
   where: Where<T> | undefined,
@@ -174,7 +185,6 @@ export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(
   return data;
 };
 
-type MaybeUndefined<T> = undefined extends T ? undefined : never;
 export const parseQuery = <T extends object, U extends undefined | Query<T> | any>(query: U): Query<T> | MaybeUndefined<U> => {
   if (!query) {
     return undefined as MaybeUndefined<U>;

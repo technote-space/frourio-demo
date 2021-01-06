@@ -1,5 +1,5 @@
 import { defineHooks } from './$relay';
-import { verifyAdmin } from '$/utils';
+import { verifyAdmin } from '$/service/auth';
 import type { AuthorizationPayload } from '$/types';
 
 export type AdditionalRequest = {
