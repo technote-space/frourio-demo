@@ -1,8 +1,7 @@
 import { defineController } from './$relay';
 import { list, create } from '$/domains/reservations';
-import { parseQuery } from '$/repositories/utils';
 
 export default defineController(({ list, create }), ({ list, create }) => ({
-  get: async({ query }) => list(parseQuery(query)),
+  get: async({ query }) => list(query),
   post: async({ body }) => create(body),
 }));

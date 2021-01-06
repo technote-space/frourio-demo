@@ -1,6 +1,5 @@
 import { defineController } from './$relay';
 import { getCheckin, checkin } from '$/domains/dashboard';
-import { parseQuery } from '$/repositories/utils';
 
 export default defineController(({ getCheckin, checkin }), ({ getCheckin }) => ({
   get: async({ query }) => {
@@ -8,7 +7,7 @@ export default defineController(({ getCheckin, checkin }), ({ getCheckin }) => (
       return getCheckin();
     }
 
-    return getCheckin(parseQuery(query.query), query.date);
+    return getCheckin(query.query, query.date);
   },
   patch: async({ body }) => checkin(body.id),
 }));
