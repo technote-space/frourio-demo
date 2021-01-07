@@ -100,6 +100,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
   }, []);
   const wrapEditComponent                       = (column: Column<T>): Column<T> => {
     if ('editComponentWithError' in column && column.editComponentWithError) {
+      // eslint-disable-next-line react/display-name
       column.editComponent = (props: EditComponentProps<T>) => {
         if (column.editComponentWithError) {
           const key = props.columnDef.field as string;
