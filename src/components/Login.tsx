@@ -24,6 +24,7 @@ const useStyles = makeStyles({
   },
   input: {
     margin: '1rem',
+    display: 'flex',
   },
 });
 
