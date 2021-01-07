@@ -1,24 +1,26 @@
 {
   "compilerOptions": {
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
+    "target": "ESNext",
     "lib": [
-      "dom"
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
-    "module": "esnext",
-    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "$/*": [
         "./*"
       ]
     },
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "rootDir": ".",
     "strict": true,
     "strictPropertyInitialization": false,
-    "noImplicitAny": false,
-    "target": "ESNext"
+    "noImplicitAny": false
   }
 }

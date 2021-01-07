@@ -86,6 +86,12 @@ export const getStatusCalendarEvents = depend(
     end: Date,
   ): Promise<BodyResponse<Array<RoomStatusEvent>>> => {
     const reservations = await getReservations({
+      select: {
+        guestName: true,
+        number: true,
+        checkin: true,
+        checkout: true,
+      },
       where: {
         roomId,
         checkin: {

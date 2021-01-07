@@ -1,2 +1,1 @@
-export type Methods = {
-}
+export type Methods = {}

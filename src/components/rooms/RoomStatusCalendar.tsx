@@ -43,12 +43,11 @@ const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
         end: info.end,
       },
     }).then(data => {
-      data.map(item => ({
+      successCallback(data.map(item => ({
         ...item,
         color: theme.palette.primary.main,
         textColor: theme.palette.primary.contrastText,
-      }));
-      successCallback(data);
+      })));
     });
   }, []);
 
