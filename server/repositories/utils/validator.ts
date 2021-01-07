@@ -7,6 +7,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { PrismaClient } from '@prisma/client';
+import { startOfDay, isAfter } from 'date-fns';
 import { Models } from '.';
 
 @ValidatorConstraint({ async: true })
@@ -62,8 +63,8 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
 
     const checkin  = new Date(data['checkin']);
     const checkout = new Date(data['checkout']);
-    if (checkin.getFullYear() >= checkout.getFullYear() && checkin.getMonth() >= checkout.getMonth() && checkin.getDate() >= checkout.getDate()) {
-      this.reason = 'The checkout time must be after the checkin time.';
+    if (!isAfter(startOfDay(checkout), startOfDay(checkin))) {
+      this.reason = 'The checkout date must be after the checkin date.';
       return false;
     }
 

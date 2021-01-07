@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { getAdmin } from '$/repositories/admin';
 import type { FastifyRequest } from 'fastify';
 import type { AuthorizationPayload } from '$/types';
+import 'fastify-jwt';
 
 export const createHash   = (data: string): string => bcrypt.hashSync(data, 10);
 export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);
