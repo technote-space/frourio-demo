@@ -8,6 +8,7 @@ export type Methods = {
       roomId: number;
       start: Date;
       end: Date;
+      id?: number;
     };
     resBody: CheckinNotSelectableEvent[];
   }

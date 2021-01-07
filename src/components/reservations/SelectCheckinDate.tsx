@@ -51,6 +51,7 @@ const SelectCheckinDate: FC<Props> = ({ authHeader, props }: Props) => {
         roomId: props.rowData['roomId'],
         start: info.start,
         end: info.end,
+        id: props.rowData['id'],
       },
     }).then(data => {
       if (props.rowData['checkin']) {

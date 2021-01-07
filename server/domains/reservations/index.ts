@@ -254,13 +254,18 @@ export const getSelectedGuest = depend(
 
 export const getCheckinNotSelectable = depend(
   { getReservations },
-  async({ getReservations }, roomId: number, start: Date, end: Date): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
+  async({ getReservations }, roomId: number, start: Date, end: Date, id?: number): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
     const reservations                             = await getReservations({
       select: {
         checkin: true,
         checkout: true,
       },
       where: {
+        id: {
+          ...(id ? {
+            not: id,
+          } : {}),
+        },
         roomId,
         checkin: {
           lt: end,
@@ -307,13 +312,18 @@ export const getCheckinNotSelectable = depend(
 
 export const getCheckoutSelectable = depend(
   { getReservations },
-  async({ getReservations }, roomId: number, end: Date, checkin: Date): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
+  async({ getReservations }, roomId: number, end: Date, checkin: Date, id?: number): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
     const reservations                           = await getReservations({
       select: {
         checkin: true,
         checkout: true,
       },
       where: {
+        id: {
+          ...(id ? {
+            not: id,
+          } : {}),
+        },
         roomId,
         checkin: {
           lt: end,

@@ -79,7 +79,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
             gt: checkin,
           },
           status: {
-            not: 'Reserved',
+            not: 'cancelled',
           },
         },
         {
