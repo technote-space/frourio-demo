@@ -211,5 +211,14 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
     _query['error'] = JSON.parse(_query['error']);
   }
 
+  Object.keys(_query).forEach(key => {
+    if (typeof _query[key] === 'string' && /^\d{4}-\d{1,2}-\d{1,2}[\dTZ\s:.+-]*$/.test(_query[key])) {
+      const date = new Date(_query[key]);
+      if (!isNaN(date.getTime())) {
+        _query[key] = date;
+      }
+    }
+  });
+
   return _query;
 };
