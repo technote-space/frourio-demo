@@ -7,7 +7,7 @@ import { startOfToday, addDays, addHours } from 'date-fns';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 import InputNumber from '~/components/reservations/InputNumber';
-import DisplayAmount from '~/components/reservations/DisplayAmount';
+import RenderAmount from '~/components/reservations/RenderAmount';
 import { ReservationStatus } from '$/types';
 import { client } from '~/utils/api';
 import { getPriceCalc } from '~/utils/calc';
@@ -90,7 +90,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         },
         filtering: false,
         // eslint-disable-next-line react/display-name
-        editComponent: (props: EditComponentProps<Model>) => <DisplayAmount
+        editComponent: (props: EditComponentProps<Model>) => <RenderAmount
           authHeader={authHeader}
           rowData={props.rowData}
         />,

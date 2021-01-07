@@ -11,7 +11,7 @@ type Props = {
   rowData: Partial<Model>;
 }
 
-const DisplayAmount: FC<Props> = ({ authHeader, rowData }: Props) => {
+const RenderAmount: FC<Props> = ({ authHeader, rowData }: Props) => {
   const { dispatch } = useDispatchContext();
   const room         = useFetch(dispatch, undefined, client.reservations.room, {
     headers: authHeader,
@@ -26,4 +26,4 @@ const DisplayAmount: FC<Props> = ({ authHeader, rowData }: Props) => {
   </> : null, [room?.data, rowData['checkin'], rowData['checkout'], rowData['number']]);
 };
 
-export default DisplayAmount;
+export default RenderAmount;
