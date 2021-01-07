@@ -1,58 +1,34 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
 import type { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import type { Column, Query, QueryResult, Options } from 'material-table';
+import type { Column, Query, QueryResult, Options, EditComponentProps } from 'material-table';
 import type { DataTableApiModels } from '~/utils/api';
 import type { ValidationError } from 'class-validator';
-import type { AspidaResponse } from 'aspida';
 import { useMemo, useCallback, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import MaterialTable, { MTableEditField } from 'material-table';
-import SearchTable from '~/components/SearchTable';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
 import { getDataTableApi, handleAuthError, processUpdateData, isAxiosError } from '~/utils/api';
 import { setNotice } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import pages from '~/_pages';
+import * as React from 'react';
 
 export type Model = Record<string, any> & {
   id: number;
 }
-
-type SearchColumn<T extends Model> = Omit<Column<T>, 'field' | 'type'> & {
-  field: keyof T;
-  type: 'search';
-  search: {
-    model: DataTableApiModels;
-    api: (option?: any) => Promise<AspidaResponse<any, any, any>>,
-    columns: {
-      title: string;
-      field: string,
-      type?:
-        | 'string'
-        | 'boolean'
-        | 'numeric'
-        | 'date'
-        | 'datetime'
-        | 'time'
-        | 'currency';
-    }[];
-    render?: (rowData: T) => string;
-    process?: (rowData: T) => T;
-  }
+export type EditComponentPropsWithError<T extends Model> = EditComponentProps<T> & {
+  helperText?: string;
+  hideError: () => void;
 }
+
 type CustomColumn<T extends Model> = Omit<Column<T>, 'field' | 'editable' | 'render'> & {
   editable: 'never';
   render: Required<Pick<Column<T>, 'render'>['render']>;
 }
 type DataTableColumn<T extends Model> = (Omit<Column<T>, 'field'> & {
   field: keyof T;
-}) | SearchColumn<T> | CustomColumn<T>;
-type EditData = {
-  [model: string]: {
-    [id: number]: any
-  }
-};
+}) | CustomColumn<T>;
 type Props<T extends Model> = {
   model: DataTableApiModels;
   columns: DataTableColumn<T>[];
@@ -66,6 +42,14 @@ type EditFieldProps<T extends Model> = {
   error?: boolean;
   helperText?: string;
   rowData: T;
+}
+
+declare module 'material-table' {
+  interface Column<RowData extends object> {
+    editComponentWithError?: (
+      props: EditComponentPropsWithError<Model>,
+    ) => React.ReactElement;
+  }
 }
 
 const controlValidationEditField = <T extends Model>(
@@ -98,17 +82,6 @@ const controlValidationEditField = <T extends Model>(
   })}/>;
 });
 
-const getRenderText = <T extends Model>(rowData: T, render: ((rowData: T) => string) | undefined, column: SearchColumn<T>, editData: EditData): string => {
-  const id    = rowData[column.field];
-  const model = column.search.model;
-  const data  = model && model in editData && id in editData[model] ? editData[model][id] : rowData;
-  if (!render) {
-    return String(data[column.field]);
-  }
-
-  return render(data);
-};
-
 const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, options }: Props<T>): ReactElement => {
   const { dispatch } = useDispatchContext();
   const tableIcons   = useTableIcons();
@@ -125,61 +98,41 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
       </Grid>
     </Grid>;
   }, []);
-  const columns                                 = useMemo(() => columnsEx.map(column => {
-    if (column.type === 'search') {
-      const { search, ...rest }                  = column;
-      const editData: EditData                   = {};
-      const editComponent: FC<EditFieldProps<T>> = (props) => {
-        const onChange = (value: T) => {
-          if (search.model) {
-            editData[search.model] = {
-              ...editData[search.model],
-              [value.id]: search.process ? search.process(value) : value,
-            };
-          }
-          props.onChange(value.id);
-        };
-        return <SearchTable
-          model={search.model}
-          api={search.api}
-          columns={[
-            { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-            ...search.columns,
-          ]}
-          searchText={getRenderText(props.rowData, search.render, column, editData)}
-          authHeader={authHeader}
-          props={{ ...props, onChange }}
-        />;
+  const wrapEditComponent                       = (column: Column<T>): Column<T> => {
+    if ('editComponentWithError' in column && column.editComponentWithError) {
+      column.editComponent = (props: EditComponentProps<T>) => {
+        if (column.editComponentWithError) {
+          const key = props.columnDef.field as string;
+          return column.editComponentWithError({
+            ...props,
+            error: key in validationErrors,
+            helperText: validationErrors[key] ?? undefined,
+            hideError: () => {
+              if (key in validationErrors) {
+                delete validationErrors[key];
+                setValidationErrors(validationErrors);
+                props.onChange(props.value);
+              }
+            },
+          });
+        }
+        return <></>;
       };
-      const render                               = (data: T) => getRenderText(data, search.render, column, editData);
-      const validate                             = (data: T) => {
-        return {
-          isValid: !!getRenderText(data, search.render, column, editData),
-        };
-      };
-
-      return {
-        filtering: false,
-        sorting: false,
-        ...rest,
-        type: 'string',
-        editComponent,
-        render,
-        validate,
-      } as Column<T>;
     }
-
+    return column;
+  };
+  const columns                                 = useMemo(() => columnsEx.map(column => {
     if (!('field' in column) && column.editable === 'never') {
-      return {
+      return wrapEditComponent({
         filtering: false,
         searchable: false,
         sorting: false,
         ...column,
-      } as Column<T>;
+      } as Column<T>);
     }
 
-    return column as Column<T>;
-  }), []);
+    return wrapEditComponent(column as Column<T>);
+  }), [validationErrors]);
   const api                                     = useMemo(() => getDataTableApi(model), []);
   const editField                               = useMemo(() => controlValidationEditField('EditField', MTableEditField, validationErrors, setValidationErrors), [validationErrors]);
   const fetchData                               = useCallback(async(query: Query<T>): Promise<QueryResult<T>> => handleAuthError(dispatch, {

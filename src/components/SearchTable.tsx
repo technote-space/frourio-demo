@@ -3,6 +3,7 @@ import type { ReactElement } from 'react';
 import type { Column, Query, QueryResult, Action } from 'material-table';
 import type { DataTableApiModels } from '~/utils/api';
 import type { AspidaResponse } from 'aspida';
+import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import { useMemo, useCallback, useState } from 'react';
 import MaterialTable from 'material-table';
 import { Dialog, DialogTitle, Link, IconButton, Typography, FormControl, FormHelperText } from '@material-ui/core';
@@ -28,27 +29,18 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-type EditFieldProps<T extends Record<string, any>> = {
-  columnDef: Column<T>;
-  onChange: ((value: any) => void);
-  error?: boolean;
-  helperText?: string;
-} & {
-  [key: string]: any;
-}
-
 type Props<T extends object> = {
   model: DataTableApiModels;
   api: (option?: any) => Promise<AspidaResponse<any, any, any>>;
   columns: Column<T>[];
   authHeader: { authorization: string };
   searchText?: string;
-  props: EditFieldProps<T>;
+  props: EditComponentPropsWithError<Model>;
 }
 
 const SearchTable = <T extends {
   id: number;
-}, >({ model, api, columns, authHeader, searchText, props: editFieldProps }: Props<T>): ReactElement => {
+}, >({ model, api, columns, authHeader, searchText, props }: Props<T>): ReactElement => {
   const classes      = useStyles();
   const { dispatch } = useDispatchContext();
 
@@ -56,6 +48,7 @@ const SearchTable = <T extends {
   const [open, setOpen]  = useState(false);
   const handleClickField = useCallback(() => {
     setOpen(true);
+    props.hideError();
   }, []);
   const handleClose      = useCallback(() => {
     setOpen(false);
@@ -73,7 +66,7 @@ const SearchTable = <T extends {
     tooltip: 'Select',
     onClick: (event, data) => {
       if ('id' in data) {
-        editFieldProps.onChange(data);
+        props.onChange(data);
       }
       setOpen(false);
     },
@@ -84,7 +77,7 @@ const SearchTable = <T extends {
     totalCount: 0,
   }, api, { headers: authHeader, query }), []);
 
-  const cell     = useMemo(() => <FormControl error={Boolean(editFieldProps.error)}>
+  const cell     = useMemo(() => <FormControl error={Boolean(props.error)}>
     <Link
       component="button"
       variant="body2"
@@ -92,8 +85,8 @@ const SearchTable = <T extends {
     >
       {searchText || '選択'}
     </Link>
-    {editFieldProps.helperText && <FormHelperText>{editFieldProps.helperText}</FormHelperText>}
-  </FormControl>, [searchText, editFieldProps.helperText]);
+    {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
+  </FormControl>, [searchText, props.error, props.helperText]);
   const editCell = useMemo(() => <Dialog open={open} onClose={handleClose}>
     <DialogTitle disableTypography className={classes.root}>
       <Typography variant="h6" className={classes.title}>

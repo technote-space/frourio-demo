@@ -1,5 +1,11 @@
+import type { Guest } from '$/repositories/guest';
+import type { Room } from '$/repositories/room';
+import type { BodyResponse } from '$/types';
+import type { Reservation } from '$/repositories/reservation';
+import type { Query, QueryResult } from 'material-table';
+import type { ReservationBody } from '$/domains/reservations/validators';
 import { depend } from 'velona';
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
 import {
   getReservations,
   getReservationCount,
@@ -9,14 +15,8 @@ import {
   deleteReservation,
 } from '$/repositories/reservation';
 import { getGuest, getGuests, getGuestCount } from '$/repositories/guest';
-import type { Guest } from '$/repositories/guest';
 import { getRoom, getRooms, getRoomCount } from '$/repositories/room';
-import type { Room } from '$/repositories/room';
 import { getCurrentPage, getSkip } from '$/service/pages';
-import type { BodyResponse } from '$/types';
-import type { Reservation } from '$/repositories/reservation';
-import type { Query, QueryResult } from 'material-table';
-import type { ReservationBody } from '$/domains/reservations/validators';
 import { getWhere, getOrderBy, getFilterConstraints } from '$/repositories/utils';
 
 export type ListReservation = Reservation & {
@@ -25,7 +25,24 @@ export type ListReservation = Reservation & {
     price: number;
   }
 }
-export type SelectedRoom = Pick<Room, 'id' | 'number' | 'price'>;
+export type SelectedRoom = Pick<Room, 'id' | 'name' | 'number' | 'price'>;
+export type SelectedGuest = Pick<Guest, 'id' | 'name'>;
+export type CheckinNotSelectableEvent = {
+  start: string;
+  end: string;
+  allDay: true;
+  color: string;
+  textColor: string;
+  display: string,
+}
+export type CheckoutSelectableEvent = {
+  start: string;
+  end: string;
+  allDay: true;
+  color: string;
+  textColor: string;
+  display: string,
+}
 
 export const list = depend(
   { getReservations, getReservationCount },
@@ -212,9 +229,139 @@ export const getSelectedRoom = depend(
       status: 200,
       body: {
         id: room.id,
+        name: room.name,
         number: room.number,
         price: room.price,
       },
+    };
+  },
+);
+
+export const getSelectedGuest = depend(
+  { getGuest },
+  async({ getGuest }, guestId: number): Promise<BodyResponse<SelectedGuest>> => {
+    const room = await getGuest(guestId);
+
+    return {
+      status: 200,
+      body: {
+        id: room.id,
+        name: room.name,
+      },
+    };
+  },
+);
+
+export const getCheckinNotSelectable = depend(
+  { getReservations },
+  async({ getReservations }, roomId: number, start: Date, end: Date): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
+    const reservations                             = await getReservations({
+      select: {
+        checkin: true,
+        checkout: true,
+      },
+      where: {
+        roomId,
+        checkin: {
+          lt: end,
+        },
+        checkout: {
+          gt: start,
+        },
+        status: {
+          not: 'cancelled',
+        },
+      },
+    });
+    const dates: Array<number>                     = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
+      start: startOfDay(reservation.checkin),
+      end: startOfDay(subDays(reservation.checkout, 1)),
+    })).map(date => date.valueOf()))].sort();
+    const events: Array<CheckinNotSelectableEvent> = [];
+    if (dates.length) {
+      const createEvent          = (start: number, end: number): CheckinNotSelectableEvent => ({
+        start: format(start, 'yyyy-MM-dd'),
+        end: format(end + 86400000, 'yyyy-MM-dd'), // end is exclusive
+        allDay: true,
+        color: '#a99',
+        textColor: 'black',
+        display: 'background',
+      });
+      let start = dates[0], prev = dates[0];
+      for (let index = 1; index < dates.length; ++index) {
+        if (dates[index] - prev !== 86400000) {
+          events.push(createEvent(start, prev));
+          start = dates[index];
+        }
+        prev = dates[index];
+      }
+      events.push(createEvent(start, prev));
+    }
+
+    return {
+      status: 200,
+      body: events,
+    };
+  },
+);
+
+export const getCheckoutSelectable = depend(
+  { getReservations },
+  async({ getReservations }, roomId: number, end: Date, checkin: Date): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
+    const reservations                           = await getReservations({
+      select: {
+        checkin: true,
+        checkout: true,
+      },
+      where: {
+        roomId,
+        checkin: {
+          lt: end,
+        },
+        checkout: {
+          gt: checkin,
+        },
+        status: {
+          not: 'cancelled',
+        },
+      },
+    });
+    const dates: Array<number>                   = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
+      start: startOfDay(reservation.checkin),
+      end: startOfDay(subDays(reservation.checkout, 1)),
+    })).map(date => date.valueOf()))].sort();
+    const events: Array<CheckoutSelectableEvent> = [];
+    const startValue                             = startOfDay(checkin).valueOf();
+    let prev                                     = startValue;
+    const endValue                               = startOfDay(end).valueOf();
+    while (prev < endValue) {
+      prev += 86400000;
+      if (dates.includes(prev)) {
+        events.push({
+          start: format(startValue + 86400000, 'yyyy-MM-dd'), // exclude checkin date
+          end: format(prev + 86400000, 'yyyy-MM-dd'), // end is exclusive
+          allDay: true,
+          color: '#a99',
+          textColor: 'black',
+          display: 'inverse-background',
+        });
+        break;
+      }
+    }
+    if (!events.length) {
+      events.push({
+        start: format(startValue + 86400000, 'yyyy-MM-dd'), // exclude checkin date
+        end: format(endValue + 86400000, 'yyyy-MM-dd'), // end is exclusive
+        allDay: true,
+        color: '#a99',
+        textColor: 'black',
+        display: 'inverse-background',
+      });
+    }
+
+    return {
+      status: 200,
+      body: events,
     };
   },
 );
