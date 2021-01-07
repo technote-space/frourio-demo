@@ -185,7 +185,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       <InputLabel>部屋</InputLabel>
       <Select value={roomId} onChange={handleSelectRoom}>
         <MenuItem value="0">
-          <em>None</em>
+          <em>全部屋</em>
         </MenuItem>
         {selectableRooms.data?.map(room => <MenuItem key={room.id} value={room.id}>{room.name}</MenuItem>)}
       </Select>
@@ -446,7 +446,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <DialogTitle>チェックアウト</DialogTitle>
     <DialogContent dividers>
       <div className={classes.buttonGroup}>
-        <TextField type="number" value={amount} onChange={handleChangeAmount}/>
+        <TextField type="number" value={amount ?? ''} onChange={handleChangeAmount}/>
         <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCheckout}>
           確定
         </Button>
