@@ -1,5 +1,8 @@
 # Sample project of [frourio](https://github.com/frouriojs/frourio)
 
+<!-- START doctoc -->
+<!-- END doctoc -->
+
 ## Getting Started
 
 1. Set
@@ -17,3 +20,7 @@
    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Author
+[GitHub (Technote)](https://github.com/technote-space)  
+[Blog](https://technote.space)
