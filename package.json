@@ -27,7 +27,7 @@
     "cover": "jest --coverage",
     "test": "npm run lint && npm run build:types && npm run cover",
     "typecheck": "npm run build:types && tsc --noEmit && tsc --noEmit -p server",
-    "update": "run-s update:*",
+    "update": "yarn update:front && yarn update:server",
     "update:front": "npx npm-check-updates -u --timeout 100000 -x @date-io/date-fns,next-transpile-modules && yarn install && yarn upgrade && yarn audit",
     "update:server": "cd server/prisma && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
   },
