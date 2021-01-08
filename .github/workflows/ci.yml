@@ -74,7 +74,7 @@ jobs:
         run: yarn install
         if: env.RUNNING && steps.client-yarn-cache.outputs.cache-hit != 'true'
       - run: yarn typecheck
-        if: env.RUNNING && !env.MATCHED_FILES
+        if: env.RUNNING
 
   cover:
     name: Coverage
