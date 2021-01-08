@@ -7,7 +7,7 @@ import { Dialog, FormControl, FormHelperText, Link } from '@material-ui/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { format, setHours, isAfter } from 'date-fns';
+import { format, setHours, isAfter, startOfToday } from 'date-fns';
 import { client, handleAuthError } from '~/utils/api';
 import { getEventDates } from '~/utils/calendar';
 import { useDispatchContext } from '~/store';
@@ -109,6 +109,7 @@ const SelectCheckoutDate: FC<Props> = ({ authHeader, props }: Props) => {
         dateClick={handleDateClick}
         ref={calendarRef}
         loading={handleEventLoading}
+        initialDate={props.rowData['checkin'] ? props.rowData['checkin'] : startOfToday()}
       />
     </div>
   </Dialog>, [classes, open, isLoading]);

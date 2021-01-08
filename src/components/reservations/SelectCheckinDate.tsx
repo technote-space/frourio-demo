@@ -7,7 +7,7 @@ import { Dialog, Link, FormControl, FormHelperText } from '@material-ui/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { format, setHours } from 'date-fns';
+import { format, setHours, startOfToday } from 'date-fns';
 import { client, handleAuthError } from '~/utils/api';
 import { getEventDates } from '~/utils/calendar';
 import { useDispatchContext } from '~/store';
@@ -104,6 +104,7 @@ const SelectCheckinDate: FC<Props> = ({ authHeader, props }: Props) => {
         dateClick={handleDateClick}
         ref={calendarRef}
         loading={handleEventLoading}
+        initialDate={props.value ? props.value : startOfToday()}
       />
     </div>
   </Dialog>, [classes, open, isLoading]);
