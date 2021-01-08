@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "setup": "run-p setup:*",
-    "setup:install": "yarn install && cd server && yarn --cwd server install",
+    "setup:install": "yarn install && cd server && yarn install",
     "setup:db": "yarn --cwd server setup && yarn migrate:seed",
     "dev": "npm run migrate:dev && run-p dev:*",
     "dev:client": "next dev -p 3000",
