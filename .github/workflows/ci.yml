@@ -1,0 +1,217 @@
+on: push
+
+name: CI
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      LINT: 1
+    steps:
+      - uses: technote-space/auto-cancel-redundant-workflow@v1
+        with:
+          EXCLUDE_MERGED: 'true'
+      - name: Set running flag
+        run: echo "RUNNING=1" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: technote-space/get-git-comment-action@v1
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: +(src|server)/**/*.+(js|ts)
+          FILES: |
+            yarn.lock
+            .eslintrc
+        if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
+      - name: Set running flag
+        run: echo "RUNNING=" >> $GITHUB_ENV
+        if: "! env.GIT_DIFF"
+
+      - uses: actions/cache@v2
+        id: client-yarn-cache
+        with:
+          path: "node_modules"
+          key: client-yarn-${{ hashFiles('yarn.lock') }}
+        if: env.RUNNING
+      - name: Install Package dependencies
+        run: yarn install
+        if: env.RUNNING && steps.client-yarn-cache.outputs.cache-hit != 'true'
+      - name: Check code style
+        run: yarn eslint ${{ env.GIT_DIFF_FILTERED }}
+        if: env.RUNNING && !env.MATCHED_FILES
+      - name: Check code style
+        run: yarn lint
+        if: env.RUNNING && env.MATCHED_FILES
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      LINT: 1
+    steps:
+      - name: Set running flag
+        run: echo "RUNNING=1" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: technote-space/get-git-comment-action@v1
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: +(src|server)/**/*.+(js|ts)
+          FILES: yarn.lock
+        if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
+      - name: Set running flag
+        run: echo "RUNNING=" >> $GITHUB_ENV
+        if: "! env.GIT_DIFF"
+
+      - uses: actions/cache@v2
+        id: client-yarn-cache
+        with:
+          path: "node_modules"
+          key: client-yarn-${{ hashFiles('yarn.lock') }}
+        if: env.RUNNING
+      - name: Install Package dependencies
+        run: yarn install
+        if: env.RUNNING && steps.client-yarn-cache.outputs.cache-hit != 'true'
+      - run: yarn typecheck
+        if: env.RUNNING && !env.MATCHED_FILES
+
+  cover:
+    name: Coverage
+    needs: [eslint, typecheck]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: ['12', '14']
+    steps:
+      - name: Set running flag
+        run: echo "RUNNING=1" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: technote-space/get-git-comment-action@v1
+      - uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: +(src|server)/**/*.+(js|ts|snap)
+          FILES: |
+            yarn.lock
+            jest.config.js
+        if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
+      - name: Set running flag
+        run: echo "RUNNING=" >> $GITHUB_ENV
+        if: "! env.GIT_DIFF"
+      - name: Set running flag
+        if: "matrix.node == '12' && ! startsWith(github.ref, 'refs/tags/') && github.event.base_ref == format('refs/heads/{0}', github.event.repository.default_branch)"
+        run: echo "RUNNING=1" >> $GITHUB_ENV
+      - name: Set running flag
+        if: matrix.node == '12' && startsWith(github.ref, 'refs/tags/v')
+        run: echo "RUNNING=1" >> $GITHUB_ENV
+      - name: Set running flag
+        run: |
+          if [[ ! -f package.json ]] || ! < package.json jq -r '.scripts | keys[]' | grep -qe '^cover$'; then
+            echo "RUNNING=" >> $GITHUB_ENV
+          fi
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+        if: env.RUNNING
+      - uses: actions/cache@v2
+        with:
+          path: "node_modules"
+          key: client-yarn-${{ hashFiles('yarn.lock') }}
+        if: env.RUNNING
+      - uses: actions/cache@v2
+        with:
+          path: "server/node_modules"
+          key: server-yarn-${{ hashFiles('server/yarn.lock') }}
+        if: env.RUNNING
+      - name: Setup
+        run: yarn setup
+        if: env.RUNNING
+      - name: Run tests
+        run: yarn cover
+        if: env.RUNNING
+      - name: Codecov
+        run: |
+          if [ -n "$CODECOV_TOKEN" ]; then
+            curl -s https://codecov.io/bash | bash -s -- -t $CODECOV_TOKEN -f $COVERAGE_FILE
+          fi
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          COVERAGE_FILE: ./coverage/lcov.info
+        if: env.RUNNING && matrix.node == '12'
+
+  releases:
+    name: Upload build files
+    needs: cover
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: "node_modules"
+          key: client-yarn-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: "server/node_modules"
+          key: server-yarn-${{ hashFiles('server/yarn.lock') }}
+
+      - name: Install Package dependencies
+        run: yarn setup:install
+      - name: Build
+        run: |
+          yarn build
+          mv out client
+          zip -r client client
+          mv server/index.js server.js
+      - name: Upload
+        uses: technote-space/action-gh-release@v2
+        with:
+          files: |
+            client.zip
+            server.js
+          draft: true
+
+  publishRelease:
+    name: Create Release
+    needs: releases
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Get version
+        run: echo "TAG_NAME=${HEAD_REF#refs/tags/}" >> $GITHUB_ENV
+        env:
+          HEAD_REF: ${{ github.ref }}
+      - name: Create Release
+        id: drafter
+        uses: technote-space/release-drafter@v6
+        with:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          DRAFT: false
+          NAME: ${{ env.TAG_NAME }}
+          TAG: ${{ env.TAG_NAME }}
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: ${{ format('<{0}>', steps.drafter.outputs.html_url) }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: success() && env.SLACK_WEBHOOK_URL
+
+  slack:
+    name: Slack
+    needs: publishRelease
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    if: always()
+    steps:
+      - uses: technote-space/workflow-conclusion-action@v2
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: env.WORKFLOW_CONCLUSION == 'failure' && env.SLACK_WEBHOOK_URL
