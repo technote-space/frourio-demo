@@ -1,7 +1,7 @@
 import { defineController } from './$relay';
 import { getCheckin, checkin } from '$/domains/dashboard';
 
-export default defineController(({ getCheckin, checkin }), ({ getCheckin }) => ({
+export default defineController(({ getCheckin, checkin }), ({ getCheckin, checkin }) => ({
   get: async({ query }) => {
     if (!query) {
       return getCheckin();
