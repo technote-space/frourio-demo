@@ -12,7 +12,6 @@ import { getDataTableApi, handleAuthError, processUpdateData, isAxiosError } fro
 import { setNotice } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import pages from '~/_pages';
-import * as React from 'react';
 
 export type Model = Record<string, any> & {
   id: number;
@@ -45,10 +44,11 @@ type EditFieldProps<T extends Model> = {
 }
 
 declare module 'material-table' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Column<RowData extends object> {
     editComponentWithError?: (
       props: EditComponentPropsWithError<Model>,
-    ) => React.ReactElement;
+    ) => ReactElement;
   }
 }
 
