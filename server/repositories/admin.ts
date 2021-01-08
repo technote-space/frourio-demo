@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
 import { createHash, validateHash } from '$/service/auth';
-import { API_ORIGIN, BASE_PATH } from '$/service/envValues';
+import { API_ORIGIN, BASE_PATH } from '$/service/env';
 import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma } from '@prisma/client';
 
