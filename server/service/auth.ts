@@ -1,19 +1,21 @@
+import type { FastifyRequest } from 'fastify';
+import type { AuthorizationPayload } from '$/types';
+import { depend } from 'velona';
 import createError from 'fastify-error';
 import bcrypt from 'bcryptjs';
 import { getAdmin } from '$/repositories/admin';
-import type { FastifyRequest } from 'fastify';
-import type { AuthorizationPayload } from '$/types';
 import 'fastify-jwt';
 
 export const createHash   = (data: string): string => bcrypt.hashSync(data, 10);
 export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);
 
-export const createAuthorizationPayload = async(id: number): Promise<AuthorizationPayload> => {
-  return {
+export const createAuthorizationPayload = depend(
+  {getAdmin},
+  async({getAdmin}, id: number): Promise<AuthorizationPayload> => ({
     id,
     roles: ((await getAdmin(id)).roles ?? '').split('|'),
-  };
-};
+  })
+);
 export const verifyAdmin                = async(request: FastifyRequest, roles?: string[]): Promise<void> => {
   if (request.url === '/api/login' && request.method === 'POST') {
     // ディレクトリレベルのフックは上書きできないようなのでここで除外

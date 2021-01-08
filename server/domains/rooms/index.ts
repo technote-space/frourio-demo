@@ -21,7 +21,7 @@ export type RoomStatusEvent = {
 
 export const list = depend(
   { getRooms, getRoomCount },
-  async({ getRooms }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
+  async({ getRooms, getRoomCount }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<Room>(query?.search, ['name'], ['price', 'number']);
     const orderBy    = getOrderBy<Room>(query?.orderBy, query?.orderDirection);

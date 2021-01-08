@@ -8,7 +8,7 @@ import type { Query, QueryResult } from 'material-table';
 
 export const list = depend(
   { getGuests, getGuestCount },
-  async({ getGuests }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
+  async({ getGuests, getGuestCount }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
     const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);

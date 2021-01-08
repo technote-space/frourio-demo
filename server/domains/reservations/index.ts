@@ -46,7 +46,10 @@ export type CheckoutSelectableEvent = {
 
 export const list = depend(
   { getReservations, getReservationCount },
-  async({ getReservations }, query?: Query<ListReservation>): Promise<BodyResponse<QueryResult<ListReservation>>> => {
+  async(
+    { getReservations, getReservationCount },
+    query?: Query<ListReservation>,
+  ): Promise<BodyResponse<QueryResult<ListReservation>>> => {
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<ListReservation>(query?.search, [
       'guestName',
@@ -94,7 +97,7 @@ export const get = depend(
   }),
 );
 
-const getData = async(data: ReservationBody) => {
+const getData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>) => {
   const guest    = await getGuest(data.guestId);
   const room     = await getRoom(data.roomId);
   const checkin  = new Date(data.checkin);
@@ -127,10 +130,10 @@ const getData = async(data: ReservationBody) => {
 };
 
 export const create = depend(
-  { createReservation },
-  async({ createReservation }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
+  { createReservation, getGuest, getRoom },
+  async({ createReservation, getGuest, getRoom }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
     status: 201,
-    body: await createReservation(await getData(data)),
+    body: await createReservation(await getData(data, getGuest, getRoom)),
   }),
 );
 
@@ -143,16 +146,20 @@ export const remove = depend(
 );
 
 export const update = depend(
-  { updateReservation },
-  async({ updateReservation }, id: number, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
+  { updateReservation, getGuest, getRoom },
+  async(
+    { updateReservation, getGuest, getRoom },
+    id: number,
+    data: ReservationBody,
+  ): Promise<BodyResponse<Reservation>> => ({
     status: 200,
-    body: await updateReservation(id, await getData(data)),
+    body: await updateReservation(id, await getData(data, getGuest, getRoom)),
   }),
 );
 
 export const searchGuest = depend(
   { getGuests, getGuestCount },
-  async({ getGuests }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
+  async({ getGuests, getGuestCount }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
     const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);
@@ -194,7 +201,7 @@ export const searchGuest = depend(
 
 export const searchRoom = depend(
   { getRooms, getRoomCount },
-  async({ getRooms }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
+  async({ getRooms, getRoomCount }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
     const pageSize   = query?.pageSize ?? 10;
     const where      = getWhere<Room>(query?.search, ['name'], ['price', 'number']);
     const orderBy    = getOrderBy<Room>(query?.orderBy, query?.orderDirection);
@@ -361,7 +368,7 @@ export const getCheckoutSelectable = depend(
     if (!events.length) {
       events.push({
         start: format(startValue + 86400000, 'yyyy-MM-dd'), // exclude checkin date
-        end: format(endValue + 86400000, 'yyyy-MM-dd'), // end is exclusive
+        end: format(endValue, 'yyyy-MM-dd'),
         allDay: true,
         color: '#a99',
         textColor: 'black',
