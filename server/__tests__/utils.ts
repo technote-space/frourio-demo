@@ -21,4 +21,4 @@ export const getAuthorizationHeader = (id: number, roles: string[] = []) => ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getPromiseLikeItem = (item: { [key: string]: any }): any => Promise.resolve(item);
+export const getPromiseLikeItem = (item: any): any => Promise.resolve(item);
