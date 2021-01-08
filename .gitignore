@@ -33,7 +33,7 @@ yarn-error.log*
 # server
 server/**/$*.ts
 server/**/*.db
-server/index.js
+server/index.js*
 server/database.json
 server/.upload
 server/public/icons/*
