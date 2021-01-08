@@ -7,7 +7,7 @@ import { CheckoutBody } from '$/domains/dashboard/validators';
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: {
+    query: {
       query?: Query<CheckoutReservation>;
       date?: Date;
     };
