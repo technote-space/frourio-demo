@@ -2,6 +2,7 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 import type { Column, Query, Filter } from 'material-table';
 import createError from 'fastify-error';
+import { startOfDay, addDays } from 'date-fns';
 
 export type Models = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {
@@ -169,16 +170,10 @@ export const getOrderBy = <T extends object>(orderBy: Column<T> | undefined, ord
   } as OrderBy<T>;
 };
 
-export const getDateConstraint = (date: Date) => {
-  const start = new Date(date.valueOf());
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start.valueOf());
-  end.setDate(end.getDate() + 1);
-  return {
-    gte: start,
-    lt: end,
-  };
-};
+export const getDateConstraint = (date: Date) => ({
+  gte: startOfDay(date),
+  lt: addDays(startOfDay(date), 1),
+});
 
 export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(data: T): Omit<T, 'id'> => {
   delete data.id;

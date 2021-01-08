@@ -31,6 +31,9 @@ const config: { projects: Config.InitialOptions[] } = {
       moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
         prefix: '<rootDir>/',
       }),
+      coveragePathIgnorePatterns: [
+        '\\$.+\\.ts',
+      ],
     },
   ],
 };
