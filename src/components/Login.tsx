@@ -50,6 +50,7 @@ const Login: FC = () => {
         setAuthToken(data.headers.authorization);
       } else {
         actions.setSubmitting(false);
+        setWarning(dispatch, 'Invalid header');
       }
     }).catch(error => {
       actions.setSubmitting(false);
