@@ -7,33 +7,40 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ja } from 'date-fns/locale';
 import { StoreContextProvider } from '~/store';
-import Layout from '~/components/Layout';
+import nock from 'nock';
+import '@testing-library/jest-dom';
 
-type ProviderOptions = {
-  wrapLayout?: boolean;
-};
+type ProviderProps = {
+  children: ReactChild;
+}
 
-const Providers = (options: ProviderOptions) => ({ children }: { children: ReactChild }) => <CookiesProvider>
+const Providers = ({ children }: ProviderProps) => <CookiesProvider>
   <StoreContextProvider>
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
       <SWRConfig value={{ dedupingInterval: 0 }}>
-        {options.wrapLayout ? <Layout>
-          {children}
-        </Layout> : { children }}
+        {children}
       </SWRConfig>
     </MuiPickersUtilsProvider>
   </StoreContextProvider>
 </CookiesProvider>;
 
-const customRender = (ui: ReactElement, options: ProviderOptions & RenderOptions = {}) => {
-  const { wrapLayout, ...renderOptions } = options;
-
+const customRender = (ui: ReactElement, options: RenderOptions = {}) => {
   window.scrollTo = jest.fn();
   return render(ui, {
-    wrapper: Providers({
-      wrapLayout,
-    }),
-    ...renderOptions,
+    wrapper: Providers,
+    ...options,
+  });
+};
+
+export const useNock = (): nock.Scope => {
+  nock.disableNetConnect();
+  nock.cleanAll();
+  return nock('http://localhost:8080/api').defaultReplyHeaders({
+    'access-control-allow-origin': '*',
+    'access-control-allow-credentials': 'true',
+    'access-control-expose-headers': 'Authorization',
+  }).persist().options(() => true).reply(204, '', {
+    'access-control-allow-methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 };
 
