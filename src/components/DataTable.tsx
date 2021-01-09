@@ -55,8 +55,8 @@ declare module 'material-table' {
 const controlValidationEditField = <T extends Model>(
   prefix: string,
   EditField: (props: any) => ReactElement,
-  validationErrors: { [key: string]: string },
-  setValidationErrors: Dispatch<SetStateAction<{ [key: string]: string }>>,
+  validationErrors: Record<string, string>,
+  setValidationErrors: Dispatch<SetStateAction<Record<string, string>>>,
   getProps: (props: any) => any = (props) => props,
 ): FC<EditFieldProps<T>> => addDisplayName<FC<EditFieldProps<T>>>(prefix, (props) => {
   if (props.columnDef && props.columnDef.field) {
@@ -86,7 +86,7 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
   const { dispatch } = useDispatchContext();
   const tableIcons   = useTableIcons();
 
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const title                                   = useMemo(() => {
     const Icon = pages[model].icon;
     return <Grid container direction="row" alignItems="center" spacing={1}>

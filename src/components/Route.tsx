@@ -10,7 +10,7 @@ const Route: FC = () => {
   const { page }                = useStoreContext();
   const { dispatch }            = useDispatchContext();
   const [nextPage, setNextPage] = useState<ReactElement | null>(null);
-  const pageInstances           = useRef<{ [key: string]: ReactElement }>({});
+  const pageInstances           = useRef<Record<string, ReactElement>>({});
 
   useEffect(() => {
     if (page === 'logout') {

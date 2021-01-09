@@ -2,6 +2,7 @@
 import type { AspidaResponse } from 'aspida';
 import type { ApiInstance } from '$/api/$api';
 import type { MaybeUndefined } from '~/types';
+import type { Dispatch } from '~/store';
 import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
 import { singular } from 'pluralize';
@@ -18,7 +19,7 @@ export const isAxiosError = (target: any): target is AxiosError => {
 };
 
 export const handleAuthError = async <T, U, V, API extends (...args: Array<any>) => Promise<AspidaResponse<T, U, V>>>(
-  dispatch: ((value: { type: string; [key: string]: any }) => void),
+  dispatch: Dispatch,
   fallback: T,
   api: API,
   ...option: Parameters<API>

@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, useContext, useMemo } from 'react';
-import type { FC, Dispatch } from 'react';
+import type { FC, Dispatch as _Dispatch } from 'react';
 import { ContextState } from '~/types';
 
 const initialState: ContextState = {
@@ -72,7 +72,8 @@ const useStoreContext = () => {
   return useContext(StoreContext);
 };
 
-type DispatchContextType = { dispatch: Dispatch<{ type: string, [key: string]: any }> };
+export type Dispatch = _Dispatch<{ type: string, [key: string]: any; }>;
+type DispatchContextType = { dispatch: Dispatch };
 const DispatchContext    = createContext<DispatchContextType>({} as DispatchContextType);
 const useDispatchContext = (): DispatchContextType => {
   return useContext(DispatchContext);

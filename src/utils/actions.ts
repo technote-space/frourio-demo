@@ -1,6 +1,5 @@
 import type { PageKeys } from '~/_pages';
-
-type Dispatch = ((value: { type: string; [key: string]: any }) => void);
+import type { Dispatch } from '~/store';
 
 export const setAdmin = (dispatch: Dispatch, admin: { name?: string; icon?: string }) => dispatch({
   type: 'SET_ADMIN',
