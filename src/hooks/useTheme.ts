@@ -162,20 +162,12 @@ const useTheme = (themeColor?: 'light' | 'dark'): Theme => {
           },
         },
         MuiInput: {},
-        MuiOutlinedInput: {
-          input: {
-            WebkitBoxShadow: '0 0 0 100px ${bgColor} inset',
-          },
-        },
         MuiFormLabel: {
           root: {
             '&$focused': {
               fontWeight: 'bold',
             },
           },
-        },
-        MuiFormControl: {
-          root: {},
         },
         MuiContainer: {
           root: {
