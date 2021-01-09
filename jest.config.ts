@@ -20,6 +20,9 @@ const config: { projects: Config.InitialOptions[] } = {
           prefix: '<rootDir>/',
         }),
       },
+      coveragePathIgnorePatterns: [
+        '\\$.+\\.ts',
+      ],
     },
     {
       clearMocks: true,

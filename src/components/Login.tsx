@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
 import { Formik, Form, Field } from 'formik';
 import { addDays } from 'date-fns';
@@ -29,20 +29,14 @@ const useStyles = makeStyles({
 });
 
 const Login: FC = () => {
-  const classes                    = useStyles();
-  const { dispatch }               = useDispatchContext();
-  const [{ authToken }, setCookie] = useCookies(['authToken']);
-  const setAuthToken               = token => {
+  const classes       = useStyles();
+  const { dispatch }  = useDispatchContext();
+  const [, setCookie] = useCookies(['authToken']);
+  const setAuthToken  = token => {
     setCookie('authToken', token, {
       expires: addDays(new Date(), 30),
     });
   };
-
-  useEffect(() => {
-    if (authToken) {
-      setAuthToken(authToken);
-    }
-  }, []);
 
   const handleSubmit = useCallback((values, actions) => {
     client.login.post({ body: { email: values.email, pass: values.password } }).then(data => {

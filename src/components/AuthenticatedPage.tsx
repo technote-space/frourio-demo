@@ -7,6 +7,7 @@ import { useStoreContext, useDispatchContext } from '~/store';
 import { setAdmin } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import { makeStyles } from '@material-ui/core/styles';
+import { addDays } from 'date-fns';
 
 const useStyles = makeStyles({
   wrap: {
@@ -21,10 +22,18 @@ export type AuthenticatedPageProps = {
 
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
   const classes         = useStyles();
-  const [{ authToken }] = useCookies(['authToken']);
+  const [{ authToken }, setCookie] = useCookies(['authToken']);
   const { name }        = useStoreContext();
   const { dispatch }    = useDispatchContext();
   const authHeader      = { authorization: `Bearer ${authToken}` };
+
+  useEffect(() => {
+    if (authToken) {
+      setCookie('authToken', authToken, {
+        expires: addDays(new Date(), 30),
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (authToken && !name) {

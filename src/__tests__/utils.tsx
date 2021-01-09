@@ -8,6 +8,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ja } from 'date-fns/locale';
 import { StoreContextProvider } from '~/store';
 import nock from 'nock';
+import Cookies from 'universal-cookie';
 import '@testing-library/jest-dom';
 
 type ProviderProps = {
@@ -42,6 +43,18 @@ export const useNock = (): nock.Scope => {
   }).persist().options(() => true).reply(204, '', {
     'access-control-allow-methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
+};
+
+export const setupCookie = () => {
+  beforeEach(() => {
+    const cookieHandler = new Cookies();
+    Object.keys(cookieHandler.getAll()).forEach(name => cookieHandler.remove(name));
+  });
+};
+
+export const setCookie = (name: string, value: any) => {
+  const cookieHandler = new Cookies();
+  cookieHandler.set(name, value);
 };
 
 export * from '@testing-library/react';
