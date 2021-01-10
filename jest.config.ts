@@ -7,7 +7,6 @@ const config: { projects: Config.InitialOptions[] } = {
     {
       clearMocks: true,
       testRunner: 'jest-circus/runner',
-      verbose: true,
       testMatch: ['<rootDir>/src/__tests__/**/*.test.ts?(x)'],
       transform: {
         '^.+\\.tsx$': 'babel-jest',
@@ -27,7 +26,6 @@ const config: { projects: Config.InitialOptions[] } = {
     {
       clearMocks: true,
       testRunner: 'jest-circus/runner',
-      verbose: true,
       preset: 'ts-jest',
       testEnvironment: 'node',
       testMatch: ['<rootDir>/server/__tests__/**/*.test.ts'],

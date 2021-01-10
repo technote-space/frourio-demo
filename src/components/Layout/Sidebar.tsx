@@ -56,7 +56,17 @@ const Sidebar: FC = () => {
   };
 
   return useMemo(() =>
-    <Drawer anchor='left' onClose={onClose} open={isSidebarOpen && !!authToken}>
+    <Drawer
+      anchor='left'
+      onClose={onClose}
+      open={isSidebarOpen && !!authToken}
+      ModalProps={{
+        BackdropProps: {
+          // @ts-ignore
+          'data-testid': 'drawer-layer',
+        },
+      }}
+    >
       {(icon || name) && <>
         <div className={classes.drawerHeader}>
           {icon && <Avatar

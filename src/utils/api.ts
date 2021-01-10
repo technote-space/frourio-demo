@@ -26,8 +26,6 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
 ): Promise<T | MaybeUndefined<T>> | never => {
   try {
     const result = await api(...option);
-    console.log(result);
-
     return result.body;
   } catch (error) {
     console.log(error);

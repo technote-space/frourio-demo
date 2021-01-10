@@ -20,7 +20,7 @@ const SnackbarWrapper: FC = () => {
   }, []);
 
   return useMemo(() =>
-    <Snackbar
+    notice.message ?  <Snackbar
       className={classes.content}
       anchorOrigin={{
         vertical: 'bottom',
@@ -36,7 +36,7 @@ const SnackbarWrapper: FC = () => {
         onClose={handleClose}
         variant={notice.variant}
       />
-    </Snackbar>, [notice, classes]);
+    </Snackbar> : null, [notice, classes]);
 };
 
 export default SnackbarWrapper;

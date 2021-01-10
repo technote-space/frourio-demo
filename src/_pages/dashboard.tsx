@@ -27,6 +27,7 @@ import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
 import { getPriceCalc } from '~/utils/calc';
+import { setNotice } from '~/utils/actions';
 import useTableIcons from '~/hooks/useTableIcons';
 import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
 import clsx from 'clsx';
@@ -131,6 +132,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       setCancelId(undefined);
       refreshTables();
       refreshSales();
+      setNotice(dispatch, 'キャンセルしました。');
     }
   }, [cancelId]);
   const handleCloseCheckout         = useCallback(() => {
@@ -147,13 +149,14 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       refreshSales();
       setCheckoutId(undefined);
       setAmount(undefined);
+      setNotice(dispatch, '更新しました。');
     }
   }, [checkoutId, amount]);
   const handleChangeAmount          = useCallback(event => {
     setAmount(Number(event.target.value));
   }, []);
 
-  const selectDate       = useMemo(() => <div className={classes.condition}>
+  const selectDate       = useMemo(() => <div className={classes.condition} data-testid="select-date">
     <DatePicker
       className={classes.date}
       disableToolbar
@@ -166,7 +169,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       autoOk
     />
   </div>, [classes, date]);
-  const selectSalesDate  = useMemo(() => <div className={classes.condition}>
+  const selectSalesDate  = useMemo(() => <div className={classes.condition} data-testid="select-sales-date">
     <DatePicker
       className={classes.date}
       disableToolbar
@@ -180,7 +183,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       autoOk
     />
   </div>, [classes, salesDate]);
-  const selectTargetRoom = useMemo(() => <div className={classes.condition}>
+  const selectTargetRoom = useMemo(() => <div className={classes.condition} data-testid="select-target-room">
     <FormControl variant="outlined" margin="normal">
       <InputLabel>部屋</InputLabel>
       <Select value={roomId} onChange={handleSelectRoom}>
@@ -191,7 +194,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       </Select>
     </FormControl>
   </div>, [classes, roomId, selectableRooms.data]);
-  const checkinTable     = useMemo(() => <div className={classes.table}>
+  const checkinTable     = useMemo(() => <div className={classes.table} data-testid="checkin-table">
     <MaterialTable
       tableRef={checkinTableRef}
       icons={tableIcons}
@@ -227,6 +230,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
                     body: { id: data.id },
                   });
                   refreshTables();
+                  setNotice(dispatch, '更新しました。');
                 }}
               >
                 チェックイン
@@ -279,7 +283,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, date]);
-  const checkoutTable    = useMemo(() => <div className={classes.table}>
+  const checkoutTable    = useMemo(() => <div className={classes.table} data-testid="checkout-table">
     <MaterialTable
       tableRef={checkoutTableRef}
       icons={tableIcons}
@@ -300,6 +304,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         },
         {
           title: '請求額',
+          sorting: false,
           // eslint-disable-next-line react/display-name
           render: data => {
             if (!data.room) {
@@ -364,7 +369,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, date]);
-  const dailySalesBar    = useMemo(() => <div className={classes.chart}>
+  const dailySalesBar    = useMemo(() => <div className={classes.chart} data-testid="daily-sales">
     <Bar
       data={{
         labels: dailySales.data?.map(item => format(new Date(item.day), 'd')) ?? [],
@@ -391,7 +396,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, dailySales.data]);
-  const monthlySalesBar  = useMemo(() => <div className={classes.chart}>
+  const monthlySalesBar  = useMemo(() => <div className={classes.chart} data-testid="monthly-sales">
     <Bar
       data={{
         labels: monthlySales.data?.map(item => format(new Date(item.month), 'M月')) ?? [],
@@ -446,7 +451,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <DialogTitle>チェックアウト</DialogTitle>
     <DialogContent dividers>
       <div className={classes.buttonGroup}>
-        <TextField type="number" value={amount ?? ''} onChange={handleChangeAmount}/>
+        <TextField type="number" value={amount ?? ''} onChange={handleChangeAmount} data-testid="checkout-payment"/>
         <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCheckout}>
           確定
         </Button>
