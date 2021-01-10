@@ -1,32 +1,33 @@
 import React from 'react';
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, useNock, act, setupCookie, setCookie } from '~/__tests__/utils';
+import { render, useNock, setupCookie, mockStdout, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
 dotenv.config({ path: 'server/.env' });
 
 setupCookie();
+mockStdout();
 
-describe('Index page', () => {
+describe('Index', () => {
   it('should show login form', async() => {
     const { asFragment, getAllByText, getByText, getByLabelText } = render(<Index/>, {});
 
     expect(getAllByText('予約システム')).toHaveLength(2); // header, footer
-    expect(getByText('Email address')).toBeInTheDocument();
-    expect(getByLabelText(/Email address/)).toBeInTheDocument();
-    expect(getByText('Password')).toBeInTheDocument();
-    expect(getByLabelText(/Password/)).toBeInTheDocument();
-    expect(getByText('Login')).toBeInTheDocument();
+    expect(getByText('Email address')).toBeVisible();
+    expect(getByLabelText(/Email address/)).toBeVisible();
+    expect(getByText('Password')).toBeVisible();
+    expect(getByLabelText(/Password/)).toBeVisible();
+    expect(getByText('Login')).toBeVisible();
     expect(asFragment()).toMatchSnapshot();
   });
 
   it('should fail to login', async() => {
     const login = jest.fn();
-    useNock().post('/login').reply(400, (uri, body) => {
+    useNock().post('/login', body => {
       login(body);
       return body;
-    });
+    }).reply(400);
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -43,10 +44,10 @@ describe('Index page', () => {
 
   it('should fail to login (invalid header)', async() => {
     const login = jest.fn();
-    useNock().post('/login').reply(204, (uri, body) => {
+    useNock().post('/login', body => {
       login(body);
       return body;
-    });
+    }).reply(204);
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -61,20 +62,24 @@ describe('Index page', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('should success to login', async() => {
+  it('should success to login, then open sidebar and close, then logout', async() => {
     const login = jest.fn();
-    useNock().post('/login').reply(204, (uri, body) => {
+    useNock().post('/login', body => {
       login(body);
       return body;
-    }, {
+    }).reply(204, undefined, {
       authorization: 'test-token',
     })
       .get('/admin').reply(200, { name: 'test name', icon: null })
-      .get('/rooms').reply(200, [])
+      .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/checkin/).reply(200, [])
-      .get(/\/dashboard\/checkout/).reply(200, []);
+      .get(/\/dashboard\/checkout/).reply(200, [])
+      .get(/\/dashboard\/sales/).reply(200, []);
 
-    const { getByText, getByLabelText, findAllByText, getAllByText } = render(<Index/>, {});
+    const { getByText, getByLabelText, findAllByText, getAllByText, container, findByText, findByTestId } = render(
+      <Index/>,
+      {},
+    );
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
@@ -86,22 +91,27 @@ describe('Index page', () => {
 
     expect(login).toBeCalledWith({ email: 'test@example.com', pass: 'password' });
     expect(getAllByText('チェックアウト')).toHaveLength(2); // table title, table header
-    expect(getByText('全部屋')).toBeInTheDocument();
-  });
+    expect(getByText('全部屋')).toBeVisible();
 
-  it('should login automatically', async() => {
-    useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
-      .get('/rooms').reply(200, [])
-      .get(/\/dashboard\/checkin/).reply(200, [])
-      .get(/\/dashboard\/checkout/).reply(200, []);
-    setCookie('authToken', 'token');
+    // test header
+    const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
+    expect(buttons).toHaveLength(2);
+    user.click(getAllByText('予約システム')[0]); // header link
+    user.click(buttons[1]); // toggle dark mode
 
-    const { getByText, findAllByText, getAllByText } = render(<Index/>, {});
+    // test sidebar
+    user.click(buttons[0]);
+    await findByText('test name');
+    const menuClose = await findByTestId('drawer-layer');
+    user.click(menuClose);
 
-    expect(await findAllByText('チェックイン')).toHaveLength(2); // table title, table header
-
-    expect(getAllByText('チェックアウト')).toHaveLength(2); // table title, table header
-    expect(getByText('全部屋')).toBeInTheDocument();
+    // test logout
+    user.click(buttons[0]);
+    await findByText('test name');
+    expect(getByText('ログアウト')).toBeVisible();
+    user.click(getByText('ログアウト'));
+    await findByText('Login');
+    expect(getByText('Email address')).toBeVisible();
+    expect(getByText('Password')).toBeVisible();
   });
 });

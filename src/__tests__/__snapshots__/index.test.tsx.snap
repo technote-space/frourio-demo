@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Index page should fail to login (invalid header) 1`] = `
+exports[`Index should fail to login (invalid header) 1`] = `
 <DocumentFragment>
   <div
     class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomCenter makeStyles-content-64"
@@ -254,7 +254,7 @@ exports[`Index page should fail to login (invalid header) 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Index page should fail to login 1`] = `
+exports[`Index should fail to login 1`] = `
 <DocumentFragment>
   <div
     class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomCenter makeStyles-content-31"
@@ -508,7 +508,7 @@ exports[`Index page should fail to login 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Index page should show login form 1`] = `
+exports[`Index should show login form 1`] = `
 <DocumentFragment>
   <div
     class="makeStyles-wrap-6"

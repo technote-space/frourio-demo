@@ -3,9 +3,6 @@ import type { RenderOptions } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { CookiesProvider } from 'react-cookie';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { ja } from 'date-fns/locale';
 import { StoreContextProvider } from '~/store';
 import nock from 'nock';
 import Cookies from 'universal-cookie';
@@ -17,11 +14,9 @@ type ProviderProps = {
 
 const Providers = ({ children }: ProviderProps) => <CookiesProvider>
   <StoreContextProvider>
-    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
-      <SWRConfig value={{ dedupingInterval: 0 }}>
-        {children}
-      </SWRConfig>
-    </MuiPickersUtilsProvider>
+    <SWRConfig value={{ dedupingInterval: 0 }}>
+      {children}
+    </SWRConfig>
   </StoreContextProvider>
 </CookiesProvider>;
 
@@ -42,6 +37,7 @@ export const useNock = (): nock.Scope => {
     'access-control-expose-headers': 'Authorization',
   }).persist().options(() => true).reply(204, '', {
     'access-control-allow-methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'access-control-allow-headers': 'Authorization',
   });
 };
 
@@ -55,6 +51,19 @@ export const setupCookie = () => {
 export const setCookie = (name: string, value: any) => {
   const cookieHandler = new Cookies();
   cookieHandler.set(name, value);
+};
+
+export const mockStdout = () => {
+  console.log = jest.fn();
+};
+
+export const findElement = (node: ParentNode, selectors: string): Element | never => {
+  const element = node.querySelector(selectors);
+  if (element) {
+    return element;
+  }
+
+  throw new Error(`selectors [${selectors}] not found`);
 };
 
 export * from '@testing-library/react';
