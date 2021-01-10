@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { useMemo, forwardRef, Ref } from 'react';
-import { Icons } from 'material-table';
+import { Icons } from '@technote-space/material-table';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';

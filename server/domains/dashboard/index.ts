@@ -2,7 +2,7 @@ import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import type { Room } from '$/repositories/room';
 import type { DailySales, MonthlySales } from '$/domains/dashboard/types';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 import { depend } from 'velona';
 import {
   startOfMonth,

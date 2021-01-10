@@ -4,7 +4,7 @@ import { getSkip, getCurrentPage } from '$/service/pages';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import type { BodyResponse } from '$/types';
 import type { Guest, CreateGuestData, UpdateGuestData } from '$/repositories/guest';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 
 export const list = depend(
   { getGuests, getGuestCount },

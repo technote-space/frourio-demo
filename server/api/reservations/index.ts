@@ -1,6 +1,6 @@
 import type { AuthHeader } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 import type { ListReservation } from '$/domains/reservations';
 import type { ReservationBody } from '$/domains/reservations/validators';
 

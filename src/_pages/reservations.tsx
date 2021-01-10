@@ -1,9 +1,10 @@
 import type { FC } from 'react';
-import type { EditComponentProps } from 'material-table';
+import type { EditComponentProps } from '@technote-space/material-table';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import { useMemo } from 'react';
 import { format } from 'date-fns';
+import useUnmountRef from '~/hooks/useUnmountRef';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 import SelectGuest from '~/components/reservations/SelectGuest';
@@ -18,6 +19,7 @@ import { getPriceCalc } from '~/utils/calc';
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Reservations');
 
+  const unmountRef = useUnmountRef();
   return useMemo(() => <DataTable
     model={'reservations'}
     columns={[
@@ -123,6 +125,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
     options={{
       filtering: true,
     }}
+    unmountRef={unmountRef}
   />, []);
 };
 

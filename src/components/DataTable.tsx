@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
-import type { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import type { Column, Query, QueryResult, Options, EditComponentProps } from 'material-table';
+import type { FC, ReactElement, Dispatch, SetStateAction, MutableRefObject } from 'react';
+import type { Column, Query, QueryResult, Options, EditComponentProps } from '@technote-space/material-table';
 import type { DataTableApiModels } from '~/utils/api';
 import type { ValidationError } from 'class-validator';
 import { useMemo, useCallback, useState } from 'react';
 import { Grid } from '@material-ui/core';
-import MaterialTable, { MTableEditField } from 'material-table';
+import MaterialTable, { MTableEditField } from '@technote-space/material-table';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
 import { getDataTableApi, handleAuthError, processUpdateData, isAxiosError } from '~/utils/api';
@@ -33,6 +33,7 @@ type Props<T extends Model> = {
   columns: DataTableColumn<T>[];
   authHeader: { authorization: string };
   options?: Options<T>;
+  unmountRef: MutableRefObject<boolean>;
 }
 type EditFieldProps<T extends Model> = {
   columnDef: Column<T>;
@@ -43,7 +44,7 @@ type EditFieldProps<T extends Model> = {
   rowData: T;
 }
 
-declare module 'material-table' {
+declare module '@technote-space/material-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Column<RowData extends object> {
     editComponentWithError?: (
@@ -82,7 +83,13 @@ const controlValidationEditField = <T extends Model>(
   })}/>;
 });
 
-const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, options }: Props<T>): ReactElement => {
+const DataTable = <T extends Model, >({
+  model,
+  columns: columnsEx,
+  authHeader,
+  options,
+  unmountRef,
+}: Props<T>): ReactElement => {
   const { dispatch } = useDispatchContext();
   const tableIcons   = useTableIcons();
 
@@ -209,7 +216,8 @@ const DataTable = <T extends Model, >({ model, columns: columnsEx, authHeader, o
     components={{
       EditField: editField,
     }}
-  />, [validationErrors]);
+    unmountRef={unmountRef}
+  />, [validationErrors, unmountRef]);
 };
 
 export default DataTable;

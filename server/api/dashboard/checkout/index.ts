@@ -1,6 +1,6 @@
 import type { AuthHeader } from '$/types';
 import type { CheckoutReservation } from '$/domains/dashboard';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 import { Reservation } from '$/repositories/reservation';
 import { CheckoutBody } from '$/domains/dashboard/validators';
 

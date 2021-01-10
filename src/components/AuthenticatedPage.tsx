@@ -8,6 +8,7 @@ import { setAdmin } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import { makeStyles } from '@material-ui/core/styles';
 import { addDays } from 'date-fns';
+import useUnmountRef from '~/hooks/useUnmountRef';
 
 const useStyles = makeStyles({
   wrap: {
@@ -21,11 +22,12 @@ export type AuthenticatedPageProps = {
 }
 
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
-  const classes         = useStyles();
+  const classes                    = useStyles();
+  const unmountRef                 = useUnmountRef();
   const [{ authToken }, setCookie] = useCookies(['authToken']);
-  const { name }        = useStoreContext();
-  const { dispatch }    = useDispatchContext();
-  const authHeader      = { authorization: `Bearer ${authToken}` };
+  const { name }                   = useStoreContext();
+  const { dispatch }               = useDispatchContext();
+  const authHeader                 = { authorization: `Bearer ${authToken}` };
 
   useEffect(() => {
     if (authToken) {
@@ -39,10 +41,12 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     if (authToken && !name) {
       (async() => {
         const admin = await handleAuthError(dispatch, {}, client.admin.get, { headers: authHeader });
-        setAdmin(dispatch, admin);
+        if (!unmountRef.current) {
+          setAdmin(dispatch, admin);
+        }
       })();
     }
-  }, [authToken, name]);
+  }, [authToken, name, unmountRef]);
 
   return <div className={classes.wrap}>
     {!authToken && <Login {...props} />}

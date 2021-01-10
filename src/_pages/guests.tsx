@@ -1,12 +1,14 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import { useMemo } from 'react';
+import useUnmountRef from '~/hooks/useUnmountRef';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 
 const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Guests');
 
+  const unmountRef = useUnmountRef();
   return useMemo(() => <DataTable
     model={'guests'}
     columns={[
@@ -18,6 +20,7 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
       { title: '電話番号', field: 'phone' },
     ]}
     authHeader={authHeader}
+    unmountRef={unmountRef}
   />, []);
 };
 

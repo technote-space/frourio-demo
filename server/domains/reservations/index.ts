@@ -2,7 +2,7 @@ import type { Guest } from '$/repositories/guest';
 import type { Room } from '$/repositories/room';
 import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 import type { ReservationBody } from '$/domains/reservations/validators';
 import { depend } from 'velona';
 import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';

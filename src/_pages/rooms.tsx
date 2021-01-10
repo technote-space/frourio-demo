@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import { useMemo } from 'react';
+import useUnmountRef from '~/hooks/useUnmountRef';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 import RoomStatusCalendar from '~/components/rooms/RoomStatusCalendar';
@@ -8,6 +9,7 @@ import RoomStatusCalendar from '~/components/rooms/RoomStatusCalendar';
 const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Rooms');
 
+  const unmountRef = useUnmountRef();
   return useMemo(() => <DataTable
     model={'rooms'}
     columns={[
@@ -23,6 +25,7 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
       },
     ]}
     authHeader={authHeader}
+    unmountRef={unmountRef}
   />, []);
 };
 

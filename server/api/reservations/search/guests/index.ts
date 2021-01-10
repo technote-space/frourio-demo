@@ -1,6 +1,6 @@
 import type { AuthHeader } from '$/types';
 import type { Guest } from '$/repositories/guest';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 
 export type Methods = {
   get: {

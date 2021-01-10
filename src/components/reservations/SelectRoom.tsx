@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import { useMemo, useCallback } from 'react';
 import useFetch from '~/hooks/useFetch';
+import useUnmountRef from '~/hooks/useUnmountRef';
 import SearchTable from '~/components/SearchTable';
 import { client } from '~/utils/api';
 import { useDispatchContext } from '~/store';
@@ -12,6 +13,7 @@ type Props = {
 }
 
 const SelectRoom: FC<Props> = ({ authHeader, props }: Props) => {
+  const unmountRef   = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const room         = useFetch(dispatch, undefined, client.reservations.room, {
     headers: authHeader,
@@ -37,7 +39,8 @@ const SelectRoom: FC<Props> = ({ authHeader, props }: Props) => {
       ...props,
       onChange: handleChange,
     }}
-  />, [room?.data, props.helperText]);
+    unmountRef={unmountRef}
+  />, [room?.data, props.helperText, unmountRef]);
 };
 
 export default SelectRoom;

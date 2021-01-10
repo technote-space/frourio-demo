@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
-import type { ReactElement } from 'react';
-import type { Column, Query, QueryResult, Action } from 'material-table';
+import type { ReactElement, MutableRefObject } from 'react';
+import type { Column, Query, QueryResult, Action } from '@technote-space/material-table';
 import type { DataTableApiModels } from '~/utils/api';
 import type { AspidaResponse } from 'aspida';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import { useMemo, useCallback, useState } from 'react';
-import MaterialTable from 'material-table';
+import MaterialTable from '@technote-space/material-table';
 import { Dialog, DialogTitle, Link, IconButton, Typography, FormControl, FormHelperText } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useDispatchContext } from '~/store';
@@ -36,11 +36,12 @@ type Props<T extends object> = {
   authHeader: { authorization: string };
   searchText?: string;
   props: EditComponentPropsWithError<Model>;
+  unmountRef: MutableRefObject<boolean>;
 }
 
 const SearchTable = <T extends {
   id: number;
-}, >({ model, api, columns, authHeader, searchText, props }: Props<T>): ReactElement => {
+}, >({ model, api, columns, authHeader, searchText, props, unmountRef }: Props<T>): ReactElement => {
   const classes      = useStyles();
   const { dispatch } = useDispatchContext();
 
@@ -110,8 +111,9 @@ const SearchTable = <T extends {
         emptyRowsWhenPaging: false,
         searchText,
       }}
+      unmountRef={unmountRef}
     />
-  </Dialog>, [classes, open, searchText]);
+  </Dialog>, [classes, open, searchText, unmountRef]);
   return <>
     {cell}
     {editCell}

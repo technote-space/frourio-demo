@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 import { useState, useMemo, useCallback, useRef } from 'react';
-import MaterialTable from 'material-table';
+import MaterialTable from '@technote-space/material-table';
 import {
   FormControl,
   InputLabel,
@@ -24,6 +24,7 @@ import { red } from '@material-ui/core/colors';
 import { Bar } from 'react-chartjs-2';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
+import useUnmountRef from '~/hooks/useUnmountRef';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
 import { getPriceCalc } from '~/utils/calc';
@@ -79,6 +80,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   console.log('page::Dashboard');
 
   const classes                     = useStyles();
+  const unmountRef                  = useUnmountRef();
   const { dispatch }                = useDispatchContext();
   const tableIcons                  = useTableIcons();
   const [date, setDate]             = useState<Date>(new Date());
@@ -281,8 +283,9 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         emptyRowsWhenPaging: false,
         draggable: false,
       }}
+      unmountRef={unmountRef}
     />
-  </div>, [classes, date]);
+  </div>, [classes, date, unmountRef]);
   const checkoutTable    = useMemo(() => <div className={classes.table} data-testid="checkout-table">
     <MaterialTable
       tableRef={checkoutTableRef}
@@ -367,8 +370,9 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         emptyRowsWhenPaging: false,
         draggable: false,
       }}
+      unmountRef={unmountRef}
     />
-  </div>, [classes, date]);
+  </div>, [classes, date, unmountRef]);
   const dailySalesBar    = useMemo(() => <div className={classes.chart} data-testid="daily-sales">
     <Bar
       data={{

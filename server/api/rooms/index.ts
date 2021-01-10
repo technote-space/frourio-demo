@@ -1,6 +1,6 @@
 import type { AuthHeader } from '$/types';
 import type { Room } from '$/repositories/room';
-import type { Query, QueryResult } from 'material-table';
+import type { Query, QueryResult } from '@technote-space/material-table';
 import type { RoomBody } from '$/domains/rooms/validators';
 
 export type Methods = {
