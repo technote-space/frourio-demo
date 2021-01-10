@@ -62,6 +62,7 @@ const Sidebar: FC = () => {
       open={isSidebarOpen && !!authToken}
       ModalProps={{
         BackdropProps: {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           'data-testid': 'drawer-layer',
         },
