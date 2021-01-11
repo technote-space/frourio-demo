@@ -259,62 +259,61 @@ describe('Dashboard', () => {
         'data': [],
         'page': 0,
         'totalCount': 5,
-      },
-      )
-      .get(/daily/, body => {
-        daily(body);
-        return body;
-      }).reply(200, [
-        { 'day': '2019-12-31T15:00:00.000Z', 'sales': 656568 },
-        { 'day': '2020-01-01T15:00:00.000Z', 'sales': 121700 },
-        { 'day': '2020-01-02T15:00:00.000Z', 'sales': 517380 },
-        { 'day': '2020-01-03T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-04T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-05T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-06T15:00:00.000Z', 'sales': 447828 },
-        { 'day': '2020-01-07T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-08T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-09T15:00:00.000Z', 'sales': 485147 },
-        { 'day': '2020-01-10T15:00:00.000Z', 'sales': 1368088 },
-        { 'day': '2020-01-11T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-12T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-13T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-14T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-15T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-16T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-17T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-18T15:00:00.000Z', 'sales': 108075 },
-        { 'day': '2020-01-19T15:00:00.000Z', 'sales': 21615 },
-        { 'day': '2020-01-20T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-21T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-22T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-23T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-24T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-25T15:00:00.000Z', 'sales': 0 },
-        { 'day': '2020-01-26T15:00:00.000Z', 'sales': 1034760 },
-        { 'day': '2020-01-27T15:00:00.000Z', 'sales': 449470 },
-        { 'day': '2020-01-28T15:00:00.000Z', 'sales': 242664 },
-        { 'day': '2020-01-29T15:00:00.000Z', 'sales': 559785 },
-        { 'day': '2020-01-30T15:00:00.000Z', 'sales': 0 },
-      ])
-      .get(/monthly/, body => {
-        monthly(body);
-        return body;
       })
-      .reply(200, [
-        { 'month': '2019-12-31T15:00:00.000Z', 'sales': 6013080 },
-        { 'month': '2020-01-31T15:00:00.000Z', 'sales': 4790803 },
-        { 'month': '2020-02-29T15:00:00.000Z', 'sales': 18903318 },
-        { 'month': '2020-03-31T15:00:00.000Z', 'sales': 11577323 },
-        { 'month': '2020-04-30T15:00:00.000Z', 'sales': 14144067 },
-        { 'month': '2020-05-31T15:00:00.000Z', 'sales': 9184391 },
-        { 'month': '2020-06-30T15:00:00.000Z', 'sales': 21629510 },
-        { 'month': '2020-07-31T15:00:00.000Z', 'sales': 19655282 },
-        { 'month': '2020-08-31T15:00:00.000Z', 'sales': 20417817 },
-        { 'month': '2020-09-30T15:00:00.000Z', 'sales': 21199194 },
-        { 'month': '2020-10-31T15:00:00.000Z', 'sales': 24838914 },
-        { 'month': '2020-11-30T15:00:00.000Z', 'sales': 19164865 },
-      ]);
+      .get(/\/dashboard\/sales\/daily/).reply(200, (uri) => {
+        daily(uri);
+        return [
+          { 'day': '2019-12-31T15:00:00.000Z', 'sales': 656568 },
+          { 'day': '2020-01-01T15:00:00.000Z', 'sales': 121700 },
+          { 'day': '2020-01-02T15:00:00.000Z', 'sales': 517380 },
+          { 'day': '2020-01-03T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-04T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-05T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-06T15:00:00.000Z', 'sales': 447828 },
+          { 'day': '2020-01-07T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-08T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-09T15:00:00.000Z', 'sales': 485147 },
+          { 'day': '2020-01-10T15:00:00.000Z', 'sales': 1368088 },
+          { 'day': '2020-01-11T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-12T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-13T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-14T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-15T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-16T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-17T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-18T15:00:00.000Z', 'sales': 108075 },
+          { 'day': '2020-01-19T15:00:00.000Z', 'sales': 21615 },
+          { 'day': '2020-01-20T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-21T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-22T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-23T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-24T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-25T15:00:00.000Z', 'sales': 0 },
+          { 'day': '2020-01-26T15:00:00.000Z', 'sales': 1034760 },
+          { 'day': '2020-01-27T15:00:00.000Z', 'sales': 449470 },
+          { 'day': '2020-01-28T15:00:00.000Z', 'sales': 242664 },
+          { 'day': '2020-01-29T15:00:00.000Z', 'sales': 559785 },
+          { 'day': '2020-01-30T15:00:00.000Z', 'sales': 0 },
+        ];
+      })
+      .get(/\/dashboard\/sales\/monthly/)
+      .reply(200, (uri) => {
+        monthly(uri);
+        return [
+          { 'month': '2019-12-31T15:00:00.000Z', 'sales': 6013080 },
+          { 'month': '2020-01-31T15:00:00.000Z', 'sales': 4790803 },
+          { 'month': '2020-02-29T15:00:00.000Z', 'sales': 18903318 },
+          { 'month': '2020-03-31T15:00:00.000Z', 'sales': 11577323 },
+          { 'month': '2020-04-30T15:00:00.000Z', 'sales': 14144067 },
+          { 'month': '2020-05-31T15:00:00.000Z', 'sales': 9184391 },
+          { 'month': '2020-06-30T15:00:00.000Z', 'sales': 21629510 },
+          { 'month': '2020-07-31T15:00:00.000Z', 'sales': 19655282 },
+          { 'month': '2020-08-31T15:00:00.000Z', 'sales': 20417817 },
+          { 'month': '2020-09-30T15:00:00.000Z', 'sales': 21199194 },
+          { 'month': '2020-10-31T15:00:00.000Z', 'sales': 24838914 },
+          { 'month': '2020-11-30T15:00:00.000Z', 'sales': 19164865 },
+        ];
+      });
     setCookie('authToken', 'token');
 
     const { getByTestId, findByText, getByText } = render(
@@ -337,9 +336,13 @@ describe('Dashboard', () => {
     user.click(await findByText(format(addYears(startOfToday(), 2), 'yyyy')));
     user.click(await findByText('5月'));
     user.click(await findByText('大翔75634'));
-    await findByText('全部屋');
+    user.click(await findByText('杏19119'));
 
-    expect(daily).toBeCalledTimes(4); // 1 + change room + change date * 2
-    expect(monthly).toBeCalledTimes(4); // 1 + change room + change date * 2
+    expect(daily.mock.calls.length).toBeGreaterThanOrEqual(3); // 1 + change room + change date
+    expect(monthly.mock.calls.length).toBeGreaterThanOrEqual(3); // 1 + change room + change date
+    expect(new RegExp(`date=${format(startOfToday(), 'yyyy')}`).test(daily.mock.calls[0])).toBe(true);
+    expect(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`).test(daily.mock.calls[daily.mock.calls.length - 1])).toBe(true);
+    expect(/roomId=2/.test(daily.mock.calls[0])).toBe(false);
+    expect(/roomId=2/.test(daily.mock.calls[daily.mock.calls.length - 1])).toBe(true);
   });
 });
