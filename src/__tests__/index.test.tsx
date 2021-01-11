@@ -1,7 +1,7 @@
 import React from 'react';
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, useNock, setupCookie, mockStdout, act } from '~/__tests__/utils';
+import { render, useNock, setupCookie, setCookie, mockStdout, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
 dotenv.config({ path: 'server/.env' });
@@ -24,10 +24,11 @@ describe('Index', () => {
 
   it('should fail to login', async() => {
     const login = jest.fn();
-    useNock().post('/login', body => {
-      login(body);
-      return body;
-    }).reply(400);
+    useNock()
+      .post('/login', body => {
+        login(body);
+        return body;
+      }).reply(400);
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -44,10 +45,11 @@ describe('Index', () => {
 
   it('should fail to login (invalid header)', async() => {
     const login = jest.fn();
-    useNock().post('/login', body => {
-      login(body);
-      return body;
-    }).reply(204);
+    useNock()
+      .post('/login', body => {
+        login(body);
+        return body;
+      }).reply(204);
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -62,14 +64,15 @@ describe('Index', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('should success to login, then open sidebar and close, then logout', async() => {
+  it('should success to login', async() => {
     const login = jest.fn();
-    useNock().post('/login', body => {
-      login(body);
-      return body;
-    }).reply(204, undefined, {
-      authorization: 'test-token',
-    })
+    useNock()
+      .post('/login', body => {
+        login(body);
+        return body;
+      }).reply(204, undefined, {
+        authorization: 'test-token',
+      })
       .get('/admin').reply(200, { name: 'test name', icon: null })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/checkin/).reply(200, [])
@@ -104,8 +107,25 @@ describe('Index', () => {
     await findByText('test name');
     const menuClose = await findByTestId('drawer-layer');
     user.click(menuClose);
+  });
 
-    // test logout
+  it('should login automatically and logout', async() => {
+    useNock()
+      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/checkin/).reply(200, [])
+      .get(/\/dashboard\/checkout/).reply(200, [])
+      .get(/\/dashboard\/sales/).reply(200, []);
+    setCookie('authToken', 'token');
+
+    const { getByText, container, findByText, findByTestId } = render(
+      <Index/>,
+      {},
+    );
+
+    await findByTestId('select-date');
+
+    const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
     user.click(buttons[0]);
     await findByText('test name');
     expect(getByText('ログアウト')).toBeVisible();
