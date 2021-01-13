@@ -32,7 +32,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
     if (isAxiosError(error)) {
       console.log(error.response);
       if (error.response && 401 === error.response.status) {
-        setError(dispatch, error.response.data.message);
+        setError(dispatch, error.response.data?.message);
         changePage(dispatch, 'logout');
         if (!fallback) {
           return undefined as MaybeUndefined<T>;
@@ -42,7 +42,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
       }
 
       if (error.response) {
-        setError(dispatch, error.response.data.message);
+        setError(dispatch, error.response.data?.message);
         throw error;
       }
     }

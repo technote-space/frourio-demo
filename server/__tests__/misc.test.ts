@@ -39,6 +39,12 @@ describe('verifyAdmin', () => {
         roles: ['guest'],
       }),
     } as any, ['settings'])).toBe(false);
+
+    expect(await verifyAdmin({
+      url: '/test', method: 'GET', jwtVerify: () => {
+        throw new Error();
+      },
+    } as any)).toBe(false);
   });
 });
 

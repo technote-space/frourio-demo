@@ -24,8 +24,12 @@ export const verifyAdmin = async(request: FastifyRequest, roles?: string[]): Pro
     return true;
   }
 
-  const payload = await request.jwtVerify() as AuthorizationPayload;
-  if (!payload.id || (roles?.length && (!payload.roles.length || roles.some(role => !payload.roles.includes(role))))) {
+  try {
+    const payload = await request.jwtVerify() as AuthorizationPayload | null;
+    if (!payload?.id || (roles?.length && (!payload.roles.length || roles.some(role => !payload.roles.includes(role))))) {
+      return false;
+    }
+  } catch {
     return false;
   }
 

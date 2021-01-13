@@ -8,9 +8,9 @@ export type AdditionalRequest = {
 }
 
 export default defineHooks(() => ({
-  onRequest: (request, reply) => {
-    if (!verifyAdmin(request)) {
-      reply.send({ status: 401 });
+  onRequest: async(request, reply) => {
+    if (!await verifyAdmin(request)) {
+      reply.status(401).send();
     }
   },
   preHandler: (request, reply, done) => {
