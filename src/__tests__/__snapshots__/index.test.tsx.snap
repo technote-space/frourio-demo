@@ -112,6 +112,7 @@ exports[`Index should fail to login (invalid header) 1`] = `
       >
         <div
           class="makeStyles-wrap-78"
+          data-testid="page-dashboard"
         >
           <div
             class="makeStyles-wrap-79"
@@ -195,6 +196,7 @@ exports[`Index should fail to login (invalid header) 1`] = `
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+                          data-testid="password-switch"
                           tabindex="0"
                           type="button"
                         >
@@ -366,6 +368,7 @@ exports[`Index should fail to login 1`] = `
       >
         <div
           class="makeStyles-wrap-45"
+          data-testid="page-dashboard"
         >
           <div
             class="makeStyles-wrap-46"
@@ -440,7 +443,7 @@ exports[`Index should fail to login 1`] = `
                           name="password"
                           placeholder="Enter password"
                           required=""
-                          type="password"
+                          type="text"
                           value="password"
                         />
                       </div>
@@ -449,13 +452,14 @@ exports[`Index should fail to login 1`] = `
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+                          data-testid="password-switch"
                           tabindex="0"
                           type="button"
                         >
                           <span
                             class="MuiButton-label"
                           >
-                            Show
+                            Hide
                           </span>
                           <span
                             class="MuiTouchRipple-root"
@@ -560,6 +564,7 @@ exports[`Index should show login form 1`] = `
       >
         <div
           class="makeStyles-wrap-19"
+          data-testid="page-dashboard"
         >
           <div
             class="makeStyles-wrap-20"
@@ -643,6 +648,7 @@ exports[`Index should show login form 1`] = `
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+                          data-testid="password-switch"
                           tabindex="0"
                           type="button"
                         >

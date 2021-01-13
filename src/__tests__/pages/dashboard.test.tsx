@@ -1,25 +1,19 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, useNock, setupCookie, setCookie, findElement, mockStdout } from '~/__tests__/utils';
+import { render, useNock, setup, setCookie, findElement, act, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
 
 dotenv.config({ path: 'server/.env' });
 
-setupCookie();
-mockStdout();
+setup();
 
 describe('Dashboard', () => {
   it('should show checkin and checkout tables and sales', async() => {
     useNock()
       .get('/admin').reply(200, { name: 'test name', icon: null })
       .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/checkin/).reply(200, {
-        'data': [],
-        'page': 0,
-        'totalCount': 0,
-      })
-      .get(/\/dashboard\/checkout/).reply(200, {
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
         'page': 0,
         'totalCount': 0,
@@ -43,9 +37,9 @@ describe('Dashboard', () => {
   });
 
   it('should checkin and checkout', async() => {
-    const checkin  = jest.fn();
+    const checkin = jest.fn();
     const checkout = jest.fn();
-    const cancel   = jest.fn();
+    const cancel = jest.fn();
     useNock()
       .get('/admin').reply(200, { name: 'test name', icon: null })
       .get('/dashboard/rooms').reply(200, [])
@@ -175,8 +169,7 @@ describe('Dashboard', () => {
         ],
         'page': 0,
         'totalCount': 5,
-      },
-      )
+      })
       .get(/\/dashboard\/sales/).reply(200, [])
       .patch('/dashboard/checkin', body => {
         checkin(body);
@@ -220,8 +213,8 @@ describe('Dashboard', () => {
     user.click(getAllByText('チェックアウト')[2]);
     user.click(await findByText('閉じる'));
     user.click(getAllByText('チェックアウト')[2]);
-    user.clear(findElement(await getByTestId('checkout-payment'), '.MuiInputBase-input'));
-    user.type(findElement(await getByTestId('checkout-payment'), '.MuiInputBase-input'), '1');
+    user.clear(findElement(getByTestId('checkout-payment'), '.MuiInputBase-input'));
+    user.type(findElement(getByTestId('checkout-payment'), '.MuiInputBase-input'), '1');
     user.click(await findByText('確定'));
     await findByText('更新しました。');
 
@@ -238,7 +231,7 @@ describe('Dashboard', () => {
   });
 
   it('should render sales', async() => {
-    const daily   = jest.fn();
+    const daily = jest.fn();
     const monthly = jest.fn();
     useNock()
       .get('/admin').reply(200, { name: 'test name', icon: null })
@@ -249,15 +242,10 @@ describe('Dashboard', () => {
         { 'id': 4, 'name': '結菜8081' },
         { 'id': 5, 'name': '杏19119' },
       ])
-      .get(/\/dashboard\/checkin/).reply(200, {
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
         'page': 0,
-        'totalCount': 5,
-      })
-      .get(/\/dashboard\/checkout/).reply(200, {
-        'data': [],
-        'page': 0,
-        'totalCount': 5,
+        'totalCount': 0,
       })
       .get(/\/dashboard\/sales\/daily/).reply(200, (uri) => {
         daily(uri);
@@ -326,22 +314,24 @@ describe('Dashboard', () => {
     expect(getByTestId('monthly-sales')).toBeVisible();
 
     // change room
-    user.click(getByText('全部屋'));
-    user.click(await findByText('大翔75634'));
+    await act(async() => {
+      user.click(getByText('全部屋'));
+      user.click(await findByText('大翔75634'));
+    });
 
     // change date
-    user.click(findElement(await getByTestId('select-sales-date'), 'input'));
-    await findByText(format(startOfToday(), 'yyyy'));
-    user.click(await findByText(format(addYears(startOfToday(), 2), 'yyyy')));
-    user.click(await findByText('5月'));
-    user.click(await findByText('大翔75634'));
-    user.click(await findByText('杏19119'));
+    await act(async() => {
+      user.click(findElement(await getByTestId('select-sales-date'), 'input'));
+      await findByText(format(startOfToday(), 'yyyy'));
+      user.click(await findByText(format(addYears(startOfToday(), 2), 'yyyy')));
+      user.click(await findByText('5月'));
+    });
 
-    expect(daily.mock.calls.length).toBeGreaterThanOrEqual(3); // 1 + change room + change date
-    expect(monthly.mock.calls.length).toBeGreaterThanOrEqual(3); // 1 + change room + change date
-    expect(new RegExp(`date=${format(startOfToday(), 'yyyy')}`).test(daily.mock.calls[0])).toBe(true);
-    expect(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`).test(daily.mock.calls[daily.mock.calls.length - 1])).toBe(true);
-    expect(/roomId=2/.test(daily.mock.calls[0])).toBe(false);
-    expect(/roomId=2/.test(daily.mock.calls[daily.mock.calls.length - 1])).toBe(true);
+    await waitFor(() => expect(daily.mock.calls.length).toBeGreaterThanOrEqual(3)); // 1 + change room + change date
+    await waitFor(() => expect(monthly.mock.calls.length).toBeGreaterThanOrEqual(3)); // 1 + change room + change date
+    expect(daily.mock.calls[0][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(startOfToday(), 'yyyy')}`)))
+    expect(daily.mock.calls[0][0]).toEqual(expect.not.stringMatching(/roomId=2/))
+    expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`)))
+    expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(/roomId=2/))
   });
 });

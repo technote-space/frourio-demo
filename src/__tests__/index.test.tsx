@@ -1,12 +1,11 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, useNock, setupCookie, setCookie, mockStdout, act } from '~/__tests__/utils';
+import { render, setup, useNock, setCookie, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
 dotenv.config({ path: 'server/.env' });
 
-setupCookie();
-mockStdout();
+setup();
 
 describe('Index', () => {
   it('should show login form', async() => {
@@ -28,10 +27,11 @@ describe('Index', () => {
         login(body);
         return body;
       }).reply(400);
-    const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
+    const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
+    user.click(getByTestId('password-switch'));
     await act(async() => {
       user.click(getByText('Login'));
     });
@@ -74,8 +74,11 @@ describe('Index', () => {
       })
       .get('/admin').reply(200, { name: 'test name', icon: null })
       .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/checkin/).reply(200, [])
-      .get(/\/dashboard\/checkout/).reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
       .get(/\/dashboard\/sales/).reply(200, []);
 
     const { getByText, getByLabelText, findAllByText, getAllByText, container, findByText, findByTestId } = render(
@@ -108,16 +111,42 @@ describe('Index', () => {
     user.click(menuClose);
   });
 
+  it('should logout automatically', async() => {
+    useNock()
+      .get('/admin').reply(401, {
+        message: 'test error',
+      })
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+    setCookie('authToken', 'token');
+
+    const { findByText } = render(
+      <Index/>,
+      {},
+    );
+
+    await findByText('Login');
+  });
+
   it('should login automatically and logout', async() => {
     useNock()
       .get('/admin').reply(200, { name: 'test name', icon: null })
       .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/checkin/).reply(200, [])
-      .get(/\/dashboard\/checkout/).reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
       .get(/\/dashboard\/sales/).reply(200, []);
     setCookie('authToken', 'token');
+    setCookie('themeColor', 'dark');
 
-    const { getByText, container, findByText, findByTestId } = render(
+    const { getByText, findByText, findByTestId, container } = render(
       <Index/>,
       {},
     );
@@ -127,7 +156,6 @@ describe('Index', () => {
     const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
     user.click(buttons[0]);
     await findByText('test name');
-    expect(getByText('ログアウト')).toBeVisible();
     user.click(getByText('ログアウト'));
     await findByText('Login');
     expect(getByText('Email address')).toBeVisible();
