@@ -106,7 +106,9 @@ export const getFilterConstraints = <T extends object>(filters?: Filter<T>[]): M
       return undefined;
     }
 
+    /* istanbul ignore next */
     if (filter.column.type === 'numeric') {
+      /* istanbul ignore next */
       return {
         [filter.column.field]: Number(filter.value),
       } as ModelWhere<T>;

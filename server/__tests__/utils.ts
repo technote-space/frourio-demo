@@ -10,7 +10,7 @@ export const getFastify = (): FastifyInstance => {
   fastify.jwt = {
     ...fastify.jwt,
     sign: jest.fn((payload: SignPayloadType) => JSON.stringify(payload)),
-    decode: jest.fn((token: string) => JSON.parse(token)),
+    // decode: jest.fn((token: string) => JSON.parse(token)),
   };
 
   return fastify;
