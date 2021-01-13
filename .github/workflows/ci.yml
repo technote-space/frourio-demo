@@ -71,7 +71,7 @@ jobs:
           key: client-yarn-${{ hashFiles('yarn.lock') }}
         if: env.RUNNING
       - name: Install Package dependencies
-        run: yarn install
+        run: yarn setup:install
         if: env.RUNNING && steps.client-yarn-cache.outputs.cache-hit != 'true'
       - run: yarn typecheck
         if: env.RUNNING
