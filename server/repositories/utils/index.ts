@@ -199,7 +199,7 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
     delete _query['filters[]'];
   }
 
-  if (typeof _query['orderBy'] === 'string') {
+  if ('orderBy' in _query && typeof _query['orderBy'] === 'string') {
     _query['orderBy'] = JSON.parse(_query['orderBy']);
   }
 
