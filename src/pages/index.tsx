@@ -8,7 +8,6 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ja } from 'date-fns/locale';
 import Route from '~/components/Route';
 import useTheme from '~/hooks/useTheme';
-import LoadingModal from '~/components/LoadingModal';
 import SnackbarWrapper from '~/components/SnackbarWrapper';
 import Layout from '~/components/Layout';
 
@@ -30,7 +29,6 @@ const Index = () => {
 
   return useMemo(() => <StylesProvider injectFirst>
     <ThemeProvider theme={theme}>
-      <LoadingModal/>
       <SnackbarWrapper/>
       <Layout>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
