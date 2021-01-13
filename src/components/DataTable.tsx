@@ -149,7 +149,7 @@ const DataTable = <T extends Model, >({
     totalCount: 0,
   }, api.get, { headers: authHeader, query }), []);
   const handleValidationError                   = error => {
-    if (isAxiosError(error) && error.response?.data) {
+    if (!unmountRef.current && isAxiosError(error) && error.response?.data) {
       const validationError = error.response.data as ValidationError[];
       setValidationErrors(Object.assign({}, ...validationError.map(error => ({
         [error.property]: Object.values(error.constraints ?? {})[0],
@@ -168,7 +168,7 @@ const DataTable = <T extends Model, >({
     } catch (error) {
       handleValidationError(error);
     }
-  }, []);
+  }, [unmountRef]);
   const handleUpdate                            = useCallback(async(newData, oldData) => {
     try {
       await handleAuthError(dispatch, {}, api.detail(oldData.id).patch, {
@@ -180,7 +180,7 @@ const DataTable = <T extends Model, >({
     } catch (error) {
       handleValidationError(error);
     }
-  }, []);
+  }, [unmountRef]);
   const handleDelete                            = useCallback(async oldData => {
     try {
       await handleAuthError(dispatch, {}, api.detail(oldData.id).delete, {
@@ -191,7 +191,7 @@ const DataTable = <T extends Model, >({
     } catch (error) {
       handleValidationError(error);
     }
-  }, []);
+  }, [unmountRef]);
   const handleCanceled                          = useCallback(() => {
     setValidationErrors({});
   }, []);
