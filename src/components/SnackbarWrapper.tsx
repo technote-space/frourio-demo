@@ -11,16 +11,16 @@ const useStyles = makeStyles(() => createStyles({
 }));
 
 const SnackbarWrapper: FC = () => {
-  const { notice }   = useStoreContext();
+  const { notice } = useStoreContext();
   const { dispatch } = useDispatchContext();
-  const classes      = useStyles();
+  const classes = useStyles();
 
   const handleClose = useCallback((): void => {
     closeNotice(dispatch);
   }, []);
 
   return useMemo(() =>
-    notice.message ?  <Snackbar
+    notice.message ? <Snackbar
       className={classes.content}
       anchorOrigin={{
         vertical: 'bottom',

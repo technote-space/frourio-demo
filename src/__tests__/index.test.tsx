@@ -1,4 +1,3 @@
-import React from 'react';
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
 import { render, useNock, setupCookie, setCookie, mockStdout, act } from '~/__tests__/utils';

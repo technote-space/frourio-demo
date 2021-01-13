@@ -16,8 +16,8 @@ const Index = () => {
   console.log('page::Index');
 
   const [{ themeColor }, setCookie] = useCookies(['themeColor']);
-  const themeObject                 = useTheme(themeColor);
-  const theme                       = responsiveFontSizes(createMuiTheme(themeObject));
+  const themeObject = useTheme(themeColor);
+  const theme = responsiveFontSizes(createMuiTheme(themeObject));
 
   useEffect(() => {
     if (themeColor) {

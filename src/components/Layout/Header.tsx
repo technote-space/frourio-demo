@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const Header: FC = () => {
-  const classes                                = useStyles();
-  const prefersDarkMode                        = useMediaQuery('(prefers-color-scheme: dark)');
-  const { dispatch }                           = useDispatchContext();
+  const classes = useStyles();
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const { dispatch } = useDispatchContext();
   const [{ authToken, themeColor }, setCookie] = useCookies(['authToken', 'themeColor']);
-  const handleClickToggle                      = useCallback(() => openSidebar(dispatch), []);
-  const handleClickHome                        = useCallback(() => changePage(dispatch, 'dashboard'), []);
-  const handleToggleDarkMode                   = useCallback(() => {
+  const handleClickToggle = useCallback(() => openSidebar(dispatch), []);
+  const handleClickHome = useCallback(() => changePage(dispatch, 'dashboard'), []);
+  const handleToggleDarkMode = useCallback(() => {
     setCookie('themeColor', (themeColor && themeColor === 'dark') || (!themeColor && prefersDarkMode) ? 'light' : 'dark', {
       expires: addDays(new Date(), 365),
     });

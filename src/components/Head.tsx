@@ -7,7 +7,7 @@ const Head: FC = () => {
   const { title } = useStoreContext();
 
   return useMemo(() => <NextHead>
-    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <meta name="viewport" content="initial-scale=1, width=device-width"/>
     <title>{title ? `${title} - ` : ''}Reservation System</title>
     <link rel="icon" href="/favicon.png"/>
     {/*<meta name="description" content={description} />*/}

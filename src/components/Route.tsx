@@ -6,11 +6,11 @@ import pages from '~/_pages';
 import { logout, changeTitle } from '~/utils/actions';
 
 const Route: FC = () => {
-  const [, , removeCookie]      = useCookies(['authToken']);
-  const { page }                = useStoreContext();
-  const { dispatch }            = useDispatchContext();
+  const [, , removeCookie] = useCookies(['authToken']);
+  const { page } = useStoreContext();
+  const { dispatch } = useDispatchContext();
   const [nextPage, setNextPage] = useState<ReactElement | null>(null);
-  const pageInstances           = useRef<Record<string, ReactElement>>({});
+  const pageInstances = useRef<Record<string, ReactElement>>({});
 
   useEffect(() => {
     if (page === 'logout') {
@@ -21,7 +21,7 @@ const Route: FC = () => {
 
     window.scrollTo(0, 0);
     if (!(page in pageInstances.current)) {
-      const Component: FC         = pages[page].page;
+      const Component: FC = pages[page].page;
       pageInstances.current[page] = <Component/>;
     }
 

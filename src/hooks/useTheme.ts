@@ -5,9 +5,9 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useTheme = (themeColor?: 'light' | 'dark'): Theme => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const colorMode       = themeColor || (prefersDarkMode ? 'dark' : 'light');
-  const bgColor         = colorMode === 'dark' ? grey[800] : grey[100];
-  const fgColor         = colorMode === 'dark' ? grey[50] : grey[900];
+  const colorMode = themeColor || (prefersDarkMode ? 'dark' : 'light');
+  const bgColor = colorMode === 'dark' ? grey[800] : grey[100];
+  const fgColor = colorMode === 'dark' ? grey[50] : grey[900];
 
   return useMemo(() =>
     createMuiTheme({

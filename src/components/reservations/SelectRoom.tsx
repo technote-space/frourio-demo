@@ -13,9 +13,9 @@ type Props = {
 }
 
 const SelectRoom: FC<Props> = ({ authHeader, props }: Props) => {
-  const unmountRef   = useUnmountRef();
+  const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
-  const room         = useFetch(dispatch, undefined, client.reservations.room, {
+  const room = useFetch(dispatch, undefined, client.reservations.room, {
     headers: authHeader,
     query: { roomId: Number(props.value) },
     enabled: !!props.value,

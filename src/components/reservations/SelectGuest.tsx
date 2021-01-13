@@ -13,9 +13,9 @@ type Props = {
 }
 
 const SelectGuest: FC<Props> = ({ authHeader, props }: Props) => {
-  const unmountRef   = useUnmountRef();
+  const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
-  const guest        = useFetch(dispatch, undefined, client.reservations.guest, {
+  const guest = useFetch(dispatch, undefined, client.reservations.guest, {
     headers: authHeader,
     query: { guestId: Number(props.value) },
     enabled: !!props.value,

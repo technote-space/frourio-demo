@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 const LoadingModal = () => {
   const { loadingModal } = useStoreContext();
-  const classes          = useStyles();
+  const classes = useStyles();
 
   return useMemo(() =>
     <Modal

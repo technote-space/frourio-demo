@@ -1,7 +1,7 @@
 import controller from '$/api/login/controller';
 import { createAuthorizationPayload, createHash } from '$/service/auth';
 import { getAdmin, validateUser } from '$/repositories/admin';
-import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
+import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { login } from '$/domains/login';
 
 describe('login', () => {

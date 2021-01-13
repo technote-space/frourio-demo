@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const SnackbarContentWrapper: FC<Props> = ({ className, message, onClose, variant, ...other }: Props) => {
-  const Icon    = variantIcon[variant];
+  const Icon = variantIcon[variant];
   const classes = useStyles();
 
   return (

@@ -29,10 +29,10 @@ const useStyles = makeStyles({
 });
 
 const Login: FC = () => {
-  const classes       = useStyles();
-  const { dispatch }  = useDispatchContext();
+  const classes = useStyles();
+  const { dispatch } = useDispatchContext();
   const [, setCookie] = useCookies(['authToken']);
-  const setAuthToken  = token => {
+  const setAuthToken = token => {
     setCookie('authToken', token, {
       expires: addDays(new Date(), 30),
     });

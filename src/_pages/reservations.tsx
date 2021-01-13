@@ -54,7 +54,13 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         title: '人数',
         field: 'number',
         type: 'numeric',
-        render: data => `${data['number']}/${data['room']['number']}`,
+        render: data => {
+          if (!data['room']) {
+            return data['number'];
+          }
+
+          return `${data['number']}/${data['room']['number']}`;
+        },
         filtering: false,
         // eslint-disable-next-line react/display-name
         editComponentWithError: (props: EditComponentPropsWithError<Model>) => <InputNumber
@@ -69,7 +75,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         // eslint-disable-next-line react/display-name
         render: data => {
           if (!data['room']) {
-            return data['amount'];
+            return <div>¥{data['amount']}</div>;
           }
 
           return <>

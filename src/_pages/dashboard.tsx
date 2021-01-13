@@ -79,28 +79,28 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
   console.log('page::Dashboard');
 
-  const classes                     = useStyles();
-  const unmountRef                  = useUnmountRef();
-  const { dispatch }                = useDispatchContext();
-  const tableIcons                  = useTableIcons();
-  const [date, setDate]             = useState<Date>(new Date());
-  const [salesDate, setSalesDate]   = useState<Date>(new Date());
-  const [roomId, setRoomId]         = useState<number>(0);
-  const [cancelId, setCancelId]     = useState<number | undefined>();
+  const classes = useStyles();
+  const unmountRef = useUnmountRef();
+  const { dispatch } = useDispatchContext();
+  const tableIcons = useTableIcons();
+  const [date, setDate] = useState<Date>(new Date());
+  const [salesDate, setSalesDate] = useState<Date>(new Date());
+  const [roomId, setRoomId] = useState<number>(0);
+  const [cancelId, setCancelId] = useState<number | undefined>();
   const [checkoutId, setCheckoutId] = useState<number | undefined>();
-  const [amount, setAmount]         = useState<number | undefined>();
-  const dailySales                  = useFetch(dispatch, [], client.dashboard.sales.daily, {
+  const [amount, setAmount] = useState<number | undefined>();
+  const dailySales = useFetch(dispatch, [], client.dashboard.sales.daily, {
     headers: authHeader,
     query: { date: salesDate, roomId: roomId ? roomId : undefined },
   });
-  const monthlySales                = useFetch(dispatch, [], client.dashboard.sales.monthly, {
+  const monthlySales = useFetch(dispatch, [], client.dashboard.sales.monthly, {
     headers: authHeader,
     query: { date: salesDate, roomId: roomId ? roomId : undefined },
   });
-  const selectableRooms             = useFetch(dispatch, [], client.dashboard.rooms, { headers: authHeader });
-  const checkinTableRef             = useRef<any>();
-  const checkoutTableRef            = useRef<any>();
-  const refreshTables               = () => {
+  const selectableRooms = useFetch(dispatch, [], client.dashboard.rooms, { headers: authHeader });
+  const checkinTableRef = useRef<any>();
+  const checkoutTableRef = useRef<any>();
+  const refreshTables = () => {
     if (checkinTableRef.current?.onQueryChange) {
       checkinTableRef.current.onQueryChange();
     }
@@ -108,24 +108,24 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       checkoutTableRef.current.onQueryChange();
     }
   };
-  const refreshSales                = () => {
+  const refreshSales = () => {
     dailySales.revalidate().then();
     monthlySales.revalidate().then();
   };
-  const handleDateChange            = useCallback(value => {
+  const handleDateChange = useCallback(value => {
     setDate(value);
     refreshTables();
   }, []);
-  const handleSalesDateChange       = useCallback(value => {
+  const handleSalesDateChange = useCallback(value => {
     setSalesDate(value);
   }, []);
-  const handleSelectRoom            = useCallback(value => {
+  const handleSelectRoom = useCallback(value => {
     setRoomId(Number(value.target.value));
   }, []);
-  const handleCloseCancel           = useCallback(() => {
+  const handleCloseCancel = useCallback(() => {
     setCancelId(undefined);
   }, []);
-  const handleCancel                = useCallback(async() => {
+  const handleCancel = useCallback(async() => {
     if (cancelId) {
       await client.dashboard.cancel.patch({
         headers: authHeader,
@@ -137,11 +137,11 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       setNotice(dispatch, 'キャンセルしました。');
     }
   }, [cancelId]);
-  const handleCloseCheckout         = useCallback(() => {
+  const handleCloseCheckout = useCallback(() => {
     setCheckoutId(undefined);
     setAmount(undefined);
   }, []);
-  const handleCheckout              = useCallback(async() => {
+  const handleCheckout = useCallback(async() => {
     if (checkoutId) {
       await client.dashboard.checkout.patch({
         headers: authHeader,
@@ -154,11 +154,11 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       setNotice(dispatch, '更新しました。');
     }
   }, [checkoutId, amount]);
-  const handleChangeAmount          = useCallback(event => {
+  const handleChangeAmount = useCallback(event => {
     setAmount(Number(event.target.value));
   }, []);
 
-  const selectDate       = useMemo(() => <div className={classes.condition} data-testid="select-date">
+  const selectDate = useMemo(() => <div className={classes.condition} data-testid="select-date">
     <DatePicker
       className={classes.date}
       disableToolbar
@@ -171,7 +171,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       autoOk
     />
   </div>, [classes, date]);
-  const selectSalesDate  = useMemo(() => <div className={classes.condition} data-testid="select-sales-date">
+  const selectSalesDate = useMemo(() => <div className={classes.condition} data-testid="select-sales-date">
     <DatePicker
       className={classes.date}
       disableToolbar
@@ -196,7 +196,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       </Select>
     </FormControl>
   </div>, [classes, roomId, selectableRooms.data]);
-  const checkinTable     = useMemo(() => <div className={classes.table} data-testid="checkin-table">
+  const checkinTable = useMemo(() => <div className={classes.table} data-testid="checkin-table">
     <MaterialTable
       tableRef={checkinTableRef}
       icons={tableIcons}
@@ -286,7 +286,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       unmountRef={unmountRef}
     />
   </div>, [classes, date, unmountRef]);
-  const checkoutTable    = useMemo(() => <div className={classes.table} data-testid="checkout-table">
+  const checkoutTable = useMemo(() => <div className={classes.table} data-testid="checkout-table">
     <MaterialTable
       tableRef={checkoutTableRef}
       icons={tableIcons}
@@ -373,7 +373,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       unmountRef={unmountRef}
     />
   </div>, [classes, date, unmountRef]);
-  const dailySalesBar    = useMemo(() => <div className={classes.chart} data-testid="daily-sales">
+  const dailySalesBar = useMemo(() => <div className={classes.chart} data-testid="daily-sales">
     <Bar
       data={{
         labels: dailySales.data?.map(item => format(new Date(item.day), 'd')) ?? [],
@@ -400,7 +400,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, dailySales.data]);
-  const monthlySalesBar  = useMemo(() => <div className={classes.chart} data-testid="monthly-sales">
+  const monthlySalesBar = useMemo(() => <div className={classes.chart} data-testid="monthly-sales">
     <Bar
       data={{
         labels: monthlySales.data?.map(item => format(new Date(item.month), 'M月')) ?? [],
@@ -427,7 +427,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       }}
     />
   </div>, [classes, monthlySales.data]);
-  const cancelDialog     = useMemo(() => <Dialog
+  const cancelDialog = useMemo(() => <Dialog
     onClose={handleCloseCancel}
     maxWidth="xs"
     open={cancelId !== undefined}
@@ -447,7 +447,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       </div>
     </DialogContent>
   </Dialog>, [classes, cancelId]);
-  const checkoutDialog   = useMemo(() => <Dialog
+  const checkoutDialog = useMemo(() => <Dialog
     onClose={handleCloseCheckout}
     maxWidth="xs"
     open={checkoutId !== undefined}

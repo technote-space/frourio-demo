@@ -45,38 +45,38 @@ export const getAdmin = depend(
   })),
 );
 
-export const createAdmin = depend(
-  { prisma: prisma as { admin: { create: typeof prisma.admin.create } } },
-  async({ prisma }, data: CreateAdminData, args?: Partial<CreateAdminArgs>) => filterAdmin(await prisma.admin.create({
-    ...args,
-    data: {
-      ...data,
-      ...args?.data,
-      password: createHash(args?.data?.password ?? data.password),
-    },
-  })),
-);
-
-export const updateAdmin = depend(
-  { prisma: prisma as { admin: { update: typeof prisma.admin.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateAdminData, args?: Partial<UpdateAdminArgs>) => filterAdmin(await prisma.admin.update({
-    ...args,
-    where: {
-      id,
-      ...args?.where,
-    },
-    data: {
-      ...data,
-      ...args?.data,
-      password: typeof data.password === 'string' ? createHash(data.password) : undefined,
-    },
-  })),
-);
-
-export const deleteAdmin = depend(
-  { prisma: prisma as { admin: { delete: typeof prisma.admin.delete } } },
-  async({ prisma }, id: number | undefined, args?: Partial<DeleteAdminArgs>) => filterAdmin(await prisma.admin.delete({
-    where: { id },
-    ...args,
-  })),
-);
+// export const createAdmin = depend(
+//   { prisma: prisma as { admin: { create: typeof prisma.admin.create } } },
+//   async({ prisma }, data: CreateAdminData, args?: Partial<CreateAdminArgs>) => filterAdmin(await prisma.admin.create({
+//     ...args,
+//     data: {
+//       ...data,
+//       ...args?.data,
+//       password: createHash(args?.data?.password ?? data.password),
+//     },
+//   })),
+// );
+//
+// export const updateAdmin = depend(
+//   { prisma: prisma as { admin: { update: typeof prisma.admin.update } } },
+//   async({ prisma }, id: number | undefined, data: UpdateAdminData, args?: Partial<UpdateAdminArgs>) => filterAdmin(await prisma.admin.update({
+//     ...args,
+//     where: {
+//       id,
+//       ...args?.where,
+//     },
+//     data: {
+//       ...data,
+//       ...args?.data,
+//       password: typeof data.password === 'string' ? createHash(data.password) : undefined,
+//     },
+//   })),
+// );
+//
+// export const deleteAdmin = depend(
+//   { prisma: prisma as { admin: { delete: typeof prisma.admin.delete } } },
+//   async({ prisma }, id: number | undefined, args?: Partial<DeleteAdminArgs>) => filterAdmin(await prisma.admin.delete({
+//     where: { id },
+//     ...args,
+//   })),
+// );

@@ -53,14 +53,14 @@ const reducer = (store, action) => {
   }
 };
 
-const StoreContext    = createContext<ContextState>(initialState);
+const StoreContext = createContext<ContextState>(initialState);
 const useStoreContext = () => {
   return useContext(StoreContext);
 };
 
 export type Dispatch = _Dispatch<{ type: string, [key: string]: any; }>;
 type DispatchContextType = { dispatch: Dispatch };
-const DispatchContext    = createContext<DispatchContextType>({} as DispatchContextType);
+const DispatchContext = createContext<DispatchContextType>({} as DispatchContextType);
 const useDispatchContext = (): DispatchContextType => {
   return useContext(DispatchContext);
 };
