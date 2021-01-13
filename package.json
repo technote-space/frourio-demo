@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "setup": "run-s setup:*",
+    "setup": "yarn setup:install && yarn setup:db",
     "setup:install": "yarn install && cd server && yarn install",
     "setup:db": "yarn --cwd server setup && yarn migrate:seed",
     "dev": "npm run migrate:dev && run-p dev:*",
