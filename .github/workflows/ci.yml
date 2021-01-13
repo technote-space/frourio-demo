@@ -28,15 +28,21 @@ jobs:
         run: echo "RUNNING=" >> $GITHUB_ENV
         if: "! env.GIT_DIFF"
 
-      - uses: actions/cache@v2
-        id: client-yarn-cache
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        if: env.RUNNING
+      - name: Cache node dependencies
+        uses: actions/cache@v2
         with:
-          path: "node_modules"
-          key: client-yarn-${{ hashFiles('yarn.lock') }}
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
         if: env.RUNNING
       - name: Install Package dependencies
         run: yarn install
-        if: env.RUNNING && steps.client-yarn-cache.outputs.cache-hit != 'true'
+        if: env.RUNNING
       - name: Check code style
         run: yarn eslint ${{ env.GIT_DIFF_FILTERED }}
         if: env.RUNNING && !env.MATCHED_FILES
@@ -64,18 +70,21 @@ jobs:
         run: echo "RUNNING=" >> $GITHUB_ENV
         if: "! env.GIT_DIFF"
 
-      - uses: actions/cache@v2
-        with:
-          path: "node_modules"
-          key: client-yarn-${{ hashFiles('yarn.lock') }}
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
         if: env.RUNNING
-      - uses: actions/cache@v2
+      - name: Cache node dependencies
+        uses: actions/cache@v2
         with:
-          path: "server/node_modules"
-          key: server-yarn-${{ hashFiles('server/yarn.lock') }}
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
         if: env.RUNNING
       - name: Install Package dependencies
         run: yarn setup:install
+        if: env.RUNNING
       - run: yarn typecheck
         if: env.RUNNING
 
@@ -119,15 +128,17 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
         if: env.RUNNING
-      - uses: actions/cache@v2
-        with:
-          path: "node_modules"
-          key: client-yarn-${{ hashFiles('yarn.lock') }}
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
         if: env.RUNNING
-      - uses: actions/cache@v2
+      - name: Cache node dependencies
+        uses: actions/cache@v2
         with:
-          path: "server/node_modules"
-          key: server-yarn-${{ hashFiles('server/yarn.lock') }}
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
         if: env.RUNNING
       - name: Setup
         run: yarn setup
@@ -153,14 +164,16 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache node dependencies
+        uses: actions/cache@v2
         with:
-          path: "node_modules"
-          key: client-yarn-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v2
-        with:
-          path: "server/node_modules"
-          key: server-yarn-${{ hashFiles('server/yarn.lock') }}
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install Package dependencies
         run: yarn setup:install
