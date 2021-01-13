@@ -17,14 +17,14 @@ class IsIdExistsConstrains implements ValidatorConstraintInterface {
       return false;
     }
 
-    const table     = args.constraints[0] as Models;
-    const prisma    = new PrismaClient();
+    const table = args.constraints[0] as Models;
+    const prisma = new PrismaClient();
     const findFirst = prisma[table].findFirst as ((args?: { where: { id: number } }) => Promise<object | null>);
-    const item      = await findFirst({ where: { id: Number(value) } });
+    const item = await findFirst({ where: { id: Number(value) } });
     return item !== null;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage() {
     return 'Data not exists';
   }
 }
@@ -61,7 +61,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
       return false;
     }
 
-    const checkin  = new Date(data['checkin']);
+    const checkin = new Date(data['checkin']);
     const checkout = new Date(data['checkout']);
     if (!isAfter(startOfDay(checkout), startOfDay(checkin))) {
       this.reason = 'The checkout date must be after the checkin date.';
@@ -69,7 +69,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
     }
 
     const prisma = new PrismaClient();
-    const where  = {
+    const where = {
       AND: [
         {
           checkin: {
@@ -110,7 +110,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
     return true;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage() {
     if (this.reason) {
       return this.reason;
     }
@@ -141,16 +141,16 @@ class IsWithinLimitConstrains implements ValidatorConstraintInterface {
     }
 
     const table = args.constraints[0] as Models;
-    const id    = `${table}Id`;
-    const data  = args.object as any;
+    const id = `${table}Id`;
+    const data = args.object as any;
     if (!(id in data) || typeof data[id] !== 'number') {
       return false;
     }
 
-    const field     = args.constraints[1];
-    const prisma    = new PrismaClient();
+    const field = args.constraints[1];
+    const prisma = new PrismaClient();
     const findFirst = prisma[table].findFirst as ((args?: { where: { id: number } }) => Promise<object | null>);
-    const item      = await findFirst({ where: { id: Number(data[id]) } });
+    const item = await findFirst({ where: { id: Number(data[id]) } });
     if (!item) {
       return false;
     }
@@ -159,7 +159,7 @@ class IsWithinLimitConstrains implements ValidatorConstraintInterface {
     return item !== null && Number(value) <= this.limit;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage() {
     if (this.limit === undefined) {
       return 'Invalid value';
     }

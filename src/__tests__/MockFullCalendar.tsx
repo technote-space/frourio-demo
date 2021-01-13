@@ -43,7 +43,8 @@ export default class MockFullCalendar extends Component<CalendarProps, CalendarS
   componentDidMount() {
     this.setState({ isLoading: true });
     this.props.loading(true);
-    typeof this.props.events === 'function' && this.props.events({
+    typeof this.props.events === 'function' && this.props.events(
+      {
         start: this.props.start,
         end: this.props.end,
         startStr: '',

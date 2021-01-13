@@ -1,7 +1,6 @@
 import type { FastifyRequest } from 'fastify';
 import type { AuthorizationPayload } from '$/types';
 import { depend } from 'velona';
-import createError from 'fastify-error';
 import bcrypt from 'bcryptjs';
 import { getAdmin } from '$/repositories/admin';
 import 'fastify-jwt';

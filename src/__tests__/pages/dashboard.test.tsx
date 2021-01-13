@@ -329,9 +329,9 @@ describe('Dashboard', () => {
 
     await waitFor(() => expect(daily.mock.calls.length).toBeGreaterThanOrEqual(3)); // 1 + change room + change date
     await waitFor(() => expect(monthly.mock.calls.length).toBeGreaterThanOrEqual(3)); // 1 + change room + change date
-    expect(daily.mock.calls[0][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(startOfToday(), 'yyyy')}`)))
-    expect(daily.mock.calls[0][0]).toEqual(expect.not.stringMatching(/roomId=2/))
-    expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`)))
-    expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(/roomId=2/))
+    expect(daily.mock.calls[0][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(startOfToday(), 'yyyy')}`)));
+    expect(daily.mock.calls[0][0]).toEqual(expect.not.stringMatching(/roomId=2/));
+    expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`)));
+    expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(/roomId=2/));
   });
 });

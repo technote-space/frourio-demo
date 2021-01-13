@@ -1,6 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '@prisma/client';
-import { createHash, validateHash } from '$/service/auth';
+// import { createHash, validateHash } from '$/service/auth';
+import { validateHash } from '$/service/auth';
 import { API_ORIGIN, BASE_PATH } from '$/service/env';
 import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma } from '@prisma/client';
@@ -15,7 +16,7 @@ export type { Admin } from '@prisma/client';
 
 export const prisma = new PrismaClient();
 
-const createIconUrl    = (name: string) => `${API_ORIGIN}${BASE_PATH}/icons/${name}`;
+const createIconUrl = (name: string) => `${API_ORIGIN}${BASE_PATH}/icons/${name}`;
 const convertToIconUrl = <T extends { icon: string | null }>(admin: T) => {
   if (admin?.icon && !/\/icons\//.test(admin.icon)) {
     admin.icon = createIconUrl(admin.icon);
@@ -23,11 +24,11 @@ const convertToIconUrl = <T extends { icon: string | null }>(admin: T) => {
 
   return admin;
 };
-const removePassword   = <T extends { password?: string }>(admin: T): Exclude<T, 'password'> => {
+const removePassword = <T extends { password?: string }>(admin: T): Exclude<T, 'password'> => {
   delete admin.password;
   return admin as Exclude<T, 'password'>;
 };
-const filterAdmin      = <T extends { icon: string | null; password: string }>(admin: T | null): Exclude<T, 'password'> | never => removePassword(convertToIconUrl(ensureNotNull(admin)));
+const filterAdmin = <T extends { icon: string | null; password: string }>(admin: T | null): Exclude<T, 'password'> | never => removePassword(convertToIconUrl(ensureNotNull(admin)));
 
 export const validateUser = depend(
   { prisma: prisma as { admin: { findFirst: typeof prisma.admin.findFirst } } },
