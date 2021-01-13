@@ -91,12 +91,12 @@ const DataTable = <T extends Model, >({
   unmountRef,
 }: Props<T>): ReactElement => {
   const { dispatch } = useDispatchContext();
-  const tableIcons   = useTableIcons();
+  const tableIcons = useTableIcons();
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-  const title                                   = useMemo(() => {
+  const title = useMemo(() => {
     const Icon = pages[model].icon;
-    return <Grid container direction="row" alignItems="center" spacing={1}>
+    return <Grid container direction="row" alignItems="center" spacing={1} data-testid="table-title">
       <Grid item>
         <Icon/>
       </Grid>
@@ -105,7 +105,7 @@ const DataTable = <T extends Model, >({
       </Grid>
     </Grid>;
   }, []);
-  const wrapEditComponent                       = (column: Column<T>): Column<T> => {
+  const wrapEditComponent = (column: Column<T>): Column<T> => {
     if ('editComponentWithError' in column && column.editComponentWithError) {
       // eslint-disable-next-line react/display-name
       column.editComponent = (props: EditComponentProps<T>) => {
@@ -129,7 +129,7 @@ const DataTable = <T extends Model, >({
     }
     return column;
   };
-  const columns                                 = useMemo(() => columnsEx.map(column => {
+  const columns = useMemo(() => columnsEx.map(column => {
     if (!('field' in column) && column.editable === 'never') {
       return wrapEditComponent({
         filtering: false,
@@ -141,14 +141,14 @@ const DataTable = <T extends Model, >({
 
     return wrapEditComponent(column as Column<T>);
   }), [validationErrors]);
-  const api                                     = useMemo(() => getDataTableApi(model), []);
-  const editField                               = useMemo(() => controlValidationEditField('EditField', MTableEditField, validationErrors, setValidationErrors), [validationErrors]);
-  const fetchData                               = useCallback(async(query: Query<T>): Promise<QueryResult<T>> => handleAuthError(dispatch, {
+  const api = useMemo(() => getDataTableApi(model), []);
+  const editField = useMemo(() => controlValidationEditField('EditField', MTableEditField, validationErrors, setValidationErrors), [validationErrors]);
+  const fetchData = useCallback(async(query: Query<T>): Promise<QueryResult<T>> => handleAuthError(dispatch, {
     data: [] as T[],
     page: 0,
     totalCount: 0,
   }, api.get, { headers: authHeader, query }), []);
-  const handleValidationError                   = error => {
+  const handleValidationError = error => {
     if (!unmountRef.current && isAxiosError(error) && error.response?.data) {
       const validationError = error.response.data as ValidationError[];
       setValidationErrors(Object.assign({}, ...validationError.map(error => ({
@@ -157,7 +157,7 @@ const DataTable = <T extends Model, >({
     }
     throw error;
   };
-  const handleAdd                               = useCallback(async newData => {
+  const handleAdd = useCallback(async newData => {
     try {
       await handleAuthError(dispatch, {}, api.post, {
         headers: authHeader,
@@ -169,7 +169,7 @@ const DataTable = <T extends Model, >({
       handleValidationError(error);
     }
   }, [unmountRef]);
-  const handleUpdate                            = useCallback(async(newData, oldData) => {
+  const handleUpdate = useCallback(async(newData, oldData) => {
     try {
       await handleAuthError(dispatch, {}, api.detail(oldData.id).patch, {
         headers: authHeader,
@@ -181,7 +181,7 @@ const DataTable = <T extends Model, >({
       handleValidationError(error);
     }
   }, [unmountRef]);
-  const handleDelete                            = useCallback(async oldData => {
+  const handleDelete = useCallback(async oldData => {
     try {
       await handleAuthError(dispatch, {}, api.detail(oldData.id).delete, {
         headers: authHeader,
@@ -192,7 +192,7 @@ const DataTable = <T extends Model, >({
       handleValidationError(error);
     }
   }, [unmountRef]);
-  const handleCanceled                          = useCallback(() => {
+  const handleCanceled = useCallback(() => {
     setValidationErrors({});
   }, []);
 

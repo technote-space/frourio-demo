@@ -25,9 +25,9 @@ const useStyles = makeStyles({
 });
 
 const PasswordInput: FC<Props> = (props: Props) => {
-  const classes         = useStyles();
+  const classes = useStyles();
   const [show, setShow] = useState(false);
-  const handleClick     = useCallback(() => setShow(!show), [show]);
+  const handleClick = useCallback(() => setShow(!show), [show]);
 
   return useMemo(() =>
     <div className={classes.wrap}>
@@ -38,7 +38,7 @@ const PasswordInput: FC<Props> = (props: Props) => {
         {...props}
       />
       <div className={classes.toggle}>
-        <Button size="small" onClick={handleClick} disabled={props.disabled}>
+        <Button size="small" onClick={handleClick} disabled={props.disabled} data-testid="password-switch">
           {show ? 'Hide' : 'Show'}
         </Button>
       </div>

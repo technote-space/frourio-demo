@@ -24,17 +24,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
-  const classes         = useStyles();
-  const theme           = useTheme() as Theme;
-  const { dispatch }    = useDispatchContext();
+  const classes = useStyles();
+  const theme = useTheme() as Theme;
+  const { dispatch } = useDispatchContext();
   const [open, setOpen] = useState(false);
-  const handleOpen      = useCallback(() => {
+  const handleOpen = useCallback(() => {
     setOpen(true);
   }, []);
-  const handleClose     = useCallback(() => {
+  const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
-  const fetchEvents     = useCallback((info, successCallback) => {
+  const fetchEvents = useCallback((info, successCallback) => {
     handleAuthError(dispatch, [] as Array<RoomStatusEvent>, client.rooms.calendar.get, {
       headers: authHeader,
       query: {
@@ -51,7 +51,7 @@ const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
     });
   }, []);
 
-  const button   = useMemo(() => <IconButton onClick={handleOpen}>
+  const button = useMemo(() => <IconButton onClick={handleOpen} data-testid="room-status">
     <TodayIcon/>
   </IconButton>, [classes]);
   const calendar = useMemo(() => <Dialog open={open} onClose={handleClose}>

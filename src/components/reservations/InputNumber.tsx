@@ -19,9 +19,9 @@ const useStyles = makeStyles({
 });
 
 const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
-  const classes      = useStyles();
+  const classes = useStyles();
   const { dispatch } = useDispatchContext();
-  const room         = useFetch(dispatch, undefined, client.reservations.room, {
+  const room = useFetch(dispatch, undefined, client.reservations.room, {
     headers: authHeader,
     query: { roomId: Number(props.rowData['roomId']) },
     enabled: !!props.rowData['roomId'],
@@ -51,6 +51,7 @@ const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
         min: 1,
         max: room.data.number,
       }}
+      data-testid="input-number"
     />
     {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
   </FormControl> : null, [room?.data, props.value]);

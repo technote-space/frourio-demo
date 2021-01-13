@@ -42,27 +42,27 @@ type Props<T extends object> = {
 const SearchTable = <T extends {
   id: number;
 }, >({ model, api, columns, authHeader, searchText, props, unmountRef }: Props<T>): ReactElement => {
-  const classes      = useStyles();
+  const classes = useStyles();
   const { dispatch } = useDispatchContext();
 
   // dialog
-  const [open, setOpen]  = useState(false);
+  const [open, setOpen] = useState(false);
   const handleClickField = useCallback(() => {
     setOpen(true);
     props.hideError();
   }, []);
-  const handleClose      = useCallback(() => {
+  const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
 
   // material table
   const tableIcons = useTableIcons();
-  const title      = useMemo(() => pages[model].label, []);
-  const icon       = useMemo(() => {
+  const title = useMemo(() => pages[model].label, []);
+  const icon = useMemo(() => {
     const Icon = pages[model].icon;
     return <Icon/>;
   }, []);
-  const actions    = useMemo<Action<T>[]>(() => [{
+  const actions = useMemo<Action<T>[]>(() => [{
     icon: tableIcons.Check as SvgIconComponent,
     tooltip: 'Select',
     onClick: (event, data) => {
@@ -72,13 +72,13 @@ const SearchTable = <T extends {
       setOpen(false);
     },
   }], []);
-  const fetchData  = useCallback(async(query: Query<T>): Promise<QueryResult<T>> => handleAuthError(dispatch, {
+  const fetchData = useCallback(async(query: Query<T>): Promise<QueryResult<T>> => handleAuthError(dispatch, {
     data: [] as T[],
     page: 0,
     totalCount: 0,
   }, api, { headers: authHeader, query }), []);
 
-  const cell     = useMemo(() => <FormControl error={Boolean(props.error)}>
+  const cell = useMemo(() => <FormControl error={Boolean(props.error)}>
     <Link
       component="button"
       variant="body2"
@@ -89,30 +89,32 @@ const SearchTable = <T extends {
     {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
   </FormControl>, [searchText, props.error, props.helperText]);
   const editCell = useMemo(() => <Dialog open={open} onClose={handleClose}>
-    <DialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6" className={classes.title}>
-        {title}
-      </Typography>
-      <IconButton aria-label="close" onClick={handleClose}>
-        <CloseIcon/>
-      </IconButton>
-    </DialogTitle>
-    <MaterialTable
-      icons={tableIcons}
-      title={icon}
-      columns={columns.map(col => {
-        const colClone = { ...col };
-        delete colClone['tableData'];
-        return colClone;
-      })}
-      data={fetchData}
-      actions={actions}
-      options={{
-        emptyRowsWhenPaging: false,
-        searchText,
-      }}
-      unmountRef={unmountRef}
-    />
+    <div data-testid={`${model}-search-table`}>
+      <DialogTitle disableTypography className={classes.root}>
+        <Typography variant="h6" className={classes.title}>
+          {title}
+        </Typography>
+        <IconButton aria-label="close" onClick={handleClose}>
+          <CloseIcon/>
+        </IconButton>
+      </DialogTitle>
+      <MaterialTable
+        icons={tableIcons}
+        title={icon}
+        columns={columns.map(col => {
+          const colClone = { ...col };
+          delete colClone['tableData'];
+          return colClone;
+        })}
+        data={fetchData}
+        actions={actions}
+        options={{
+          emptyRowsWhenPaging: false,
+          searchText,
+        }}
+        unmountRef={unmountRef}
+      />
+    </div>
   </Dialog>, [classes, open, searchText, unmountRef]);
   return <>
     {cell}

@@ -31,11 +31,11 @@ const useStyles = makeStyles({
 });
 
 const Sidebar: FC = () => {
-  const classes                                    = useStyles();
+  const classes = useStyles();
   const { isSidebarOpen, icon, name, page: _page } = useStoreContext();
-  const { dispatch }                               = useDispatchContext();
-  const [{ authToken }]                            = useCookies(['authToken']);
-  const onClose                                    = useCallback(() => closeSidebar(dispatch), []);
+  const { dispatch } = useDispatchContext();
+  const [{ authToken }] = useCookies(['authToken']);
+  const onClose = useCallback(() => closeSidebar(dispatch), []);
 
   const MappedListItem: FC<{ slug: PageKeys, page: typeof pages[PageKeys] }> = ({ slug, page }) => {
     const handleClick = useCallback(() => {
@@ -47,6 +47,7 @@ const Sidebar: FC = () => {
       key={slug}
       className={clsx(classes.item, slug === _page ? classes.active : '')}
       onClick={handleClick}
+      data-testid={`menu-item-${slug}`}
     >
       <ListItemIcon>
         <page.icon/>
@@ -66,6 +67,11 @@ const Sidebar: FC = () => {
           // @ts-ignore
           'data-testid': 'drawer-layer',
         },
+      }}
+      PaperProps={{
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        'data-testid': 'drawer-paper',
       }}
     >
       {(icon || name) && <>

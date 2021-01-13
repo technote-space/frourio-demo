@@ -22,12 +22,12 @@ export type AuthenticatedPageProps = {
 }
 
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
-  const classes                    = useStyles();
-  const unmountRef                 = useUnmountRef();
+  const classes = useStyles();
+  const unmountRef = useUnmountRef();
   const [{ authToken }, setCookie] = useCookies(['authToken']);
-  const { name }                   = useStoreContext();
-  const { dispatch }               = useDispatchContext();
-  const authHeader                 = { authorization: `Bearer ${authToken}` };
+  const { name, page } = useStoreContext();
+  const { dispatch } = useDispatchContext();
+  const authHeader = { authorization: `Bearer ${authToken}` };
 
   useEffect(() => {
     if (authToken) {
@@ -48,7 +48,7 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     }
   }, [authToken, name, unmountRef]);
 
-  return <div className={classes.wrap}>
+  return <div className={classes.wrap} data-testid={`page-${page}`}>
     {!authToken && <Login {...props} />}
     {authToken && <WrappedComponent authToken={authToken} authHeader={authHeader} {...props} />}
   </div>;
