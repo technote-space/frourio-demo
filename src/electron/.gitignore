@@ -1,0 +1,5 @@
+index.js*
+/dist/
+/migrations/
+*.db
+schema.prisma
