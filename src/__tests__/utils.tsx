@@ -3,10 +3,8 @@ import type { RenderOptions, RenderResult } from '@testing-library/react';
 import type { PageKeys } from '~/_pages';
 import { render } from '@testing-library/react';
 import { SWRConfig } from 'swr';
-import { CookiesProvider } from 'react-cookie';
 import { StoreContextProvider } from '~/store';
 import nock from 'nock';
-import Cookies from 'universal-cookie';
 import Index from '~/pages';
 import user from '@testing-library/user-event';
 import FullCalendar from '~/components/FullCalendar';
@@ -23,13 +21,11 @@ type ProviderProps = {
   children: ReactChild;
 }
 
-const Providers = ({ children }: ProviderProps) => <CookiesProvider>
-  <StoreContextProvider>
-    <SWRConfig value={{ dedupingInterval: 0 }}>
-      {children}
-    </SWRConfig>
-  </StoreContextProvider>
-</CookiesProvider>;
+const Providers = ({ children }: ProviderProps) => <StoreContextProvider>
+  <SWRConfig value={{ dedupingInterval: 0 }}>
+    {children}
+  </SWRConfig>
+</StoreContextProvider>;
 
 const customRender = (ui: ReactElement, options: RenderOptions = {}) => {
   window.scrollTo = jest.fn();
@@ -58,16 +54,39 @@ export const useNock = (): nock.Scope => {
   });
 };
 
-export const setupCookie = () => {
+export const setupLocalStorage = () => {
+  const localStorageMock = jest.fn(() => {
+    const store = {};
+
+    return {
+      getItem: (key: string): string | null => store[key] || null,
+      setItem: (key: string, value: string): void => {
+        store[key] = value;
+      },
+      clear: (): void => {
+        Object.keys(store).forEach(key => {
+          delete store[key];
+        });
+      },
+    };
+  })();
+
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock,
+  });
   afterEach(() => {
-    const cookieHandler = new Cookies();
-    Object.keys(cookieHandler.getAll()).forEach(name => cookieHandler.remove(name));
+    window.localStorage.clear();
   });
 };
 
-export const setCookie = (name: string, value: any) => {
-  const cookieHandler = new Cookies();
-  cookieHandler.set(name, value);
+export const setToken = (token: string) => {
+  window.localStorage.setItem('auth-token', JSON.stringify(token));
+};
+export const setInvalidToken = () => {
+  window.localStorage.setItem('auth-token', 'invalid');
+};
+export const setDarkMode = (mode: boolean) => {
+  window.localStorage.setItem('dark-mode-enabled', JSON.stringify(mode));
 };
 
 export const mockStdout = () => {
@@ -114,7 +133,7 @@ export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderR
       'totalCount': 0,
     })
     .get(/\/dashboard\/sales/).reply(200, []));
-  setCookie('authToken', 'token');
+  setToken('token');
 
   const result = customRender(
     <Index/>,
@@ -132,7 +151,7 @@ export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderR
 
 export const setup = () => {
   setupNock();
-  setupCookie();
+  setupLocalStorage();
   setupTimers();
   mockStdout();
 };

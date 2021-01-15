@@ -4,9 +4,8 @@ import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Brightness4 from '@material-ui/icons/Brightness4';
 import Brightness5 from '@material-ui/icons/Brightness5';
-import { useCookies } from 'react-cookie';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { addDays } from 'date-fns';
+import useDarkMode from '~/hooks/useDarkMode';
+import useAuthToken from '~/hooks/useAuthToken';
 import { useDispatchContext } from '~/store';
 import { openSidebar, changePage } from '~/utils/actions';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -30,21 +29,16 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const Header: FC = () => {
   const classes = useStyles();
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const { dispatch } = useDispatchContext();
-  const [{ authToken, themeColor }, setCookie] = useCookies(['authToken', 'themeColor']);
+  const [themeColor, toggleDarkMode] = useDarkMode();
+  const [auth] = useAuthToken();
   const handleClickToggle = useCallback(() => openSidebar(dispatch), []);
   const handleClickHome = useCallback(() => changePage(dispatch, 'dashboard'), []);
-  const handleToggleDarkMode = useCallback(() => {
-    setCookie('themeColor', (themeColor && themeColor === 'dark') || (!themeColor && prefersDarkMode) ? 'light' : 'dark', {
-      expires: addDays(new Date(), 365),
-    });
-  }, [prefersDarkMode, themeColor]);
 
   return useMemo(() =>
     <AppBar position="static" className={classes.root}>
       <Toolbar>
-        {authToken && <IconButton
+        {auth && <IconButton
           edge="start"
           className={classes.menuButton}
           color="inherit"
@@ -56,11 +50,11 @@ const Header: FC = () => {
           予約システム
         </Typography>
         <div className={classes.grow}/>
-        <IconButton onClick={handleToggleDarkMode}>
+        <IconButton onClick={toggleDarkMode}>
           {themeColor === 'dark' ? <Brightness5/> : <Brightness4/>}
         </IconButton>
       </Toolbar>
-    </AppBar>, [classes, authToken, themeColor]);
+    </AppBar>, [classes, auth, themeColor]);
 };
 
 export default Header;

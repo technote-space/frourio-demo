@@ -43,6 +43,13 @@ const reducer = (store, action) => {
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'warning' }, ...action.notice } };
     case 'CLOSE_NOTICE':
       return { ...store, notice: { ...store.notice, ...{ open: false } } };
+    case 'LOCAL_STORAGE_CHANGED':
+      return {
+        ...store, localStorage: {
+          ...store.localStorage,
+          [action.key]: action.value,
+        },
+      };
     default:
       return store;
   }

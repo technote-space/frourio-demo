@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Avatar } from '@material-ui/core';
-import { useCookies } from 'react-cookie';
 import clsx from 'clsx';
+import useAuthToken from '~/hooks/useAuthToken';
 import { useStoreContext, useDispatchContext } from '~/store';
 import pages, { PageKeys } from '~/_pages';
 import { closeSidebar, changePage } from '~/utils/actions';
@@ -34,7 +34,7 @@ const Sidebar: FC = () => {
   const classes = useStyles();
   const { isSidebarOpen, icon, name, page: _page } = useStoreContext();
   const { dispatch } = useDispatchContext();
-  const [{ authToken }] = useCookies(['authToken']);
+  const [auth] = useAuthToken();
   const onClose = useCallback(() => closeSidebar(dispatch), []);
 
   const MappedListItem: FC<{ slug: PageKeys, page: typeof pages[PageKeys] }> = ({ slug, page }) => {
@@ -60,7 +60,7 @@ const Sidebar: FC = () => {
     <Drawer
       anchor='left'
       onClose={onClose}
-      open={isSidebarOpen && !!authToken}
+      open={isSidebarOpen && !!auth}
       ModalProps={{
         BackdropProps: {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -89,7 +89,7 @@ const Sidebar: FC = () => {
         {Object.entries(pages).map(([key, page]) =>
           <MappedListItem key={key} slug={key as PageKeys} page={page}/>)}
       </List>
-    </Drawer>, [classes, isSidebarOpen, authToken, name, icon]);
+    </Drawer>, [classes, isSidebarOpen, auth, name, icon]);
 };
 
 export default Sidebar;

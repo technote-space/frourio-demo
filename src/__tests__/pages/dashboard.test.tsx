@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, useNock, setup, setCookie, findElement, act, waitFor } from '~/__tests__/utils';
+import { render, useNock, setup, setToken, findElement, act, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
 
@@ -19,7 +19,7 @@ describe('Dashboard', () => {
         'totalCount': 0,
       })
       .get(/\/dashboard\/sales/).reply(200, []);
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { findByTestId, getByTestId, getByText } = render(
       <Index/>,
@@ -183,7 +183,7 @@ describe('Dashboard', () => {
         cancel(body);
         return body;
       }).reply(200);
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { getByTestId, findAllByText, findByText, getAllByText } = render(
       <Index/>,
@@ -301,7 +301,7 @@ describe('Dashboard', () => {
           { 'month': '2020-11-30T15:00:00.000Z', 'sales': 19164865 },
         ];
       });
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { getByTestId, findByText, getByText } = render(
       <Index/>,
