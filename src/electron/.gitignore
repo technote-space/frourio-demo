@@ -1,5 +1,8 @@
 index.js*
 /dist/
 /migrations/
+/prisma/client/
+/prisma/migrations/
+/prisma/schema.prisma
 *.db
-schema.prisma
+

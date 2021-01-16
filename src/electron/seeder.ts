@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './prisma/client';
 import bcrypt from 'bcryptjs';
 import { startOfToday, addDays, setHours } from 'date-fns';
 

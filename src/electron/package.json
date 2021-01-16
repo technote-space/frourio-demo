@@ -24,9 +24,8 @@
   "main": "index.js",
   "scripts": {
     "setup": "yarn install && run-s setup:*",
-    "setup:config": "npx cpy-cli --no-overwrite --rename=.env .env.example ./ && npx cpy-cli --no-overwrite ../../server/prisma/schema.prisma ./",
-    "setup:db": "npx del-cli dev.db && prisma migrate dev --name init --preview-feature",
-    "setup:migrate": "yarn ts-node ./seeder.ts",
+    "setup:config": "npx cpy-cli --no-overwrite --rename=.env ../../server/.env.example ./ && npx cpy-cli --no-overwrite --rename=.env ../../server/prisma/.env.example ./prisma && npx cpy-cli --no-overwrite ../../server/prisma/schema.prisma ./prisma",
+    "setup:db": "npx del-cli prisma/dev.db && prisma migrate dev --name init --preview-feature && yarn ts-node ./seeder.ts",
     "build": "run-p build:*",
     "build:client": "yarn --cwd ../.. build:client",
     "build:electron": "webpack --progress --mode=production",
@@ -82,10 +81,31 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
-    "asar": true,
-    "asarUnpack": [
-      "dev.db",
-      "public"
+    "extraResources": [
+      {
+        "from": "../../out",
+        "to": "out"
+      },
+      {
+        "from": "prisma",
+        "to": "prisma",
+        "filter": [
+          ".env",
+          "dev.db",
+          "client/schema.prisma"
+        ]
+      },
+      {
+        "from": "public",
+        "to": "public"
+      },
+      {
+        "from": ".",
+        "to": ".",
+        "filter": [
+          ".env"
+        ]
+      }
     ]
   },
   "productName": "ReservationSystem"
