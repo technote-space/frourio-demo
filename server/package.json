@@ -5,8 +5,8 @@
   "scripts": {
     "build": "run-s build:* && webpack --mode=production",
     "build:prisma": "prisma generate",
-    "build:frourio": "npm run migrate:dev && frourio",
-    "dev": "npm run migrate:dev && run-p dev:*",
+    "build:frourio": "yarn migrate:dev && frourio",
+    "dev": "yarn migrate:dev && run-p dev:*",
     "dev:frourio": "frourio --watch",
     "dev:prisma": "prisma generate --watch",
     "dev:server": "webpack --watch --mode=development",
