@@ -19,6 +19,7 @@ type Props = {
     end: Date;
   }) => Promise<Array<EventRefined>>;
   isValidDate: (date: Date, rowData: Model, eventDates: Array<string>) => boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getInitialDate: (rowData: Model, value: any) => string | Date;
   resultHour: number;
   target: string;

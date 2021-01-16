@@ -7,6 +7,7 @@ type CalendarProps = Required<Pick<CalendarOptions, 'loading' | 'dateClick' | 'e
   calendarEvents: Record<string, { start: Date; end: Date; }[][]>;
   start: Date;
   end: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   calendarRef: MutableRefObject<any>;
   target: string;
 }

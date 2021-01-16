@@ -12,6 +12,7 @@ export type ContextState = {
     message: string,
     variant: 'error' | 'info' | 'success' | 'warning',
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   localStorage?: Record<string, any>;
 };
 

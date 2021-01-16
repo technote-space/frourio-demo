@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
 import {
   registerDecorator,
   ValidationOptions,

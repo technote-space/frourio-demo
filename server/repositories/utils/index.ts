@@ -178,11 +178,13 @@ export const getDateConstraint = (date: Date) => ({
   lt: addDays(startOfDay(date), 1),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(data: T): Omit<T, 'id'> => {
   delete data.id;
   return data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseQuery = <T extends object, U extends undefined | Query<T> | any>(query: U): Query<T> | MaybeUndefined<U> => {
   if (!query) {
     return undefined as MaybeUndefined<U>;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { startOfDay, addDays } from 'date-fns';
 import { verifyAdmin } from '$/service/auth';
 import { parseQuery, getWhere, getFilterConstraints } from '$/repositories/utils';

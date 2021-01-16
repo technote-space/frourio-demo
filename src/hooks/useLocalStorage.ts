@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useStoreContext, useDispatchContext } from '~/store';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getStoreValue = <T>(key: string, localStorage: Record<string, any> | undefined, initialValue: T): T => {
   if (localStorage && key in localStorage) {
     return localStorage[key];

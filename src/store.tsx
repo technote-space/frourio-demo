@@ -60,6 +60,7 @@ const useStoreContext = () => {
   return useContext(StoreContext);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Dispatch = _Dispatch<{ type: string, [key: string]: any; }>;
 type DispatchContextType = { dispatch: Dispatch };
 const DispatchContext = createContext<DispatchContextType>({} as DispatchContextType);
