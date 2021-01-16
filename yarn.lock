@@ -412,10 +412,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fullcalendar/common@^5.5.0", "@fullcalendar/common@~5.5.0":
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.5.0.tgz#02509c8d96bb0bb7fcf397ccf564ed271a6cee00"
-  integrity sha512-xHsHRI2xnC4vDPdRaOkt03SGIEsmlcSTI6RVInI2PQKi3n4otgM4ej3WL4B010uT4IzrBlUvNm8HHEo/o3g8Ug==
+"@fullcalendar/common@^5.5.1", "@fullcalendar/common@~5.5.0":
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.5.1.tgz#cc3679408b625b35d6f3f05bdca73f3700d0d370"
+  integrity sha512-tfVlX4aBHxCDJAVkUm93FXScOhmdz6/vUy/ISfpNeRNYuUvhJbmjoH67DpGNdS3we2n6/dVte021TE4Bbo4uRA==
   dependencies:
     ical.js "^1.4.0"
     tslib "^2.0.3"
