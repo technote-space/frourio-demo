@@ -7,9 +7,9 @@ import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma } from '$/prisma/client';
 
 export type FindAdminArgs = Prisma.FindFirstAdminArgs;
-export type CreateAdminData = Prisma.AdminCreateInput;
-export type CreateAdminArgs = Prisma.AdminCreateArgs;
-export type UpdateAdminData = Prisma.AdminUpdateInput;
+// export type CreateAdminData = Prisma.AdminCreateInput;
+// export type CreateAdminArgs = Prisma.AdminCreateArgs;
+// export type UpdateAdminData = Prisma.AdminUpdateInput;
 export type UpdateAdminArgs = Prisma.AdminUpdateArgs;
 export type DeleteAdminArgs = Prisma.AdminDeleteArgs;
 export type { Admin } from '$/prisma/client';
