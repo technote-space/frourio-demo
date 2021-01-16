@@ -40,6 +40,7 @@
     "migrate:reset": "yarn --cwd server migrate:reset",
     "migrate:seed": "yarn --cwd server migrate:seed",
     "setup": "yarn install && yarn setup:db && yarn build",
+    "setup:config": "yarn --cwd server setup:config",
     "setup:db": "yarn --cwd server setup && yarn migrate:seed",
     "setup:install": "yarn install && cd server && yarn install",
     "start": "run-p start:*",
