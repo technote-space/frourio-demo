@@ -82,8 +82,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
         if: env.RUNNING
-      - name: Install Package dependencies
-        run: yarn setup:install
+      - name: Setup
+        run: |
+          yarn setup:install
+          yarn setup:config
         if: env.RUNNING
       - run: yarn typecheck
         if: env.RUNNING
