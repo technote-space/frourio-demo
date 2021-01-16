@@ -1,4 +1,4 @@
-import path from 'path';
+import { resolve } from 'path';
 import Fastify from 'fastify';
 import helmet from 'fastify-helmet';
 import cors from 'fastify-cors';
@@ -14,7 +14,7 @@ fastify.register(cors, {
   exposedHeaders: ['Authorization'],
 });
 fastify.register(fastifyStatic, {
-  root: path.join(__dirname, 'public'),
+  root: resolve(process.cwd(), 'public'),
   prefix: BASE_PATH,
 });
 fastify.register(fastifyJwt, { secret: JWT_SECRET });

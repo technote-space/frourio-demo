@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
+import { resolve } from 'path';
 
-dotenv.config();
+dotenv.config({ path: resolve(process.cwd(), '.env') });
 
 const JWT_SECRET = process.env.JWT_SECRET ?? '';
 const SERVER_PORT = +(process.env.SERVER_PORT ?? '8080');
