@@ -23,6 +23,8 @@ const config: { projects: Config.InitialOptions[] } = {
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
       ],
+      globalSetup: './jest.global.setup.ts',
+      setupFilesAfterEnv: ['./jest.setup.ts'],
     },
     {
       displayName: 'server',
@@ -38,6 +40,8 @@ const config: { projects: Config.InitialOptions[] } = {
         '\\$.+\\.ts',
         '<rootDir>/server/prisma/client/',
       ],
+      globalSetup: './jest.global.setup.ts',
+      setupFilesAfterEnv: ['./jest.setup.ts'],
     },
   ],
 };
