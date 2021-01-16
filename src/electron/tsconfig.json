@@ -16,5 +16,11 @@
     "strictPropertyInitialization": false,
     "noImplicitAny": false,
     "outDir": "./main"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "isolatedModules": false
+    }
   }
 }

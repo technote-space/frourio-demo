@@ -1,4 +1,4 @@
-import type { ReservationCreateInput, Room } from '@prisma/client';
+import type { ReservationCreateInput, Room } from '$/prisma/client';
 import { isBefore } from 'date-fns';
 import { define } from '../tools/define';
 import { ReservationStatus } from '$/types';

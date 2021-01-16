@@ -1,5 +1,5 @@
 import Faker from 'faker';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '$/prisma/client';
 import { getDefines } from './define';
 
 Faker.locale = 'ja';

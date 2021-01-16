@@ -26,7 +26,7 @@
     "setup": "yarn install && run-s setup:*",
     "setup:config": "npx cpy-cli --no-overwrite --rename=.env .env.example ./ && npx cpy-cli --no-overwrite ../../server/prisma/schema.prisma ./",
     "setup:db": "npx del-cli dev.db && prisma migrate dev --name init --preview-feature",
-    "setup:migrate": "yarn ts-node -O '{\"module\":\"commonjs\"}' ./seeder.ts",
+    "setup:migrate": "yarn ts-node ./seeder.ts",
     "build": "run-p build:*",
     "build:client": "yarn --cwd ../.. build:client",
     "build:electron": "webpack --progress --mode=production",

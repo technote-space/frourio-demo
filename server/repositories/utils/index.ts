@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { Prisma, PrismaClient } from '@prisma/client';
+import type { Prisma, PrismaClient } from '$/prisma/client';
 import type { Column, Query, Filter } from '@technote-space/material-table';
 import createError from 'fastify-error';
 import { startOfDay, addDays } from 'date-fns';

@@ -1,4 +1,4 @@
-import type { AdminCreateInput } from '@prisma/client';
+import type { AdminCreateInput } from '$/prisma/client';
 import { define } from '../tools/define';
 
 define<AdminCreateInput>('admin', (faker => ({
