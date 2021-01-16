@@ -1,8 +1,8 @@
 {
-  "name": "frourio-demo",
+  "name": "frourio-electron-demo",
   "version": "1.0.0",
   "private": true,
-  "description": "Demo electron application of Frourio.",
+  "description": "Demo application of Frourio (using Electron).",
   "keywords": [
     "frourio",
     "electron"

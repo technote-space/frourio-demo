@@ -6,3 +6,5 @@ server/migration
 server/index.js
 server/prisma/client/*
 **/electron/index.js
+**/electron/prisma
+**/electron/dist
