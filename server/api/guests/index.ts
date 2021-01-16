@@ -6,7 +6,7 @@ import type { GuestBody } from '$/domains/guests/validators';
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: Query<Guest>;
+    query: Query<Guest>;
     resBody: QueryResult<Guest>;
   };
   post: {

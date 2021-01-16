@@ -48,10 +48,10 @@ export const list = depend(
   { getReservations, getReservationCount },
   async(
     { getReservations, getReservationCount },
-    query?: Query<ListReservation>,
+    query: Query<ListReservation>,
   ): Promise<BodyResponse<QueryResult<ListReservation>>> => {
-    const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<ListReservation>(query?.search, [
+    const pageSize = query.pageSize;
+    const where = getWhere<ListReservation>(query.search, [
       'guestName',
       'guestNameKana',
       'guestPhone',
@@ -59,11 +59,11 @@ export const list = depend(
     ], [
       'amount',
       'payment',
-    ], undefined, ...getFilterConstraints(query?.filters));
-    const orderBy    = getOrderBy<ListReservation>(query?.orderBy, query?.orderDirection);
+    ], undefined, ...getFilterConstraints(query.filters));
+    const orderBy = getOrderBy<ListReservation>(query.orderBy, query.orderDirection);
     const totalCount = await getReservationCount({ where });
-    const page       = getCurrentPage(pageSize, totalCount, query?.page);
-    const data       = await getReservations({
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getReservations({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,
@@ -98,11 +98,11 @@ export const get = depend(
 );
 
 const getData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>) => {
-  const guest    = await getGuest(data.guestId);
-  const room     = await getRoom(data.roomId);
-  const checkin  = new Date(data.checkin);
+  const guest = await getGuest(data.guestId);
+  const room = await getRoom(data.roomId);
+  const checkin = new Date(data.checkin);
   const checkout = new Date(data.checkout);
-  const nights   = differenceInCalendarDays(checkout, checkin);
+  const nights = differenceInCalendarDays(checkout, checkin);
   return {
     guest: {
       connect: {
@@ -159,15 +159,15 @@ export const update = depend(
 
 export const searchGuest = depend(
   { getGuests, getGuestCount },
-  async({ getGuests, getGuestCount }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
-    const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
-    const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);
+  async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
+    const pageSize = query.pageSize;
+    const where = getWhere<Guest>(query.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({
       where,
     });
-    const page       = getCurrentPage(pageSize, totalCount, query?.page);
-    const data       = await getGuests({
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getGuests({
       select: {
         id: true,
         name: true,
@@ -201,15 +201,15 @@ export const searchGuest = depend(
 
 export const searchRoom = depend(
   { getRooms, getRoomCount },
-  async({ getRooms, getRoomCount }, query?: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
-    const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<Room>(query?.search, ['name'], ['price', 'number']);
-    const orderBy    = getOrderBy<Room>(query?.orderBy, query?.orderDirection);
+  async({ getRooms, getRoomCount }, query: Query<Room>): Promise<BodyResponse<QueryResult<Room>>> => {
+    const pageSize = query.pageSize;
+    const where = getWhere<Room>(query.search, ['name'], ['price', 'number']);
+    const orderBy = getOrderBy<Room>(query.orderBy, query.orderDirection);
     const totalCount = await getRoomCount({
       where,
     });
-    const page       = getCurrentPage(pageSize, totalCount, query?.page);
-    const data       = await getRooms({
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getRooms({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,
@@ -262,7 +262,7 @@ export const getSelectedGuest = depend(
 export const getCheckinNotSelectable = depend(
   { getReservations },
   async({ getReservations }, roomId: number, start: Date, end: Date, id?: number): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
-    const reservations                             = await getReservations({
+    const reservations = await getReservations({
       select: {
         checkin: true,
         checkout: true,
@@ -285,13 +285,13 @@ export const getCheckinNotSelectable = depend(
         },
       },
     });
-    const dates: Array<number>                     = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
+    const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
       start: startOfDay(reservation.checkin),
       end: startOfDay(subDays(reservation.checkout, 1)),
     })).map(date => date.valueOf()))].sort();
     const events: Array<CheckinNotSelectableEvent> = [];
     if (dates.length) {
-      const createEvent          = (start: number, end: number): CheckinNotSelectableEvent => ({
+      const createEvent = (start: number, end: number): CheckinNotSelectableEvent => ({
         start: format(start, 'yyyy-MM-dd'),
         end: format(end + 86400000, 'yyyy-MM-dd'), // end is exclusive
         allDay: true,
@@ -320,7 +320,7 @@ export const getCheckinNotSelectable = depend(
 export const getCheckoutSelectable = depend(
   { getReservations },
   async({ getReservations }, roomId: number, end: Date, checkin: Date, id?: number): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
-    const reservations                           = await getReservations({
+    const reservations = await getReservations({
       select: {
         checkin: true,
         checkout: true,
@@ -343,14 +343,14 @@ export const getCheckoutSelectable = depend(
         },
       },
     });
-    const dates: Array<number>                   = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
+    const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
       start: startOfDay(reservation.checkin),
       end: startOfDay(subDays(reservation.checkout, 1)),
     })).map(date => date.valueOf()))].sort();
     const events: Array<CheckoutSelectableEvent> = [];
-    const startValue                             = startOfDay(checkin).valueOf();
-    let prev                                     = startValue;
-    const endValue                               = startOfDay(end).valueOf();
+    const startValue = startOfDay(checkin).valueOf();
+    let prev = startValue;
+    const endValue = startOfDay(end).valueOf();
     while (prev < endValue) {
       prev += 86400000;
       if (dates.includes(prev)) {

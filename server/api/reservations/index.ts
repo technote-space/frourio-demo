@@ -7,7 +7,7 @@ import type { ReservationBody } from '$/domains/reservations/validators';
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: Query<ListReservation>;
+    query: Query<ListReservation>;
     resBody: QueryResult<ListReservation>;
   };
   post: {
