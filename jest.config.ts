@@ -24,7 +24,7 @@ const config: { projects: Config.InitialOptions[] } = {
         '\\$.+\\.ts',
       ],
       globalSetup: './jest.global.setup.ts',
-      setupFilesAfterEnv: ['./jest.setup.ts'],
+      setupFilesAfterEnv: ['./jest.setup.ts', 'jest-canvas-mock'],
     },
     {
       displayName: 'server',
