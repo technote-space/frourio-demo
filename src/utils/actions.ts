@@ -8,6 +8,8 @@ export const setAdmin = (dispatch: Dispatch, admin: { name?: string; icon?: stri
 
 export const openSidebar = (dispatch: Dispatch) => dispatch({ type: 'OPEN_SIDEBAR' });
 export const closeSidebar = (dispatch: Dispatch) => dispatch({ type: 'CLOSE_SIDEBAR' });
+export const openLicense = (dispatch: Dispatch) => dispatch({ type: 'OPEN_LICENSE' });
+export const closeLicense = (dispatch: Dispatch) => dispatch({ type: 'CLOSE_LICENSE' });
 
 export const changePage = (dispatch: Dispatch, page: PageKeys) => dispatch({ type: 'PAGE', page });
 export const changeTitle = (dispatch: Dispatch, title: string) => dispatch({ type: 'TITLE', title });

@@ -7,7 +7,7 @@ import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
 import { singular } from 'pluralize';
 import api from '$/api/$api';
-import { changePage, setError } from '~/utils/actions';
+import { logout, setError } from '~/utils/actions';
 
 export const client = api(aspida());
 
@@ -33,7 +33,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
       console.log(error.response);
       if (error.response && 401 === error.response.status) {
         setError(dispatch, error.response.data?.message);
-        changePage(dispatch, 'logout');
+        logout(dispatch);
         if (!fallback) {
           return undefined as MaybeUndefined<T>;
         }

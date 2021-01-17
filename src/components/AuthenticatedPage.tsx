@@ -23,7 +23,7 @@ export type AuthenticatedPageProps = {
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
   const classes = useStyles();
   const unmountRef = useUnmountRef();
-  const [auth] = useAuthToken();
+  const [auth, , removeToken] = useAuthToken();
   const { name, page } = useStoreContext();
   const { dispatch } = useDispatchContext();
 
@@ -31,8 +31,12 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     if (auth && !name) {
       (async() => {
         const admin = await handleAuthError(dispatch, {}, client.admin.get, { headers: auth.authHeader });
-        if ('name' in admin && !unmountRef.current) {
-          setAdmin(dispatch, admin);
+        if ('name' in admin) {
+          if (!unmountRef.current) {
+            setAdmin(dispatch, admin);
+          }
+        } else {
+          removeToken();
         }
       })();
     }
