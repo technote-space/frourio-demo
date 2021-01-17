@@ -213,8 +213,8 @@ jobs:
           mv out admin
           zip -r admin admin
           mv server/index.js server.js
-          mv src/electron/dist/FrourioElectronDemo-mac.dmg FrourioElectronDemo-mac.dmg
-          mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-win.exe
+          mv src/electron/dist/mac/FrourioElectronDemo.app FrourioElectronDemo.app
+          mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-setup.exe
       - name: Upload
         uses: technote-space/action-gh-release@v2
         with:
