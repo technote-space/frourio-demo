@@ -177,7 +177,7 @@ describe('Index', () => {
       .get(/\/dashboard\/sales/).reply(200, []);
     setToken('token');
 
-    const { findByText, findByTestId, container } = render(
+    const { findByText, findByTestId, findAllByTestId, container } = render(
       <Index/>,
       {},
     );
@@ -187,7 +187,7 @@ describe('Index', () => {
     const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
     user.click(buttons[0]);
     user.click(await findByText('ライセンス'));
-    user.click(await findByText('frourio-demo@0.1.0 : MIT'));
+    user.click((await findAllByTestId('license-item'))[0]);
     user.click(await findByTestId('close-license'));
     user.click(await findByTestId('close-license-list'));
   });
