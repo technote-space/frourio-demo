@@ -8,13 +8,13 @@ import type { Query, QueryResult } from '@technote-space/material-table';
 
 export const list = depend(
   { getGuests, getGuestCount },
-  async({ getGuests, getGuestCount }, query?: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
-    const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<Guest>(query?.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
-    const orderBy    = getOrderBy<Guest>(query?.orderBy, query?.orderDirection);
+  async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
+    const pageSize = query.pageSize;
+    const where = getWhere<Guest>(query.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({ where });
-    const page       = getCurrentPage(pageSize, totalCount, query?.page);
-    const data       = await getGuests({
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getGuests({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,

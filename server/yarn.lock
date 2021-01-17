@@ -552,9 +552,9 @@ chalk@^4.0.0, chalk@^4.1.0:
     supports-color "^7.1.0"
 
 chokidar@^3.2.2, chokidar@^3.4.3:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.0.tgz#458a4816a415e9d3b3caa4faec2b96a6935a9e65"
-  integrity sha512-JgQM9JS92ZbFR4P90EvmzNpSGhpPBGBSj10PILeDyYFwp4h2/D9OM03wsJ4zW1fEp4ka2DGrnUeD7FuvQ2aZ2Q==
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.1.tgz#ee9ce7bbebd2b79f49f304799d5468e31e14e68a"
+  integrity sha512-9+s+Od+W0VJJzawDma/gvBNQqkTiqYTWLuZoyAsivsI4AaWTCzHG06/TMjsf1cYe9Cb97UCEhjz7HvnPk2p/tw==
   dependencies:
     anymatch "~3.1.1"
     braces "~3.0.2"
@@ -814,9 +814,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.634:
-  version "1.3.640"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.640.tgz#94e68c0ae79181a1d6fd1ed9a42b9790d51a1bca"
-  integrity sha512-cU6wQdXYzuSPzLdszsa4whStYfmU7CVNnG6c5z6/z9YlCOQ2Xh/uKB1gTxlIRr0ubgSg1/dZuSbUAoeESeQ3sQ==
+  version "1.3.641"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.641.tgz#03f14efd70a7971eff2efc947b3c1d0f717c82b9"
+  integrity sha512-b0DLhsHSHESC1I+Nx6n4w4Lr61chMd3m/av1rZQhS2IXTzaS5BMM5N+ldWdMIlni9CITMRM09m8He4+YV/92TA==
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -1011,9 +1011,9 @@ fast-json-stable-stringify@^2.0.0:
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
 
 fast-json-stringify@^2.2.1:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-2.4.0.tgz#31b19e757e8f36f93d48a9f1d6f6060c256c3908"
-  integrity sha512-h5h8cA/5apS5fIRdzdDAHkuhNSIYF/6F8TXjDYT9iQgr6Nv2GI5TnYNwbNYC6F2UT6UohrXigAtBkr9DSltZ4w==
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-2.4.1.tgz#f16f99ef80518699d347924c846060f0360a95ea"
+  integrity sha512-Nzqv9yf0JDIhWwA6GcSPKMPhHJYIexOLEw7psxZhPjnYlLuJ/SGEAihVC1whQu5bKJWE2VMmoGTcspv/6AGLVQ==
   dependencies:
     ajv "^6.11.0"
     deepmerge "^4.2.2"
@@ -1053,6 +1053,11 @@ fastify-error@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/fastify-error/-/fastify-error-0.2.0.tgz#9a1c28d4f42b6259e7a549671c8e5e2d85660634"
   integrity sha512-zabxsBatj59ROG0fhP36zNdc5Q1/eYeH9oSF9uvfrurZf8/JKfrJbMcIGrLpLWcf89rS6L91RHWm20A/X85hcA==
+
+fastify-error@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/fastify-error/-/fastify-error-0.3.0.tgz#08866323d521156375a8be7c7fcaf98df946fafb"
+  integrity sha512-Jm2LMTB5rsJqlS1+cmgqqM9tTs0UrlgYR7TvDT3ZgXsUI5ib1NjQlqZHf+tDK5tVPdFGwyq02wAoJtyYIRSiFA==
 
 fastify-helmet@^5.1.0:
   version "5.1.0"
@@ -1106,16 +1111,16 @@ fastify-warning@^0.2.0:
   resolved "https://registry.yarnpkg.com/fastify-warning/-/fastify-warning-0.2.0.tgz#e717776026a4493dc9a2befa44db6d17f618008f"
   integrity sha512-s1EQguBw/9qtc1p/WTY4eq9WMRIACkj+HTcOIK1in4MV5aFaQC9ZCIt0dJ7pr5bIf4lPpHvAtP2ywpTNgs7hqw==
 
-fastify@^3.9.2:
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.9.2.tgz#20007d1a558cf8c88a8ef2936b4e484553fdf706"
-  integrity sha512-8VEf4l6a2tdtrYQQwgT9Zh2/OvOgE4Sf6cDNMduAnKZ44CXrT0tXuH/uQkXuxqMAW27ZOy4jeexBl8CFaECntg==
+fastify@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.10.1.tgz#9a17b395e162e90c2dded93353bf2e04410884ff"
+  integrity sha512-ChjHCXbCFzftVzQ1sDD8f8Ou1uDObkcVXBJmDkzVoZSNTxDrIapg63HIy3tPwScTNyMdmikA+QbP6zkGP+cFzw==
   dependencies:
     abstract-logging "^2.0.0"
     ajv "^6.12.2"
     avvio "^7.1.2"
     fast-json-stringify "^2.2.1"
-    fastify-error "^0.2.0"
+    fastify-error "^0.3.0"
     fastify-warning "^0.2.0"
     find-my-way "^3.0.5"
     flatstr "^1.0.12"
@@ -1663,9 +1668,9 @@ latest-version@^5.0.0:
     package-json "^6.3.0"
 
 libphonenumber-js@^1.9.7:
-  version "1.9.7"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.7.tgz#51c0a2b600f8d40ff7a65947fe2c1ff7f85268c1"
-  integrity sha512-mDY7fCe6dXd1ZUvYr3Q0ZaoqZ1DVXDSjcqa3AMGyudEd0Tyf8PoHkQ+9NucIBy9C/wFITPwL3Ef9SA148q20Cw==
+  version "1.9.8"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.8.tgz#82f88ea473c2214667709c24220bade4b85e0752"
+  integrity sha512-gXzuhvlqdH20MlKAy1jXOVouCYByz43ZGCAeNnNuKQXUM+Wl36gbql0M27QQI3ahYCHJErd2W8ciqWweoQdbrQ==
 
 light-my-request@^4.2.0:
   version "4.4.1"
@@ -2108,9 +2113,9 @@ pino-std-serializers@^3.1.0:
   integrity sha512-Ud4+WzgEr/swOlfQdkxqKP2hlwuQlIqQ5YwYpo9MczNg2mpsKKyKgwQXW5KnP5tgH3/Cy9QRhAhLM8k1K+gfnA==
 
 pino@^6.2.1:
-  version "6.10.0"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-6.10.0.tgz#0dc4c701aef9e6f1ab276c7c1fbfcbebeba720db"
-  integrity sha512-ZFGE/Wq930gFb1h0RI6S/QOfkyzNj94Xubwlyo4XpxNUgrG1C0iEqnlooG5Fymx6yrUUtEJ8j/u8NCGwgwTXaQ==
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-6.11.0.tgz#c474712d462f1de524cf885257d21271d1ab7c16"
+  integrity sha512-VPqEE2sU1z6wqkTtr7DdTktayTNE/JgeuWjfXh9g/TI6X7venzv4gaoU24/jSywf6bBeDfZRHWEeO/6f8bNppA==
   dependencies:
     fast-redact "^3.0.0"
     fast-safe-stringify "^2.0.7"
@@ -2330,9 +2335,9 @@ reusify@^1.0.0, reusify@^1.0.4:
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
 rfdc@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.1.4.tgz#ba72cc1367a0ccd9cf81a870b3b58bd3ad07f8c2"
-  integrity sha512-5C9HXdzK8EAqN7JDif30jqsBzavB7wLpaubisuQIGHWf2gUXSpzy6ArX/+Da8RjFpagWsCn+pIgxTMAmKw9Zug==
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.2.0.tgz#9e9894258f48f284b43c3143c68070a4f373b949"
+  integrity sha512-ijLyszTMmUrXvjSooucVQwimGUk84eRcmCuLV8Xghe3UO85mjUtRAHRyoMM6XtyqbECaXuBWx18La3523sXINA==
 
 safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@~5.2.0:
   version "5.2.1"
@@ -2754,7 +2759,7 @@ tsconfig-paths-webpack-plugin@^3.3.0:
     enhanced-resolve "^4.0.0"
     tsconfig-paths "^3.4.0"
 
-tsconfig-paths@^3.4.0:
+tsconfig-paths@^3.4.0, tsconfig-paths@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.9.0.tgz#098547a6c4448807e8fcb8eae081064ee9a3c90b"
   integrity sha512-dRcuzokWhajtZWkQsDVKbWyY+jgcLC5sqJhg2PSgf4ZkH2aHPvaOY8YWGhmjb68b5qqTfasSsDO9k7RUiEmZAw==
@@ -2913,10 +2918,10 @@ webpack-sources@^2.1.1:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
 
-webpack@^5.14.0:
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.14.0.tgz#cdfe9286d14ddc2bb348afabc1d910d166f3c47f"
-  integrity sha512-PFtfqXIKT6EG+k4L7d9whUPacN2XvxlUMc8NAQvN+sF9G8xPQqrCDGDiXbAdyGNz+/OP6ioxnUKybBBZ1kp/2A==
+webpack@^5.15.0:
+  version "5.15.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.15.0.tgz#63d7b6228a4e15ee8c89899c2cfdd993e809bdd2"
+  integrity sha512-y/xG+ONDz78yn3VvP6gAvGr1/gkxOgitvHSXBmquyN8KDtrGEyE3K9WkXOPB7QmfcOBCpO4ELXwNcCYQnEmexA==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.45"

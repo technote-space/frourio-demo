@@ -30,15 +30,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# server
-server/**/$*.ts
-server/**/*.db
-server/index.js*
-server/database.json
-server/.upload
-server/public/icons/*
-!server/public/icons/dummy.svg
-
 # IDE
 /.idea/
 /.vscode/

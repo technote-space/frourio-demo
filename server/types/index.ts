@@ -45,6 +45,7 @@ export type BodyResponse<T> = (BasicResponse & {
   status: HttpStatusNg;
   body?: {
     message: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } & Record<string, any>;
 }
 

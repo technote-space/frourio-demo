@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, setup, useNock, setCookie, act } from '~/__tests__/utils';
+import { render, setup, useNock, setToken, setInvalidToken, setDarkMode, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
 dotenv.config({ path: 'server/.env' });
@@ -27,6 +27,8 @@ describe('Index', () => {
         login(body);
         return body;
       }).reply(400);
+    setInvalidToken();
+
     const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -49,6 +51,7 @@ describe('Index', () => {
         login(body);
         return body;
       }).reply(204);
+
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -123,7 +126,7 @@ describe('Index', () => {
         'totalCount': 0,
       })
       .get(/\/dashboard\/sales/).reply(200, []);
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { findByText } = render(
       <Index/>,
@@ -143,8 +146,8 @@ describe('Index', () => {
         'totalCount': 0,
       })
       .get(/\/dashboard\/sales/).reply(200, []);
-    setCookie('authToken', 'token');
-    setCookie('themeColor', 'dark');
+    setToken('token');
+    setDarkMode(true);
 
     const { getByText, findByText, findByTestId, container } = render(
       <Index/>,

@@ -1,9 +1,10 @@
+import type { ThemeColor } from '~/types';
 import { useMemo } from 'react';
 import { createMuiTheme, Theme } from '@material-ui/core/styles';
 import { teal, grey, pink } from '@material-ui/core/colors';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-const useTheme = (themeColor?: 'light' | 'dark'): Theme => {
+const useTheme = (themeColor?: ThemeColor): Theme => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const colorMode = themeColor || (prefersDarkMode ? 'dark' : 'light');
   const bgColor = colorMode === 'dark' ? grey[800] : grey[100];

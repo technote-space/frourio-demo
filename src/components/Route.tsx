@@ -1,12 +1,12 @@
 import type { FC, ReactElement } from 'react';
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { useCookies } from 'react-cookie';
 import { useStoreContext, useDispatchContext } from '~/store';
+import useAuthToken from '~/hooks/useAuthToken';
 import pages from '~/_pages';
 import { logout, changeTitle } from '~/utils/actions';
 
 const Route: FC = () => {
-  const [, , removeCookie] = useCookies(['authToken']);
+  const [, , removeToken] = useAuthToken();
   const { page } = useStoreContext();
   const { dispatch } = useDispatchContext();
   const [nextPage, setNextPage] = useState<ReactElement | null>(null);
@@ -14,7 +14,7 @@ const Route: FC = () => {
 
   useEffect(() => {
     if (page === 'logout') {
-      removeCookie('authToken');
+      removeToken();
       logout(dispatch);
       return;
     }

@@ -5,7 +5,7 @@ import type { Query, QueryResult } from '@technote-space/material-table';
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: Query<Guest>;
+    query: Query<Guest>;
     resBody: QueryResult<Guest>;
   };
 }

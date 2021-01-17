@@ -5,7 +5,7 @@ import type {
   Room,
   Prisma,
   PrismaClient,
-} from '@prisma/client';
+} from '$/prisma/client';
 import { factory, Factory } from './factory';
 
 export abstract class Seeder {

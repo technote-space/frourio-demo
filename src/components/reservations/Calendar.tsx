@@ -19,6 +19,7 @@ type Props = {
     end: Date;
   }) => Promise<Array<EventRefined>>;
   isValidDate: (date: Date, rowData: Model, eventDates: Array<string>) => boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getInitialDate: (rowData: Model, value: any) => string | Date;
   resultHour: number;
   target: string;
@@ -69,7 +70,6 @@ const Calendar: FC<Props> = ({
     });
   }, [props.rowData['roomId'], props.rowData['checkin']]);
   const handleDateClick = useCallback(args => {
-    console.log(target, args.date);
     if (isLoading) {
       return;
     }

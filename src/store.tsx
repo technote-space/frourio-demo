@@ -43,7 +43,16 @@ const reducer = (store, action) => {
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'warning' }, ...action.notice } };
     case 'CLOSE_NOTICE':
       return { ...store, notice: { ...store.notice, ...{ open: false } } };
+    case 'LOCAL_STORAGE_CHANGED':
+      return {
+        ...store, localStorage: {
+          ...store.localStorage,
+          [action.key]: action.value,
+        },
+      };
+    /* istanbul ignore next */
     default:
+      /* istanbul ignore next */
       return store;
   }
 };
@@ -53,6 +62,7 @@ const useStoreContext = () => {
   return useContext(StoreContext);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Dispatch = _Dispatch<{ type: string, [key: string]: any; }>;
 type DispatchContextType = { dispatch: Dispatch };
 const DispatchContext = createContext<DispatchContextType>({} as DispatchContextType);
