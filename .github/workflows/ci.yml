@@ -205,15 +205,20 @@ jobs:
       - name: Build
         run: |
           yarn build
-          mv out client
-          zip -r client client
+          yarn build:electron
+          mv out admin
+          zip -r admin admin
           mv server/index.js server.js
+          mv src/electron/dist/FrourioElectronDemo-mac.dmg FrourioElectronDemo-mac.dmg
+          mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-win.exe
       - name: Upload
         uses: technote-space/action-gh-release@v2
         with:
           files: |
-            client.zip
+            admin.zip
             server.js
+            FrourioElectronDemo-mac.dmg
+            FrourioElectronDemo-win.exe
           draft: true
 
   publishRelease:
