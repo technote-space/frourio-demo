@@ -23,10 +23,10 @@
   "main": "index.js",
   "scripts": {
     "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
-    "setup:config": "npx cpy-cli --no-overwrite --rename=.env ../../server/.env.example ./ && npx cpy-cli --no-overwrite --rename=.env ../../server/prisma/.env.example ./prisma && npx cpy-cli --no-overwrite ../../server/prisma/schema.prisma ./prisma",
-    "setup:db": "npx del-cli prisma/dev.db && prisma migrate dev --name init --preview-feature && yarn ts-node ./seeder.ts",
+    "setup:config": "npx shx cp -u ../../server/.env.example ./.env && npx shx cp -u ../../server/prisma/.env.example ./prisma/.env && npx shx cp -u ../../server/prisma/schema.prisma ./prisma/schema.prisma",
+    "setup:db": "npx shx rm -f prisma/dev.db && prisma migrate dev --name init --preview-feature && yarn ts-node ./seeder.ts",
     "build": "run-s build:*",
-    "build:license": "yarn license:generate && npx cpy-cli ./license.json ../../",
+    "build:license": "yarn license:generate && npx shx cp -u ./license.json ../../license.json",
     "build:client": "yarn --cwd ../.. build:admin",
     "build:electron": "webpack --progress --mode=production",
     "dev": "MODE=dev electron .",
