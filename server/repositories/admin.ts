@@ -16,7 +16,7 @@ export type { Admin } from '$/prisma/client';
 
 export const prisma = new PrismaClient();
 
-const createIconUrl = (name: string) => `${API_ORIGIN}:${SERVER_PORT}${BASE_PATH}/icons/${name}`;
+const createIconUrl = (name: string) => `${API_ORIGIN}${SERVER_PORT === 80 ? '' : `:${SERVER_PORT}`}${BASE_PATH}/icons/${name}`;
 const convertToIconUrl = <T extends { icon: string | null }>(admin: T) => {
   if (admin?.icon && !/\/icons\//.test(admin.icon)) {
     admin.icon = createIconUrl(admin.icon);
