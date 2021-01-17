@@ -86,13 +86,35 @@ jobs:
         run: |
           yarn setup:install
           yarn setup:config
+          yarn license:generate
         if: env.RUNNING
       - run: yarn typecheck
         if: env.RUNNING
 
+  license:
+    name: License check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set running flag
+        run: echo "RUNNING=1" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: technote-space/get-git-comment-action@v1
+      - uses: technote-space/get-diff-action@v4
+        with:
+          FILES: yarn.lock
+        if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
+      - name: Set running flag
+        run: echo "RUNNING=" >> $GITHUB_ENV
+        if: "! env.GIT_DIFF"
+
+      - name: License check
+        run: yarn license:check
+        if: env.RUNNING
+
   cover:
     name: Coverage
-    needs: [eslint, typecheck]
+    needs: [eslint, typecheck, license]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:

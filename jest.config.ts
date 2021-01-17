@@ -5,6 +5,7 @@ import { compilerOptions } from './tsconfig.json';
 const config: { projects: Config.InitialOptions[] } = {
   projects: [
     {
+      displayName: 'admin',
       clearMocks: true,
       testRunner: 'jest-circus/runner',
       testMatch: ['<rootDir>/src/__tests__/**/*.test.ts?(x)'],
@@ -22,8 +23,11 @@ const config: { projects: Config.InitialOptions[] } = {
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
       ],
+      globalSetup: './jest.global.setup.ts',
+      setupFilesAfterEnv: ['./jest.setup.ts', 'jest-canvas-mock'],
     },
     {
+      displayName: 'server',
       clearMocks: true,
       testRunner: 'jest-circus/runner',
       preset: 'ts-jest',
@@ -34,7 +38,10 @@ const config: { projects: Config.InitialOptions[] } = {
       }),
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
+        '<rootDir>/server/prisma/client/',
       ],
+      globalSetup: './jest.global.setup.ts',
+      setupFilesAfterEnv: ['./jest.setup.ts'],
     },
   ],
 };

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, setup, useNock, setCookie, act } from '~/__tests__/utils';
+import { render, setup, useNock, setToken, setInvalidToken, setDarkMode, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
 dotenv.config({ path: 'server/.env' });
@@ -27,6 +27,8 @@ describe('Index', () => {
         login(body);
         return body;
       }).reply(400);
+    setInvalidToken();
+
     const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -49,6 +51,7 @@ describe('Index', () => {
         login(body);
         return body;
       }).reply(204);
+
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -123,7 +126,7 @@ describe('Index', () => {
         'totalCount': 0,
       })
       .get(/\/dashboard\/sales/).reply(200, []);
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { findByText } = render(
       <Index/>,
@@ -143,8 +146,8 @@ describe('Index', () => {
         'totalCount': 0,
       })
       .get(/\/dashboard\/sales/).reply(200, []);
-    setCookie('authToken', 'token');
-    setCookie('themeColor', 'dark');
+    setToken('token');
+    setDarkMode(true);
 
     const { getByText, findByText, findByTestId, container } = render(
       <Index/>,
@@ -160,5 +163,32 @@ describe('Index', () => {
     await findByText('Login');
     expect(getByText('Email address')).toBeVisible();
     expect(getByText('Password')).toBeVisible();
+  });
+
+  it('should show license dialog', async() => {
+    useNock()
+      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+    setToken('token');
+
+    const { findByText, findByTestId, container } = render(
+      <Index/>,
+      {},
+    );
+
+    await findByTestId('select-date');
+
+    const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
+    user.click(buttons[0]);
+    user.click(await findByText('ライセンス'));
+    user.click(await findByText('frourio-demo@0.1.0 : MIT'));
+    user.click(await findByTestId('close-license'));
+    user.click(await findByTestId('close-license-list'));
   });
 });

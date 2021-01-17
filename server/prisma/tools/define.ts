@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Faker from 'faker';
 import { DelegateTypes } from './factory';
 
@@ -7,4 +8,4 @@ export const define = <T>(type: DelegateTypes, callback: Callback<T>) => {
 };
 
 const defines: Record<string, Callback<any>> = {};
-export const getDefines                      = () => defines;
+export const getDefines = () => defines;

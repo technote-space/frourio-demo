@@ -17,6 +17,7 @@ type Props = {
   message: string;
   onClose: MouseEventHandler;
   variant: 'error' | 'info' | 'success' | 'warning';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   other?: any
 }
 

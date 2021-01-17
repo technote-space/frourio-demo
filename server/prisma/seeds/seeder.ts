@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '$/prisma/client';
 import '../factories';
 import { AdminSeeder } from './admin';
 import { GuestSeeder } from './guest';

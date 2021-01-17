@@ -1,9 +1,8 @@
 import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
-import { useCookies } from 'react-cookie';
 import { Formik, Form, Field } from 'formik';
-import { addDays } from 'date-fns';
 import { Card, CardContent, FormControl, FormLabel, Input, Button } from '@material-ui/core';
+import useAuthToken from '~/hooks/useAuthToken';
 import PasswordInput from '~/components/PasswordInput';
 import { addDisplayName } from '~/utils/component';
 import { client } from '~/utils/api';
@@ -31,17 +30,12 @@ const useStyles = makeStyles({
 const Login: FC = () => {
   const classes = useStyles();
   const { dispatch } = useDispatchContext();
-  const [, setCookie] = useCookies(['authToken']);
-  const setAuthToken = token => {
-    setCookie('authToken', token, {
-      expires: addDays(new Date(), 30),
-    });
-  };
+  const [, setToken] = useAuthToken();
 
   const handleSubmit = useCallback((values, actions) => {
     client.login.post({ body: { email: values.email, pass: values.password } }).then(data => {
       if (data?.headers?.authorization) {
-        setAuthToken(data.headers.authorization);
+        setToken(data.headers.authorization);
       } else {
         actions.setSubmitting(false);
         setWarning(dispatch, 'Invalid header');

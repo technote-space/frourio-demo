@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '$/prisma/client';
 import bcrypt from 'bcryptjs';
 import { Seeder } from '../tools/seeder';
 

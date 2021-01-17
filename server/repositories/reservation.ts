@@ -1,7 +1,7 @@
 import { depend } from 'velona';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '$/prisma/client';
 import { ensureNotNull } from '$/repositories/utils';
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
 
 export type SearchReservationArgs = Prisma.FindManyReservationArgs;
@@ -13,7 +13,7 @@ export type UpdateReservationArgs = Prisma.ReservationUpdateArgs;
 export type DeleteReservationArgs = Prisma.ReservationDeleteArgs;
 export type ReservationOrderByInput = Prisma.ReservationOrderByInput;
 export type ReservationWhereInput = Prisma.ReservationWhereInput;
-export type { Reservation } from '@prisma/client';
+export type { Reservation } from '$/prisma/client';
 
 const prisma = new PrismaClient();
 

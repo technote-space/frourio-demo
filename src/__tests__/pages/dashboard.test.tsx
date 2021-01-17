@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, useNock, setup, setCookie, findElement, act, waitFor } from '~/__tests__/utils';
+import { render, useNock, setup, setToken, findElement, act, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
 
@@ -19,7 +19,7 @@ describe('Dashboard', () => {
         'totalCount': 0,
       })
       .get(/\/dashboard\/sales/).reply(200, []);
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { findByTestId, getByTestId, getByText } = render(
       <Index/>,
@@ -183,7 +183,7 @@ describe('Dashboard', () => {
         cancel(body);
         return body;
       }).reply(200);
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { getByTestId, findAllByText, findByText, getAllByText } = render(
       <Index/>,
@@ -233,6 +233,7 @@ describe('Dashboard', () => {
   it('should render sales', async() => {
     const daily = jest.fn();
     const monthly = jest.fn();
+    const year = Number(format(startOfToday(), 'yyyy'));
     useNock()
       .get('/admin').reply(200, { name: 'test name', icon: null })
       .get('/dashboard/rooms').reply(200, [
@@ -250,58 +251,58 @@ describe('Dashboard', () => {
       .get(/\/dashboard\/sales\/daily/).reply(200, (uri) => {
         daily(uri);
         return [
-          { 'day': '2019-12-31T15:00:00.000Z', 'sales': 656568 },
-          { 'day': '2020-01-01T15:00:00.000Z', 'sales': 121700 },
-          { 'day': '2020-01-02T15:00:00.000Z', 'sales': 517380 },
-          { 'day': '2020-01-03T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-04T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-05T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-06T15:00:00.000Z', 'sales': 447828 },
-          { 'day': '2020-01-07T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-08T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-09T15:00:00.000Z', 'sales': 485147 },
-          { 'day': '2020-01-10T15:00:00.000Z', 'sales': 1368088 },
-          { 'day': '2020-01-11T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-12T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-13T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-14T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-15T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-16T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-17T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-18T15:00:00.000Z', 'sales': 108075 },
-          { 'day': '2020-01-19T15:00:00.000Z', 'sales': 21615 },
-          { 'day': '2020-01-20T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-21T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-22T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-23T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-24T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-25T15:00:00.000Z', 'sales': 0 },
-          { 'day': '2020-01-26T15:00:00.000Z', 'sales': 1034760 },
-          { 'day': '2020-01-27T15:00:00.000Z', 'sales': 449470 },
-          { 'day': '2020-01-28T15:00:00.000Z', 'sales': 242664 },
-          { 'day': '2020-01-29T15:00:00.000Z', 'sales': 559785 },
-          { 'day': '2020-01-30T15:00:00.000Z', 'sales': 0 },
+          { 'day': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 656568 },
+          { 'day': `${year}-01-01T15:00:00.000Z`, 'sales': 121700 },
+          { 'day': `${year}-01-02T15:00:00.000Z`, 'sales': 517380 },
+          { 'day': `${year}-01-03T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-04T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-05T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-06T15:00:00.000Z`, 'sales': 447828 },
+          { 'day': `${year}-01-07T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-08T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-09T15:00:00.000Z`, 'sales': 485147 },
+          { 'day': `${year}-01-10T15:00:00.000Z`, 'sales': 1368088 },
+          { 'day': `${year}-01-11T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-12T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-13T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-14T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-15T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-16T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-17T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-18T15:00:00.000Z`, 'sales': 108075 },
+          { 'day': `${year}-01-19T15:00:00.000Z`, 'sales': 21615 },
+          { 'day': `${year}-01-20T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-21T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-22T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-23T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-24T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-25T15:00:00.000Z`, 'sales': 0 },
+          { 'day': `${year}-01-26T15:00:00.000Z`, 'sales': 1034760 },
+          { 'day': `${year}-01-27T15:00:00.000Z`, 'sales': 449470 },
+          { 'day': `${year}-01-28T15:00:00.000Z`, 'sales': 242664 },
+          { 'day': `${year}-01-29T15:00:00.000Z`, 'sales': 559785 },
+          { 'day': `${year}-01-30T15:00:00.000Z`, 'sales': 0 },
         ];
       })
       .get(/\/dashboard\/sales\/monthly/)
       .reply(200, (uri) => {
         monthly(uri);
         return [
-          { 'month': '2019-12-31T15:00:00.000Z', 'sales': 6013080 },
-          { 'month': '2020-01-31T15:00:00.000Z', 'sales': 4790803 },
-          { 'month': '2020-02-29T15:00:00.000Z', 'sales': 18903318 },
-          { 'month': '2020-03-31T15:00:00.000Z', 'sales': 11577323 },
-          { 'month': '2020-04-30T15:00:00.000Z', 'sales': 14144067 },
-          { 'month': '2020-05-31T15:00:00.000Z', 'sales': 9184391 },
-          { 'month': '2020-06-30T15:00:00.000Z', 'sales': 21629510 },
-          { 'month': '2020-07-31T15:00:00.000Z', 'sales': 19655282 },
-          { 'month': '2020-08-31T15:00:00.000Z', 'sales': 20417817 },
-          { 'month': '2020-09-30T15:00:00.000Z', 'sales': 21199194 },
-          { 'month': '2020-10-31T15:00:00.000Z', 'sales': 24838914 },
-          { 'month': '2020-11-30T15:00:00.000Z', 'sales': 19164865 },
+          { 'month': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 6013080 },
+          { 'month': `${year}-01-31T15:00:00.000Z`, 'sales': 4790803 },
+          { 'month': `${year}-02-29T15:00:00.000Z`, 'sales': 18903318 },
+          { 'month': `${year}-03-31T15:00:00.000Z`, 'sales': 11577323 },
+          { 'month': `${year}-04-30T15:00:00.000Z`, 'sales': 14144067 },
+          { 'month': `${year}-05-31T15:00:00.000Z`, 'sales': 9184391 },
+          { 'month': `${year}-06-30T15:00:00.000Z`, 'sales': 21629510 },
+          { 'month': `${year}-07-31T15:00:00.000Z`, 'sales': 19655282 },
+          { 'month': `${year}-08-31T15:00:00.000Z`, 'sales': 20417817 },
+          { 'month': `${year}-09-30T15:00:00.000Z`, 'sales': 21199194 },
+          { 'month': `${year}-10-31T15:00:00.000Z`, 'sales': 24838914 },
+          { 'month': `${year}-11-30T15:00:00.000Z`, 'sales': 19164865 },
         ];
       });
-    setCookie('authToken', 'token');
+    setToken('token');
 
     const { getByTestId, findByText, getByText } = render(
       <Index/>,
@@ -333,5 +334,9 @@ describe('Dashboard', () => {
     expect(daily.mock.calls[0][0]).toEqual(expect.not.stringMatching(/roomId=2/));
     expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`)));
     expect(daily.mock.calls[daily.mock.calls.length - 1][0]).toEqual(expect.stringMatching(/roomId=2/));
+    expect(monthly.mock.calls[0][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(startOfToday(), 'yyyy')}`)));
+    expect(monthly.mock.calls[0][0]).toEqual(expect.not.stringMatching(/roomId=2/));
+    expect(monthly.mock.calls[monthly.mock.calls.length - 1][0]).toEqual(expect.stringMatching(new RegExp(`date=${format(addYears(startOfToday(), 2), 'yyyy')}`)));
+    expect(monthly.mock.calls[monthly.mock.calls.length - 1][0]).toEqual(expect.stringMatching(/roomId=2/));
   });
 });

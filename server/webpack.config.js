@@ -6,7 +6,13 @@ module.exports = {
   entry: './index.ts',
   target: 'node',
   node: {
-    __dirname: false,
+    /*
+    * for prisma client
+    *
+    * const dirnamePolyfill = path.join(process.cwd(), "prisma/client")
+    * const dirname = __dirname.length === 1 ? dirnamePolyfill : __dirname
+    * */
+    __dirname: 'mock',
   },
   output: {
     filename: 'index.js',

@@ -6,7 +6,7 @@ import type { RoomBody } from '$/domains/rooms/validators';
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    query?: Query<Room>;
+    query: Query<Room>;
     resBody: QueryResult<Room>;
   };
   post: {

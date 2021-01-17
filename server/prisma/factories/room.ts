@@ -1,4 +1,4 @@
-import type { RoomCreateInput } from '@prisma/client';
+import type { RoomCreateInput } from '$/prisma/client';
 import { define } from '../tools/define';
 
 define<RoomCreateInput>('room', (faker => ({
