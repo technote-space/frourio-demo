@@ -207,15 +207,20 @@ jobs:
       - name: Build
         run: |
           yarn setup
+          yarn license:generate
           mv out admin
           zip -r admin admin
           mv server/index.js server.js
+          mv license.json admin-license.json
+          mv server/license.json server-license.json
       - name: Upload
         uses: technote-space/action-gh-release@v2
         with:
           files: |
             admin.zip
+            admin-license.json
             server.js
+            server-license.json
           draft: true
 
   releasesElectron:
