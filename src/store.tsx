@@ -50,7 +50,9 @@ const reducer = (store, action) => {
           [action.key]: action.value,
         },
       };
+    /* istanbul ignore next */
     default:
+      /* istanbul ignore next */
       return store;
   }
 };
