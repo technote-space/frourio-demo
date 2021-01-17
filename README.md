@@ -5,11 +5,19 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/technote-space/frourio-demo/badge)](https://www.codefactor.io/repository/github/technote-space/frourio-demo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/technote-space/frourio-demo/blob/master/LICENSE)
 
-<!-- START doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- param::isFolding::false:: -->
 <!-- param::isNotitle::true:: -->
 <!-- param::isCustomMode::true:: -->
-<!-- END doctoc -->
+
+<p align="center">
+<a href="#getting-started">Getting Started</a>
+<span>|</span>
+<a href="#author">Author</a>
+</p>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Getting Started
 
