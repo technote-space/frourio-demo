@@ -22,7 +22,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "setup": "yarn install && run-s setup:*",
+    "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx cpy-cli --no-overwrite --rename=.env ../../server/.env.example ./ && npx cpy-cli --no-overwrite --rename=.env ../../server/prisma/.env.example ./prisma && npx cpy-cli --no-overwrite ../../server/prisma/schema.prisma ./prisma",
     "setup:db": "npx del-cli prisma/dev.db && prisma migrate dev --name init --preview-feature && yarn ts-node ./seeder.ts",
     "build": "run-s build:*",
