@@ -227,7 +227,7 @@ jobs:
     name: Build electron
     needs: cover
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       matrix:
         os: [windows-latest, macos-latest]
@@ -251,21 +251,17 @@ jobs:
 
       - name: Setup
         run: yarn setup
-      - name: Build for Mac
-        run: |
-          yarn build:electron:mac
-          mv src/electron/dist/mac/FrourioElectronDemo.app FrourioElectronDemo.app
+      - name: Package
+        run: yarn build:electron
+      - run: mv src/electron/dist/FrourioElectronDemo-mac.dmg FrourioElectronDemo-setup.dmg
         if: matrix.os == 'macos-latest'
       - name: Upload
         uses: technote-space/action-gh-release@v2
         with:
-          files: FrourioElectronDemo.app
+          files: FrourioElectronDemo-setup.dmg
           draft: true
         if: matrix.os == 'macos-latest'
-      - name: Build for Windows
-        run: |
-          yarn build:electron:win
-          mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-setup.exe
+      - run: mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-setup.exe
         if: matrix.os == 'windows-latest'
       - name: Upload
         uses: technote-space/action-gh-release@v2
