@@ -1,16 +1,19 @@
+import type { Page, Menu, MenuProps } from '~/types';
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
   Hotel as HotelIcon,
   Today as TodayIcon,
   ExitToApp as LogoutIcon,
+  Description as LicenseIcon,
 } from '@material-ui/icons';
 import Dashboard from './dashboard';
 import Guests from './guests';
 import Reservations from './reservations';
 import Rooms from './rooms';
+import { logout, openLicense } from '~/utils/actions';
 
-const pages = {
+const pages: Record<string, Page> = {
   dashboard: {
     label: 'ダッシュボード',
     page: Dashboard,
@@ -31,13 +34,26 @@ const pages = {
     page: Reservations,
     icon: TodayIcon,
   },
+} as const;
+
+export const menus: Record<string, Menu> = {
   logout: {
     label: 'ログアウト',
-    page: null,
     icon: LogoutIcon,
+    onClick: ({ dispatch, removeToken }: MenuProps) => {
+      removeToken();
+      logout(dispatch);
+    },
+  },
+  license: {
+    label: 'ライセンス',
+    icon: LicenseIcon,
+    onClick: ({ dispatch }: MenuProps) => {
+      openLicense(dispatch);
+    },
   },
 } as const;
 
+export type MenuKeys = keyof typeof menus;
 export type PageKeys = keyof typeof pages;
-
 export default pages;

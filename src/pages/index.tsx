@@ -8,6 +8,7 @@ import Route from '~/components/Route';
 import useTheme from '~/hooks/useTheme';
 import useDarkMode from '~/hooks/useDarkMode';
 import SnackbarWrapper from '~/components/SnackbarWrapper';
+import LicenseDialog from '~/components/LicenseDialog';
 import Layout from '~/components/Layout';
 
 const Index = () => {
@@ -20,6 +21,7 @@ const Index = () => {
   return useMemo(() => <StylesProvider injectFirst>
     <ThemeProvider theme={theme}>
       <SnackbarWrapper/>
+      <LicenseDialog/>
       <Layout>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
           <Route/>

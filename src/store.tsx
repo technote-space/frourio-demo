@@ -6,8 +6,8 @@ const initialState: ContextState = {
   name: undefined,
   icon: undefined,
   isSidebarOpen: false,
+  isLicenseOpen: false,
   page: 'dashboard',
-  prevPage: undefined,
   title: undefined,
   notice: {
     open: false,
@@ -25,16 +25,16 @@ const reducer = (store, action) => {
       return { ...store, isSidebarOpen: true };
     case 'CLOSE_SIDEBAR':
       return { ...store, isSidebarOpen: false };
+    case 'OPEN_LICENSE':
+      return { ...store, isLicenseOpen: true };
+    case 'CLOSE_LICENSE':
+      return { ...store, isLicenseOpen: false };
     case 'PAGE':
-      if ('logout' === store.page) {
-        return { ...store, page: action.page };
-      }
-
-      return { ...store, prevPage: store.page, page: action.page };
+      return { ...store, page: action.page };
     case 'TITLE':
       return { ...store, title: action.title };
     case 'LOGOUT':
-      return { ...store, name: undefined, icon: undefined, page: store.prevPage, title: undefined };
+      return { ...store, name: undefined, icon: undefined, title: undefined };
     case 'SET_NOTICE':
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice } };
     case 'SET_ERROR':

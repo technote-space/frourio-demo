@@ -3,11 +3,11 @@
 exports[`Index should fail to login (invalid header) 1`] = `
 <DocumentFragment>
   <div
-    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomCenter makeStyles-content-55"
+    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomCenter makeStyles-content-69"
   >
     <div
       aria-describedby="client-snackbar"
-      class="MuiPaper-root MuiSnackbarContent-root makeStyles-warning-80 makeStyles-content-55 MuiPaper-elevation6"
+      class="MuiPaper-root MuiSnackbarContent-root makeStyles-warning-101 makeStyles-content-69 MuiPaper-elevation6"
       direction="up"
       role="alert"
       style="opacity: 1; transform: scale(1, 1); transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
@@ -16,12 +16,12 @@ exports[`Index should fail to login (invalid header) 1`] = `
         class="MuiSnackbarContent-message"
       >
         <span
-          class="makeStyles-message-83"
+          class="makeStyles-message-104"
           id="client-snackbar"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root makeStyles-icon-81 makeStyles-iconVariant-82"
+            class="MuiSvgIcon-root makeStyles-icon-102 makeStyles-iconVariant-103"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -46,7 +46,7 @@ exports[`Index should fail to login (invalid header) 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root makeStyles-icon-81"
+              class="MuiSvgIcon-root makeStyles-icon-102"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -63,21 +63,21 @@ exports[`Index should fail to login (invalid header) 1`] = `
     </div>
   </div>
   <div
-    class="makeStyles-wrap-56"
+    class="makeStyles-wrap-77"
   >
     <header
-      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-59 MuiPaper-elevation4"
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-80 MuiPaper-elevation4"
     >
       <div
         class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
       >
         <h6
-          class="MuiTypography-root makeStyles-title-61 MuiTypography-h6"
+          class="MuiTypography-root makeStyles-title-82 MuiTypography-h6"
         >
           予約システム
         </h6>
         <div
-          class="makeStyles-grow-62"
+          class="makeStyles-grow-83"
         />
         <button
           class="MuiButtonBase-root MuiIconButton-root"
@@ -105,17 +105,17 @@ exports[`Index should fail to login (invalid header) 1`] = `
       </div>
     </header>
     <main
-      class="makeStyles-main-57"
+      class="makeStyles-main-78"
     >
       <div
-        class="makeStyles-contents-58"
+        class="makeStyles-contents-79"
       >
         <div
-          class="makeStyles-wrap-69"
+          class="makeStyles-wrap-90"
           data-testid="page-dashboard"
         >
           <div
-            class="makeStyles-wrap-70"
+            class="makeStyles-wrap-91"
           >
             <div
               class="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
@@ -127,7 +127,7 @@ exports[`Index should fail to login (invalid header) 1`] = `
                   action="#"
                 >
                   <div
-                    class="MuiFormControl-root makeStyles-input-73"
+                    class="MuiFormControl-root makeStyles-input-94"
                   >
                     <label
                       class="MuiFormLabel-root MuiFormLabel-filled Mui-required"
@@ -156,11 +156,11 @@ exports[`Index should fail to login (invalid header) 1`] = `
                       />
                     </div>
                     <div
-                      class="makeStyles-error-72"
+                      class="makeStyles-error-93"
                     />
                   </div>
                   <div
-                    class="MuiFormControl-root makeStyles-input-73"
+                    class="MuiFormControl-root makeStyles-input-94"
                   >
                     <label
                       class="MuiFormLabel-root MuiFormLabel-filled Mui-required"
@@ -175,10 +175,10 @@ exports[`Index should fail to login (invalid header) 1`] = `
                       </span>
                     </label>
                     <div
-                      class="makeStyles-wrap-74"
+                      class="makeStyles-wrap-95"
                     >
                       <div
-                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-75 MuiInputBase-formControl MuiInput-formControl"
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-96 MuiInputBase-formControl MuiInput-formControl"
                       >
                         <input
                           aria-invalid="false"
@@ -192,7 +192,7 @@ exports[`Index should fail to login (invalid header) 1`] = `
                         />
                       </div>
                       <div
-                        class="makeStyles-toggle-76"
+                        class="makeStyles-toggle-97"
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
@@ -212,11 +212,11 @@ exports[`Index should fail to login (invalid header) 1`] = `
                       </div>
                     </div>
                     <div
-                      class="makeStyles-error-72"
+                      class="makeStyles-error-93"
                     />
                   </div>
                   <div
-                    class="makeStyles-login-71"
+                    class="makeStyles-login-92"
                   >
                     <button
                       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -241,10 +241,10 @@ exports[`Index should fail to login (invalid header) 1`] = `
       </div>
     </main>
     <footer
-      class="makeStyles-footer-67"
+      class="makeStyles-footer-88"
     >
       <div
-        class="makeStyles-wrap-68"
+        class="makeStyles-wrap-89"
       >
         2021 — 
         <strong>
@@ -259,11 +259,11 @@ exports[`Index should fail to login (invalid header) 1`] = `
 exports[`Index should fail to login 1`] = `
 <DocumentFragment>
   <div
-    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomCenter makeStyles-content-25"
+    class="MuiSnackbar-root MuiSnackbar-anchorOriginBottomCenter makeStyles-content-32"
   >
     <div
       aria-describedby="client-snackbar"
-      class="MuiPaper-root MuiSnackbarContent-root makeStyles-warning-50 makeStyles-content-25 MuiPaper-elevation6"
+      class="MuiPaper-root MuiSnackbarContent-root makeStyles-warning-64 makeStyles-content-32 MuiPaper-elevation6"
       direction="up"
       role="alert"
       style="opacity: 1; transform: scale(1, 1); transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
@@ -272,12 +272,12 @@ exports[`Index should fail to login 1`] = `
         class="MuiSnackbarContent-message"
       >
         <span
-          class="makeStyles-message-53"
+          class="makeStyles-message-67"
           id="client-snackbar"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root makeStyles-icon-51 makeStyles-iconVariant-52"
+            class="MuiSvgIcon-root makeStyles-icon-65 makeStyles-iconVariant-66"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -302,7 +302,7 @@ exports[`Index should fail to login 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root makeStyles-icon-51"
+              class="MuiSvgIcon-root makeStyles-icon-65"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -319,21 +319,21 @@ exports[`Index should fail to login 1`] = `
     </div>
   </div>
   <div
-    class="makeStyles-wrap-26"
+    class="makeStyles-wrap-40"
   >
     <header
-      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-29 MuiPaper-elevation4"
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-43 MuiPaper-elevation4"
     >
       <div
         class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
       >
         <h6
-          class="MuiTypography-root makeStyles-title-31 MuiTypography-h6"
+          class="MuiTypography-root makeStyles-title-45 MuiTypography-h6"
         >
           予約システム
         </h6>
         <div
-          class="makeStyles-grow-32"
+          class="makeStyles-grow-46"
         />
         <button
           class="MuiButtonBase-root MuiIconButton-root"
@@ -361,17 +361,17 @@ exports[`Index should fail to login 1`] = `
       </div>
     </header>
     <main
-      class="makeStyles-main-27"
+      class="makeStyles-main-41"
     >
       <div
-        class="makeStyles-contents-28"
+        class="makeStyles-contents-42"
       >
         <div
-          class="makeStyles-wrap-39"
+          class="makeStyles-wrap-53"
           data-testid="page-dashboard"
         >
           <div
-            class="makeStyles-wrap-40"
+            class="makeStyles-wrap-54"
           >
             <div
               class="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
@@ -383,7 +383,7 @@ exports[`Index should fail to login 1`] = `
                   action="#"
                 >
                   <div
-                    class="MuiFormControl-root makeStyles-input-43"
+                    class="MuiFormControl-root makeStyles-input-57"
                   >
                     <label
                       class="MuiFormLabel-root MuiFormLabel-filled Mui-required"
@@ -412,11 +412,11 @@ exports[`Index should fail to login 1`] = `
                       />
                     </div>
                     <div
-                      class="makeStyles-error-42"
+                      class="makeStyles-error-56"
                     />
                   </div>
                   <div
-                    class="MuiFormControl-root makeStyles-input-43"
+                    class="MuiFormControl-root makeStyles-input-57"
                   >
                     <label
                       class="MuiFormLabel-root MuiFormLabel-filled Mui-required"
@@ -431,10 +431,10 @@ exports[`Index should fail to login 1`] = `
                       </span>
                     </label>
                     <div
-                      class="makeStyles-wrap-44"
+                      class="makeStyles-wrap-58"
                     >
                       <div
-                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-45 MuiInputBase-formControl MuiInput-formControl"
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-59 MuiInputBase-formControl MuiInput-formControl"
                       >
                         <input
                           aria-invalid="false"
@@ -448,7 +448,7 @@ exports[`Index should fail to login 1`] = `
                         />
                       </div>
                       <div
-                        class="makeStyles-toggle-46"
+                        class="makeStyles-toggle-60"
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
@@ -468,11 +468,11 @@ exports[`Index should fail to login 1`] = `
                       </div>
                     </div>
                     <div
-                      class="makeStyles-error-42"
+                      class="makeStyles-error-56"
                     />
                   </div>
                   <div
-                    class="makeStyles-login-41"
+                    class="makeStyles-login-55"
                   >
                     <button
                       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -497,10 +497,10 @@ exports[`Index should fail to login 1`] = `
       </div>
     </main>
     <footer
-      class="makeStyles-footer-37"
+      class="makeStyles-footer-51"
     >
       <div
-        class="makeStyles-wrap-38"
+        class="makeStyles-wrap-52"
       >
         2021 — 
         <strong>
@@ -515,21 +515,21 @@ exports[`Index should fail to login 1`] = `
 exports[`Index should show login form 1`] = `
 <DocumentFragment>
   <div
-    class="makeStyles-wrap-3"
+    class="makeStyles-wrap-10"
   >
     <header
-      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-6 MuiPaper-elevation4"
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-13 MuiPaper-elevation4"
     >
       <div
         class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
       >
         <h6
-          class="MuiTypography-root makeStyles-title-8 MuiTypography-h6"
+          class="MuiTypography-root makeStyles-title-15 MuiTypography-h6"
         >
           予約システム
         </h6>
         <div
-          class="makeStyles-grow-9"
+          class="makeStyles-grow-16"
         />
         <button
           class="MuiButtonBase-root MuiIconButton-root"
@@ -557,17 +557,17 @@ exports[`Index should show login form 1`] = `
       </div>
     </header>
     <main
-      class="makeStyles-main-4"
+      class="makeStyles-main-11"
     >
       <div
-        class="makeStyles-contents-5"
+        class="makeStyles-contents-12"
       >
         <div
-          class="makeStyles-wrap-16"
+          class="makeStyles-wrap-23"
           data-testid="page-dashboard"
         >
           <div
-            class="makeStyles-wrap-17"
+            class="makeStyles-wrap-24"
           >
             <div
               class="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
@@ -579,7 +579,7 @@ exports[`Index should show login form 1`] = `
                   action="#"
                 >
                   <div
-                    class="MuiFormControl-root makeStyles-input-20"
+                    class="MuiFormControl-root makeStyles-input-27"
                   >
                     <label
                       class="MuiFormLabel-root Mui-required"
@@ -608,11 +608,11 @@ exports[`Index should show login form 1`] = `
                       />
                     </div>
                     <div
-                      class="makeStyles-error-19"
+                      class="makeStyles-error-26"
                     />
                   </div>
                   <div
-                    class="MuiFormControl-root makeStyles-input-20"
+                    class="MuiFormControl-root makeStyles-input-27"
                   >
                     <label
                       class="MuiFormLabel-root Mui-required"
@@ -627,10 +627,10 @@ exports[`Index should show login form 1`] = `
                       </span>
                     </label>
                     <div
-                      class="makeStyles-wrap-21"
+                      class="makeStyles-wrap-28"
                     >
                       <div
-                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-22 MuiInputBase-formControl MuiInput-formControl"
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-29 MuiInputBase-formControl MuiInput-formControl"
                       >
                         <input
                           aria-invalid="false"
@@ -644,7 +644,7 @@ exports[`Index should show login form 1`] = `
                         />
                       </div>
                       <div
-                        class="makeStyles-toggle-23"
+                        class="makeStyles-toggle-30"
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
@@ -664,11 +664,11 @@ exports[`Index should show login form 1`] = `
                       </div>
                     </div>
                     <div
-                      class="makeStyles-error-19"
+                      class="makeStyles-error-26"
                     />
                   </div>
                   <div
-                    class="makeStyles-login-18"
+                    class="makeStyles-login-25"
                   >
                     <button
                       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -693,10 +693,10 @@ exports[`Index should show login form 1`] = `
       </div>
     </main>
     <footer
-      class="makeStyles-footer-14"
+      class="makeStyles-footer-21"
     >
       <div
-        class="makeStyles-wrap-15"
+        class="makeStyles-wrap-22"
       >
         2021 — 
         <strong>

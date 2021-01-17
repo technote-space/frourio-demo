@@ -164,4 +164,31 @@ describe('Index', () => {
     expect(getByText('Email address')).toBeVisible();
     expect(getByText('Password')).toBeVisible();
   });
+
+  it('should show license dialog', async() => {
+    useNock()
+      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+    setToken('token');
+
+    const { findByText, findByTestId, container } = render(
+      <Index/>,
+      {},
+    );
+
+    await findByTestId('select-date');
+
+    const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
+    user.click(buttons[0]);
+    user.click(await findByText('ライセンス'));
+    user.click(await findByText('frourio-demo@0.1.0 : MIT'));
+    user.click(await findByTestId('close-license'));
+    user.click(await findByTestId('close-license-list'));
+  });
 });
