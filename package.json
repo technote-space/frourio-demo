@@ -1,6 +1,6 @@
 {
   "name": "frourio-demo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Demo application of Frourio.",
   "keywords": [
     "frourio"
@@ -23,16 +23,16 @@
     "analyze": "ANALYZE=true next build",
     "build": "run-s license:generate:admin build:server build:admin",
     "build:admin": "aspida && next build && next export",
+    "build:electron": "yarn --cwd src/electron setup && yarn --cwd src/electron build && yarn --cwd src/electron dist",
     "build:server": "yarn --cwd server build",
     "build:types": "aspida && yarn --cwd server build:frourio",
-    "build:electron": "yarn --cwd src/electron setup && yarn --cwd src/electron build && yarn --cwd src/electron dist",
     "cover": "jest --coverage --verbose -i --bail",
     "cover:admin": "jest --coverage --verbose -i --bail --selectProjects admin",
     "cover:server": "jest --coverage --verbose --bail --selectProjects server",
     "cover:update": "jest --coverage --verbose -u -i --bail --selectProjects admin",
     "dev": "yarn migrate:dev && run-p dev:*",
-    "dev:aspida": "aspida --watch",
     "dev:admin": "next dev -p 3000",
+    "dev:aspida": "aspida --watch",
     "dev:server": "yarn --cwd server dev",
     "license:check": "yarn license:check:admin && yarn --cwd server license:check && yarn --cwd src/electron license:check",
     "license:check:admin": "npx license-checker --production --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
@@ -55,8 +55,8 @@
     "typecheck": "yarn build:types && tsc --noEmit && tsc --noEmit -p server",
     "update": "run-s update:*",
     "update:admin": "npx npm-check-updates -u --timeout 100000 -x @date-io/date-fns,next-transpile-modules && yarn install && yarn upgrade && yarn audit",
-    "update:server": "cd server/prisma && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
-    "update:electron": "cd src/electron && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
+    "update:electron": "cd src/electron && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
+    "update:server": "cd server/prisma && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
   },
   "dependencies": {
     "@aspida/axios": "^1.2.1",
