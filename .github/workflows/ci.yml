@@ -220,8 +220,8 @@ jobs:
           files: |
             admin.zip
             server.js
-            FrourioElectronDemo-mac.dmg
-            FrourioElectronDemo-win.exe
+            FrourioElectronDemo.app
+            FrourioElectronDemo-setup.exe
           draft: true
 
   publishRelease:
