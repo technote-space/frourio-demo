@@ -51,6 +51,7 @@ export const menus: Record<string, Menu> = {
     onClick: ({ dispatch }: MenuProps) => {
       openLicense(dispatch);
     },
+    always: true,
   },
 } as const;
 

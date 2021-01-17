@@ -5,7 +5,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Brightness4 from '@material-ui/icons/Brightness4';
 import Brightness5 from '@material-ui/icons/Brightness5';
 import useDarkMode from '~/hooks/useDarkMode';
-import useAuthToken from '~/hooks/useAuthToken';
 import { useDispatchContext } from '~/store';
 import { openSidebar, changePage } from '~/utils/actions';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -31,21 +30,20 @@ const Header: FC = () => {
   const classes = useStyles();
   const { dispatch } = useDispatchContext();
   const [themeColor, toggleDarkMode] = useDarkMode();
-  const [auth] = useAuthToken();
   const handleClickToggle = useCallback(() => openSidebar(dispatch), []);
   const handleClickHome = useCallback(() => changePage(dispatch, 'dashboard'), []);
 
   return useMemo(() =>
     <AppBar position="static" className={classes.root}>
       <Toolbar>
-        {auth && <IconButton
+        <IconButton
           edge="start"
           className={classes.menuButton}
           color="inherit"
           aria-label="menu"
           onClick={handleClickToggle}>
           <MenuIcon/>
-        </IconButton>}
+        </IconButton>
         <Typography variant="h6" className={classes.title} onClick={handleClickHome}>
           予約システム
         </Typography>
@@ -54,7 +52,7 @@ const Header: FC = () => {
           {themeColor === 'dark' ? <Brightness5/> : <Brightness4/>}
         </IconButton>
       </Toolbar>
-    </AppBar>, [classes, auth, themeColor]);
+    </AppBar>, [classes, themeColor]);
 };
 
 export default Header;

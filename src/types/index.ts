@@ -32,6 +32,7 @@ export type Menu = {
   label: string;
   icon: SvgIconComponent;
   onClick: (props: MenuProps) => void;
+  always?: boolean;
 };
 
 export type MaybeUndefined<T> = undefined extends T ? undefined : never;

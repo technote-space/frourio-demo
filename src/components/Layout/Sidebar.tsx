@@ -79,7 +79,7 @@ const Sidebar: FC = () => {
     <Drawer
       anchor='left'
       onClose={onClose}
-      open={isSidebarOpen && !!auth}
+      open={isSidebarOpen}
       ModalProps={{
         BackdropProps: {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -104,12 +104,14 @@ const Sidebar: FC = () => {
         </div>
         <Divider/>
       </>}
-      <List>
-        {Object.entries(pages).map(([key, page]) => <MappedPageItem key={`page-${key}`} slug={key as PageKeys} page={page}/>)}
-      </List>
+      {auth && <List>
+        {Object.entries(pages).map(([key, page]) =>
+          <MappedPageItem key={`page-${key}`} slug={key as PageKeys} page={page}/>)}
+      </List>}
       <Divider/>
       <List>
-        {Object.entries(menus).map(([key, menu]) => <MappedMenuItem key={`menu-${key}`} slug={key as PageKeys} menu={menu}/>)}
+        {Object.entries(menus).map(([key, menu]) =>
+          auth || menu.always ? <MappedMenuItem key={`menu-${key}`} slug={key as PageKeys} menu={menu}/> : null)}
       </List>
     </Drawer>, [classes, isSidebarOpen, auth, name, icon]);
 };
