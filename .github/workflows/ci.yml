@@ -227,7 +227,7 @@ jobs:
     name: Build electron
     needs: cover
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       matrix:
         os: [windows-latest, macos-latest]
