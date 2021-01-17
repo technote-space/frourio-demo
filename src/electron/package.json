@@ -63,6 +63,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "build": {
+    "artifactName": "${productName}-${os}.${ext}",
     "directories": {
       "output": "dist",
       "buildResources": "."
@@ -108,5 +109,5 @@
       }
     ]
   },
-  "productName": "ReservationSystem"
+  "productName": "FrourioElectronDemo"
 }

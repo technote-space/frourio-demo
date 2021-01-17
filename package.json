@@ -25,6 +25,7 @@
     "build:client": "aspida && next build && next export",
     "build:server": "yarn --cwd server build",
     "build:types": "aspida && yarn --cwd server build:frourio",
+    "build:electron": "yarn --cwd src/electron setup && yarn --cwd src/electron build && yarn --cwd src/electron dist",
     "cover": "jest --coverage --verbose -i --bail",
     "cover:admin": "jest --coverage --verbose -i --bail --selectProjects admin",
     "cover:server": "jest --coverage --verbose --bail --selectProjects server",
