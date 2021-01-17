@@ -24,8 +24,6 @@
     "build": "run-s license:generate:admin build:server build:admin",
     "build:admin": "aspida && next build && next export",
     "build:electron": "yarn --cwd src/electron setup && yarn --cwd src/electron build && yarn --cwd src/electron dist",
-    "build:electron:mac": "yarn --cwd src/electron setup && yarn --cwd src/electron build && yarn --cwd src/electron dist:mac",
-    "build:electron:win": "yarn --cwd src/electron setup && yarn --cwd src/electron build && yarn --cwd src/electron dist:win",
     "build:server": "yarn --cwd server build",
     "build:types": "aspida && yarn --cwd server build:frourio",
     "cover": "jest --coverage --verbose -i --bail",
