@@ -284,23 +284,24 @@ describe('Dashboard', () => {
           { 'day': `${year}-01-30T15:00:00.000Z`, 'sales': 0 },
         ];
       })
-      .get(/\/dashboard\/sales\/monthly/).reply(200, (uri) => {
-      monthly(uri);
-      return [
-        { 'month': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 6013080 },
-        { 'month': `${year}-01-31T15:00:00.000Z`, 'sales': 4790803 },
-        { 'month': `${year}-02-29T15:00:00.000Z`, 'sales': 18903318 },
-        { 'month': `${year}-03-31T15:00:00.000Z`, 'sales': 11577323 },
-        { 'month': `${year}-04-30T15:00:00.000Z`, 'sales': 14144067 },
-        { 'month': `${year}-05-31T15:00:00.000Z`, 'sales': 9184391 },
-        { 'month': `${year}-06-30T15:00:00.000Z`, 'sales': 21629510 },
-        { 'month': `${year}-07-31T15:00:00.000Z`, 'sales': 19655282 },
-        { 'month': `${year}-08-31T15:00:00.000Z`, 'sales': 20417817 },
-        { 'month': `${year}-09-30T15:00:00.000Z`, 'sales': 21199194 },
-        { 'month': `${year}-10-31T15:00:00.000Z`, 'sales': 24838914 },
-        { 'month': `${year}-11-30T15:00:00.000Z`, 'sales': 19164865 },
-      ];
-    });
+      .get(/\/dashboard\/sales\/monthly/)
+      .reply(200, (uri) => {
+        monthly(uri);
+        return [
+          { 'month': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 6013080 },
+          { 'month': `${year}-01-31T15:00:00.000Z`, 'sales': 4790803 },
+          { 'month': `${year}-02-29T15:00:00.000Z`, 'sales': 18903318 },
+          { 'month': `${year}-03-31T15:00:00.000Z`, 'sales': 11577323 },
+          { 'month': `${year}-04-30T15:00:00.000Z`, 'sales': 14144067 },
+          { 'month': `${year}-05-31T15:00:00.000Z`, 'sales': 9184391 },
+          { 'month': `${year}-06-30T15:00:00.000Z`, 'sales': 21629510 },
+          { 'month': `${year}-07-31T15:00:00.000Z`, 'sales': 19655282 },
+          { 'month': `${year}-08-31T15:00:00.000Z`, 'sales': 20417817 },
+          { 'month': `${year}-09-30T15:00:00.000Z`, 'sales': 21199194 },
+          { 'month': `${year}-10-31T15:00:00.000Z`, 'sales': 24838914 },
+          { 'month': `${year}-11-30T15:00:00.000Z`, 'sales': 19164865 },
+        ];
+      });
     setToken('token');
 
     const { getByTestId, findByText, getByText } = render(
