@@ -6,7 +6,7 @@ import { startOfTomorrow, addDays } from 'date-fns';
 
 describe('dashboard/checkout', () => {
   it('should get today\'s checkout reservations', async() => {
-    const getReservationsMock     = jest.fn(() => getPromiseLikeItem([
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
         guestId: 234,
@@ -37,7 +37,7 @@ describe('dashboard/checkout', () => {
       },
     ]));
     const getReservationCountMock = jest.fn(() => getPromiseLikeItem(3));
-    const injectedController      = controller.inject({
+    const injectedController = controller.inject({
       getCheckout: getCheckout.inject({
         getReservations: getReservations.inject({
           prisma: {
@@ -156,7 +156,7 @@ describe('dashboard/checkout', () => {
   });
 
   it('should get another day\'s checkout reservations', async() => {
-    const getReservationsMock     = jest.fn(() => getPromiseLikeItem([
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
         guestId: 234,
@@ -187,7 +187,7 @@ describe('dashboard/checkout', () => {
       },
     ]));
     const getReservationCountMock = jest.fn(() => getPromiseLikeItem(3));
-    const injectedController      = controller.inject({
+    const injectedController = controller.inject({
       getCheckout: getCheckout.inject({
         getReservations: getReservations.inject({
           prisma: {
@@ -210,6 +210,15 @@ describe('dashboard/checkout', () => {
       headers: getAuthorizationHeader(1),
       user: { id: 1, roles: [] },
       query: {
+        query: {
+          filters: [],
+          page: 0,
+          pageSize: 10,
+          totalCount: 2,
+          search: '',
+          orderBy: {},
+          orderDirection: 'desc',
+        },
         date: startOfTomorrow(),
       },
     });
@@ -266,7 +275,7 @@ describe('dashboard/checkout', () => {
   });
 
   it('should checkout', async() => {
-    const getReservationMock    = jest.fn(() => getPromiseLikeItem({
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       guestId: 234,
       guestName: 'test name',
@@ -304,7 +313,7 @@ describe('dashboard/checkout', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
-    const injectedController    = controller.inject({
+    const injectedController = controller.inject({
       checkout: checkout.inject({
         getReservation: getReservation.inject({
           prisma: {
@@ -359,7 +368,7 @@ describe('dashboard/checkout', () => {
   });
 
   it('should not checkout', async() => {
-    const getReservationMock    = jest.fn(() => getPromiseLikeItem({
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       guestId: 234,
       guestName: 'test name',
@@ -379,7 +388,7 @@ describe('dashboard/checkout', () => {
       updatedAt: new Date(),
     }));
     const updateReservationMock = jest.fn();
-    const injectedController    = controller.inject({
+    const injectedController = controller.inject({
       checkout: checkout.inject({
         getReservation: getReservation.inject({
           prisma: {

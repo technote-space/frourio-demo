@@ -98,7 +98,9 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     query: { date: salesDate, roomId: roomId ? roomId : undefined },
   });
   const selectableRooms = useFetch(dispatch, [], client.dashboard.rooms, { headers: authHeader });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const checkinTableRef = useRef<any>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const checkoutTableRef = useRef<any>();
   const refreshTables = () => {
     if (checkinTableRef.current?.onQueryChange) {

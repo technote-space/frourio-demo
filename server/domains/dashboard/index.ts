@@ -39,11 +39,11 @@ export const getCheckin = depend(
   { getReservations, getReservationCount },
   async(
     { getReservations, getReservationCount },
-    query?: Query<CheckinReservation>,
+    query: Query<CheckinReservation>,
     date?: Date,
   ): Promise<BodyResponse<QueryResult<CheckinReservation>>> => {
-    const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<CheckinReservation>(query?.search, [
+    const pageSize = query.pageSize;
+    const where = getWhere<CheckinReservation>(query.search, [
       'guestName',
       'guestNameKana',
       'guestPhone',
@@ -52,10 +52,10 @@ export const getCheckin = depend(
       date,
       key: 'checkin',
     });
-    const orderBy    = getOrderBy<CheckinReservation>(query?.orderBy, query?.orderDirection);
+    const orderBy = getOrderBy<CheckinReservation>(query.orderBy, query.orderDirection);
     const totalCount = await getReservationCount({ where });
-    const page       = getCurrentPage(pageSize, totalCount, query?.page);
-    const data       = await getReservations({
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getReservations({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,
@@ -87,11 +87,11 @@ export const getCheckout = depend(
   { getReservations, getReservationCount },
   async(
     { getReservations, getReservationCount },
-    query?: Query<CheckoutReservation>,
+    query: Query<CheckoutReservation>,
     date?: Date,
   ): Promise<BodyResponse<QueryResult<CheckoutReservation>>> => {
-    const pageSize   = query?.pageSize ?? 10;
-    const where      = getWhere<CheckoutReservation>(query?.search, [
+    const pageSize = query.pageSize;
+    const where = getWhere<CheckoutReservation>(query.search, [
       'guestName',
       'guestNameKana',
       'roomName',
@@ -103,10 +103,10 @@ export const getCheckout = depend(
         not: 'cancelled',
       },
     });
-    const orderBy    = getOrderBy<CheckoutReservation>(query?.orderBy, query?.orderDirection);
+    const orderBy = getOrderBy<CheckoutReservation>(query.orderBy, query.orderDirection);
     const totalCount = await getReservationCount({ where });
-    const page       = getCurrentPage(pageSize, totalCount, query?.page);
-    const data       = await getReservations({
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getReservations({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,
@@ -186,7 +186,7 @@ export const checkout = depend(
     };
   },
 );
-export const cancel   = depend(
+export const cancel = depend(
   { updateReservation },
   async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => ({
     status: 200,

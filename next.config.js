@@ -7,6 +7,7 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer(withTranspileModules({
   target: 'serverless',
+  assetPrefix: '.',
   async rewrites() {
     return [
       {
@@ -20,9 +21,11 @@ module.exports = withBundleAnalyzer(withTranspileModules({
     ];
   },
   webpack: (config) => {
+    // remove unused packages
+    // https://github.com/mbrn/material-table/issues/2164#issuecomment-692525181
     config.module.rules.push({
-      test: /jspdf|moment/,
-      use: 'null-loader'
+      test: /jspdf|moment/, // material-table => jspdf, chart.js => moment
+      use: 'null-loader',
     });
 
     return config;

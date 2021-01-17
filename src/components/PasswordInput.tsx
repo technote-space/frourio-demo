@@ -42,7 +42,7 @@ const PasswordInput: FC<Props> = (props: Props) => {
           {show ? 'Hide' : 'Show'}
         </Button>
       </div>
-    </div>, [show, props.value, props.disabled]);
+    </div>, [classes, show, props.value, props.disabled]);
 };
 
 export default PasswordInput;

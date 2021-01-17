@@ -6,7 +6,7 @@ import { startOfTomorrow, addDays } from 'date-fns';
 
 describe('dashboard/checkin', () => {
   it('should get today\'s checkin reservations', async() => {
-    const getReservationsMock     = jest.fn(() => getPromiseLikeItem([
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
         guestId: 234,
@@ -37,7 +37,7 @@ describe('dashboard/checkin', () => {
       },
     ]));
     const getReservationCountMock = jest.fn(() => getPromiseLikeItem(3));
-    const injectedController      = controller.inject({
+    const injectedController = controller.inject({
       getCheckin: getCheckin.inject({
         getReservations: getReservations.inject({
           prisma: {
@@ -153,7 +153,7 @@ describe('dashboard/checkin', () => {
   });
 
   it('should get another day\'s checkin reservations', async() => {
-    const getReservationsMock     = jest.fn(() => getPromiseLikeItem([
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
         guestId: 234,
@@ -184,7 +184,7 @@ describe('dashboard/checkin', () => {
       },
     ]));
     const getReservationCountMock = jest.fn(() => getPromiseLikeItem(3));
-    const injectedController      = controller.inject({
+    const injectedController = controller.inject({
       getCheckin: getCheckin.inject({
         getReservations: getReservations.inject({
           prisma: {
@@ -207,6 +207,15 @@ describe('dashboard/checkin', () => {
       headers: getAuthorizationHeader(1),
       user: { id: 1, roles: [] },
       query: {
+        query: {
+          filters: [],
+          page: 0,
+          pageSize: 10,
+          totalCount: 2,
+          search: '',
+          orderBy: {},
+          orderDirection: 'desc',
+        },
         date: startOfTomorrow(),
       },
     });
@@ -250,7 +259,7 @@ describe('dashboard/checkin', () => {
   });
 
   it('should checkin', async() => {
-    const getReservationMock    = jest.fn(() => getPromiseLikeItem({
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       guestId: 234,
       guestName: 'test name',
@@ -288,7 +297,7 @@ describe('dashboard/checkin', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
-    const injectedController    = controller.inject({
+    const injectedController = controller.inject({
       checkin: checkin.inject({
         getReservation: getReservation.inject({
           prisma: {
@@ -342,7 +351,7 @@ describe('dashboard/checkin', () => {
   });
 
   it('should not checkin', async() => {
-    const getReservationMock    = jest.fn(() => getPromiseLikeItem({
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       guestId: 234,
       guestName: 'test name',
@@ -362,7 +371,7 @@ describe('dashboard/checkin', () => {
       updatedAt: new Date(),
     }));
     const updateReservationMock = jest.fn();
-    const injectedController    = controller.inject({
+    const injectedController = controller.inject({
       checkin: checkin.inject({
         getReservation: getReservation.inject({
           prisma: {

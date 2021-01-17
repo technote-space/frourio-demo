@@ -1,0 +1,7 @@
+**/$*.ts
+**/*.db
+index.js*
+database.json
+.upload
+public/icons/*
+!public/icons/dummy.svg

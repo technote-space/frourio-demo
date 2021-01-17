@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
 import {
   registerDecorator,
   ValidationOptions,
@@ -6,7 +6,7 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '$/prisma/client';
 import { startOfDay, isAfter } from 'date-fns';
 import { Models } from '.';
 

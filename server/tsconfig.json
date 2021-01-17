@@ -12,6 +12,8 @@
         "./*"
       ]
     },
+    "allowJs": true,
+    "skipLibCheck": true,
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -22,5 +24,11 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "noImplicitAny": false
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "isolatedModules": false
+    }
   }
 }

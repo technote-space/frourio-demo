@@ -8,7 +8,7 @@ export type Methods = {
   get: {
     reqHeaders: AuthHeader;
     query: {
-      query?: Query<CheckinReservation>;
+      query: Query<CheckinReservation>;
       date?: Date;
     };
     resBody: QueryResult<CheckinReservation>;
