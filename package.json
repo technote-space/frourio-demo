@@ -57,7 +57,7 @@
     "update:admin": "npx npm-check-updates -u --timeout 100000 -x @date-io/date-fns,next-transpile-modules && yarn install && yarn upgrade && yarn audit",
     "update:electron": "cd src/electron && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
     "update:server": "cd server/prisma && npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
-    "heroku-postbuild": "YARN_PRODUCTION=false yarn setup"
+    "heroku-postbuild": "yarn --cwd server setup:heroku"
   },
   "dependencies": {
     "@aspida/axios": "^1.2.1",
