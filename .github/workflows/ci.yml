@@ -185,7 +185,7 @@ jobs:
     name: Upload build files
     needs: cover
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v2
@@ -210,23 +210,68 @@ jobs:
           mv out admin
           zip -r admin admin
           mv server/index.js server.js
-
-          yarn build:electron
-          mv src/electron/dist/mac/FrourioElectronDemo.app FrourioElectronDemo.app
-          mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-setup.exe
       - name: Upload
         uses: technote-space/action-gh-release@v2
         with:
           files: |
             admin.zip
             server.js
-            FrourioElectronDemo.app
-            FrourioElectronDemo-setup.exe
           draft: true
+
+  releasesElectron:
+    name: Build electron
+    needs: cover
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache node dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-15-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-15-yarn-
+
+      - name: Setup
+        run: yarn setup
+      - name: Build for Mac
+        run: |
+          yarn build:electron:mac
+          mv src/electron/dist/mac/FrourioElectronDemo.app FrourioElectronDemo.app
+        if: matrix.os == 'macos-latest'
+      - name: Upload
+        uses: technote-space/action-gh-release@v2
+        with:
+          files: FrourioElectronDemo.app
+          draft: true
+        if: matrix.os == 'macos-latest'
+      - name: Build for Windows
+        run: |
+          yarn build:electron:win
+          mv src/electron/dist/FrourioElectronDemo-win.exe FrourioElectronDemo-setup.exe
+        if: matrix.os == 'windows-latest'
+      - name: Upload
+        uses: technote-space/action-gh-release@v2
+        with:
+          files: FrourioElectronDemo-setup.exe
+          draft: true
+        if: matrix.os == 'windows-latest'
 
   publishRelease:
     name: Create Release
-    needs: releases
+    needs: [releases, releasesElectron]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
