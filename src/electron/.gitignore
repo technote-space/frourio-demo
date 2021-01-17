@@ -5,4 +5,6 @@ index.js*
 /prisma/migrations/
 /prisma/schema.prisma
 *.db
-
+client-license.json
+admin-license.json
+server-license.json
