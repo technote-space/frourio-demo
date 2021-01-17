@@ -1,6 +1,6 @@
 {
   "name": "frourio-demo",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Demo application of Frourio.",
   "keywords": [
     "frourio"
@@ -46,10 +46,10 @@
     "migrate:init": "yarn --cwd server migrate:init",
     "migrate:reset": "yarn --cwd server migrate:reset",
     "migrate:seed": "yarn --cwd server migrate:seed",
-    "setup": "yarn install && yarn setup:db && yarn build",
+    "setup": "yarn install --network-timeout 1000000 && yarn setup:db && yarn build",
     "setup:config": "yarn --cwd server setup:config",
     "setup:db": "yarn --cwd server setup && yarn migrate:seed",
-    "setup:install": "yarn install && cd server && yarn install",
+    "setup:install": "yarn install --network-timeout 1000000 && cd server && yarn install --network-timeout 1000000",
     "start": "run-p start:*",
     "start:admin": "next start",
     "start:server": "yarn --cwd server start",

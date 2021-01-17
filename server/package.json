@@ -16,7 +16,7 @@
     "migrate:init": "prisma migrate dev --name init --preview-feature",
     "migrate:reset": "prisma migrate reset --preview-feature",
     "migrate:seed": "yarn ts-node -r tsconfig-paths/register ./prisma/seeds/seeder.ts",
-    "setup": "yarn install && run-s setup:*",
+    "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx cpy-cli --no-overwrite --rename=.env .env.example ./ && npx cpy-cli --no-overwrite --rename=.env prisma/.env.example prisma/",
     "setup:db": "npx del-cli prisma/dev.db && yarn migrate:dev",
     "start": "cross-env NODE_ENV=production node index.js"
