@@ -19,7 +19,7 @@
     "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx shx cp -u .env.example ./.env && npx shx cp -u prisma/.env.example prisma/.env",
     "setup:db": "npx shx rm -f prisma/dev.db && yarn migrate:dev",
-    "heroku": "yarn install && sed -i s/sqlite/postgresql/ prisma/schema.prisma && yarn build:prisma && prisma db push --preview-feature && frourio && webpack --mode=production && yarn migrate:seed",
+    "heroku": "yarn install && sed -i s/sqlite/postgresql/ prisma/schema.prisma && yarn build:prisma && prisma db push --preview-feature && frourio && webpack --mode=production",
     "start": "cross-env NODE_ENV=production node index.js"
   },
   "dependencies": {
