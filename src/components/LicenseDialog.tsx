@@ -80,7 +80,7 @@ const LicenseDialog: FC = () => {
       setSelectIndex(index);
     }, []);
 
-    return useMemo(() => <ListItem className={classes.listItem} onClick={handleClick}>
+    return useMemo(() => <ListItem className={classes.listItem} onClick={handleClick} data-testid="license-item">
       {license.name}@{license.version} : {license.licenses}
     </ListItem>, [classes]);
   };
