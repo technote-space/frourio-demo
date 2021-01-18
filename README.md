@@ -14,9 +14,15 @@ Frourio (Next.js + Fastify + Prisma) を使用した予約管理業務アプリ�
 <!-- param::isCustomMode::true:: -->
 
 <p align="center">
+<a href="#screenshot">Screenshot</a>
+<span>|</span>
 <a href="#getting-started">Getting Started</a>
 <span>|</span>
 <a href="#demo">Demo</a>
+<span>|</span>
+<a href="#%E8%A6%81%E4%BB%B6">要件</a>
+<span>|</span>
+<a href="#%E6%A7%8B%E6%88%90">構成</a>
 <span>|</span>
 <a href="#author">Author</a>
 </p>
