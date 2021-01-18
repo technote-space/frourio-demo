@@ -1,6 +1,6 @@
 {
   "name": "frourio-demo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Demo application of Frourio.",
   "keywords": [
     "frourio"
@@ -118,7 +118,7 @@
     "typescript": "^4.1.3"
   },
   "engines": {
-    "yarn": "1.x",
-    "node": "15.3.0"
+    "node": "15.3.0",
+    "yarn": "1.x"
   }
 }
