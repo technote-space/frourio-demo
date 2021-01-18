@@ -2,13 +2,10 @@ import type { ThemeColor } from '~/types';
 import { useMemo } from 'react';
 import { createMuiTheme, Theme } from '@material-ui/core/styles';
 import { teal, grey, pink } from '@material-ui/core/colors';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-const useTheme = (themeColor?: ThemeColor): Theme => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const colorMode = themeColor || (prefersDarkMode ? 'dark' : 'light');
-  const bgColor = colorMode === 'dark' ? grey[800] : grey[100];
-  const fgColor = colorMode === 'dark' ? grey[50] : grey[900];
+const useTheme = (themeColor: ThemeColor): Theme => {
+  const bgColor = themeColor === 'dark' ? grey[800] : grey[100];
+  const fgColor = themeColor === 'dark' ? grey[50] : grey[900];
 
   return useMemo(() =>
     createMuiTheme({
@@ -45,7 +42,7 @@ const useTheme = (themeColor?: ThemeColor): Theme => {
         },
       },
       palette: {
-        type: colorMode,
+        type: themeColor,
         background: {
           default: bgColor,
           paper: teal.A700,
@@ -200,7 +197,7 @@ const useTheme = (themeColor?: ThemeColor): Theme => {
           },
         },
       },
-    }), [colorMode],
+    }), [themeColor],
   );
 };
 
