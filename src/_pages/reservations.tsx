@@ -17,8 +17,6 @@ import { ReservationStatus } from '$/types';
 import { getPriceCalc } from '~/utils/calc';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
-  console.log('page::Reservations');
-
   const unmountRef = useUnmountRef();
   return useMemo(() => <DataTable
     model={'reservations'}

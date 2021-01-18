@@ -6,8 +6,6 @@ import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 
 const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
-  console.log('page::Guests');
-
   const unmountRef = useUnmountRef();
   return useMemo(() => <DataTable
     model={'guests'}
