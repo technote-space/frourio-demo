@@ -45,7 +45,7 @@
     "migrate:init": "yarn --cwd server migrate:init",
     "migrate:reset": "yarn --cwd server migrate:reset",
     "migrate:seed": "yarn --cwd server setup:db && yarn --cwd server migrate:seed",
-    "prepare:cover": "yarn setup:install && yarn setup:config && yarn --cwd server build:prisma && aspida",
+    "prepare:cover": "yarn setup:install && yarn setup:config && yarn --cwd server build:prisma && aspida && yarn license:generate:admin",
     "prepare:eslint": "yarn install",
     "prepare:pages": "yarn setup:install && yarn license:generate:admin && yarn --cwd server build:prisma",
     "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn license:generate:admin",
