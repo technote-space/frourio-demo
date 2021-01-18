@@ -1,4 +1,9 @@
 import server from './server';
-import { SERVER_PORT } from './service/env';
+import { SERVER_PORT, SERVER_ADDRESS } from './service/env';
 
-server.listen(SERVER_PORT);
+server.listen(SERVER_PORT, SERVER_ADDRESS, (err, address) => {
+  console.log(address);
+  if (err) {
+    console.log(err);
+  }
+});

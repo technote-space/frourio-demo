@@ -2,7 +2,7 @@ import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 // import { createHash, validateHash } from '$/service/auth';
 import { validateHash } from '$/service/auth';
-import { API_ORIGIN, BASE_PATH } from '$/service/env';
+import { API_ORIGIN, SERVER_PORT, BASE_PATH } from '$/service/env';
 import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma } from '$/prisma/client';
 
@@ -16,7 +16,7 @@ export type { Admin } from '$/prisma/client';
 
 export const prisma = new PrismaClient();
 
-const createIconUrl = (name: string) => `${API_ORIGIN}${BASE_PATH}/icons/${name}`;
+const createIconUrl = (name: string) => `${API_ORIGIN}${SERVER_PORT === 80 ? '' : `:${SERVER_PORT}`}${BASE_PATH}/icons/${name}`;
 const convertToIconUrl = <T extends { icon: string | null }>(admin: T) => {
   if (admin?.icon && !/\/icons\//.test(admin.icon)) {
     admin.icon = createIconUrl(admin.icon);
