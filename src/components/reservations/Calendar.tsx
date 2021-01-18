@@ -4,8 +4,9 @@ import type { Model, EditComponentPropsWithError } from '~/components/DataTable'
 import type { Dispatch } from '~/store';
 import { useMemo, useCallback, useState, useRef } from 'react';
 import { Dialog, Link, FormControl, FormHelperText } from '@material-ui/core';
+import { TimePicker } from '@material-ui/pickers';
 import OriginalFullCalendar from '@fullcalendar/react';
-import { format, setHours } from 'date-fns';
+import { format, set } from 'date-fns';
 import FullCalendar from '~/components/FullCalendar';
 import { getEventDates } from '~/utils/calendar';
 import { useDispatchContext } from '~/store';
@@ -31,6 +32,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
+const getDateTime = (date: Date | string, time: Date | string): Date => set(new Date(date), {
+  hours: (new Date(time)).getHours(),
+  minutes: (new Date(time)).getMinutes(),
+  seconds: 0,
+  milliseconds: 0,
+});
+
 const Calendar: FC<Props> = ({
   props,
   requiredFields,
@@ -43,16 +51,31 @@ const Calendar: FC<Props> = ({
   const classes = useStyles();
   const { dispatch } = useDispatchContext();
   const calendarRef = useRef<OriginalFullCalendar>(null);
-  const [open, setOpen] = useState(false);
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const [openTimePicker, setOpenTimePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const handleOpen = useCallback(() => {
-    setOpen(true);
+  const [time, setTime] = useState(props.value ? getDateTime(props.value, props.value) : set(new Date(), {
+    hours: resultHour,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  }));
+  console.log(time);
+  const handleOpenCalendar = useCallback(() => {
+    setOpenCalendar(true);
     props.hideError();
   }, []);
-  const handleClose = useCallback(() => {
-    setOpen(false);
+  const handleCloseCalendar = useCallback(() => {
+    setOpenCalendar(false);
+  }, []);
+  const handleOpenTimePicker = useCallback(() => {
+    setOpenTimePicker(true);
+  }, []);
+  const handleCloseTimePicker = useCallback(() => {
+    setOpenTimePicker(false);
   }, []);
 
+  const getResultDate = (date: Date): Date => getDateTime(date, time);
   const isFilledData = useMemo(() => !requiredFields.some(field => !props.rowData[field]), [props.rowData]);
   const fetchEvents = useCallback((info, successCallback) => {
     fetchCallback(dispatch, props.rowData, info).then(data => {
@@ -80,27 +103,60 @@ const Calendar: FC<Props> = ({
       return;
     }
 
-    props.onChange(setHours(args.date, resultHour));
-    setOpen(false);
+    props.onChange(getResultDate(args.date));
+    setOpenCalendar(false);
   }, [isLoading, isFilledData, props.rowData]);
+  const handleTimeClick = useCallback((date: Date) => {
+    const datetime = getDateTime(props.value, date);
+    console.log(props.value, date, datetime);
+    setTime(datetime);
+    props.onChange(datetime);
+    setOpenTimePicker(false);
+  }, [props.value]);
   const handleEventLoading = useCallback(flag => {
     setIsLoading(flag);
   }, []);
+
+  const TimePickerComponent: FC = () => {
+    return <>
+      <Link
+        component="button"
+        variant="body2"
+        onClick={handleOpenTimePicker}
+        data-testid={`select-${target}-time-link`}
+      >
+        {format(time, 'HH:mm')}
+      </Link>
+      <TimePicker
+        open={openTimePicker}
+        onClose={handleCloseTimePicker}
+        value={time}
+        ampm={false}
+        autoOk
+        onChange={handleTimeClick}
+        minutesStep={5}
+        TextFieldComponent={() => <></>}
+      />
+    </>;
+  };
 
   const field = useMemo(() => {
     if (!isFilledData) {
       return null;
     }
-    return <Link
-      component="button"
-      variant="body2"
-      onClick={handleOpen}
-      data-testid={`select-${target}-date-link`}
-    >
-      {props.value ? format(new Date(props.value), 'yyyy-MM-dd') : '選択'}
-    </Link>;
-  }, [isFilledData, props.value]);
-  const calendar = useMemo(() => <Dialog open={open} onClose={handleClose}>
+    return <>
+      <Link
+        component="button"
+        variant="body2"
+        onClick={handleOpenCalendar}
+        data-testid={`select-${target}-date-link`}
+      >
+        {props.value ? format(new Date(props.value), 'yyyy-MM-dd') : '選択'}
+      </Link>
+      {props.value && <TimePickerComponent/>}
+    </>;
+  }, [isFilledData, props.value, time, openTimePicker]);
+  const calendar = useMemo(() => <Dialog open={openCalendar} onClose={handleCloseCalendar}>
     <div className={classes.calendar} data-testid={`select-${target}-date-calendar`}>
       <FullCalendar
         events={fetchEvents}
@@ -111,7 +167,7 @@ const Calendar: FC<Props> = ({
         target={target}
       />
     </div>
-  </Dialog>, [classes, open, isLoading]);
+  </Dialog>, [classes, openCalendar, isLoading]);
 
   return <>
     <FormControl error={Boolean(props.error)}>
