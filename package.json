@@ -1,6 +1,6 @@
 {
   "name": "frourio-demo",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Demo application of Frourio.",
   "keywords": [
     "frourio"
@@ -45,10 +45,10 @@
     "migrate:init": "yarn --cwd server migrate:init",
     "migrate:reset": "yarn --cwd server migrate:reset",
     "migrate:seed": "yarn --cwd server setup:db && yarn --cwd server migrate:seed",
-    "prepare:eslint": "yarn install",
-    "prepare:typecheck": "yarn setup:install && yarn setup:config && license:generate:admin",
     "prepare:cover": "yarn setup:install && yarn setup:config && yarn --cwd server build:prisma",
+    "prepare:eslint": "yarn install",
     "prepare:pages": "yarn setup:install && yarn license:generate:admin && yarn --cwd server build:prisma",
+    "prepare:typecheck": "yarn setup:install && yarn setup:config && license:generate:admin",
     "setup": "yarn install --network-timeout 1000000 && yarn setup:db && yarn build",
     "setup:config": "yarn --cwd server setup:config",
     "setup:db": "yarn --cwd server setup && yarn migrate:seed",
