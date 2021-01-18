@@ -44,7 +44,7 @@
     "migrate:dev": "yarn --cwd server migrate:dev",
     "migrate:init": "yarn --cwd server migrate:init",
     "migrate:reset": "yarn --cwd server migrate:reset",
-    "migrate:seed": "yarn --cwd server migrate:seed",
+    "migrate:seed": "yarn --cwd server setup:db && yarn --cwd server migrate:seed",
     "prepare:eslint": "yarn install",
     "prepare:typecheck": "yarn setup:install && yarn setup:config && license:generate:admin",
     "prepare:cover": "yarn setup:install && yarn setup:config && yarn --cwd server build:prisma",
