@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { startOfDay, addDays } from 'date-fns';
 import { verifyAdmin } from '$/service/auth';
-import { parseQuery, getWhere, getFilterConstraints } from '$/repositories/utils';
+import { parseQuery, getWhere, getFilterConstraints, ensureNotNull } from '$/repositories/utils';
 
 describe('verifyAdmin', () => {
   it('should return true if login api', async() => {
@@ -183,5 +183,18 @@ describe('getWhere', () => {
           },
         }],
     });
+  });
+});
+
+describe('ensureNotNull', () => {
+  it('should return not empty value', () => {
+    expect(ensureNotNull('test')).toBe('test');
+    expect(ensureNotNull(123)).toBe(123);
+    expect(ensureNotNull({})).toEqual({});
+  });
+
+  it('should throw error', () => {
+    expect(() => ensureNotNull(null)).toThrow();
+    expect(() => ensureNotNull(null, 'error message')).toThrow();
   });
 });
