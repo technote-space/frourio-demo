@@ -23,6 +23,10 @@ Frourio (Next.js + Fastify + Prisma) を使用した予約管理業務アプリ�
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Screenshot
+
+![screenshot](https://raw.githubusercontent.com/technote-space/frourio-demo/images/screenshot.gif)
+
 ## Getting Started
 
 1. セットアップ
