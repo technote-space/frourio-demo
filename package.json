@@ -48,7 +48,7 @@
     "prepare:cover": "yarn setup:install && yarn setup:config && yarn --cwd server build:prisma",
     "prepare:eslint": "yarn install",
     "prepare:pages": "yarn setup:install && yarn license:generate:admin && yarn --cwd server build:prisma",
-    "prepare:typecheck": "yarn setup:install && yarn setup:config && license:generate:admin",
+    "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn license:generate:admin",
     "setup": "yarn install --network-timeout 1000000 && yarn setup:db && yarn build",
     "setup:config": "yarn --cwd server setup:config",
     "setup:db": "yarn --cwd server setup && yarn migrate:seed",
