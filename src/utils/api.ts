@@ -35,6 +35,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
         setError(dispatch, error.response.data?.message);
         logout(dispatch);
         if (!fallback) {
+          /* istanbul ignore next */
           return undefined as MaybeUndefined<T>;
         }
 
@@ -47,7 +48,9 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
       }
     }
 
+    /* istanbul ignore next */
     setError(dispatch, error.message);
+    /* istanbul ignore next */
     throw error;
   }
 };
