@@ -14,10 +14,9 @@ import Layout from '~/components/Layout';
 const Index = () => {
   const [themeColor] = useDarkMode();
   const themeObject = useTheme(themeColor);
-  const theme = responsiveFontSizes(createMuiTheme(themeObject));
 
   return useMemo(() => <StylesProvider injectFirst>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={responsiveFontSizes(createMuiTheme(themeObject))}>
       <SnackbarWrapper/>
       <LicenseDialog/>
       <Layout>
@@ -26,7 +25,7 @@ const Index = () => {
         </MuiPickersUtilsProvider>
       </Layout>
     </ThemeProvider>
-  </StylesProvider>, [theme.palette.type]);
+  </StylesProvider>, [themeColor]);
 };
 
 export default Index;

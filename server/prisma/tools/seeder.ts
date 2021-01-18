@@ -14,7 +14,7 @@ export abstract class Seeder {
   protected reservationFactory: Factory<Reservation, Prisma.ReservationCreateInput>;
   protected roomFactory: Factory<Room, Prisma.RoomCreateInput>;
 
-  constructor(prisma: PrismaClient) {
+  protected constructor(prisma: PrismaClient) {
     this.adminFactory = factory<Admin, Prisma.AdminCreateInput>(prisma, 'admin');
     this.guestFactory = factory<Guest, Prisma.GuestCreateInput>(prisma, 'guest');
     this.reservationFactory = factory<Reservation, Prisma.ReservationCreateInput>(prisma, 'reservation');
