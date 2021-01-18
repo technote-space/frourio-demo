@@ -14,6 +14,8 @@
 <p align="center">
 <a href="#getting-started">Getting Started</a>
 <span>|</span>
+<a href="#demo">Demo</a>
+<span>|</span>
 <a href="#author">Author</a>
 </p>
 
