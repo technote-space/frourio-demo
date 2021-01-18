@@ -21,10 +21,7 @@ describe('Dashboard', () => {
       .get(/\/dashboard\/sales/).reply(200, []);
     setToken('token');
 
-    const { findByTestId, getByTestId, getByText } = render(
-      <Index/>,
-      {},
-    );
+    const { findByTestId, getByTestId, getByText } = render(<Index/>);
 
     // tables
     await findByTestId('select-date');
@@ -185,10 +182,7 @@ describe('Dashboard', () => {
       }).reply(200);
     setToken('token');
 
-    const { getByTestId, findAllByText, findByText, getAllByText } = render(
-      <Index/>,
-      {},
-    );
+    const { getByTestId, findAllByText, findByText, getAllByText } = render(<Index/>);
 
     await findByText('山本 美咲');
     await findByText('山本 蓮');
@@ -304,10 +298,7 @@ describe('Dashboard', () => {
       });
     setToken('token');
 
-    const { getByTestId, findByText, getByText } = render(
-      <Index/>,
-      {},
-    );
+    const { getByTestId, findByText, getByText } = render(<Index/>);
 
     await findByText('全部屋');
     expect(getByTestId('select-sales-date')).toBeVisible();

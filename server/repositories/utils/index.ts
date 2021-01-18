@@ -47,7 +47,6 @@ type MaybeUndefined<T> = undefined extends T ? undefined : never;
 
 export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T | never => {
   if (!item) {
-    /* istanbul ignore next */
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     throw new createError('FST_TARGET_NOT_FOUND', errorMessage, 404);

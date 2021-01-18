@@ -1,5 +1,5 @@
 import type { ReactChild, ReactElement } from 'react';
-import type { RenderOptions, RenderResult } from '@testing-library/react';
+import type { RenderResult } from '@testing-library/react';
 import type { PageKeys } from '~/_pages';
 import { render } from '@testing-library/react';
 import { SWRConfig } from 'swr';
@@ -27,11 +27,10 @@ const Providers = ({ children }: ProviderProps) => <StoreContextProvider>
   </SWRConfig>
 </StoreContextProvider>;
 
-const customRender = (ui: ReactElement, options: RenderOptions = {}) => {
+const customRender = (ui: ReactElement) => {
   window.scrollTo = jest.fn();
   return render(ui, {
     wrapper: Providers,
-    ...options,
   });
 };
 
@@ -135,10 +134,7 @@ export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderR
     .get(/\/dashboard\/sales/).reply(200, []));
   setToken('token');
 
-  const result = customRender(
-    <Index/>,
-    {},
-  );
+  const result = customRender(<Index/>);
 
   const buttons = result.container.querySelectorAll('header .MuiSvgIcon-root');
   user.click(buttons[0]);

@@ -9,7 +9,7 @@ setup();
 
 describe('Index', () => {
   it('should show login form', async() => {
-    const { asFragment, getAllByText, getByText, getByLabelText } = render(<Index/>, {});
+    const { asFragment, getAllByText, getByText, getByLabelText } = render(<Index/>);
 
     expect(getAllByText('予約システム')).toHaveLength(2); // header, footer
     expect(getByText('Email address')).toBeVisible();
@@ -29,7 +29,7 @@ describe('Index', () => {
       }).reply(400);
     setInvalidToken();
 
-    const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>, {});
+    const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>);
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
@@ -52,7 +52,7 @@ describe('Index', () => {
         return body;
       }).reply(204);
 
-    const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>, {});
+    const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>);
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
@@ -86,7 +86,6 @@ describe('Index', () => {
 
     const { getByText, getByLabelText, findAllByText, getAllByText, container, findByText, findByTestId } = render(
       <Index/>,
-      {},
     );
 
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -128,10 +127,7 @@ describe('Index', () => {
       .get(/\/dashboard\/sales/).reply(200, []);
     setToken('token');
 
-    const { findByText } = render(
-      <Index/>,
-      {},
-    );
+    const { findByText } = render(<Index/>);
 
     await findByText('Login');
   });
@@ -149,10 +145,7 @@ describe('Index', () => {
     setToken('token');
     setDarkMode(true);
 
-    const { getByText, findByText, findByTestId, container } = render(
-      <Index/>,
-      {},
-    );
+    const { getByText, findByText, findByTestId, container } = render(<Index/>);
 
     await findByTestId('select-date');
 
@@ -177,10 +170,7 @@ describe('Index', () => {
       .get(/\/dashboard\/sales/).reply(200, []);
     setToken('token');
 
-    const { findByText, findByTestId, findAllByTestId, container } = render(
-      <Index/>,
-      {},
-    );
+    const { findByText, findByTestId, findAllByTestId, container } = render(<Index/>);
 
     await findByTestId('select-date');
 

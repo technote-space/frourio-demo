@@ -43,8 +43,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-15-yarn-
         if: env.RUNNING
-      - name: Install Package dependencies
-        run: yarn install
+      - name: Prepare
+        run: yarn prepare:eslint
         if: env.RUNNING
       - name: Check code style
         run: yarn eslint ${{ env.GIT_DIFF_FILTERED }}
@@ -88,11 +88,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-15-yarn-
         if: env.RUNNING
-      - name: Setup
-        run: |
-          yarn setup:install
-          yarn setup:config
-          yarn license:generate
+      - name: Prepare
+        run: yarn prepare:typecheck
         if: env.RUNNING
       - run: yarn typecheck
         if: env.RUNNING
@@ -173,8 +170,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.node }}-yarn-
         if: env.RUNNING
-      - name: Setup
-        run: yarn setup
+      - name: Prepare
+        run: yarn prepare:cover
         if: env.RUNNING
       - name: Run tests
         run: yarn cover
@@ -213,12 +210,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-15-yarn-
 
+      - name: Prepare
+        run: yarn prepare:pages
       - name: Build
-        run: |
-          yarn setup:install
-          yarn license:generate:admin
-          yarn --cwd server build:prisma
-          yarn build:admin
+        run: yarn build:admin
         env:
           API_ORIGIN: 'https://frourio-demo.herokuapp.com'
           SERVER_PORT: 80
