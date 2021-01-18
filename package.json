@@ -118,7 +118,7 @@
     "typescript": "^4.1.3"
   },
   "engines": {
-    "node": "15.3.0",
+    "node": "15.x",
     "yarn": "1.x"
   }
 }
