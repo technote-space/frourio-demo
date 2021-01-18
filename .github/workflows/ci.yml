@@ -102,6 +102,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 15
       - name: Set running flag
         run: echo "RUNNING=1" >> $GITHUB_ENV
       - uses: actions/checkout@v2
