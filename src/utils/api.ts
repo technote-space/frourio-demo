@@ -29,11 +29,13 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
     return result.body;
   } catch (error) {
     console.log(error);
+    /* istanbul ignore next */
     if (isAxiosError(error)) {
       console.log(error.response);
       if (error.response && 401 === error.response.status) {
         setError(dispatch, error.response.data?.message);
         logout(dispatch);
+        /* istanbul ignore next */
         if (!fallback) {
           /* istanbul ignore next */
           return undefined as MaybeUndefined<T>;
@@ -42,6 +44,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
         return fallback;
       }
 
+      /* istanbul ignore next */
       if (error.response) {
         setError(dispatch, error.response.data?.message);
         throw error;

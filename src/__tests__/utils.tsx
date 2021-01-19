@@ -113,6 +113,7 @@ export const setupTimers = () => {
 
 export const findElement = (node: ParentNode, selectors: string): HTMLElement | never => {
   const element = node.querySelector(selectors);
+  /* istanbul ignore next */
   if (element) {
     return element as HTMLElement;
   }

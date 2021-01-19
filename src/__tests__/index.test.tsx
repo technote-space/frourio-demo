@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import Index from '~/pages/index';
-import { render, setup, useNock, setToken, setInvalidToken, setDarkMode, act } from '~/__tests__/utils';
+import { render, setup, useNock, setToken, setInvalidToken, setDarkMode, loadPage, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
 dotenv.config({ path: 'server/.env' });
@@ -84,7 +84,7 @@ describe('Index', () => {
       })
       .get(/\/dashboard\/sales/).reply(200, []);
 
-    const { getByText, getByLabelText, findAllByText, getAllByText, container, findByText, findByTestId } = render(
+    const { getByText, getByLabelText, findAllByText, getAllByText, container, findByTestId } = render(
       <Index/>,
     );
 
@@ -180,5 +180,23 @@ describe('Index', () => {
     user.click((await findAllByTestId('license-item'))[0]);
     user.click(await findByTestId('close-license'));
     user.click(await findByTestId('close-license-list'));
+  });
+
+  it('should reuse component', async() => {
+    const { findByText, findByTestId, container } = await loadPage(
+      'guests',
+      scope => scope
+        .get(/guests\?/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .post('/guests').reply(201),
+    );
+
+    const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
+    user.click(buttons[0]);
+    user.click(await findByText('ダッシュボード'));
+    await findByTestId('select-date');
   });
 });
