@@ -6,7 +6,7 @@ import type { Room, CreateRoomData, UpdateRoomData } from '$/repositories/room';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import { format } from 'date-fns';
 import { getWhere, getOrderBy } from '$/repositories/utils';
-import { getReservations } from '../../repositories/reservation';
+import { getReservations } from '$/repositories/reservation';
 
 export type RoomStatusEvent = {
   title: string;

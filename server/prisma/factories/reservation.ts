@@ -1,13 +1,13 @@
-import type { ReservationCreateInput, Room } from '$/prisma/client';
+import type { Room } from '$/prisma/client';
 import { isBefore } from 'date-fns';
 import { define } from '../tools/define';
 import { ReservationStatus } from '$/types';
 
-define<ReservationCreateInput>('reservation', ((faker, params) => {
-  const number  = faker.random.number({ min: 1, max: (params[0] as Room).number });
+define('reservation', ((faker, params) => {
+  const number = faker.random.number({ min: 1, max: (params[0] as Room).number });
   const checkin = faker.date.between(faker.date.past(2), faker.date.future(2));
   checkin.setHours(15, 0, 0, 0);
-  const nights   = faker.random.number({ min: 1, max: 7 });
+  const nights = faker.random.number({ min: 1, max: 7 });
   const checkout = new Date(checkin.valueOf());
   checkout.setDate(checkin.getDate() + nights);
   checkout.setHours(10, 0, 0, 0);
@@ -15,7 +15,7 @@ define<ReservationCreateInput>('reservation', ((faker, params) => {
   const amount = (params[0] as Room).price * number * nights;
   let status: ReservationStatus;
   let payment: number | undefined;
-  const now    = new Date();
+  const now = new Date();
   if (faker.random.number(1000) < 50) {
     status = 'cancelled';
   } else {
@@ -24,7 +24,7 @@ define<ReservationCreateInput>('reservation', ((faker, params) => {
     } else if (isBefore(now, checkout)) {
       status = 'checkin';
     } else {
-      status  = 'checkout';
+      status = 'checkout';
       payment = amount;
     }
   }

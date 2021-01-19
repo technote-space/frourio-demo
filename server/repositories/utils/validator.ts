@@ -156,7 +156,7 @@ class IsWithinLimitConstrains implements ValidatorConstraintInterface {
     }
 
     this.limit = Number(item[field]);
-    return item !== null && Number(value) <= this.limit;
+    return Number(value) <= this.limit;
   }
 
   defaultMessage() {
