@@ -45,7 +45,7 @@
     "migrate:seed": "yarn --cwd server migrate:seed",
     "prepare:cover": "yarn setup:install && yarn setup:config && yarn --cwd server build:frourio && aspida && yarn --cwd admin license:generate",
     "prepare:eslint": "yarn install",
-    "prepare:pages": "yarn setup:install && yarn --cwd admin license:generate && yarn --cwd server build:prisma",
+    "prepare:pages": "yarn setup:install && yarn setup:config && yarn --cwd server build:frourio && aspida && yarn --cwd admin license:generate",
     "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn --cwd admin license:generate",
     "setup": "yarn install --network-timeout 1000000 && yarn setup:server && yarn setup:admin && yarn build",
     "setup:admin": "yarn --cwd admin setup",
