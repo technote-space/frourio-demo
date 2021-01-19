@@ -101,12 +101,8 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const checkoutTableRef = useRef<any>();
   const refreshTables = () => {
-    if (checkinTableRef.current?.onQueryChange) {
-      checkinTableRef.current.onQueryChange();
-    }
-    if (checkoutTableRef.current?.onQueryChange) {
-      checkoutTableRef.current.onQueryChange();
-    }
+    checkinTableRef.current.onQueryChange();
+    checkoutTableRef.current.onQueryChange();
   };
   const refreshSales = () => {
     dailySales.revalidate().then();
@@ -126,33 +122,29 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     setCancelId(undefined);
   }, []);
   const handleCancel = useCallback(async() => {
-    if (cancelId) {
-      await client.dashboard.cancel.patch({
-        headers: authHeader,
-        body: { id: cancelId },
-      });
-      setCancelId(undefined);
-      refreshTables();
-      refreshSales();
-      setNotice(dispatch, 'キャンセルしました。');
-    }
+    await client.dashboard.cancel.patch({
+      headers: authHeader,
+      body: { id: cancelId! },
+    });
+    setCancelId(undefined);
+    refreshTables();
+    refreshSales();
+    setNotice(dispatch, 'キャンセルしました。');
   }, [cancelId]);
   const handleCloseCheckout = useCallback(() => {
     setCheckoutId(undefined);
     setAmount(undefined);
   }, []);
   const handleCheckout = useCallback(async() => {
-    if (checkoutId) {
-      await client.dashboard.checkout.patch({
-        headers: authHeader,
-        body: { id: checkoutId, payment: amount },
-      });
-      refreshTables();
-      refreshSales();
-      setCheckoutId(undefined);
-      setAmount(undefined);
-      setNotice(dispatch, '更新しました。');
-    }
+    await client.dashboard.checkout.patch({
+      headers: authHeader,
+      body: { id: checkoutId!, payment: amount },
+    });
+    refreshTables();
+    refreshSales();
+    setCheckoutId(undefined);
+    setAmount(undefined);
+    setNotice(dispatch, '更新しました。');
   }, [checkoutId, amount]);
   const handleChangeAmount = useCallback(event => {
     setAmount(Number(event.target.value));

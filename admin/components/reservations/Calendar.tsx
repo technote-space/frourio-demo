@@ -92,10 +92,7 @@ const Calendar: FC<Props> = ({
     });
   }, [props.rowData['roomId'], props.rowData['checkin']]);
   const handleDateClick = useCallback(args => {
-    if (isLoading) {
-      return;
-    }
-    if (!isFilledData) {
+    if (!isFilledData || isLoading) {
       return;
     }
     if (!isValidDate(args.date, props.rowData, getEventDates(calendarRef.current))) {
