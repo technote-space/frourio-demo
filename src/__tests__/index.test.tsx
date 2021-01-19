@@ -75,7 +75,7 @@ describe('Index', () => {
       }).reply(204, undefined, {
         authorization: 'test-token',
       })
-      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/admin').reply(200, { name: null, icon: 'http://localhost:8080/api/icons/dummy.svg' })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
@@ -108,7 +108,7 @@ describe('Index', () => {
 
     // test sidebar
     user.click(buttons[0]);
-    await findByText('test name');
+    await findByTestId('admin-avatar');
     const menuClose = await findByTestId('drawer-layer');
     user.click(menuClose);
   });
