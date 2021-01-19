@@ -22,10 +22,10 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(src|server)/**/*.+(js|ts|jsx|tsx)
+          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx)
           FILES: |
             yarn.lock
-            .eslintrc
+            .eslintrc.js
         if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
       - name: Set running flag
         run: echo "RUNNING=" >> $GITHUB_ENV
@@ -69,8 +69,10 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(src|server)/**/*.+(js|ts|jsx|tsx)
-          FILES: yarn.lock
+          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx)
+          FILES: |
+            yarn.lock
+            tsconfig.json
         if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
       - name: Set running flag
         run: echo "RUNNING=" >> $GITHUB_ENV
@@ -137,11 +139,12 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(src|server)/**/*.+(js|ts|jsx|tsx|snap)
+          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx|snap)
           FILES: |
             yarn.lock
-            jest.config.js
             jest.config.ts
+            jest.global.setup.ts
+            jest.setup.ts
         if: "! contains(env.COMMIT_MESSAGE, '[skip ci]') && ! contains(env.COMMIT_MESSAGE, '[ci skip]')"
       - name: Set running flag
         run: echo "RUNNING=" >> $GITHUB_ENV
@@ -219,13 +222,13 @@ jobs:
           SERVER_PORT: 80
           BASE_PATH: '/api'
       - name: add nojekyll
-        run: touch ./out/.nojekyll
+        run: touch ./admin/out/.nojekyll
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: ./out
+          FOLDER: ./admin/out
 
   publishRelease:
     name: Create Release

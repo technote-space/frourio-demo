@@ -1,15 +1,16 @@
 {
   "name": "frourio-app-server",
-  "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "build": "run-s build:* && webpack --mode=production",
-    "build:prisma": "prisma generate",
+    "build": "yarn build:frourio && webpack --mode=production",
     "build:frourio": "yarn migrate:dev && frourio",
-    "dev": "yarn migrate:dev && run-p dev:*",
+    "build:prisma": "prisma generate",
+    "build:types": "yarn build:frourio",
+    "dev": "run-p dev:*",
     "dev:frourio": "frourio --watch",
     "dev:prisma": "prisma generate --watch",
     "dev:server": "webpack --watch --mode=development",
+    "heroku": "yarn install && sed -i s/sqlite/postgresql/ prisma/schema.prisma && yarn build:prisma && prisma db push --preview-feature && frourio && webpack --mode=production",
     "license:check": "npx license-checker --production --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
     "license:generate": "npx license-checker --json --customPath ../license-format.json > ./license.json",
     "migrate:dev": "prisma migrate dev --preview-feature",
@@ -19,8 +20,8 @@
     "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx shx cp -u .env.example ./.env && npx shx cp -u prisma/.env.example prisma/.env",
     "setup:db": "npx shx rm -f prisma/dev.db && yarn migrate:dev",
-    "heroku": "yarn install && sed -i s/sqlite/postgresql/ prisma/schema.prisma && yarn build:prisma && prisma db push --preview-feature && frourio && webpack --mode=production",
-    "start": "cross-env NODE_ENV=production node index.js"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "update": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
   },
   "dependencies": {
     "@prisma/client": "^2.14.0",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@prisma/cli": "^2.14.0",
+    "@technote-space/material-table": "^2.3.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/faker": "^5.1.5",
     "@types/jest": "^26.0.20",

@@ -90,6 +90,7 @@ export const setDarkMode = (mode: boolean) => {
 
 export const mockStdout = () => {
   console.log = jest.fn();
+  console.error = jest.fn();
 };
 
 export const mockFullCalendar = (start: Date, end: Date, dates: Record<string, Date[]>, events: Record<string, { start: Date; end: Date; }[][]>) => {

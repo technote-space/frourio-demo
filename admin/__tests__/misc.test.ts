@@ -1,6 +1,7 @@
 import { startOfToday, startOfTomorrow } from 'date-fns';
 import { getPriceCalc } from '~/utils/calc';
 import { getEventDates } from '~/utils/calendar';
+import { ensureString } from '~/utils/license';
 
 describe('getPriceCalc', () => {
   it('should return empty string', () => {
@@ -16,5 +17,12 @@ describe('getPriceCalc', () => {
 describe('getEventDates', () => {
   it('should return empty array if invalid calendar', () => {
     expect(getEventDates(null)).toHaveLength(0);
+  });
+});
+
+describe('ensureString', () => {
+  it('should return string', () => {
+    expect(ensureString('test')).toBe('test');
+    expect(ensureString(['test1', 'test2'])).toBe('test1, test2');
   });
 });

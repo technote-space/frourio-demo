@@ -46,7 +46,7 @@
     1. シーディング
     
 
-1. サーバ起動
+2. サーバ起動
    ```bash
    yarn start
    ```
@@ -74,6 +74,7 @@ https://technote-space.github.io/frourio-demo/
 
 ### フロントエンド
 
+* [GitHub Pages](https://docs.github.com/ja/github/working-with-github-pages/about-github-pages)
 * [Next.js](https://nextjs.org/)
     * React Context による SPA
 * [Aspida](https://github.com/aspida/aspida)
@@ -83,6 +84,7 @@ https://technote-space.github.io/frourio-demo/
 
 ### バックエンド
 
+* [Heroku](https://jp.heroku.com/)
 * [Fastify](https://www.fastify.io/)
     * 軽量な Node.js フレームワーク
 * [Prisma](https://www.prisma.io/)
@@ -104,16 +106,16 @@ https://technote-space.github.io/frourio-demo/
 
 ### その他
 
-* GitHub Actions
-    * 目次生成自動化
-    * PRとIssueのラベル付与自動化
-    * PRとIssueのプロジェクト登録自動化
-    * アサイン自動化
-    * 依存モジュール更新自動化
-    * PRに更新内容追記自動化
-    * [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0-beta.4/) に基づく次のバージョンの決定自動化
-    * package.json のバージョン更新自動化
-    * リリースタグ付与自動化
+* [GitHub Actions](https://github.co.jp/features/actions)
+    * 目次生成自動化 [TOC Generator](https://github.com/technote-space/toc-generator)
+    * PRとIssueのラベル付与自動化 [PR Labeler](https://github.com/TimonVS/pr-labeler-action), [Pull Request Labeler](https://github.com/actions/labeler)
+    * PRとIssueのプロジェクト登録自動化 [Create Project Card Action](https://github.com/technote-space/create-project-card-action)
+    * アサイン自動化 [Assign Author](https://github.com/technote-space/assign-author)
+    * 依存モジュール更新自動化 [Create PR Action](https://github.com/technote-space/create-pr-action)
+    * PRに更新内容追記自動化 [PR Commit Body Action](https://github.com/technote-space/pr-commit-body-action)
+    * [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0-beta.4/) に基づく次のバージョンの決定自動化 [Release Type Action](https://github.com/technote-space/release-type-action), [Get Next Version Action](https://github.com/technote-space/get-next-version-action)
+    * package.json のバージョン更新自動化 [Package Version Check Action](https://github.com/technote-space/package-version-check-action)
+    * リリースタグ付与自動化 [actions/github-script](https://github.com/actions/github-script)
 
 ## Author
 

@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { setup, loadPage, findElement } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 
-dotenv.config({ path: 'server/.env' });
+dotenv.config({ path: '../server/.env' });
 
 setup();
 

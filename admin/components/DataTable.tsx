@@ -60,21 +60,19 @@ const controlValidationEditField = <T extends Model>(
   setValidationErrors: Dispatch<SetStateAction<Record<string, string>>>,
   getProps: (props: any) => any = (props) => props,
 ): FC<EditFieldProps<T>> => addDisplayName<FC<EditFieldProps<T>>>(prefix, (props) => {
-  if (props.columnDef && props.columnDef.field) {
-    const key = props.columnDef.field as string;
-    if (key in validationErrors) {
-      return <EditField {...getProps({
-        ...props,
-        onChange: value => {
-          delete validationErrors[key];
-          setValidationErrors(validationErrors);
-          props.onChange(value);
-        },
-        error: true,
-        helperText: validationErrors[key],
-        value: props.value === null ? undefined : props.value,
-      })}/>;
-    }
+  const key = props.columnDef.field as string;
+  if (key in validationErrors) {
+    return <EditField {...getProps({
+      ...props,
+      onChange: value => {
+        delete validationErrors[key];
+        setValidationErrors(validationErrors);
+        props.onChange(value);
+      },
+      error: true,
+      helperText: validationErrors[key],
+      value: props.value === null ? undefined : props.value,
+    })}/>;
   }
 
   return <EditField {...getProps({

@@ -99,7 +99,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           authHeader={authHeader}
           props={props}
         />,
-        render: data => data['checkin'] ? format(new Date(data['checkin']), 'yyyy-MM-dd') : '',
+        render: data => format(new Date(data['checkin']), 'yyyy-MM-dd'),
         validate: data => !!data['checkin'],
       },
       {
@@ -111,7 +111,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
           authHeader={authHeader}
           props={props}
         />,
-        render: data => data['checkout'] ? format(new Date(data['checkout']), 'yyyy-MM-dd HH:mm') : '',
+        render: data => format(new Date(data['checkout']), 'yyyy-MM-dd HH:mm'),
         validate: data => !!data['checkout'],
       },
       { title: 'ステータス', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },

@@ -9,8 +9,8 @@ node_modules
 /coverage
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
 /build
@@ -34,5 +34,5 @@ yarn-error.log*
 /.idea/
 /.vscode/
 
-# license
+# generated files
 license.json

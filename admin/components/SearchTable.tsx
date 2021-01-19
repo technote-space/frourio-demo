@@ -66,9 +66,7 @@ const SearchTable = <T extends {
     icon: tableIcons.Check as SvgIconComponent,
     tooltip: 'Select',
     onClick: (event, data) => {
-      if ('id' in data) {
-        props.onChange(data);
-      }
+      props.onChange(data);
       setOpen(false);
     },
   }], []);

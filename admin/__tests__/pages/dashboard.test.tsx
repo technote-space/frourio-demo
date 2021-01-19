@@ -4,7 +4,7 @@ import { render, useNock, setup, setToken, findElement, act, waitFor } from '~/_
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
 
-dotenv.config({ path: 'server/.env' });
+dotenv.config({ path: '../server/.env' });
 
 setup();
 
