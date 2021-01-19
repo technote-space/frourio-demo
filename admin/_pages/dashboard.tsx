@@ -124,6 +124,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const handleCancel = useCallback(async() => {
     await client.dashboard.cancel.patch({
       headers: authHeader,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       body: { id: cancelId! },
     });
     setCancelId(undefined);
@@ -138,6 +139,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const handleCheckout = useCallback(async() => {
     await client.dashboard.checkout.patch({
       headers: authHeader,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       body: { id: checkoutId!, payment: amount },
     });
     refreshTables();
