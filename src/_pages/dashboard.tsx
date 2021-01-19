@@ -77,8 +77,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
-  console.log('page::Dashboard');
-
   const classes = useStyles();
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();

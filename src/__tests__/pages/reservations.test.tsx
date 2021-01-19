@@ -423,13 +423,17 @@ describe('Reservations', () => {
     user.click(await findByTestId('checkin-mock-calendar')); // click after loading (valid date)
     await findByText(format(addDays(startOfMonth(startOfToday()), 4), 'yyyy-MM-dd'));
 
-    // select checkout
+    // select checkout date
     user.click(await findByTestId('select-checkout-date-link'));
     await findByTestId('select-checkout-date-calendar');
     await findByTestId('checkout-mock-calendar-loading');
     await findByTestId('checkout-mock-calendar-not-loading');
     user.click(await findByTestId('checkout-mock-calendar')); // click after loading (valid date)
     await findByText(format(addDays(startOfMonth(startOfToday()), 6), 'yyyy-MM-dd'));
+
+    // select checkout time
+    user.click(await findByTestId('select-checkout-time-link'));
+    user.click(await findByText('OK'));
 
     // save
     await findByText('¥298552 = ¥37319 * 4人 * 2泊');
@@ -558,8 +562,8 @@ describe('Reservations', () => {
     // edit
     user.click(container.querySelectorAll('[title="Edit"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
-    expect(input).toHaveLength(2);
-    user.type(input[1], '12345');
+    expect(input).toHaveLength(3);
+    user.type(input[2], '12345');
     user.click(container.querySelectorAll('[title="Save"]')[0]);
 
     // notice

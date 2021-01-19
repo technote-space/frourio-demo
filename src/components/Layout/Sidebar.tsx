@@ -99,6 +99,7 @@ const Sidebar: FC = () => {
             className={classes.avatar}
             src={icon}
             alt={name ?? 'admin'}
+            data-testid="admin-avatar"
           />}
           {name}
         </div>

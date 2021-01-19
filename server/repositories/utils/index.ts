@@ -192,11 +192,10 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
   const _query = (typeof query === 'string' ? JSON.parse(query) as Query<T> : query) as Query<T> & { 'filters[]'?: string };
   if ('filters[]' in _query && _query['filters[]']) {
     if (typeof _query['filters[]'] === 'string') {
-      const filters     = JSON.parse(_query['filters[]']) as Filter<T>;
+      const filters = JSON.parse(_query['filters[]']) as Filter<T>;
       _query['filters'] = [filters];
     } else if (Array.isArray(_query['filters[]'])) {
-      const filters     = (_query['filters[]'] as string[]).map(filter => JSON.parse(filter)) as Filter<T>[];
-      _query['filters'] = filters;
+      _query['filters'] = (_query['filters[]'] as string[]).map(filter => JSON.parse(filter)) as Filter<T>[];
     }
 
     delete _query['filters[]'];
