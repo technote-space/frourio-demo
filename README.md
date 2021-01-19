@@ -74,6 +74,7 @@ https://technote-space.github.io/frourio-demo/
 
 ### フロントエンド
 
+* [GitHub Pages](https://docs.github.com/ja/github/working-with-github-pages/about-github-pages)
 * [Next.js](https://nextjs.org/)
     * React Context による SPA
 * [Aspida](https://github.com/aspida/aspida)
@@ -83,6 +84,7 @@ https://technote-space.github.io/frourio-demo/
 
 ### バックエンド
 
+* [Heroku](https://jp.heroku.com/)
 * [Fastify](https://www.fastify.io/)
     * 軽量な Node.js フレームワーク
 * [Prisma](https://www.prisma.io/)
@@ -100,7 +102,7 @@ https://technote-space.github.io/frourio-demo/
     * テスト
     * GitHub Pages
     * GitHub Releases
-* [Heroku](https://jp.heroku.com/)
+* Heroku
 
 ### その他
 
