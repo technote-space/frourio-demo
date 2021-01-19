@@ -60,7 +60,6 @@ const Calendar: FC<Props> = ({
     seconds: 0,
     milliseconds: 0,
   }));
-  console.log(time);
   const handleOpenCalendar = useCallback(() => {
     setOpenCalendar(true);
     props.hideError();
@@ -108,7 +107,6 @@ const Calendar: FC<Props> = ({
   }, [isLoading, isFilledData, props.rowData]);
   const handleTimeClick = useCallback((date: Date) => {
     const datetime = getDateTime(props.value, date);
-    console.log(props.value, date, datetime);
     setTime(datetime);
     props.onChange(datetime);
     setOpenTimePicker(false);
