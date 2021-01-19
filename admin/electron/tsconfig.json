@@ -1,12 +1,7 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "$/*": [
-        "./*"
-      ]
-    },
+    "outDir": "./main",
     "noEmit": false
   },
   "ts-node": {

@@ -3,7 +3,7 @@ import { setup, mockFullCalendar, loadPage, findElement } from '~/__tests__/util
 import user from '@testing-library/user-event';
 import { startOfToday, startOfMonth, endOfMonth, addDays, format, setHours } from 'date-fns';
 
-dotenv.config({ path: 'server/.env' });
+dotenv.config({ path: '../server/.env' });
 
 setup();
 

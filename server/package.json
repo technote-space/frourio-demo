@@ -2,10 +2,11 @@
   "name": "frourio-app-server",
   "license": "MIT",
   "scripts": {
-    "build": "run-s build:* && webpack --mode=production",
+    "build": "yarn build:frourio && webpack --mode=production",
     "build:frourio": "yarn migrate:dev && frourio",
     "build:prisma": "prisma generate",
-    "dev": "yarn migrate:dev && run-p dev:*",
+    "build:types": "yarn build:frourio",
+    "dev": "run-p dev:*",
     "dev:frourio": "frourio --watch",
     "dev:prisma": "prisma generate --watch",
     "dev:server": "webpack --watch --mode=development",
@@ -19,7 +20,8 @@
     "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx shx cp -u .env.example ./.env && npx shx cp -u prisma/.env.example prisma/.env",
     "setup:db": "npx shx rm -f prisma/dev.db && yarn migrate:dev",
-    "start": "cross-env NODE_ENV=production node index.js"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "update": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
   },
   "dependencies": {
     "@prisma/client": "^2.14.0",

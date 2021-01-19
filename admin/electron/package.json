@@ -26,7 +26,7 @@
     "setup:config": "npx shx cp -u ../../server/.env.example ./.env && npx shx cp -u ../../server/prisma/.env.example ./prisma/.env && npx shx cp -u ../../server/prisma/schema.prisma ./prisma/schema.prisma",
     "setup:db": "npx shx rm -f prisma/dev.db && prisma migrate dev --name init --preview-feature && yarn ts-node ./seeder.ts",
     "build": "run-s build:*",
-    "build:license": "yarn license:generate && npx shx cp -u ./license.json ../../license.json",
+    "build:license": "yarn license:generate && npx shx cp -u ./license.json ../license.json",
     "build:client": "yarn --cwd ../.. build:admin",
     "build:electron": "webpack --progress --mode=production",
     "dev": "MODE=dev electron .",
@@ -35,7 +35,8 @@
     "license:check": "npx license-checker --production --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
     "license:generate": "run-s license:generate:*",
     "license:generate:prepare": "npx license-checker --json --customPath ../../license-format.json > ./client-license.json && npx license-checker --json --customPath ../../license-format.json --start ../.. > ./admin-license.json && npx license-checker --json --customPath ../../license-format.json --start ../../server > ./server-license.json",
-    "license:generate:merge": "jq -s add client-license.json admin-license.json server-license.json > license.json"
+    "license:generate:merge": "jq -s add client-license.json admin-license.json server-license.json > license.json",
+    "update": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
   },
   "dependencies": {
     "@prisma/client": "^2.14.0",

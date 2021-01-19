@@ -6,15 +6,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "baseUrl": ".",
-    "paths": {
-      "~/*": [
-        "./src/*"
-      ],
-      "$/*": [
-        "./server/*"
-      ]
-    },
     "allowJs": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -29,22 +20,17 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "noImplicitAny": false,
-    "strict": false
-  },
-  "exclude": [
-    "node_modules",
-    "server",
-    "src/electron"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "isolatedModules": false
+    "strict": true,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./admin/*"
+      ],
+      "$/*": [
+        "./server/*"
+      ]
     }
   }
 }

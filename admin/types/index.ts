@@ -39,10 +39,17 @@ export type MaybeUndefined<T> = undefined extends T ? undefined : never;
 
 export type ThemeColor = 'light' | 'dark';
 
+export type RawLicenseType = {
+  name: string;
+  version: string;
+  licenses: string | Array<string>;
+  repository?: string;
+  licenseText: string;
+};
 export type License = {
   name: string;
   version: string;
   licenses: string;
   repository?: string;
   licenseText: string;
-}
+};

@@ -8,9 +8,9 @@ const config: { projects: Config.InitialOptions[] } = {
       displayName: 'admin',
       clearMocks: true,
       testRunner: 'jest-circus/runner',
-      testMatch: ['<rootDir>/src/__tests__/**/*.test.ts?(x)'],
+      testMatch: ['<rootDir>/admin/__tests__/**/*.test.ts?(x)'],
       transform: {
-        '^.+\\.tsx$': 'babel-jest',
+        '^.+\\.tsx$': ['babel-jest', { configFile: './admin/babel.config.js' }],
         '^.+\\.ts$': 'ts-jest',
       },
       moduleNameMapper: {
