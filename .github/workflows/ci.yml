@@ -216,7 +216,8 @@ jobs:
       - name: Prepare
         run: yarn prepare:pages
         env:
-          API_ORIGIN: 'https://frourio-demo.herokuapp.com'
+#          API_ORIGIN: 'https://frourio-demo.herokuapp.com'
+          API_ORIGIN: 'https://frourio-demo.technote.space'
           SERVER_PORT: 80
           BASE_PATH: '/api'
       - name: Build
