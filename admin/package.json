@@ -17,16 +17,16 @@
     "email": "technote.space@gmail.com",
     "url": "https://technote.space"
   },
+  "port": 3000,
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build && next export",
-    "dev": "run-p dev:*",
-    "dev:admin": "next dev -p 3000",
+    "dev": "yarn kill && next dev -p $npm_package_port",
+    "kill": "lsof -i:$npm_package_port -t | xargs kill -9",
     "license:check": "npx license-checker --production --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
     "license:generate": "npx license-checker --json --customPath ../license-format.json > ./license.json",
     "setup": "yarn install --network-timeout 1000000",
-    "start": "run-p start:*",
-    "start:admin": "next start -p 3000",
+    "start": "yarn kill && next start -p $npm_package_port",
     "update": "npx npm-check-updates -u --timeout 100000 -x @date-io/date-fns,next-transpile-modules && yarn install && yarn upgrade && yarn audit"
   },
   "dependencies": {
