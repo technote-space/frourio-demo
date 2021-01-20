@@ -34,7 +34,6 @@
     "dev:admin": "yarn --cwd admin dev",
     "dev:aspida": "aspida --watch",
     "dev:server": "yarn --cwd server dev",
-    "heroku-postbuild": "YARN_PRODUCTION=false yarn --cwd server heroku",
     "license:check": "yarn --cwd admin license:check && yarn --cwd server license:check && yarn --cwd admin/electron license:check",
     "license:generate": "yarn --cwd admin license:generate && yarn --cwd server license:generate && yarn --cwd admin/electron license:generate",
     "lint": "eslint --ext .ts,.js,.tsx .",
