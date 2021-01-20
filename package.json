@@ -1,6 +1,6 @@
 {
   "name": "frourio-demo",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Demo application of Frourio.",
   "keywords": [
     "frourio"
@@ -80,7 +80,6 @@
     "jest": "^26.6.3",
     "jest-canvas-mock": "^2.3.0",
     "jest-circus": "^26.6.3",
-    "next-transpile-modules": "^4.1.0",
     "npm-run-all": "^4.1.5",
     "react": "^17.0.1",
     "ts-jest": "^26.4.4",
