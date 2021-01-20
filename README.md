@@ -84,7 +84,6 @@ https://technote-space.github.io/frourio-demo/
 
 ### バックエンド
 
-* [Heroku](https://jp.heroku.com/)
 * [Fastify](https://www.fastify.io/)
     * 軽量な Node.js フレームワーク
 * [Prisma](https://www.prisma.io/)
@@ -102,7 +101,6 @@ https://technote-space.github.io/frourio-demo/
     * テスト
     * GitHub Pages
     * GitHub Releases
-* [Heroku](https://jp.heroku.com/)
 
 ### その他
 
