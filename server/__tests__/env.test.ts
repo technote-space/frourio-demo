@@ -11,7 +11,7 @@ describe('env', () => {
     process.env.SERVER_ADDRESS = '0.0.0.0';
     process.env.BASE_PATH = '/api/test';
     process.env.API_ORIGIN = 'http://example.com';
-    process.env.API_URL = 'https://example.com/abc/'
+    process.env.API_URL = 'https://example.com/abc/';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../service/env');
