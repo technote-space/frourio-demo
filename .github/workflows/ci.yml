@@ -215,12 +215,12 @@ jobs:
 
       - name: Prepare
         run: yarn prepare:pages
-      - name: Build
-        run: yarn build:admin
         env:
           API_ORIGIN: 'https://frourio-demo.herokuapp.com'
           SERVER_PORT: 80
           BASE_PATH: '/api'
+      - name: Build
+        run: yarn build:admin
       - name: add nojekyll
         run: touch ./admin/out/.nojekyll
       - name: Deploy
