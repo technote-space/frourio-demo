@@ -9,5 +9,6 @@ const SERVER_ADDRESS = process.env.SERVER_ADDRESS ?? 'localhost'; // consider he
 const BASE_PATH = process.env.BASE_PATH ?? '';
 const API_ORIGIN = process.env.API_ORIGIN ?? '';
 const URL_PORT = SERVER_PORT === 80 ? '' : `:${SERVER_PORT}`;
+const API_URL = `${(process.env.API_URL ?? `${API_ORIGIN}${URL_PORT}`).replace(/\/$/, '')}${BASE_PATH}`;
 
-export { JWT_SECRET, SERVER_PORT, SERVER_ADDRESS, BASE_PATH, API_ORIGIN, URL_PORT };
+export { JWT_SECRET, SERVER_PORT, SERVER_ADDRESS, BASE_PATH, API_ORIGIN, URL_PORT, API_URL };
