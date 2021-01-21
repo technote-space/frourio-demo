@@ -11,6 +11,7 @@ type Props = CalendarOptions & {
   target: string;
 }
 
+/* istanbul ignore next */
 const FullCalendar: FC<Props> = (props: Props) => {
   /* istanbul ignore next */
   const { calendarRef, ...calendarOptions } = props;

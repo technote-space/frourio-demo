@@ -73,15 +73,13 @@ const Login: FC = () => {
           >
             {((props) => <Form onSubmit={props.handleSubmit}>
               {settings.map(setting => <Field name={setting.id} key={setting.id}>
-                {({ field, form }) =>
+                {({ field }) =>
                   <FormControl
-                    error={form.errors[setting.id] && form.touched[setting.id]}
                     required={setting.isRequired}
                     className={classes.input}
                   >
                     <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
                     <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
-                    <div className={classes.error}>{form.errors[setting.id]}</div>
                   </FormControl>}
               </Field>)}
               <div className={classes.login}>

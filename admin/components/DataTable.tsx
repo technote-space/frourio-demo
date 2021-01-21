@@ -71,13 +71,13 @@ const controlValidationEditField = <T extends Model>(
       },
       error: true,
       helperText: validationErrors[key],
-      value: props.value === null ? undefined : props.value,
+      value: props.value,
     })}/>;
   }
 
   return <EditField {...getProps({
     ...props,
-    value: props.value === null ? undefined : props.value,
+    value: props.value,
   })}/>;
 });
 
@@ -107,22 +107,20 @@ const DataTable = <T extends Model, >({
     if ('editComponentWithError' in column && column.editComponentWithError) {
       // eslint-disable-next-line react/display-name
       column.editComponent = (props: EditComponentProps<T>) => {
-        if (column.editComponentWithError) {
-          const key = props.columnDef.field as string;
-          return column.editComponentWithError({
-            ...props,
-            error: key in validationErrors,
-            helperText: validationErrors[key] ?? undefined,
-            hideError: () => {
-              if (key in validationErrors) {
-                delete validationErrors[key];
-                setValidationErrors(validationErrors);
-                props.onChange(props.value);
-              }
-            },
-          });
-        }
-        return <></>;
+        const key = props.columnDef.field as string;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return column.editComponentWithError!({
+          ...props,
+          error: key in validationErrors,
+          helperText: validationErrors[key] ?? undefined,
+          hideError: () => {
+            if (key in validationErrors) {
+              delete validationErrors[key];
+              setValidationErrors(validationErrors);
+              props.onChange(props.value);
+            }
+          },
+        });
       };
     }
     return column;
@@ -149,9 +147,9 @@ const DataTable = <T extends Model, >({
   const handleValidationError = error => {
     if (!unmountRef.current && isAxiosError(error) && error.response?.data) {
       const validationError = error.response.data as ValidationError[];
-      setValidationErrors(Object.assign({}, ...validationError.map(error => ({
-        [error.property]: Object.values(error.constraints ?? {})[0],
-      }))));
+      setValidationErrors(Object.assign({}, ...validationError.map(error => error.constraints ? {
+        [error.property]: Object.values(error.constraints)[0],
+      } : undefined)));
     }
     throw error;
   };

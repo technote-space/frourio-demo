@@ -63,7 +63,7 @@ export default class MockFullCalendar extends Component<CalendarProps, CalendarS
   getApi() {
     return {
       getEvents: () => {
-        const events = this.props.calendarEvents[this.props.target][Math.min(this.state.eventsIndex, this.props.calendarEvents[this.props.target].length - 1)];
+        const events = !this.props.calendarEvents[this.props.target]?.length ? [] : this.props.calendarEvents[this.props.target][Math.min(this.state.eventsIndex, this.props.calendarEvents[this.props.target].length - 1)];
         this.setState(prevState => ({ eventsIndex: prevState.eventsIndex + 1 }));
         return events;
       },

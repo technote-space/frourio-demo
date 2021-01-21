@@ -117,6 +117,7 @@ describe('Index', () => {
     useNock()
       .get('/admin').reply(401, {
         message: 'test error',
+        tokenExpired: true,
       })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
@@ -130,6 +131,23 @@ describe('Index', () => {
     const { findByText } = render(<Index/>);
 
     await findByText('Login');
+  });
+
+  it('should not logout automatically', async() => {
+    useNock()
+      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/dashboard/rooms').reply(401)
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+    setToken('token');
+
+    const { findByTestId } = render(<Index/>);
+
+    await findByTestId('select-date');
   });
 
   it('should login automatically and logout', async() => {
