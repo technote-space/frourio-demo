@@ -68,7 +68,7 @@ type Crud = 'create' | 'read' | 'update' | 'delete' | 'all';
 export const getRolesValue = (settings: { domain: string, targets: Crud[] }[]): Role[] => {
   const roles: Role[] = [];
   settings.forEach(setting => {
-    const domain = setting.domain.replace(/[\s-.]+/g, '_')
+    const domain = setting.domain.replace(/[\s-.]+/g, '_');
     const label = domain.slice(0, 1).toUpperCase() + domain.slice(1).replace('_', ' ');
     roles.push({ role: domain, name: label });
     setting.targets.forEach(target => {
