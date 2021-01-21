@@ -10,7 +10,7 @@ export type AdditionalRequest = {
 export default defineHooks(() => ({
   onRequest: async(request, reply) => {
     if (!await verifyAdmin(request)) {
-      reply.status(401).send();
+      reply.status(401).send({ tokenExpired: true });
     }
   },
   preHandler: (request, reply, done) => {

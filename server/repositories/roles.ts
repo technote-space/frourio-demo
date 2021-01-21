@@ -1,0 +1,28 @@
+import { depend } from 'velona';
+import { PrismaClient } from '$/prisma/client';
+import type { Prisma } from '$/prisma/client';
+import { ensureNotNull } from '$/repositories/utils';
+
+export type SearchRoleArgs = Prisma.FindManyRoleArgs;
+export type FindRoleArgs = Prisma.FindFirstRoleArgs;
+export type { Role } from '$/prisma/client';
+
+const prisma = new PrismaClient();
+
+export const getRoles = depend(
+  { prisma: prisma as { role: { findMany: typeof prisma.role.findMany } } },
+  async({ prisma }, args?: SearchRoleArgs) => prisma.role.findMany(args),
+);
+
+export const getRoleCount = depend(
+  { prisma: prisma as { role: { count: typeof prisma.role.count } } },
+  async({ prisma }, args?: Omit<SearchRoleArgs, 'select' | 'include'>) => prisma.role.count(args),
+);
+
+export const getRole = depend(
+  { prisma: prisma as { role: { findFirst: typeof prisma.role.findFirst } } },
+  async({ prisma }, role: string | undefined, args?: FindRoleArgs) => ensureNotNull(await prisma.role.findFirst({
+    where: { role },
+    ...args,
+  })),
+);

@@ -1,21 +1,48 @@
 import type { FastifyRequest } from 'fastify';
 import type { AuthorizationPayload } from '$/types';
+import type { Role } from '$/repositories/roles';
 import { depend } from 'velona';
-import bcrypt from 'bcryptjs';
 import { getAdmin } from '$/repositories/admin';
 import 'fastify-jwt';
-
-export const createHash = (data: string): string => bcrypt.hashSync(data, 10);
-export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);
 
 export const createAuthorizationPayload = depend(
   { getAdmin },
   async({ getAdmin }, id: number): Promise<AuthorizationPayload> => ({
     id,
-    roles: ((await getAdmin(id)).roles ?? '').split('|'),
+    roles: (await getAdmin(id)).roles.map(role => role.role),
   }),
 );
-export const verifyAdmin = async(request: FastifyRequest, roles?: string[]): Promise<boolean> => {
+const getRole = (domain: string, method: string, hasParams?: boolean): string => {
+  switch (method.trim().toLocaleUpperCase()) {
+    case 'GET':
+      if (hasParams) {
+        return `${domain}_detail`;
+      }
+
+      return domain;
+    case 'POST':
+      return `${domain}_create`;
+    case 'PATCH':
+      return `${domain}_update`;
+    case 'DELETE':
+      return `${domain}_delete`;
+    /* istanbul ignore next */
+    default:
+      /* istanbul ignore next */
+      return domain;
+  }
+};
+const getRoles = (request: FastifyRequest, domain: string | undefined): string[] => {
+  if (!domain) {
+    return [];
+  }
+
+  const roles = [domain];
+  roles.push(getRole(domain, request.method, !!request.params && typeof request.params === 'object' && !!Object.keys(request.params as {}).length));
+
+  return [...new Set(roles)];
+};
+export const verifyAdmin = async(request: FastifyRequest, domain?: string): Promise<boolean> => {
   if (request.url === '/api/login' && request.method === 'POST') {
     // ディレクトリレベルのフックは上書きできないようなのでここで除外
     //
@@ -24,9 +51,10 @@ export const verifyAdmin = async(request: FastifyRequest, roles?: string[]): Pro
     return true;
   }
 
+  const roles = getRoles(request, domain);
   try {
     const payload = await request.jwtVerify() as AuthorizationPayload | null;
-    if (!payload?.id || (roles?.length && (!payload.roles.length || roles.some(role => !payload.roles.includes(role))))) {
+    if (!payload?.id || (roles.length && (!payload.roles.length || roles.some(role => !payload.roles.includes(role))))) {
       return false;
     }
   } catch {
@@ -34,4 +62,30 @@ export const verifyAdmin = async(request: FastifyRequest, roles?: string[]): Pro
   }
 
   return true;
+};
+
+type Crud = 'create' | 'read' | 'update' | 'delete' | 'all';
+export const getRolesValue = (settings: { domain: string, targets: Crud[] }[]): Role[] => {
+  const roles: Role[] = [];
+  settings.forEach(setting => {
+    const domain = setting.domain.replace(/[\s-.]+/g, '_')
+    const label = domain.slice(0, 1).toUpperCase() + domain.slice(1).replace('_', ' ');
+    roles.push({ role: domain, name: label });
+    setting.targets.forEach(target => {
+      if (target === 'create' || target === 'all') {
+        roles.push({ role: getRole(domain, 'post'), name: `Create in ${label}` });
+      }
+      if (target === 'read' || target === 'all') {
+        roles.push({ role: getRole(domain, 'get', true), name: `Get detail in ${label}` });
+      }
+      if (target === 'update' || target === 'all') {
+        roles.push({ role: getRole(domain, 'patch'), name: `Update in ${label}` });
+      }
+      if (target === 'delete' || target === 'all') {
+        roles.push({ role: getRole(domain, 'delete'), name: `Delete in ${label}` });
+      }
+    });
+  });
+
+  return roles;
 };

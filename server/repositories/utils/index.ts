@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { Prisma, PrismaClient } from '$/prisma/client';
+import type { Prisma, PrismaClient, StringFieldUpdateOperationsInput } from '$/prisma/client';
 import type { Column, Query, Filter } from '@technote-space/material-table';
+import type { MaybeUndefined } from '$/types';
+import bcrypt from 'bcryptjs';
 import createError from 'fastify-error';
 import { startOfDay, addDays } from 'date-fns';
 
@@ -20,10 +22,11 @@ export type Models = {
   } ? key : never
 }[keyof PrismaClient]
 type ModelWhere<T extends object> = {
-  [key in keyof T]?: T[key] extends number ? (Prisma.IntFilter | number) :
-    T[key] extends string ? (Prisma.StringFilter | string) :
-      T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
-        never
+  [key in keyof T]?: T[key] extends undefined ? never :
+    T[key] extends number ? (Prisma.IntFilter | number) :
+      T[key] extends string ? (Prisma.StringFilter | string) :
+        T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
+          never
 };
 type WhereSub<T extends object> = ModelWhere<T> | {
   AND?: Prisma.Enumerable<WhereSub<T>>;
@@ -43,7 +46,6 @@ type DateConstraint<T extends object> = {
   date?: Date;
   key: keyof T;
 }
-type MaybeUndefined<T> = undefined extends T ? undefined : never;
 
 export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T | never => {
   if (!item) {
@@ -219,4 +221,18 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
   });
 
   return _query;
+};
+
+export const createHash = (data: string): string => bcrypt.hashSync(data, 10);
+export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);
+export const createAdminPasswordHash = <T extends StringFieldUpdateOperationsInput | string | undefined>(password?: T): string | MaybeUndefined<T> => {
+  if (password && typeof password === 'object') {
+    return createAdminPasswordHash(password.set);
+  }
+
+  if (!password) {
+    return undefined as MaybeUndefined<T>;
+  }
+
+  return createHash(password as string);
 };
