@@ -14,6 +14,7 @@ export const closeLicense = (dispatch: Dispatch) => dispatch({ type: 'CLOSE_LICE
 export const changePage = (dispatch: Dispatch, page: PageKeys) => dispatch({ type: 'PAGE', page });
 export const changeTitle = (dispatch: Dispatch, title: string) => dispatch({ type: 'TITLE', title });
 export const logout = (dispatch: Dispatch) => dispatch({ type: 'LOGOUT' });
+export const tokenRemoved = (dispatch: Dispatch) => dispatch({ type: 'TOKEN_REMOVED' });
 
 export const setNotice = (dispatch: Dispatch, message: string): void => dispatch({
   type: 'SET_NOTICE',

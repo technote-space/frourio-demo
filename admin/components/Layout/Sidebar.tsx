@@ -35,7 +35,7 @@ const Sidebar: FC = () => {
   const classes = useStyles();
   const { isSidebarOpen, icon, name, page: _page } = useStoreContext();
   const { dispatch } = useDispatchContext();
-  const [auth, , removeToken] = useAuthToken();
+  const [auth] = useAuthToken();
   const onClose = useCallback(() => closeSidebar(dispatch), []);
 
   const MappedPageItem: FC<{ slug: PageKeys, page: Page }> = ({ slug, page }) => {
@@ -58,7 +58,7 @@ const Sidebar: FC = () => {
   };
   const MappedMenuItem: FC<{ slug: MenuKeys, menu: Menu }> = ({ slug, menu }) => {
     const handleClick = useCallback(() => {
-      menu.onClick({ dispatch, removeToken });
+      menu.onClick(dispatch);
       closeSidebar(dispatch);
     }, []);
 

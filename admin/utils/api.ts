@@ -34,8 +34,10 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
       console.log(error.response);
       if (error.response && 401 === error.response.status) {
         setError(dispatch, error.response.data?.message);
-        logout(dispatch);
-        /* istanbul ignore next */
+        if (error.response.data?.tokenExpired) {
+          logout(dispatch);
+        }
+
         if (!fallback) {
           /* istanbul ignore next */
           return undefined as MaybeUndefined<T>;

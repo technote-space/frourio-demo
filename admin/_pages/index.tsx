@@ -1,4 +1,5 @@
-import type { Page, Menu, MenuProps } from '~/types';
+import type { Page, Menu } from '~/types';
+import type { Dispatch } from '~/store';
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
@@ -40,15 +41,14 @@ export const menus: Record<string, Menu> = {
   logout: {
     label: 'ログアウト',
     icon: LogoutIcon,
-    onClick: ({ dispatch, removeToken }: MenuProps) => {
-      removeToken();
+    onClick: (dispatch: Dispatch) => {
       logout(dispatch);
     },
   },
   license: {
     label: 'ライセンス',
     icon: LicenseIcon,
-    onClick: ({ dispatch }: MenuProps) => {
+    onClick: (dispatch: Dispatch) => {
       openLicense(dispatch);
     },
     always: true,

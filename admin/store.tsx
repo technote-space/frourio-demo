@@ -14,6 +14,7 @@ const initialState: ContextState = {
     message: '',
     variant: 'success',
   },
+  onRemoveToken: false,
 };
 
 const reducer = (store, action) => {
@@ -34,7 +35,9 @@ const reducer = (store, action) => {
     case 'TITLE':
       return { ...store, title: action.title };
     case 'LOGOUT':
-      return { ...store, name: undefined, icon: undefined, title: undefined };
+      return { ...store, name: undefined, icon: undefined, title: undefined, onRemoveToken: true };
+    case 'TOKEN_REMOVED':
+      return { ...store, onRemoveToken: false, page: 'dashboard' };
     case 'SET_NOTICE':
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice } };
     case 'SET_ERROR':
