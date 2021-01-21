@@ -5,9 +5,14 @@ CREATE TABLE "Admin" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "icon" TEXT,
-    "roles" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Role" (
+    "role" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -51,10 +56,23 @@ CREATE TABLE "Reservation" (
     "payment" INTEGER,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
+    FOREIGN KEY ("guestId") REFERENCES "Guest" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY ("roomId") REFERENCES "Room" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
 
-    FOREIGN KEY ("guestId") REFERENCES "Guest"("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE SET NULL ON UPDATE CASCADE
+-- CreateTable
+CREATE TABLE "_AdminToRole" (
+    "A" INTEGER NOT NULL,
+    "B" TEXT NOT NULL,
+    FOREIGN KEY ("A") REFERENCES "Admin" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("B") REFERENCES "Role" ("role") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Admin.email_unique" ON "Admin"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AdminToRole_AB_unique" ON "_AdminToRole"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AdminToRole_B_index" ON "_AdminToRole"("B");
