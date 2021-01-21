@@ -39,8 +39,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
         }
 
         if (!fallback) {
-          /* istanbul ignore next */
-          return undefined as MaybeUndefined<T>;
+          throw error;
         }
 
         return fallback;

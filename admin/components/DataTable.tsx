@@ -157,7 +157,7 @@ const DataTable = <T extends Model, >({
   };
   const handleAdd = useCallback(async newData => {
     try {
-      await handleAuthError(dispatch, {}, api.post, {
+      await handleAuthError(dispatch, undefined, api.post, {
         headers: authHeader,
         body: newData,
       });
@@ -169,7 +169,7 @@ const DataTable = <T extends Model, >({
   }, [unmountRef]);
   const handleUpdate = useCallback(async(newData, oldData) => {
     try {
-      await handleAuthError(dispatch, {}, api.detail(oldData.id).patch, {
+      await handleAuthError(dispatch, undefined, api.detail(oldData.id).patch, {
         headers: authHeader,
         body: processUpdateData(newData),
       });
@@ -181,7 +181,7 @@ const DataTable = <T extends Model, >({
   }, [unmountRef]);
   const handleDelete = useCallback(async oldData => {
     try {
-      await handleAuthError(dispatch, {}, api.detail(oldData.id).delete, {
+      await handleAuthError(dispatch, undefined, api.detail(oldData.id).delete, {
         headers: authHeader,
       });
       setNotice(dispatch, '削除しました。');
