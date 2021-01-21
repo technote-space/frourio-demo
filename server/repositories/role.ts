@@ -19,10 +19,10 @@ export const getRoleCount = depend(
   async({ prisma }, args?: Omit<SearchRoleArgs, 'select' | 'include'>) => prisma.role.count(args),
 );
 
-export const getRole = depend(
-  { prisma: prisma as { role: { findFirst: typeof prisma.role.findFirst } } },
-  async({ prisma }, role: string | undefined, args?: FindRoleArgs) => ensureNotNull(await prisma.role.findFirst({
-    where: { role },
-    ...args,
-  })),
-);
+// export const getRole = depend(
+//   { prisma: prisma as { role: { findFirst: typeof prisma.role.findFirst } } },
+//   async({ prisma }, role: string | undefined, args?: FindRoleArgs) => ensureNotNull(await prisma.role.findFirst({
+//     where: { role },
+//     ...args,
+//   })),
+// );

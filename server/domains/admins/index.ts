@@ -1,10 +1,14 @@
-import { depend } from 'velona';
-import { getAdmins, getAdminCount, getAdmin, createAdmin, updateAdmin, deleteAdmin } from '$/repositories/admin';
-import { getSkip, getCurrentPage } from '$/service/pages';
-import { getWhere, getOrderBy } from '$/repositories/utils';
 import type { BodyResponse } from '$/types';
 import type { Admin, CreateAdminData, UpdateAdminData } from '$/repositories/admin';
 import type { Query, QueryResult } from '@technote-space/material-table';
+import type { Role } from '$/repositories/role';
+import { depend } from 'velona';
+import { getAdmins, getAdminCount, getAdmin, createAdmin, updateAdmin, deleteAdmin } from '$/repositories/admin';
+import { getRoles, getRoleCount } from '$/repositories/role';
+import { getSkip, getCurrentPage } from '$/service/pages';
+import { getWhere, getOrderBy } from '$/repositories/utils';
+
+export type ListRole = Record<string, string>;
 
 export const list = depend(
   { getAdmins, getAdminCount },
@@ -62,4 +66,40 @@ export const update = depend(
     status: 200,
     body: await updateAdmin(id, data),
   }),
+);
+
+export const listRoles = depend(
+  { getRoles },
+  async({ getRoles }): Promise<BodyResponse<ListRole>> => ({
+    status: 200,
+    body: Object.assign({}, ...(await getRoles()).map(role => ({ [role.role]: role.name }))),
+  }),
+);
+
+export const searchRole = depend(
+  { getRoles, getRoleCount },
+  async({ getRoles, getRoleCount }, query: Query<Role>): Promise<BodyResponse<QueryResult<Role>>> => {
+    const pageSize = query.pageSize;
+    const where = getWhere<Role>(query.search, ['name'], []);
+    const orderBy = getOrderBy<Role>(query.orderBy, query.orderDirection);
+    const totalCount = await getRoleCount({
+      where,
+    });
+    const page = getCurrentPage(pageSize, totalCount, query.page);
+    const data = await getRoles({
+      skip: getSkip(pageSize, page),
+      take: pageSize,
+      where,
+      orderBy,
+    });
+
+    return {
+      status: 200,
+      body: {
+        data,
+        page,
+        totalCount,
+      },
+    };
+  },
 );

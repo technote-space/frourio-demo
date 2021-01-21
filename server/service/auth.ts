@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify';
 import type { AuthorizationPayload } from '$/types';
-import type { Role } from '$/repositories/roles';
+import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
 import { getAdmin } from '$/repositories/admin';
 import 'fastify-jwt';

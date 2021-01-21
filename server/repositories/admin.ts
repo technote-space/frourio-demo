@@ -3,7 +3,7 @@ import { PrismaClient } from '$/prisma/client';
 import { API_URL } from '$/service/env';
 import { ensureNotNull, createAdminPasswordHash, validateHash } from '$/repositories/utils';
 import type { Prisma, Admin as _Admin } from '$/prisma/client';
-import type { Role } from '$/repositories/roles';
+import type { Role } from '$/repositories/role';
 
 export type SearchAdminArgs = Prisma.FindManyAdminArgs;
 export type FindAdminArgs = Prisma.FindFirstAdminArgs;
