@@ -1,5 +1,7 @@
 import type Blob from 'cross-blob';
+import type { Role } from '$/repositories/role';
 import { IsNotEmpty, Length, IsEmail, MinLength, IsOptional } from 'class-validator';
+import { IsUniqueValue, IsOptionalWhenUpdate } from '$/repositories/utils/validator';
 
 export class AdminBody {
   @IsNotEmpty()
@@ -8,15 +10,17 @@ export class AdminBody {
 
   @IsNotEmpty()
   @IsEmail()
+  @IsUniqueValue('admin')
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(4)
-  password: string;
+  @IsOptionalWhenUpdate()
+  password?: string;
 
   @IsOptional()
   icon?: Blob;
 
   @IsOptional()
-  roles?: string[];
+  roles?: Role[];
 }

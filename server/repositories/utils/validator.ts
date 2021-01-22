@@ -42,6 +42,71 @@ export function IsIdExists(table: Models, validationOptions?: ValidationOptions)
 }
 
 @ValidatorConstraint({ async: true })
+class IsUniqueValueConstraint implements ValidatorConstraintInterface {
+  async validate(value: any, args: ValidationArguments) {
+    const data = args.object as any;
+    const table = args.constraints[0] as Models;
+    const prisma = new PrismaClient();
+    const findFirst = prisma[table].findFirst as ((args?: { where: { [key: string]: any } }) => Promise<object | null>);
+    const where = { [args.property]: value };
+    if ('id' in data) {
+      where['id'] = {
+        not: Number(data['id']),
+      };
+    }
+    const item = await findFirst({ where });
+    return item === null;
+  }
+
+  defaultMessage() {
+    return 'すでに登録されている値です';
+  }
+}
+
+export function IsUniqueValue(table: Models, validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [table],
+      validator: IsUniqueValueConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: true })
+class IsOptionalWhenUpdateConstraint implements ValidatorConstraintInterface {
+  async validate(value: any, args: ValidationArguments) {
+    const data = args.object as any;
+    if ('id' in data) {
+      return true;
+    }
+    if (typeof value === 'object') {
+      return false;
+    }
+
+    return !!value;
+  }
+
+  defaultMessage() {
+    return '有効な値を入力してください';
+  }
+}
+
+export function IsOptionalWhenUpdate(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsOptionalWhenUpdateConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: true })
 class IsReservableConstraint implements ValidatorConstraintInterface {
   private reason?: string;
 
