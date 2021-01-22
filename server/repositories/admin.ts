@@ -144,7 +144,6 @@ export type ProcessRoleType<T extends Record<string, any> & { roles?: Role[] }> 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const processRoleConnections = <T extends Record<string, any> & { roles?: Role[] }>(data: T): ProcessRoleType<T> => {
-  console.log(data.roles);
   return {
     ...data,
     roles: {

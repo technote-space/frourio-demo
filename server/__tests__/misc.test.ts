@@ -4,6 +4,7 @@ import { startOfDay, addDays } from 'date-fns';
 import { verifyAdmin, getRolesValue } from '$/service/auth';
 import {
   parseQuery,
+  parseBody,
   getWhere,
   getFilterConstraints,
   ensureNotNull,
@@ -184,6 +185,14 @@ describe('parseQuery', () => {
       test1: new Date('2020-01-01'),
       test2: '0000-99-99',
     });
+  });
+});
+
+describe('parseBody', () => {
+  it('should parse json object', () => {
+    expect(parseBody({})).toEqual({});
+    expect(parseBody({ test1: JSON.stringify({ test2: 3 }), test4: 5 })).toEqual({ test1: { test2: 3 }, test4: 5 });
+    expect(parseBody({ test1: [JSON.stringify({ test2: 3 })], test4: 5 })).toEqual({ test1: [{ test2: 3 }], test4: 5 });
   });
 });
 
