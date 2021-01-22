@@ -48,23 +48,23 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     const data = args.object as any;
     if (!('roomId' in data) || typeof data['roomId'] !== 'number') {
-      this.reason = 'The room is not selected.';
+      this.reason = '部屋が選択されていません';
       return false;
     }
     if (!('guestId' in data) || typeof data['guestId'] !== 'number') {
-      this.reason = 'The guest is not selected.';
+      this.reason = '宿泊客が選択されていません';
       return false;
     }
 
     if (!('checkin' in data) || !('checkout' in data) || !data['checkin'] || !data['checkout']) {
-      this.reason = 'The date and time of your stay have not been specified.';
+      this.reason = '宿泊期間が指定されていません';
       return false;
     }
 
     const checkin = new Date(data['checkin']);
     const checkout = new Date(data['checkout']);
     if (!isAfter(startOfDay(checkout), startOfDay(checkin))) {
-      this.reason = 'The checkout date must be after the checkin date.';
+      this.reason = 'チェックアウトはチェックインよりも後である必要があります';
       return false;
     }
 
@@ -103,7 +103,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
       where,
     });
     if (reservation) {
-      this.reason = 'This period is already reserved.';
+      this.reason = 'この期間はすでに予約されています';
       return false;
     }
 
@@ -115,7 +115,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
       return this.reason;
     }
 
-    return 'Invalid value';
+    return '有効な値ではありません';
   }
 }
 
@@ -161,10 +161,10 @@ class IsWithinLimitConstraint implements ValidatorConstraintInterface {
 
   defaultMessage() {
     if (this.limit === undefined) {
-      return 'Invalid value';
+      return '有効な値ではありません';
     }
 
-    return 'The value must be less than or equal to ' + this.limit;
+    return `${this.limit}以下を指定してください`;
   }
 }
 
