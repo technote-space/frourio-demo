@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
 import type { Prisma, PrismaClient, StringFieldUpdateOperationsInput } from '$/prisma/client';
 import type { Column, Query, Filter } from '@technote-space/material-table';
 import type { MaybeUndefined } from '$/types';
@@ -180,13 +180,11 @@ export const getDateConstraint = (date: Date) => ({
   lt: addDays(startOfDay(date), 1),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(data: T): Omit<T, 'id'> => {
   delete data.id;
   return data;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseQuery = <T extends object, U extends undefined | Query<T> | any>(query: U): Query<T> | MaybeUndefined<U> => {
   if (!query) {
     return undefined as MaybeUndefined<U>;
@@ -226,6 +224,22 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
 
 export const isMultipartFile = (value: any): value is Multipart => {
   return typeof value === 'object' && 'filename' in value && 'toBuffer' in value;
+};
+
+export const parseBody = (body: Record<string, any>) => {
+  Object.keys(body).forEach(key => {
+    if (typeof body[key] === 'string' && /^\{[\s\S]*\}$/.test(body[key])) {
+      try {
+        body[key] = JSON.parse(body[key]);
+      } catch {
+        //
+      }
+    } else if (body[key] && typeof body[key] === 'object' && !isMultipartFile(body[key])) {
+      body[key] = parseBody(body[key]);
+    }
+  });
+
+  return body;
 };
 
 export const createHash = (data: string): string => bcrypt.hashSync(data, 10);
