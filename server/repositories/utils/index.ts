@@ -5,6 +5,7 @@ import type { MaybeUndefined } from '$/types';
 import bcrypt from 'bcryptjs';
 import createError from 'fastify-error';
 import { startOfDay, addDays } from 'date-fns';
+import { Multipart } from 'fastify-multipart';
 
 export type Models = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {
@@ -221,6 +222,10 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
   });
 
   return _query;
+};
+
+export const isMultipartFile = (value: any): value is Multipart => {
+  return typeof value === 'object' && 'filename' in value && 'toBuffer' in value;
 };
 
 export const createHash = (data: string): string => bcrypt.hashSync(data, 10);
