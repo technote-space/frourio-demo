@@ -15,6 +15,7 @@ const initialState: ContextState = {
     variant: 'success',
   },
   onRemoveToken: false,
+  onRefreshToken: false,
 };
 
 const reducer = (store, action) => {
@@ -38,6 +39,10 @@ const reducer = (store, action) => {
       return { ...store, name: undefined, icon: undefined, title: undefined, onRemoveToken: true };
     case 'TOKEN_REMOVED':
       return { ...store, onRemoveToken: false, page: 'dashboard' };
+    case 'ON_REFRESH_TOKEN':
+      return { ...store, onRefreshToken: true };
+    case 'OFF_REFRESH_TOKEN':
+      return { ...store, onRefreshToken: false };
     case 'SET_NOTICE':
       return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice } };
     case 'SET_ERROR':

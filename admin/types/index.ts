@@ -18,6 +18,7 @@ export type ContextState = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   localStorage?: Record<string, any>;
   onRemoveToken: boolean;
+  onRefreshToken: boolean;
 };
 
 export type Page = {

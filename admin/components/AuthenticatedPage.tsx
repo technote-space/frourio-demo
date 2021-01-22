@@ -1,13 +1,12 @@
 import type { FC } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { client, handleAuthError } from '~/utils/api';
 import Login from '~/components/Login';
 import { useStoreContext, useDispatchContext } from '~/store';
 import useAuthToken from '~/hooks/useAuthToken';
-import { setAdmin, tokenRemoved } from '~/utils/actions';
+import { setAdmin, tokenRemoved, offRefreshToken } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import { makeStyles } from '@material-ui/core/styles';
-import useUnmountRef from '~/hooks/useUnmountRef';
 
 const useStyles = makeStyles({
   wrap: {
@@ -22,10 +21,10 @@ export type AuthenticatedPageProps = {
 
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
   const classes = useStyles();
-  const unmountRef = useUnmountRef();
   const [auth, , removeToken] = useAuthToken();
-  const { name, page, onRemoveToken } = useStoreContext();
+  const { name, page, onRemoveToken, onRefreshToken } = useStoreContext();
   const { dispatch } = useDispatchContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (onRemoveToken) {
@@ -42,15 +41,18 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
     }
   }, [auth]);
   useEffect(() => {
-    if (auth && !name && !onRemoveToken) {
+    if (!isLoading && auth && (onRefreshToken || (!name && !onRemoveToken))) {
+      setIsLoading(true);
       (async() => {
         const admin = await handleAuthError(dispatch, {}, client.admin.get, { headers: auth.authHeader });
-        if ('name' in admin && !unmountRef.current) {
+        if ('name' in admin) {
           setAdmin(dispatch, admin);
         }
+        offRefreshToken(dispatch);
+        setIsLoading(false);
       })();
     }
-  }, [auth, name, onRemoveToken, unmountRef.current]);
+  }, [dispatch, auth, name, onRemoveToken, onRefreshToken, isLoading, page]);
 
   return <div className={classes.wrap} data-testid={`page-${page}`}>
     {(!auth || onRemoveToken) && <Login {...props} />}
