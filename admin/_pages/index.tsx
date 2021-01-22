@@ -7,11 +7,13 @@ import {
   Today as TodayIcon,
   ExitToApp as LogoutIcon,
   Description as LicenseIcon,
+  SupervisorAccount as AdminIcon,
 } from '@material-ui/icons';
 import Dashboard from './dashboard';
 import Guests from './guests';
 import Reservations from './reservations';
 import Rooms from './rooms';
+import Admins from './admins';
 import { logout, openLicense } from '~/utils/actions';
 
 const pages: Record<string, Page> = {
@@ -34,6 +36,11 @@ const pages: Record<string, Page> = {
     label: '予約',
     page: Reservations,
     icon: TodayIcon,
+  },
+  admins: {
+    label: '管理者',
+    page: Admins,
+    icon: AdminIcon,
   },
 } as const;
 
