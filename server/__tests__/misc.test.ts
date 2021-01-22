@@ -11,7 +11,8 @@ import {
   createAdminPasswordHash,
 } from '$/repositories/utils';
 import { saveFile } from '$/service/multipart';
-import { includeRoles, processRoleConnections } from '$/repositories/admin';
+import { includeRoles } from '$/repositories/admin';
+import { processRoleConnections } from '$/domains/admins/utils';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs') as {},

@@ -136,18 +136,3 @@ export const deleteAdmin = depend(
     ...args,
   })),
 );
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ProcessRoleType<T extends Record<string, any> & { roles?: Role[] }> = {
-  [key in keyof T]: key extends 'roles' ? { connect: { role: string }[] } : T[key]
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const processRoleConnections = <T extends Record<string, any> & { roles?: Role[] }>(data: T): ProcessRoleType<T> => {
-  return {
-    ...data,
-    roles: {
-      connect: (data.roles ?? []).map(role => ({ role: role.role })),
-    },
-  };
-};
