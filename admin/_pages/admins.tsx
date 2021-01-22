@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import useUnmountRef from '~/hooks/useUnmountRef';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { Avatar } from '@material-ui/core';
@@ -12,6 +12,7 @@ import EditRoles from '~/components/admins/EditRoles';
 import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client } from '~/utils/api';
+import { onRefreshToken } from '~/utils/actions';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -26,6 +27,9 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const roles = useFetch(dispatch, {}, client.admins.roles, { headers: authHeader });
+  const onUpdated = useCallback(() => {
+    onRefreshToken(dispatch);
+  }, []);
 
   return useMemo(() => roles.data ? <DataTable
     model={'admins'}
@@ -87,6 +91,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
       filtering: true,
     }}
     unmountRef={unmountRef}
+    onUpdated={onUpdated}
   /> : null, [classes, roles.data]);
 };
 

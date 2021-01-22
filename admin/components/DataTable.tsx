@@ -34,6 +34,7 @@ type Props<T extends Model> = {
   authHeader: { authorization: string };
   options?: Options<T>;
   unmountRef: MutableRefObject<boolean>;
+  onUpdated?: () => void;
 }
 type EditFieldProps<T extends Model> = {
   columnDef: Column<T>;
@@ -87,6 +88,7 @@ const DataTable = <T extends Model, >({
   authHeader,
   options,
   unmountRef,
+  onUpdated,
 }: Props<T>): ReactElement => {
   const { dispatch } = useDispatchContext();
   const tableIcons = useTableIcons();
@@ -153,6 +155,11 @@ const DataTable = <T extends Model, >({
     }
     throw error;
   };
+  const handleUpdated = () => {
+    if (onUpdated) {
+      onUpdated();
+    }
+  };
   const handleAdd = useCallback(async newData => {
     try {
       await handleAuthError(dispatch, undefined, api.post, {
@@ -161,6 +168,7 @@ const DataTable = <T extends Model, >({
       });
       setNotice(dispatch, '追加しました。');
       setValidationErrors({});
+      handleUpdated();
     } catch (error) {
       handleValidationError(error);
     }
@@ -173,6 +181,7 @@ const DataTable = <T extends Model, >({
       });
       setNotice(dispatch, '更新しました。');
       setValidationErrors({});
+      handleUpdated();
     } catch (error) {
       handleValidationError(error);
     }
@@ -184,6 +193,7 @@ const DataTable = <T extends Model, >({
       });
       setNotice(dispatch, '削除しました。');
       setValidationErrors({});
+      handleUpdated();
     } catch (error) {
       handleValidationError(error);
     }
