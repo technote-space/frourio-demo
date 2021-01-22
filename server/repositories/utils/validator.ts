@@ -11,7 +11,7 @@ import { startOfDay, isAfter } from 'date-fns';
 import { Models } from '.';
 
 @ValidatorConstraint({ async: true })
-class IsIdExistsConstrains implements ValidatorConstraintInterface {
+class IsIdExistsConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     if (typeof value !== 'number') {
       return false;
@@ -36,13 +36,13 @@ export function IsIdExists(table: Models, validationOptions?: ValidationOptions)
       propertyName: propertyName,
       options: validationOptions,
       constraints: [table],
-      validator: IsIdExistsConstrains,
+      validator: IsIdExistsConstraint,
     });
   };
 }
 
 @ValidatorConstraint({ async: true })
-class IsReservableConstrains implements ValidatorConstraintInterface {
+class IsReservableConstraint implements ValidatorConstraintInterface {
   private reason?: string;
 
   async validate(value: any, args: ValidationArguments) {
@@ -126,13 +126,13 @@ export function IsReservable(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsReservableConstrains,
+      validator: IsReservableConstraint,
     });
   };
 }
 
 @ValidatorConstraint({ async: true })
-class IsWithinLimitConstrains implements ValidatorConstraintInterface {
+class IsWithinLimitConstraint implements ValidatorConstraintInterface {
   private limit?: number;
 
   async validate(value: any, args: ValidationArguments) {
@@ -175,7 +175,7 @@ export function IsWithinLimit(table: Models, field: string, validationOptions?: 
       propertyName: propertyName,
       options: validationOptions,
       constraints: [table, field],
-      validator: IsWithinLimitConstrains,
+      validator: IsWithinLimitConstraint,
     });
   };
 }
