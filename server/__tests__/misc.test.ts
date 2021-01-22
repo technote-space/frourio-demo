@@ -328,7 +328,7 @@ describe('processRoleConnections', () => {
   it('should contains roles property', () => {
     expect(processRoleConnections({})).toEqual({ roles: { connect: [] } });
     expect(processRoleConnections({
-      roles: ['test1', 'test2'],
+      roles: [{ role: 'test1', name: 'test1' }, { role: 'test2', name: 'test2' }],
     })).toEqual({ roles: { connect: [{ role: 'test1' }, { role: 'test2' }] } });
   });
 });

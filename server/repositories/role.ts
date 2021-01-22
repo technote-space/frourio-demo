@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import type { Prisma } from '$/prisma/client';
-import { ensureNotNull } from '$/repositories/utils';
+// import { ensureNotNull } from '$/repositories/utils';
 
 export type SearchRoleArgs = Prisma.FindManyRoleArgs;
 export type FindRoleArgs = Prisma.FindFirstRoleArgs;

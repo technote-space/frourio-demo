@@ -4,6 +4,7 @@ import { API_URL } from '$/service/env';
 import { ensureNotNull, createAdminPasswordHash, validateHash } from '$/repositories/utils';
 import type { Prisma, Admin as _Admin } from '$/prisma/client';
 import type { Role } from '$/repositories/role';
+import { dropId } from '$/repositories/utils';
 
 export type SearchAdminArgs = Prisma.FindManyAdminArgs;
 export type FindAdminArgs = Prisma.FindFirstAdminArgs;
@@ -120,11 +121,11 @@ export const updateAdmin = depend(
       id,
       ...args?.where,
     },
-    data: {
+    data: dropId({
       ...data,
       ...args?.data,
       password: createAdminPasswordHash(data.password),
-    },
+    }),
   })),
 );
 
@@ -137,13 +138,17 @@ export const deleteAdmin = depend(
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const processRoleConnections = <T extends Record<string, any> & { roles?: string[] }>(data: T): {
+export type ProcessRoleType<T extends Record<string, any> & { roles?: Role[] }> = {
   [key in keyof T]: key extends 'roles' ? { connect: { role: string }[] } : T[key]
-} => {
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const processRoleConnections = <T extends Record<string, any> & { roles?: Role[] }>(data: T): ProcessRoleType<T> => {
+  console.log(data.roles);
   return {
     ...data,
     roles: {
-      connect: (data.roles ?? []).map(role => ({ role })),
+      connect: (data.roles ?? []).map(role => ({ role: role.role })),
     },
   };
 };

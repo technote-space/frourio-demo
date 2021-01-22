@@ -133,7 +133,7 @@ describe('admins', () => {
         name: 'test name',
         email: 'test1@example.com',
         password: 'test1234',
-        roles: ['rooms', 'rooms_create'],
+        roles: [{ role: 'rooms', name: 'rooms' }, { role: 'rooms_create', name: 'rooms create' }],
       },
     });
     expect(res.status).toBe(201);
