@@ -35,14 +35,12 @@ const Auth: FC = () => {
     }
   }, [dispatch, auth, name, onRemoveToken, onRefreshToken, isLoading, page]);
   useEffect(() => {
-    if (roles) {
-      if (!(page in roles)) {
-        const available = Object.keys(pages).find(page => roles.includes(page));
-        if (available) {
-          changePage(dispatch, available);
-        } else {
-          logout(dispatch);
-        }
+    if (roles && !(page in roles)) {
+      const available = Object.keys(pages).find(page => roles.includes(page));
+      if (available) {
+        changePage(dispatch, available);
+      } else {
+        logout(dispatch);
       }
     }
   }, [roles]);

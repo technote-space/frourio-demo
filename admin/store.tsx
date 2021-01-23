@@ -66,10 +66,12 @@ const reducerActions = {
 
 const reducer = (store, action) => {
   console.log(action);
+  /* istanbul ignore next */
   if (action.type in reducerActions) {
     return reducerActions[action.type](store, action);
   }
 
+  /* istanbul ignore next */
   return store;
 };
 
