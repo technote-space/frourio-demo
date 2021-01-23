@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 
 const Sidebar: FC = () => {
   const classes = useStyles();
-  const { isSidebarOpen, icon, name, page: _page } = useStoreContext();
+  const { isSidebarOpen, icon, name, page: _page, roles } = useStoreContext();
   const { dispatch } = useDispatchContext();
   const [auth] = useAuthToken();
   const onClose = useCallback(() => closeSidebar(dispatch), []);
@@ -44,7 +44,7 @@ const Sidebar: FC = () => {
       closeSidebar(dispatch);
     }, []);
 
-    return useMemo(() => <ListItem
+    return useMemo(() => (!roles && !pages[slug].roleCheck) || (roles && roles.includes(slug)) ? <ListItem
       key={slug}
       className={clsx(classes.item, slug === _page ? classes.active : '')}
       onClick={handleClick}
@@ -54,7 +54,7 @@ const Sidebar: FC = () => {
         <page.icon/>
       </ListItemIcon>
       <ListItemText primary={page.label}/>
-    </ListItem>, [_page, page.label]);
+    </ListItem> : null, [_page, page.label, roles]);
   };
   const MappedMenuItem: FC<{ slug: MenuKeys, menu: Menu }> = ({ slug, menu }) => {
     const handleClick = useCallback(() => {
@@ -114,7 +114,7 @@ const Sidebar: FC = () => {
         {Object.entries(menus).map(([key, menu]) =>
           auth || menu.always ? <MappedMenuItem key={`menu-${key}`} slug={key as PageKeys} menu={menu}/> : null)}
       </List>
-    </Drawer>, [classes, isSidebarOpen, auth, name, icon]);
+    </Drawer>, [classes, isSidebarOpen, auth, name, icon, roles]);
 };
 
 export default Sidebar;

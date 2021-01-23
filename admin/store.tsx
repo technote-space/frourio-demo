@@ -5,6 +5,7 @@ import { ContextState } from '~/types';
 const initialState: ContextState = {
   name: undefined,
   icon: undefined,
+  roles: undefined,
   isSidebarOpen: false,
   isLicenseOpen: false,
   page: 'dashboard',
@@ -22,7 +23,12 @@ const reducer = (store, action) => {
   console.log(action);
   switch (action.type) {
     case 'SET_ADMIN':
-      return { ...store, name: action.admin.name, icon: action.admin.icon };
+      return {
+        ...store,
+        name: action.admin.name,
+        icon: action.admin.icon,
+        roles: action.admin.roles.map(role => role.role),
+      };
     case 'OPEN_SIDEBAR':
       return { ...store, isSidebarOpen: true };
     case 'CLOSE_SIDEBAR':
@@ -36,7 +42,7 @@ const reducer = (store, action) => {
     case 'TITLE':
       return { ...store, title: action.title };
     case 'LOGOUT':
-      return { ...store, name: undefined, icon: undefined, title: undefined, onRemoveToken: true };
+      return { ...store, name: undefined, icon: undefined, title: undefined, roles: undefined, onRemoveToken: true };
     case 'TOKEN_REMOVED':
       return { ...store, onRemoveToken: false, page: 'dashboard' };
     case 'ON_REFRESH_TOKEN':

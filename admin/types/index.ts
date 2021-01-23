@@ -6,6 +6,7 @@ import { Dispatch } from '~/store';
 export type ContextState = {
   name?: string;
   icon?: string;
+  roles?: string[];
   isSidebarOpen: boolean;
   isLicenseOpen: boolean;
   page: PageKeys;
@@ -25,6 +26,7 @@ export type Page = {
   label: string;
   page: FC;
   icon: SvgIconComponent;
+  roleCheck: boolean;
 };
 export type Menu = {
   label: string;

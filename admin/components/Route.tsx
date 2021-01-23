@@ -5,12 +5,16 @@ import pages from '~/_pages';
 import { changeTitle } from '~/utils/actions';
 
 const Route: FC = () => {
-  const { page } = useStoreContext();
+  const { page, roles } = useStoreContext();
   const { dispatch } = useDispatchContext();
   const [nextPage, setNextPage] = useState<ReactElement | null>(null);
   const pageInstances = useRef<Record<string, ReactElement>>({});
 
   useEffect(() => {
+    if (!roles || !roles.includes(page)) {
+      return;
+    }
+
     window.scrollTo(0, 0);
     if (!(page in pageInstances.current)) {
       const Component: FC = pages[page].page;
@@ -19,7 +23,7 @@ const Route: FC = () => {
 
     setNextPage(pageInstances.current[page]);
     changeTitle(dispatch, pages[page].label);
-  }, [page]);
+  }, [page, roles]);
 
   return useMemo(() => nextPage, [nextPage]);
 };

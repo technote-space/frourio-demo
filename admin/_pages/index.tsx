@@ -21,26 +21,31 @@ const pages: Record<string, Page> = {
     label: 'ダッシュボード',
     page: Dashboard,
     icon: DashboardIcon,
+    roleCheck: false,
   },
   rooms: {
     label: '部屋',
     page: Rooms,
     icon: HotelIcon,
+    roleCheck: true,
   },
   guests: {
     label: '宿泊客',
     page: Guests,
     icon: PeopleIcon,
+    roleCheck: true,
   },
   reservations: {
     label: '予約',
     page: Reservations,
     icon: TodayIcon,
+    roleCheck: true,
   },
   admins: {
     label: '管理者',
     page: Admins,
     icon: AdminIcon,
+    roleCheck: true,
   },
 } as const;
 
