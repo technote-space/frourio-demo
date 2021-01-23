@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
-import Index from '~/pages/index';
-import { render, useNock, setup, setToken, findElement, act, waitFor } from '~/__tests__/utils';
+import { loadPage, setup, findElement, act, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
 
@@ -10,18 +9,17 @@ setup();
 
 describe('Dashboard', () => {
   it('should show checkin and checkout tables and sales', async() => {
-    useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
-      .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
-        'data': [],
-        'page': 0,
-        'totalCount': 0,
-      })
-      .get(/\/dashboard\/sales/).reply(200, []);
-    setToken('token');
-
-    const { findByTestId, getByTestId, getByText } = render(<Index/>);
+    const { findByTestId, getByTestId, getByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .get(/\/dashboard\/sales/).reply(200, []),
+    );
 
     // tables
     await findByTestId('select-date');
@@ -37,152 +35,152 @@ describe('Dashboard', () => {
     const checkin = jest.fn();
     const checkout = jest.fn();
     const cancel = jest.fn();
-    useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
-      .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/checkin/).reply(200, {
-        'data': [
-          {
-            'id': 831,
-            'guestName': '山本 美咲',
-            'guestNameKana': 'テスト',
-            'guestPhone': '060-844-7544',
-            'roomName': '杏19119',
-            'checkin': '2021-01-10T06:00:00.000Z',
-            'checkout': '2021-01-17T01:00:00.000Z',
-            'status': 'reserved',
-          },
-          {
-            'id': 127,
-            'guestName': '清水 蒼空',
-            'guestNameKana': 'テスト',
-            'guestPhone': '01165-3-9928',
-            'roomName': '杏19119',
-            'checkin': '2021-01-10T06:00:00.000Z',
-            'checkout': '2021-01-14T01:00:00.000Z',
-            'status': 'reserved',
-          },
-          {
-            'id': 731,
-            'guestName': '清水 結菜',
-            'guestNameKana': 'テスト',
-            'guestPhone': '089-159-0016',
-            'roomName': '颯太83958',
-            'checkin': '2021-01-10T06:00:00.000Z',
-            'checkout': '2021-01-17T01:00:00.000Z',
-            'status': 'checkin',
-          },
-          {
-            'id': 227,
-            'guestName': '吉田 大和',
-            'guestNameKana': 'テスト',
-            'guestPhone': '05469-0-9629',
-            'roomName': '杏19119',
-            'checkin': '2021-01-10T06:00:00.000Z',
-            'checkout': '2021-01-14T01:00:00.000Z',
-            'status': 'cancelled',
-          },
-          {
-            'id': 227,
-            'guestName': '吉田 大和',
-            'guestNameKana': 'テスト',
-            'guestPhone': '05469-0-9629',
-            'roomName': '杏19119',
-            'checkin': '2021-01-10T06:00:00.000Z',
-            'checkout': '2021-01-14T01:00:00.000Z',
-            'status': 'checkout',
-          },
-        ],
-        'page': 0,
-        'totalCount': 5,
-      })
-      .get(/\/dashboard\/checkout/).reply(200, {
-        'data': [
-          {
-            'id': 578,
-            'guestName': '清水 蒼空',
-            'guestNameKana': 'テスト',
-            'roomName': '大翔75634',
-            'checkin': '2021-01-09T06:00:00.000Z',
-            'checkout': '2021-01-10T01:00:00.000Z',
-            'number': 4,
-            'status': 'checkout',
-            'amount': 323552,
-            'payment': 323552,
-            'room': { 'number': 5, 'price': 80888 },
-          },
-          {
-            'id': 315,
-            'guestName': '山本 蓮',
-            'guestNameKana': 'テスト',
-            'roomName': '颯太83958',
-            'checkin': '2021-01-08T06:00:00.000Z',
-            'checkout': '2021-01-10T01:00:00.000Z',
-            'number': 3,
-            'status': 'checkin',
-            'amount': 36510,
-            'payment': null,
-            'room': { 'number': 8, 'price': 6085 },
-          },
-          {
-            'id': 415,
-            'guestName': '伊藤 颯太',
-            'guestNameKana': 'テスト',
-            'roomName': '大翔75634',
-            'checkin': '2021-01-08T06:00:00.000Z',
-            'checkout': '2021-01-10T01:00:00.000Z',
-            'number': 3,
-            'status': 'checkout',
-            'amount': 36510,
-            'payment': 365100,
-            'room': { 'number': 8, 'price': 6085 },
-          },
-          {
-            'id': 415,
-            'guestName': '伊藤 颯太',
-            'guestNameKana': 'テスト',
-            'roomName': '大翔75634',
-            'checkin': '2021-01-08T06:00:00.000Z',
-            'checkout': '2021-01-10T01:00:00.000Z',
-            'number': 3,
-            'status': 'reserved',
-            'amount': 36510,
-            'payment': null,
-            'room': { 'number': 8, 'price': 6085 },
-          },
-          {
-            'id': 415,
-            'guestName': '伊藤 颯太',
-            'guestNameKana': 'テスト',
-            'roomName': '大翔75634',
-            'checkin': '2021-01-08T06:00:00.000Z',
-            'checkout': '2021-01-10T01:00:00.000Z',
-            'number': 3,
-            'status': 'cancelled',
-            'amount': 36510,
-            'payment': null,
-            'room': null,
-          },
-        ],
-        'page': 0,
-        'totalCount': 5,
-      })
-      .get(/\/dashboard\/sales/).reply(200, [])
-      .patch('/dashboard/checkin', body => {
-        checkin(body);
-        return body;
-      }).reply(200, () => ({ id: 123 }))
-      .patch('/dashboard/checkout', body => {
-        checkout(body);
-        return body;
-      }).reply(200, () => ({ id: 123 }))
-      .patch('/dashboard/cancel', body => {
-        cancel(body);
-        return body;
-      }).reply(200, () => ({ id: 123 }));
-    setToken('token');
 
-    const { getByTestId, findAllByText, findByText, getAllByText } = render(<Index/>);
+    const { getByTestId, findAllByText, findByText, getAllByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [
+            {
+              'id': 831,
+              'guestName': '山本 美咲',
+              'guestNameKana': 'テスト',
+              'guestPhone': '060-844-7544',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 127,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'guestPhone': '01165-3-9928',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 731,
+              'guestName': '清水 結菜',
+              'guestNameKana': 'テスト',
+              'guestPhone': '089-159-0016',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'checkin',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'cancelled',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'checkout',
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [
+            {
+              'id': 578,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-09T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 4,
+              'status': 'checkout',
+              'amount': 323552,
+              'payment': 323552,
+              'room': { 'number': 5, 'price': 80888 },
+            },
+            {
+              'id': 315,
+              'guestName': '山本 蓮',
+              'guestNameKana': 'テスト',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkin',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkout',
+              'amount': 36510,
+              'payment': 365100,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'reserved',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'cancelled',
+              'amount': 36510,
+              'payment': null,
+              'room': null,
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/sales/).reply(200, [])
+        .patch('/dashboard/checkin', body => {
+          checkin(body);
+          return body;
+        }).reply(200, () => ({ id: 123 }))
+        .patch('/dashboard/checkout', body => {
+          checkout(body);
+          return body;
+        }).reply(200, () => ({ id: 123 }))
+        .patch('/dashboard/cancel', body => {
+          cancel(body);
+          return body;
+        }).reply(200, () => ({ id: 123 })),
+    );
 
     await findByText('山本 美咲');
     await findByText('山本 蓮');
@@ -226,36 +224,36 @@ describe('Dashboard', () => {
 
   it('should fail to checkin', async() => {
     const checkin = jest.fn();
-    useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
-      .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/checkin/).reply(200, {
-        'data': [{
-          'id': 831,
-          'guestName': '山本 美咲',
-          'guestNameKana': 'テスト',
-          'guestPhone': '060-844-7544',
-          'roomName': '杏19119',
-          'checkin': '2021-01-10T06:00:00.000Z',
-          'checkout': '2021-01-17T01:00:00.000Z',
-          'status': 'reserved',
-        }],
-        'page': 0,
-        'totalCount': 1,
-      })
-      .get(/\/dashboard\/checkout/).reply(200, {
-        'data': [],
-        'page': 0,
-        'totalCount': 0,
-      })
-      .get(/\/dashboard\/sales/).reply(200, [])
-      .patch('/dashboard/checkin', body => {
-        checkin(body);
-        return body;
-      }).reply(401);
-    setToken('token');
 
-    const { findByText, getAllByText } = render(<Index/>);
+    const { findByText, getAllByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [{
+            'id': 831,
+            'guestName': '山本 美咲',
+            'guestNameKana': 'テスト',
+            'guestPhone': '060-844-7544',
+            'roomName': '杏19119',
+            'checkin': '2021-01-10T06:00:00.000Z',
+            'checkout': '2021-01-17T01:00:00.000Z',
+            'status': 'reserved',
+          }],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .get(/\/dashboard\/sales/).reply(200, [])
+        .patch('/dashboard/checkin', body => {
+          checkin(body);
+          return body;
+        }).reply(401),
+    );
 
     await findByText('山本 美咲');
 
@@ -268,77 +266,77 @@ describe('Dashboard', () => {
     const daily = jest.fn();
     const monthly = jest.fn();
     const year = Number(format(startOfToday(), 'yyyy'));
-    useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
-      .get('/dashboard/rooms').reply(200, [
-        { 'id': 1, 'name': '颯太83958' },
-        { 'id': 2, 'name': '大翔75634' },
-        { 'id': 3, 'name': '翼36423' },
-        { 'id': 4, 'name': '結菜8081' },
-        { 'id': 5, 'name': '杏19119' },
-      ])
-      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
-        'data': [],
-        'page': 0,
-        'totalCount': 0,
-      })
-      .get(/\/dashboard\/sales\/daily/).reply(200, (uri) => {
-        daily(uri);
-        return [
-          { 'day': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 656568 },
-          { 'day': `${year}-01-01T15:00:00.000Z`, 'sales': 121700 },
-          { 'day': `${year}-01-02T15:00:00.000Z`, 'sales': 517380 },
-          { 'day': `${year}-01-03T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-04T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-05T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-06T15:00:00.000Z`, 'sales': 447828 },
-          { 'day': `${year}-01-07T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-08T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-09T15:00:00.000Z`, 'sales': 485147 },
-          { 'day': `${year}-01-10T15:00:00.000Z`, 'sales': 1368088 },
-          { 'day': `${year}-01-11T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-12T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-13T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-14T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-15T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-16T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-17T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-18T15:00:00.000Z`, 'sales': 108075 },
-          { 'day': `${year}-01-19T15:00:00.000Z`, 'sales': 21615 },
-          { 'day': `${year}-01-20T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-21T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-22T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-23T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-24T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-25T15:00:00.000Z`, 'sales': 0 },
-          { 'day': `${year}-01-26T15:00:00.000Z`, 'sales': 1034760 },
-          { 'day': `${year}-01-27T15:00:00.000Z`, 'sales': 449470 },
-          { 'day': `${year}-01-28T15:00:00.000Z`, 'sales': 242664 },
-          { 'day': `${year}-01-29T15:00:00.000Z`, 'sales': 559785 },
-          { 'day': `${year}-01-30T15:00:00.000Z`, 'sales': 0 },
-        ];
-      })
-      .get(/\/dashboard\/sales\/monthly/)
-      .reply(200, (uri) => {
-        monthly(uri);
-        return [
-          { 'month': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 6013080 },
-          { 'month': `${year}-01-31T15:00:00.000Z`, 'sales': 4790803 },
-          { 'month': `${year}-02-29T15:00:00.000Z`, 'sales': 18903318 },
-          { 'month': `${year}-03-31T15:00:00.000Z`, 'sales': 11577323 },
-          { 'month': `${year}-04-30T15:00:00.000Z`, 'sales': 14144067 },
-          { 'month': `${year}-05-31T15:00:00.000Z`, 'sales': 9184391 },
-          { 'month': `${year}-06-30T15:00:00.000Z`, 'sales': 21629510 },
-          { 'month': `${year}-07-31T15:00:00.000Z`, 'sales': 19655282 },
-          { 'month': `${year}-08-31T15:00:00.000Z`, 'sales': 20417817 },
-          { 'month': `${year}-09-30T15:00:00.000Z`, 'sales': 21199194 },
-          { 'month': `${year}-10-31T15:00:00.000Z`, 'sales': 24838914 },
-          { 'month': `${year}-11-30T15:00:00.000Z`, 'sales': 19164865 },
-        ];
-      });
-    setToken('token');
 
-    const { getByTestId, findByText, getByText } = render(<Index/>);
+    const { getByTestId, findByText, getByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [
+          { 'id': 1, 'name': '颯太83958' },
+          { 'id': 2, 'name': '大翔75634' },
+          { 'id': 3, 'name': '翼36423' },
+          { 'id': 4, 'name': '結菜8081' },
+          { 'id': 5, 'name': '杏19119' },
+        ])
+        .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .get(/\/dashboard\/sales\/daily/).reply(200, (uri) => {
+          daily(uri);
+          return [
+            { 'day': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 656568 },
+            { 'day': `${year}-01-01T15:00:00.000Z`, 'sales': 121700 },
+            { 'day': `${year}-01-02T15:00:00.000Z`, 'sales': 517380 },
+            { 'day': `${year}-01-03T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-04T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-05T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-06T15:00:00.000Z`, 'sales': 447828 },
+            { 'day': `${year}-01-07T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-08T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-09T15:00:00.000Z`, 'sales': 485147 },
+            { 'day': `${year}-01-10T15:00:00.000Z`, 'sales': 1368088 },
+            { 'day': `${year}-01-11T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-12T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-13T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-14T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-15T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-16T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-17T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-18T15:00:00.000Z`, 'sales': 108075 },
+            { 'day': `${year}-01-19T15:00:00.000Z`, 'sales': 21615 },
+            { 'day': `${year}-01-20T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-21T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-22T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-23T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-24T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-25T15:00:00.000Z`, 'sales': 0 },
+            { 'day': `${year}-01-26T15:00:00.000Z`, 'sales': 1034760 },
+            { 'day': `${year}-01-27T15:00:00.000Z`, 'sales': 449470 },
+            { 'day': `${year}-01-28T15:00:00.000Z`, 'sales': 242664 },
+            { 'day': `${year}-01-29T15:00:00.000Z`, 'sales': 559785 },
+            { 'day': `${year}-01-30T15:00:00.000Z`, 'sales': 0 },
+          ];
+        })
+        .get(/\/dashboard\/sales\/monthly/)
+        .reply(200, (uri) => {
+          monthly(uri);
+          return [
+            { 'month': `${year - 1}-12-31T15:00:00.000Z`, 'sales': 6013080 },
+            { 'month': `${year}-01-31T15:00:00.000Z`, 'sales': 4790803 },
+            { 'month': `${year}-02-29T15:00:00.000Z`, 'sales': 18903318 },
+            { 'month': `${year}-03-31T15:00:00.000Z`, 'sales': 11577323 },
+            { 'month': `${year}-04-30T15:00:00.000Z`, 'sales': 14144067 },
+            { 'month': `${year}-05-31T15:00:00.000Z`, 'sales': 9184391 },
+            { 'month': `${year}-06-30T15:00:00.000Z`, 'sales': 21629510 },
+            { 'month': `${year}-07-31T15:00:00.000Z`, 'sales': 19655282 },
+            { 'month': `${year}-08-31T15:00:00.000Z`, 'sales': 20417817 },
+            { 'month': `${year}-09-30T15:00:00.000Z`, 'sales': 21199194 },
+            { 'month': `${year}-10-31T15:00:00.000Z`, 'sales': 24838914 },
+            { 'month': `${year}-11-30T15:00:00.000Z`, 'sales': 19164865 },
+          ];
+        }),
+    );
 
     await findByText('全部屋');
     expect(getByTestId('select-sales-date')).toBeVisible();

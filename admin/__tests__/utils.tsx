@@ -129,15 +129,27 @@ export const findElement = (node: ParentNode, selectors: string): HTMLElement | 
 
 type SetupNock = (scope: nock.Scope) => void;
 export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderResult> => {
-  setup(useNock()
-    .get('/admin').reply(200, { name: 'test name', icon: null })
-    .get('/dashboard/rooms').reply(200, [])
-    .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
-      'data': [],
-      'page': 0,
-      'totalCount': 0,
-    })
-    .get(/\/dashboard\/sales/).reply(200, []));
+  const scope = useNock()
+    .get('/admin').reply(200, {
+      name: 'test name', icon: null, roles: [
+        { 'role': 'dashboard', 'name': 'Dashboard' },
+        { 'role': 'guests', 'name': 'Guests' },
+        { 'role': 'reservations', 'name': 'Reservations' },
+        { 'role': 'rooms', 'name': 'Rooms' },
+        { 'role': 'admins', 'name': 'Admins' },
+      ],
+    });
+  if (page !== 'dashboard') {
+    scope
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+  }
+  setup(scope);
   setToken('token');
 
   const result = customRender(<Index/>);
