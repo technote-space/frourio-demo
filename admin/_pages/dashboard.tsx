@@ -122,31 +122,35 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     setCancelId(undefined);
   }, []);
   const handleCancel = useCallback(async() => {
-    await client.dashboard.cancel.patch({
+    const result = await handleAuthError(dispatch, {}, client.dashboard.cancel.patch, {
       headers: authHeader,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       body: { id: cancelId! },
     });
-    setCancelId(undefined);
-    refreshTables();
-    refreshSales();
-    setNotice(dispatch, 'キャンセルしました。');
+    if ('id' in result) {
+      refreshTables();
+      refreshSales();
+      setCancelId(undefined);
+      setNotice(dispatch, 'キャンセルしました。');
+    }
   }, [cancelId]);
   const handleCloseCheckout = useCallback(() => {
     setCheckoutId(undefined);
     setAmount(undefined);
   }, []);
   const handleCheckout = useCallback(async() => {
-    await client.dashboard.checkout.patch({
+    const result = await handleAuthError(dispatch, {}, client.dashboard.checkout.patch, {
       headers: authHeader,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       body: { id: checkoutId!, payment: amount },
     });
-    refreshTables();
-    refreshSales();
-    setCheckoutId(undefined);
-    setAmount(undefined);
-    setNotice(dispatch, '更新しました。');
+    if ('id' in result) {
+      refreshTables();
+      refreshSales();
+      setCheckoutId(undefined);
+      setAmount(undefined);
+      setNotice(dispatch, '更新しました。');
+    }
   }, [checkoutId, amount]);
   const handleChangeAmount = useCallback(event => {
     setAmount(Number(event.target.value));
@@ -221,12 +225,14 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
                 className={classes.button}
                 startIcon={<HomeIcon/>}
                 onClick={async() => {
-                  await client.dashboard.checkin.patch({
+                  const result = await handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
                     headers: authHeader,
                     body: { id: data.id },
                   });
-                  refreshTables();
-                  setNotice(dispatch, '更新しました。');
+                  if ('id' in result) {
+                    refreshTables();
+                    setNotice(dispatch, '更新しました。');
+                  }
                 }}
               >
                 チェックイン
