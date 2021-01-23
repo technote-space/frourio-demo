@@ -5,6 +5,9 @@ import { Chip, Select, MenuItem, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
+  select: {
+    minWidth: 100,
+  },
   chips: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -37,6 +40,7 @@ const EditRoles: FC<Props> = ({ props, roles }: Props) => {
   return useMemo(() => isNotProcessed ? null : <div data-testid="edit-roles">
     <Select
       multiple
+      className={classes.select}
       value={(props.value ?? []).map((role: string) => JSON.parse(role).role)}
       onChange={handleChange}
       input={<Input/>}

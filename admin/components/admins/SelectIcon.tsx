@@ -39,8 +39,6 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
     }
   }, [props.value]);
 
-  console.log(props.value);
-  console.log(preview);
   return useMemo(() => <div>
     {preview && <Avatar
       className={classes.avatar}
@@ -53,6 +51,7 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
       type="file"
       id="select-icon-file"
       onChange={handleChange}
+      data-testid="select-icon-file"
     />
     <label htmlFor="select-icon-file">
       <Button
@@ -61,7 +60,7 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
         component="span"
         startIcon={<CloudUploadIcon/>}
       >
-        Upload
+        選択
       </Button>
     </label>
   </div>, [classes, preview]);
