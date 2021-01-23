@@ -183,11 +183,12 @@ describe('Index', () => {
           { 'role': 'rooms', 'name': 'Rooms' },
         ],
       })
-      .get(/rooms\?/).reply(200, {
-      'data': [],
-      'page': 0,
-      'totalCount': 0,
-    });
+      .get(/rooms\?/)
+      .reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      });
     setToken('token');
 
     const { findByTestId } = render(<Index/>);
