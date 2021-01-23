@@ -93,6 +93,10 @@ export const mockStdout = () => {
   console.error = jest.fn();
 };
 
+export const mockCreateObjectUrl = () => {
+  global.URL.createObjectURL = jest.fn(() => 'blob:http://localhost:3000/b7547d11-e9b5-4819-b0fe-4b505ee50fc9');
+};
+
 export const mockFullCalendar = (start: Date, end: Date, dates: Record<string, Date[]>, events: Record<string, { start: Date; end: Date; }[][]>) => {
   (FullCalendar as jest.Mock).mockImplementation(props => <MockFullCalendar
     start={start}
@@ -152,6 +156,7 @@ export const setup = () => {
   setupLocalStorage();
   setupTimers();
   mockStdout();
+  mockCreateObjectUrl();
 };
 
 export * from '@testing-library/react';

@@ -171,15 +171,15 @@ describe('Dashboard', () => {
       .patch('/dashboard/checkin', body => {
         checkin(body);
         return body;
-      }).reply(200)
+      }).reply(200, () => ({ id: 123 }))
       .patch('/dashboard/checkout', body => {
         checkout(body);
         return body;
-      }).reply(200)
+      }).reply(200, () => ({ id: 123 }))
       .patch('/dashboard/cancel', body => {
         cancel(body);
         return body;
-      }).reply(200);
+      }).reply(200, () => ({ id: 123 }));
     setToken('token');
 
     const { getByTestId, findAllByText, findByText, getAllByText } = render(<Index/>);
@@ -222,6 +222,46 @@ describe('Dashboard', () => {
     expect(checkin).toBeCalledWith({ id: 831 });
     expect(checkout).toBeCalledWith({ id: 315, payment: 1 });
     expect(cancel).toBeCalledWith({ id: 227 });
+  });
+
+  it('should fail to checkin', async() => {
+    const checkin = jest.fn();
+    useNock()
+      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/checkin/).reply(200, {
+        'data': [{
+          'id': 831,
+          'guestName': '山本 美咲',
+          'guestNameKana': 'テスト',
+          'guestPhone': '060-844-7544',
+          'roomName': '杏19119',
+          'checkin': '2021-01-10T06:00:00.000Z',
+          'checkout': '2021-01-17T01:00:00.000Z',
+          'status': 'reserved',
+        }],
+        'page': 0,
+        'totalCount': 1,
+      })
+      .get(/\/dashboard\/checkout/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, [])
+      .patch('/dashboard/checkin', body => {
+        checkin(body);
+        return body;
+      }).reply(401);
+    setToken('token');
+
+    const { getByTestId, findAllByText, findByText, getAllByText } = render(<Index/>);
+
+    await findByText('山本 美咲');
+
+    // test checkin
+    user.click(getAllByText('チェックイン')[2]);
+    await findByText('その操作をする権限がありません。');
   });
 
   it('should render sales', async() => {
