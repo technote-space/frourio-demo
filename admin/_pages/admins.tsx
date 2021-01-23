@@ -41,6 +41,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         filtering: false,
         cellStyle: { width: 'auto', whiteSpace: 'nowrap' },
         headerStyle: { width: 'auto', whiteSpace: 'nowrap' },
+        validate: data => !!data['name'],
       },
       {
         title: 'メールアドレス',
@@ -48,6 +49,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         filtering: false,
         cellStyle: { width: 'auto', whiteSpace: 'nowrap' },
         headerStyle: { width: 'auto', whiteSpace: 'nowrap' },
+        validate: data => !!data['email'],
       },
       {
         title: 'パスワード',
@@ -56,6 +58,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         cellStyle: { width: 'auto', whiteSpace: 'nowrap' },
         headerStyle: { width: 'auto', whiteSpace: 'nowrap' },
         render: () => '******',
+        validate: data => !!data['id'] || !!data['password']
       },
       {
         title: 'アイコン',
@@ -84,6 +87,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         editComponentWithError: (props: EditComponentPropsWithError<Model>) =>
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           <EditRoles props={props} roles={roles.data!}/>,
+        validate: data => !!data['roles'] && !!data['roles'].length,
       },
     ]}
     authHeader={authHeader}

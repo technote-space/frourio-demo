@@ -158,6 +158,13 @@ describe('Rooms', () => {
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
+    // input
+    const input = container.querySelectorAll('[mode="add"] input');
+    expect(input).toHaveLength(3);
+    user.type(input[0], 'test-name');
+    user.type(input[1], '3');
+    user.type(input[2], '10000');
+
     user.click(container.querySelectorAll('[title="Save"]')[0]);
     await findByText('name must be longer than or equal to 1 characters');
     await findByText('number must be a positive number');

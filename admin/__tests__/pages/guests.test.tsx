@@ -127,6 +127,15 @@ describe('Guests', () => {
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
+    // input
+    const input = container.querySelectorAll('[mode="add"] input');
+    expect(input).toHaveLength(5);
+    user.type(input[0], 'test-name');
+    user.type(input[1], 'テスト');
+    user.type(input[2], '100-0001');
+    user.type(input[3], 'テスト県テスト市テスト町');
+    user.type(input[4], '090-0000-0000');
+
     user.click(container.querySelectorAll('[title="Save"]')[0]);
     await findByText('name must be longer than or equal to 1 characters');
     await findByText('This value is not katakana');
