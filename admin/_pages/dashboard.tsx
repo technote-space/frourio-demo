@@ -121,37 +121,37 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const handleCloseCancel = useCallback(() => {
     setCancelId(undefined);
   }, []);
-  const handleCancel = useCallback(async() => {
-    const result = await handleAuthError(dispatch, {}, client.dashboard.cancel.patch, {
-      headers: authHeader,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      body: { id: cancelId! },
-    });
+  const handleRequest = async(request: Promise<any>, onSuccess: () => void) => {
+    const result = await request;
     if ('id' in result) {
-      refreshTables();
-      refreshSales();
-      setCancelId(undefined);
-      setNotice(dispatch, 'キャンセルしました。');
+      onSuccess();
     }
-  }, [cancelId]);
+  };
+  const handleCancel = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.cancel.patch, {
+    headers: authHeader,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    body: { id: cancelId! },
+  }), () => {
+    refreshTables();
+    refreshSales();
+    setCancelId(undefined);
+    setNotice(dispatch, 'キャンセルしました。');
+  }), [cancelId]);
   const handleCloseCheckout = useCallback(() => {
     setCheckoutId(undefined);
     setAmount(undefined);
   }, []);
-  const handleCheckout = useCallback(async() => {
-    const result = await handleAuthError(dispatch, {}, client.dashboard.checkout.patch, {
-      headers: authHeader,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      body: { id: checkoutId!, payment: amount },
-    });
-    if ('id' in result) {
-      refreshTables();
-      refreshSales();
-      setCheckoutId(undefined);
-      setAmount(undefined);
-      setNotice(dispatch, '更新しました。');
-    }
-  }, [checkoutId, amount]);
+  const handleCheckout = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkout.patch, {
+    headers: authHeader,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    body: { id: checkoutId!, payment: amount },
+  }), () => {
+    refreshTables();
+    refreshSales();
+    setCheckoutId(undefined);
+    setAmount(undefined);
+    setNotice(dispatch, '更新しました。');
+  }), [checkoutId, amount]);
   const handleChangeAmount = useCallback(event => {
     setAmount(Number(event.target.value));
   }, []);
@@ -224,16 +224,13 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
               return <Button
                 className={classes.button}
                 startIcon={<HomeIcon/>}
-                onClick={async() => {
-                  const result = await handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
-                    headers: authHeader,
-                    body: { id: data.id },
-                  });
-                  if ('id' in result) {
-                    refreshTables();
-                    setNotice(dispatch, '更新しました。');
-                  }
-                }}
+                onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
+                  headers: authHeader,
+                  body: { id: data.id },
+                }), () => {
+                  refreshTables();
+                  setNotice(dispatch, '更新しました。');
+                })}
               >
                 チェックイン
               </Button>;
