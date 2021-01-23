@@ -22,7 +22,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "setup": "yarn install --network-timeout 1000000 && run-s setup:*",
+    "setup": "yarn install --prefer-offline --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx shx cp -u ../../server/.env.example ./.env && npx shx cp -u ../../server/prisma/.env.example ./prisma/.env && npx shx cp -u ../../server/prisma/schema.prisma ./prisma/schema.prisma",
     "setup:db": "npx shx rm -f prisma/dev.db && prisma migrate dev --name init --preview-feature && yarn ts-node ./seeder.ts",
     "build": "run-s build:*",
