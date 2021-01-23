@@ -28,11 +28,7 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
 
   useEffect(() => {
     if (onRemoveToken) {
-      if (auth) {
-        removeToken();
-      } else {
-        tokenRemoved(dispatch);
-      }
+      removeToken();
     }
   }, [onRemoveToken]);
   useEffect(() => {

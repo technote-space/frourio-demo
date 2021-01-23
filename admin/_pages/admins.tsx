@@ -58,7 +58,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         cellStyle: { width: 'auto', whiteSpace: 'nowrap' },
         headerStyle: { width: 'auto', whiteSpace: 'nowrap' },
         render: () => '******',
-        validate: data => !!data['id'] || !!data['password']
+        validate: data => !!data['id'] || !!data['password'],
       },
       {
         title: 'アイコン',
@@ -70,7 +70,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         render: data => data['icon'] && <Avatar
           className={classes.avatar}
           src={data['icon']}
-          alt={data['name'] || 'icon'}
+          alt={data['name']}
         />,
         // eslint-disable-next-line react/display-name
         editComponentWithError: (props: EditComponentPropsWithError<Model>) => <SelectIcon props={props}/>,

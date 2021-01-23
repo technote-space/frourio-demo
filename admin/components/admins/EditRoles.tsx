@@ -49,7 +49,6 @@ const EditRoles: FC<Props> = ({ props, roles }: Props) => {
           key={`chip-${role}`}
           label={roles[role]}
           className={classes.chip}
-          onMouseDown={event => event.stopPropagation()}
         />)}
       </div>}
     >
