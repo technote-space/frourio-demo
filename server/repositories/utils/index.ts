@@ -2,10 +2,10 @@
 import type { Prisma, PrismaClient, StringFieldUpdateOperationsInput } from '$/prisma/client';
 import type { Column, Query, Filter } from '@technote-space/material-table';
 import type { MaybeUndefined } from '$/types';
+import type { Multipart } from 'fastify-multipart';
 import bcrypt from 'bcryptjs';
 import createError from 'fastify-error';
 import { startOfDay, addDays } from 'date-fns';
-import { Multipart } from 'fastify-multipart';
 
 export type Models = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {

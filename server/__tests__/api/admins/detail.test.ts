@@ -1,7 +1,16 @@
+import type Blob from 'cross-blob';
 import controller from '$/api/admins/_adminId@number/controller';
 import { getAdmin, updateAdmin, deleteAdmin } from '$/repositories/admin';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
 import { get, update, remove } from '$/domains/admins';
+
+jest.mock('fs', () => ({
+  ...jest.requireActual('fs') as {},
+  promises: {
+    ...jest.requireActual('fs').promises as {},
+    writeFile: jest.fn(),
+  },
+}));
 
 describe('admins/detail', () => {
   it('should get admin', async() => {
@@ -70,6 +79,16 @@ describe('admins/detail', () => {
         name: 'test',
         email: 'test1@example.com',
         password: 'test1234',
+        icon: {
+          filename: 'test.png',
+          toBuffer: jest.fn(),
+          size: 0,
+          type: '',
+          arrayBuffer: jest.fn(),
+          slice: jest.fn(),
+          stream: jest.fn(),
+          text: jest.fn(),
+        } as Blob,
         roles: [],
       },
     });
@@ -80,6 +99,7 @@ describe('admins/detail', () => {
         email: 'test1@example.com',
         password: expect.any(String),
         roles: { connect: [] },
+        icon: expect.stringMatching(/\.png$/),
       },
       where: {
         id: 123,

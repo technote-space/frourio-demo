@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type Blob from 'cross-blob';
 import { promises } from 'fs';
 import { resolve, join, extname } from 'path';
 import { Multipart } from 'fastify-multipart';
@@ -6,7 +7,7 @@ import { isMultipartFile } from '$/repositories/utils';
 import { startOfToday, format } from 'date-fns';
 
 export type SavedFileType<T extends Record<string, any>> = {
-  [key in keyof T]: T[key] extends Multipart | undefined ? string : T[key]
+  [key in keyof T]: T[key] extends Multipart | Blob | undefined ? string : T[key]
 }
 export const saveFile = async <T extends Record<string, any>>(body: T): Promise<SavedFileType<T>> => {
   return Object.fromEntries(await Object.entries(body).reduce(async(prev, [key, value]) => {

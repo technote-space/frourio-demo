@@ -19,7 +19,7 @@ export class AdminBody {
   password?: string;
 
   @IsOptional()
-  icon?: Blob;
+  icon?: Blob | string;
 
   @IsOptional()
   roles?: Role[];
