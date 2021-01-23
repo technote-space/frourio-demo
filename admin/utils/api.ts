@@ -37,7 +37,7 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
           setError(dispatch, error.response.data?.message);
           logout(dispatch);
         } else {
-          setError(dispatch, error.response.data?.message ?? 'その操作をする権限がありません。');
+          setError(dispatch, error.response.data?.message ?? error.response.config.method?.toUpperCase() === 'GET' ? '' : 'その操作をする権限がありません。');
           onRefreshToken(dispatch);
         }
 
