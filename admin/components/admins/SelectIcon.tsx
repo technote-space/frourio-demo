@@ -29,7 +29,6 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
   }, []);
 
   useEffect(() => {
-    console.log(props.value);
     if (props.value) {
       if (typeof props.value === 'string') {
         setPreview(props.value);

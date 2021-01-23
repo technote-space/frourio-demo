@@ -35,8 +35,6 @@ const EditRoles: FC<Props> = ({ props, roles }: Props) => {
     }
   }, [isNotProcessed]);
 
-  console.log(isNotProcessed);
-  console.log(props.value);
   return useMemo(() => isNotProcessed ? null : <div data-testid="edit-roles">
     <Select
       multiple
