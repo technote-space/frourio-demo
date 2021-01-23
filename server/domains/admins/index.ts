@@ -7,6 +7,7 @@ import { getAdmins, getAdminCount, getAdmin, createAdmin, updateAdmin, deleteAdm
 import { getRoles, getRoleCount } from '$/repositories/role';
 import { getSkip, getCurrentPage } from '$/service/pages';
 import { getWhere, getOrderBy } from '$/repositories/utils';
+import { getAdminFilterConstraints } from '$/domains/admins/utils';
 
 export type ListRole = Record<string, string>;
 
@@ -14,7 +15,7 @@ export const list = depend(
   { getAdmins, getAdminCount },
   async({ getAdmins, getAdminCount }, query: Query<Admin>): Promise<BodyResponse<QueryResult<Admin>>> => {
     const pageSize = query.pageSize;
-    const where = getWhere<Admin>(query.search, ['name', 'email'], []);
+    const where = getWhere<Admin>(query.search, ['name', 'email'], [], undefined, ...getAdminFilterConstraints(query.filters));
     const orderBy = getOrderBy<Admin>(query.orderBy, query.orderDirection);
     const totalCount = await getAdminCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);

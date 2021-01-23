@@ -12,7 +12,7 @@ import {
 } from '$/repositories/utils';
 import { saveFile } from '$/service/multipart';
 import { includeRoles } from '$/repositories/admin';
-import { processRoleConnections } from '$/domains/admins/utils';
+import { processRoleConnections, getAdminFilterConstraints } from '$/domains/admins/utils';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs') as {},
@@ -340,5 +340,68 @@ describe('processRoleConnections', () => {
     expect(processRoleConnections({
       roles: [{ role: 'test1', name: 'test1' }, { role: 'test2', name: 'test2' }],
     })).toEqual({ roles: { connect: [{ role: 'test1' }, { role: 'test2' }] } });
+  });
+});
+
+describe('getAdminFilterConstraints', () => {
+  it('should return empty array', () => {
+    expect(getAdminFilterConstraints()).toEqual([]);
+    expect(getAdminFilterConstraints([])).toEqual([]);
+  });
+
+  it('should return constraints', () => {
+    expect(getAdminFilterConstraints([{
+      column: {
+        field: 'roles',
+      },
+      value: ['dashboard', 'rooms'],
+      operator: '=',
+    }])).toEqual([{
+      roles: {
+        some: {
+          role: {
+            in: ['dashboard', 'rooms'],
+          },
+        },
+      },
+    }]);
+    expect(getAdminFilterConstraints([{
+      column: {
+        field: 'test',
+      },
+      value: 123,
+      operator: '=',
+    }])).toEqual([{
+      test: 123,
+    }]);
+    expect(getAdminFilterConstraints([
+      {
+        column: {
+          field: 'test',
+        },
+        value: 123,
+        operator: '=',
+      },
+      {
+        column: {
+          field: 'roles',
+        },
+        value: ['dashboard', 'rooms'],
+        operator: '=',
+      },
+    ])).toEqual([
+      {
+        roles: {
+          some: {
+            role: {
+              in: ['dashboard', 'rooms'],
+            },
+          },
+        },
+      },
+      {
+        test: 123,
+      },
+    ]);
   });
 });

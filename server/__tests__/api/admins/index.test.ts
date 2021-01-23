@@ -49,7 +49,13 @@ describe('admins', () => {
       headers: getAuthorizationHeader(1),
       user: { id: 1, roles: [] },
       query: {
-        filters: [],
+        filters: [{
+          column: {
+            field: 'roles',
+          },
+          value: ['dashboard', 'rooms'],
+          operator: '=',
+        }],
         page: 0,
         pageSize: 2,
         totalCount: 100,
@@ -95,6 +101,15 @@ describe('admins', () => {
               },
             },
           ],
+        },
+        {
+          roles: {
+            some: {
+              role: {
+                in: ['dashboard', 'rooms'],
+              },
+            },
+          },
         },
       ],
     };

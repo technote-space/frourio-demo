@@ -29,13 +29,38 @@ type ModelWhere<T extends object> = {
         T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
           never
 };
-type WhereSub<T extends object> = ModelWhere<T> | {
-  AND?: Prisma.Enumerable<WhereSub<T>>;
-  OR?: Prisma.Enumerable<WhereSub<T>>;
-  NOT?: Prisma.Enumerable<WhereSub<T>>;
+type ModelWhereSub<T extends object> = ModelWhere<T> | {
+  AND?: Prisma.Enumerable<ModelWhereSub<T> & ModelWhere<T>>;
+  OR?: Prisma.Enumerable<ModelWhereSub<T> & ModelWhere<T>>;
+  NOT?: Prisma.Enumerable<ModelWhereSub<T> & ModelWhere<T>>;
 };
+
+type RelationFilterWhereInput = {
+  AND?: Prisma.Enumerable<RelationFilterWhereInput & {
+    [key: string]: any;
+  }>;
+  OR?: Prisma.Enumerable<RelationFilterWhereInput & {
+    [key: string]: any;
+  }>;
+  NOT?: Prisma.Enumerable<RelationFilterWhereInput & {
+    [key: string]: any;
+  }>;
+} & {
+  [key: string]: any;
+};
+type RelationFilterWhere = {
+  every?: RelationFilterWhereInput;
+  some?: RelationFilterWhereInput;
+  none?: RelationFilterWhereInput;
+};
+type RelationFilterWhereSub<T extends object> = {
+  [key in keyof T]?: T[key] extends undefined ? never :
+    T[key] extends {}[] ? RelationFilterWhere :
+      never;
+};
+
 type Where<T extends object> = {
-  AND: Array<WhereSub<T>>;
+  AND: Array<ModelWhereSub<T> | RelationFilterWhereSub<T>>;
 };
 type OrderBy<T extends object> = {
   [key in keyof T]?: Prisma.SortOrder
@@ -61,7 +86,7 @@ export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T 
 const mergeConstraints = <T extends object>(
   where: Where<T> | undefined,
   dateConstraint: ModelWhere<T> | undefined,
-  additional: ModelWhere<T>[],
+  additional: (ModelWhere<T> | RelationFilterWhereSub<T>)[],
 ): Where<T> | undefined => {
   if (!where) {
     if (!dateConstraint) {
@@ -127,7 +152,7 @@ export const getWhere = <T extends object>(
   stringKeys: TypeKey<T, string>[],
   numberKeys: TypeKey<T, number>[],
   date?: DateConstraint<T>,
-  ...additional: ModelWhere<T>[]
+  ...additional: (ModelWhere<T> | RelationFilterWhereSub<T>)[]
 ): Where<T> | undefined => {
   let dateConstraint;
   if (date?.date) {
