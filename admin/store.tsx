@@ -17,58 +17,60 @@ const initialState: ContextState = {
   },
   onRemoveToken: false,
   onRefreshToken: false,
-};
+} as const;
+
+const reducerActions = {
+  SET_ADMIN: (store, action) => ({
+    ...store,
+    name: action.admin.name,
+    icon: action.admin.icon,
+    roles: action.admin.roles?.map((role: { role: string }) => role.role),
+  }),
+  OPEN_SIDEBAR: (store) => ({ ...store, isSidebarOpen: true }),
+  CLOSE_SIDEBAR: (store) => ({ ...store, isSidebarOpen: false }),
+  OPEN_LICENSE: (store) => ({ ...store, isLicenseOpen: true }),
+  CLOSE_LICENSE: (store) => ({ ...store, isLicenseOpen: false }),
+  PAGE: (store, action) => ({ ...store, page: action.page }),
+  TITLE: (store, action) => ({ ...store, title: action.title }),
+  LOGOUT: (store) => ({
+    ...store,
+    name: undefined,
+    icon: undefined,
+    title: undefined,
+    roles: undefined,
+    onRemoveToken: true,
+  }),
+  TOKEN_REMOVED: (store) => ({ ...store, onRemoveToken: false, page: 'dashboard' }),
+  ON_REFRESH_TOKEN: (store) => ({ ...store, onRefreshToken: true }),
+  OFF_REFRESH_TOKEN: (store) => ({ ...store, onRefreshToken: false }),
+  SET_NOTICE: (store, action) => ({
+    ...store,
+    notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice },
+  }),
+  SET_ERROR: (store, action) => ({
+    ...store,
+    notice: { ...store.notice, ...{ open: true, variant: 'error' }, ...action.notice },
+  }),
+  SET_WARNING: (store, action) => ({
+    ...store,
+    notice: { ...store.notice, ...{ open: true, variant: 'warning' }, ...action.notice },
+  }),
+  CLOSE_NOTICE: (store) => ({ ...store, notice: { ...store.notice, ...{ open: false } } }),
+  LOCAL_STORAGE_CHANGED: (store, action) => ({
+    ...store, localStorage: {
+      ...store.localStorage,
+      [action.key]: action.value,
+    },
+  }),
+} as const;
 
 const reducer = (store, action) => {
   console.log(action);
-  switch (action.type) {
-    case 'SET_ADMIN':
-      return {
-        ...store,
-        name: action.admin.name,
-        icon: action.admin.icon,
-        roles: action.admin.roles.map(role => role.role),
-      };
-    case 'OPEN_SIDEBAR':
-      return { ...store, isSidebarOpen: true };
-    case 'CLOSE_SIDEBAR':
-      return { ...store, isSidebarOpen: false };
-    case 'OPEN_LICENSE':
-      return { ...store, isLicenseOpen: true };
-    case 'CLOSE_LICENSE':
-      return { ...store, isLicenseOpen: false };
-    case 'PAGE':
-      return { ...store, page: action.page };
-    case 'TITLE':
-      return { ...store, title: action.title };
-    case 'LOGOUT':
-      return { ...store, name: undefined, icon: undefined, title: undefined, roles: undefined, onRemoveToken: true };
-    case 'TOKEN_REMOVED':
-      return { ...store, onRemoveToken: false, page: 'dashboard' };
-    case 'ON_REFRESH_TOKEN':
-      return { ...store, onRefreshToken: true };
-    case 'OFF_REFRESH_TOKEN':
-      return { ...store, onRefreshToken: false };
-    case 'SET_NOTICE':
-      return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'success' }, ...action.notice } };
-    case 'SET_ERROR':
-      return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'error' }, ...action.notice } };
-    case 'SET_WARNING':
-      return { ...store, notice: { ...store.notice, ...{ open: true, variant: 'warning' }, ...action.notice } };
-    case 'CLOSE_NOTICE':
-      return { ...store, notice: { ...store.notice, ...{ open: false } } };
-    case 'LOCAL_STORAGE_CHANGED':
-      return {
-        ...store, localStorage: {
-          ...store.localStorage,
-          [action.key]: action.value,
-        },
-      };
-    /* istanbul ignore next */
-    default:
-      /* istanbul ignore next */
-      return store;
+  if (action.type in reducerActions) {
+    return reducerActions[action.type](store, action);
   }
+
+  return store;
 };
 
 const StoreContext = createContext<ContextState>(initialState);
