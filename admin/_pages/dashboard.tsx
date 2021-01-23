@@ -121,7 +121,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const handleCloseCancel = useCallback(() => {
     setCancelId(undefined);
   }, []);
-  const handleRequest = async(request: Promise<any>, onSuccess: () => void) => {
+  const handleRequest = async(request: Promise<{ id?: number }>, onSuccess: () => void) => {
     const result = await request;
     if ('id' in result) {
       onSuccess();

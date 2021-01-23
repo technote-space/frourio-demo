@@ -255,7 +255,7 @@ describe('Dashboard', () => {
       }).reply(401);
     setToken('token');
 
-    const { getByTestId, findAllByText, findByText, getAllByText } = render(<Index/>);
+    const { findByText, getAllByText } = render(<Index/>);
 
     await findByText('山本 美咲');
 
