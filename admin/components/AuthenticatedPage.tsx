@@ -16,14 +16,18 @@ export type AuthenticatedPageProps = {
   authHeader: { authorization: string };
 }
 
-const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
+type Props = {
+  page: string;
+}
+
+const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC<Props> = WrappedComponent => addDisplayName<FC<Props>>('AuthenticatedPage', props => {
   const classes = useStyles();
   const [auth] = useAuthToken();
-  const { page, onRemoveToken } = useStoreContext();
+  const { page, onRemoveToken, roles } = useStoreContext();
 
   return <div className={classes.wrap} data-testid={`page-${page}`}>
     {(!auth || onRemoveToken) && <Login {...props} />}
-    {!(!auth || onRemoveToken) && <WrappedComponent {...auth} {...props} />}
+    {!(!auth || onRemoveToken) && !!roles && roles.includes(props.page) && <WrappedComponent {...auth} {...props} />}
   </div>;
 }, WrappedComponent);
 
