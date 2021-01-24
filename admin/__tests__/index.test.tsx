@@ -39,7 +39,6 @@ describe('Index', () => {
     await findByText('Request failed with status code 400');
 
     expect(login).toBeCalledWith({ email: 'test@example.com', pass: 'password' });
-    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should fail to login (invalid header)', async() => {
@@ -62,7 +61,6 @@ describe('Index', () => {
     await findByText('Invalid header');
 
     expect(login).toBeCalledWith({ email: 'test@example.com', pass: 'password' });
-    expect(asFragment()).toMatchSnapshot();
   });
 
   it('should success to login', async() => {
