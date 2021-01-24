@@ -56,7 +56,7 @@
     "start:server": "yarn --cwd server start",
     "test": "yarn lint && yarn typecheck && yarn cover",
     "typecheck": "yarn build:types && tsc --noEmit -p admin && tsc --noEmit -p server",
-    "update": "run-s update:*",
+    "update": "yarn install && run-s update:*",
     "update:admin": "yarn --cwd admin update",
     "update:admin:electron": "yarn --cwd admin/electron update",
     "update:common": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
