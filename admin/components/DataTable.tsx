@@ -8,6 +8,7 @@ import { Grid } from '@material-ui/core';
 import MaterialTable, { MTableEditField } from '@technote-space/material-table';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
+import useTableLocalization from '~/hooks/useTableLocalization';
 import { getDataTableApi, handleAuthError, processUpdateData, isAxiosError } from '~/utils/api';
 import { setNotice } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
@@ -92,6 +93,7 @@ const DataTable = <T extends Model, >({
 }: Props<T>): ReactElement => {
   const { dispatch } = useDispatchContext();
   const tableIcons = useTableIcons();
+  const tableLocalization = useTableLocalization();
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const title = useMemo(() => {
@@ -204,6 +206,7 @@ const DataTable = <T extends Model, >({
 
   return useMemo(() => <MaterialTable
     icons={tableIcons}
+    localization={tableLocalization}
     title={title}
     columns={columns}
     data={fetchData}

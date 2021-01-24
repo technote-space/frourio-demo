@@ -10,6 +10,7 @@ import { Dialog, DialogTitle, Link, IconButton, Typography, FormControl, FormHel
 import CloseIcon from '@material-ui/icons/Close';
 import { useDispatchContext } from '~/store';
 import useTableIcons from '~/hooks/useTableIcons';
+import useTableLocalization from '~/hooks/useTableLocalization';
 import { handleAuthError } from '~/utils/api';
 import pages from '~/_pages';
 import { SvgIconComponent } from '@material-ui/icons';
@@ -57,6 +58,7 @@ const SearchTable = <T extends {
 
   // material table
   const tableIcons = useTableIcons();
+  const tableLocalization = useTableLocalization();
   const title = useMemo(() => pages[model].label, []);
   const icon = useMemo(() => {
     const Icon = pages[model].icon;
@@ -98,6 +100,7 @@ const SearchTable = <T extends {
       </DialogTitle>
       <MaterialTable
         icons={tableIcons}
+        localization={tableLocalization}
         title={icon}
         columns={columns.map(col => {
           const colClone = { ...col };
