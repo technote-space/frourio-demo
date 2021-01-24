@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { setup, mockFullCalendar, loadPage, findElement } from '~/__tests__/utils';
+import { setup, mockFullCalendar, loadPage, findElement, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, startOfMonth, endOfMonth, addDays, format, setHours } from 'date-fns';
 
@@ -286,6 +286,8 @@ describe('Reservations', () => {
     user.click(await findByText('清水 結菜'));
     user.click(findElement(await findByRole('presentation'), '.MuiBackdrop-root'));
     expect(queryAllByText('Invalid guestId.')).toHaveLength(0);
+    expect(save).toBeCalledTimes(1);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
   });
 
   it('should handle validation error (update)', async() => {
@@ -332,6 +334,8 @@ describe('Reservations', () => {
           'page': 0,
           'totalCount': 1,
         })
+        .get('/reservations/guest?guestId=10').reply(200, { 'id': 10, 'name': '清水 結菜' })
+        .get('/reservations/room?roomId=1').reply(200, { 'id': 1, 'name': '杏19119', 'number': 4, 'price': 37319 })
         .get(/reservations\/calendar\/checkin/).reply(200, [
           {
             'start': format(startOfMonth(startOfToday()), 'yyyy-MM-dd'),
@@ -375,6 +379,7 @@ describe('Reservations', () => {
     user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('Invalid checkout.');
     expect(update).toBeCalledTimes(1);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
   });
 
   it('should handle validation error (delete)', async() => {
@@ -429,7 +434,7 @@ describe('Reservations', () => {
 
     user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('この行を削除しますか？');
-    expect(del).toBeCalledTimes(1);
+    await waitFor(() => expect(del).toBeCalledTimes(1));
   });
 
   it('should add reservation', async() => {
@@ -626,8 +631,6 @@ describe('Reservations', () => {
           'page': 0,
           'totalCount': 1,
         })
-        .get('/reservations/guest?guestId=10').reply(200, { 'id': 10, 'name': '清水 結菜' })
-        .get('/reservations/room?roomId=1').reply(200, { 'id': 1, 'name': '杏19119', 'number': 4, 'price': 37319 })
         .delete('/reservations/1011').reply(200, body => {
           del();
           return body;

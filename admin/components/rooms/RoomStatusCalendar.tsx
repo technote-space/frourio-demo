@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { RoomStatusEvent } from '$/domains/rooms';
+import type { RoomStatusEvent } from '$/domains/admin/rooms';
 import { useState, useMemo, useCallback } from 'react';
 import { IconButton, Dialog } from '@material-ui/core';
 import { Today as TodayIcon } from '@material-ui/icons';

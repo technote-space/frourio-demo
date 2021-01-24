@@ -23,13 +23,13 @@ describe('Index', () => {
   it('should fail to login', async() => {
     const login = jest.fn();
     useNock()
-      .post('/login', body => {
+      .post('/login/admin', body => {
         login(body);
         return body;
       }).reply(400);
     setInvalidToken();
 
-    const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>);
+    const { getByText, getByLabelText, getByTestId, findByText } = render(<Index/>);
 
     await findByText('Login');
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -48,12 +48,12 @@ describe('Index', () => {
   it('should fail to login (invalid header)', async() => {
     const login = jest.fn();
     useNock()
-      .post('/login', body => {
+      .post('/login/admin', body => {
         login(body);
         return body;
       }).reply(204);
 
-    const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>);
+    const { getByText, getByLabelText, findByText } = render(<Index/>);
 
     await findByText('Login');
     user.type(getByLabelText(/Email address/), 'test@example.com');
@@ -71,7 +71,7 @@ describe('Index', () => {
   it('should success to login', async() => {
     const login = jest.fn();
     useNock()
-      .post('/login', body => {
+      .post('/login/admin', body => {
         login(body);
         return body;
       }).reply(204, undefined, {
@@ -84,7 +84,7 @@ describe('Index', () => {
           { 'role': 'dashboard', 'name': 'Dashboard' },
         ],
       })
-      .get('/dashboard/rooms').reply(200, [])
+      .get('/admin/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
         'page': 0,
@@ -127,14 +127,7 @@ describe('Index', () => {
       .get('/admin').reply(401, {
         message: 'test error',
         tokenExpired: true,
-      })
-      .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
-        'data': [],
-        'page': 0,
-        'totalCount': 0,
-      })
-      .get(/\/dashboard\/sales/).reply(200, []);
+      });
     setToken('token');
 
     const { findByText } = render(<Index/>);
@@ -162,7 +155,7 @@ describe('Index', () => {
           { 'role': 'dashboard', 'name': 'Dashboard' },
         ],
       })
-      .get('/dashboard/rooms').reply(401)
+      .get('/admin/dashboard/rooms').reply(401)
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
         'page': 0,
@@ -205,7 +198,7 @@ describe('Index', () => {
           { 'role': 'dashboard', 'name': 'Dashboard' },
         ],
       })
-      .get('/dashboard/rooms').reply(200, [])
+      .get('/admin/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
         'page': 0,
@@ -237,7 +230,7 @@ describe('Index', () => {
           { 'role': 'dashboard', 'name': 'Dashboard' },
         ],
       })
-      .get('/dashboard/rooms').reply(200, [])
+      .get('/admin/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
         'page': 0,
@@ -279,8 +272,7 @@ describe('Index', () => {
           'data': [],
           'page': 0,
           'totalCount': 0,
-        })
-        .post('/guests').reply(201),
+        }),
     );
 
     const buttons = container.querySelectorAll('header .MuiSvgIcon-root');

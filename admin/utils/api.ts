@@ -9,7 +9,11 @@ import { singular } from 'pluralize';
 import api from '$/api/$api';
 import { logout, setError, onRefreshToken } from '~/utils/actions';
 
-export const client = api(aspida());
+const apiClient = api(aspida());
+export const client = {
+  ...apiClient.admin,
+  login: apiClient.login.admin,
+};
 
 export const isAxiosError = (target: any): target is AxiosError => {
   return typeof target === 'object' &&
@@ -71,11 +75,11 @@ export type DataTableApi = {
   }
 };
 export type DataTableApiModels = {
-  [key in keyof ApiInstance]: ApiInstance[key] extends {
+  [key in keyof ApiInstance['admin']]: ApiInstance['admin'][key] extends {
     get,
     post,
   } ? key : never
-}[keyof ApiInstance]
+}[keyof ApiInstance['admin']]
 export const getDataTableApi = (model: DataTableApiModels): DataTableApi => ({
   ...client[model],
   detail: id => ({

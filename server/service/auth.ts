@@ -43,14 +43,6 @@ const getRoles = (request: FastifyRequest, domain: string | undefined): string[]
   return [...new Set(roles)];
 };
 export const verifyAdmin = async(request: FastifyRequest, domain?: string): Promise<boolean> => {
-  if (request.url === '/api/login' && request.method === 'POST') {
-    // ディレクトリレベルのフックは上書きできないようなのでここで除外
-    //
-    // https://frourio.io/docs/hooks/directory-level-hooks
-    // > Directory-level hooks are cascading
-    return true;
-  }
-
   const roles = getRoles(request, domain);
   try {
     const payload = await request.jwtVerify() as AuthorizationPayload | null;

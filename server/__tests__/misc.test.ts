@@ -11,7 +11,7 @@ import {
 } from '$/repositories/utils';
 import { saveFile } from '$/service/multipart';
 import { includeRoles } from '$/repositories/admin';
-import { processRoleConnections, getAdminFilterConstraints } from '$/domains/admins/utils';
+import { processRoleConnections, getAdminFilterConstraints } from '$/domains/admin/admins/utils';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs') as {},
@@ -22,12 +22,6 @@ jest.mock('fs', () => ({
 }));
 
 describe('verifyAdmin', () => {
-  it('should return true if login api', async() => {
-    const jwtVerify = jest.fn();
-    expect(await verifyAdmin({ url: '/api/login', method: 'POST', jwtVerify } as any)).toBe(true);
-    expect(jwtVerify).not.toBeCalled();
-  });
-
   it('should return true if verified', async() => {
     const jwtVerify = jest.fn(() => ({
       id: 123,

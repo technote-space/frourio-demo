@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { CheckinNotSelectableEvent } from '$/domains/reservations';
+import type { CheckinNotSelectableEvent } from '$/domains/admin/reservations';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import { useMemo, useCallback } from 'react';
 import { format, startOfToday } from 'date-fns';

@@ -1,7 +1,7 @@
 import type { ReactChild, ReactElement } from 'react';
 import type { RenderResult } from '@testing-library/react';
 import type { PageKeys } from '~/_pages';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { StoreContextProvider } from '~/store';
 import nock from 'nock';
@@ -35,23 +35,27 @@ const customRender = (ui: ReactElement) => {
 };
 
 export const setupNock = () => {
-  afterEach(() => {
-    nock.abortPendingRequests();
-    nock.cleanAll();
+  afterEach(async() => {
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 };
 
-export const useNock = (): nock.Scope => {
-  nock.disableNetConnect();
-  return nock('http://localhost:8080/api').persist().defaultReplyHeaders({
+export const useNock = (prefix = ''): nock.Scope => {
+  if (!prefix) {
+    nock.abortPendingRequests();
+    nock.cleanAll();
+    nock.disableNetConnect();
+  }
+  return nock(`http://localhost:8080/api${prefix}`).persist().defaultReplyHeaders({
     'access-control-allow-origin': '*',
     'access-control-allow-credentials': 'true',
     'access-control-expose-headers': 'Authorization',
-  }).options(() => true).reply(204, '', {
+  }).options(() => true).optionally().reply(204, '', {
     'access-control-allow-methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
     'access-control-allow-headers': 'Authorization',
   });
 };
+export const useAdminNock = (): nock.Scope => useNock('/admin');
 
 export const setupLocalStorage = () => {
   const localStorageMock = jest.fn(() => {
@@ -129,25 +133,25 @@ export const findElement = (node: ParentNode, selectors: string): HTMLElement | 
 
 type SetupNock = (scope: nock.Scope) => void;
 export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderResult> => {
-  const scope = useNock()
-    .get('/admin').reply(200, {
-      name: 'test name', icon: null, roles: [
-        { 'role': 'dashboard', 'name': 'Dashboard' },
-        { 'role': 'guests', 'name': 'Guests' },
-        { 'role': 'reservations', 'name': 'Reservations' },
-        { 'role': 'rooms', 'name': 'Rooms' },
-        { 'role': 'admins', 'name': 'Admins' },
-      ],
-    });
+  useNock().get('/admin').optionally().reply(200, {
+    name: 'test name', icon: null, roles: [
+      { 'role': 'dashboard', 'name': 'Dashboard' },
+      { 'role': 'guests', 'name': 'Guests' },
+      { 'role': 'reservations', 'name': 'Reservations' },
+      { 'role': 'rooms', 'name': 'Rooms' },
+      { 'role': 'admins', 'name': 'Admins' },
+    ],
+  });
+  const scope = useAdminNock();
   if (page !== 'dashboard') {
     scope
-      .get('/dashboard/rooms').reply(200, [])
-      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+      .get('/dashboard/rooms').optionally().reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).optionally().reply(200, {
         'data': [],
         'page': 0,
         'totalCount': 0,
       })
-      .get(/\/dashboard\/sales/).reply(200, []);
+      .get(/\/dashboard\/sales/).optionally().reply(200, []);
   }
   setup(scope);
   setToken('token');
