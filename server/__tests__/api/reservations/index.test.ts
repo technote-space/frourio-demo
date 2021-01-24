@@ -7,7 +7,7 @@ import { list, create } from '$/domains/reservations';
 
 describe('reservations', () => {
   it('should get reservations', async() => {
-    const getReservationsMock      = jest.fn(() => getPromiseLikeItem([
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
         guestId: 234,
@@ -48,7 +48,7 @@ describe('reservations', () => {
       },
     ]));
     const getReservationsCountMock = jest.fn(() => getPromiseLikeItem(3));
-    const injectedController       = controller.inject({
+    const injectedController = controller.inject({
       list: list.inject({
         getReservations: getReservations.inject({
           prisma: {
@@ -178,7 +178,7 @@ describe('reservations', () => {
 
   it('should create reservation', async() => {
     const createReservationMock = jest.fn();
-    const getGuestMock          = jest.fn(() => getPromiseLikeItem({
+    const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
       name: 'test',
       nameKana: 'テスト',
@@ -186,13 +186,13 @@ describe('reservations', () => {
       address: 'テスト県テスト市',
       phone: '090-1234-5678',
     }));
-    const getRoomMock           = jest.fn(() => getPromiseLikeItem({
+    const getRoomMock = jest.fn(() => getPromiseLikeItem({
       id: 345,
       name: 'test',
       number: 1,
       price: 10000,
     }));
-    const injectedController    = controller.inject({
+    const injectedController = controller.inject({
       create: create.inject({
         createReservation: createReservation.inject({
           prisma: {
@@ -258,11 +258,13 @@ describe('reservations', () => {
       },
     });
     expect(getGuestMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 234,
       },
     });
     expect(getRoomMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 345,
       },

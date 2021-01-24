@@ -37,6 +37,7 @@ describe('rooms/detail', () => {
       price: 10000,
     }));
     expect(getRoomMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },

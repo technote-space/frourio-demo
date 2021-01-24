@@ -352,6 +352,7 @@ describe('dashboard/checkout', () => {
       status: 'checkout',
     }));
     expect(getReservationMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },
@@ -416,6 +417,7 @@ describe('dashboard/checkout', () => {
       message: 'Not found or invalid status.',
     }));
     expect(getReservationMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },

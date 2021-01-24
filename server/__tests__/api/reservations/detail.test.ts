@@ -7,7 +7,7 @@ import { getRoom } from '$/repositories/room';
 
 describe('reservations/detail', () => {
   it('should get reservation', async() => {
-    const getReservationMock       = jest.fn(() => getPromiseLikeItem({
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       guestId: 234,
       guestName: 'test name',
@@ -50,6 +50,7 @@ describe('reservations/detail', () => {
       status: 'reserved',
     }));
     expect(getReservationMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },
@@ -57,8 +58,8 @@ describe('reservations/detail', () => {
   });
 
   it('should update reservation', async() => {
-    const updateReservationMock    = jest.fn();
-    const getGuestMock          = jest.fn(() => getPromiseLikeItem({
+    const updateReservationMock = jest.fn();
+    const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
       name: 'test',
       nameKana: 'テスト',
@@ -66,7 +67,7 @@ describe('reservations/detail', () => {
       address: 'テスト県テスト市',
       phone: '090-1234-5678',
     }));
-    const getRoomMock           = jest.fn(() => getPromiseLikeItem({
+    const getRoomMock = jest.fn(() => getPromiseLikeItem({
       id: 345,
       name: 'test',
       number: 1,
@@ -143,11 +144,13 @@ describe('reservations/detail', () => {
       },
     });
     expect(getGuestMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 234,
       },
     });
     expect(getRoomMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 345,
       },
@@ -155,8 +158,8 @@ describe('reservations/detail', () => {
   });
 
   it('should update reservation with empty status', async() => {
-    const updateReservationMock    = jest.fn();
-    const getGuestMock          = jest.fn(() => getPromiseLikeItem({
+    const updateReservationMock = jest.fn();
+    const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
       name: 'test',
       nameKana: 'テスト',
@@ -164,7 +167,7 @@ describe('reservations/detail', () => {
       address: 'テスト県テスト市',
       phone: '090-1234-5678',
     }));
-    const getRoomMock           = jest.fn(() => getPromiseLikeItem({
+    const getRoomMock = jest.fn(() => getPromiseLikeItem({
       id: 345,
       name: 'test',
       number: 1,
@@ -240,11 +243,13 @@ describe('reservations/detail', () => {
       },
     });
     expect(getGuestMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 234,
       },
     });
     expect(getRoomMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 345,
       },
@@ -252,7 +257,7 @@ describe('reservations/detail', () => {
   });
 
   it('should delete reservation', async() => {
-    const deleteReservationMock    = jest.fn();
+    const deleteReservationMock = jest.fn();
     const injectedController = controller.inject({
       remove: remove.inject({
         deleteReservation: deleteReservation.inject({

@@ -41,6 +41,7 @@ describe('guests/detail', () => {
       phone: '090-1234-5678',
     }));
     expect(getGuestMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },

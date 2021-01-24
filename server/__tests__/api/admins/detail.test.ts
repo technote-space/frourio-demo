@@ -51,6 +51,7 @@ describe('admins/detail', () => {
       include: {
         roles: true,
       },
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },

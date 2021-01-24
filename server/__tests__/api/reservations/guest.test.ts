@@ -37,6 +37,7 @@ describe('reservations/guest', () => {
       name: 'test',
     });
     expect(getGuestMock).toBeCalledWith({
+      rejectOnNotFound: true,
       where: {
         id: 123,
       },
