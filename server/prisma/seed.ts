@@ -1,5 +1,5 @@
 import { PrismaClient } from '$/prisma/client';
-import '../factories';
+import './factories';
 import { RoleSeeder } from './seed/role';
 import { AdminSeeder } from './seed/admin';
 import { GuestSeeder } from './seed/guest';
