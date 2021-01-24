@@ -6,6 +6,7 @@ import { Dispatch } from '~/store';
 export type ContextState = {
   name?: string;
   icon?: string;
+  roles?: string[];
   isSidebarOpen: boolean;
   isLicenseOpen: boolean;
   page: PageKeys;
@@ -17,21 +18,20 @@ export type ContextState = {
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   localStorage?: Record<string, any>;
+  onRemoveToken: boolean;
+  onRefreshToken: boolean;
 };
 
-export type MenuProps = {
-  dispatch: Dispatch;
-  removeToken: () => void;
-}
 export type Page = {
   label: string;
   page: FC;
   icon: SvgIconComponent;
+  roleCheck: boolean;
 };
 export type Menu = {
   label: string;
   icon: SvgIconComponent;
-  onClick: (props: MenuProps) => void;
+  onClick: (dispatch: Dispatch) => void;
   always?: boolean;
 };
 

@@ -179,9 +179,6 @@ exports[`Index should fail to login (invalid header) 1`] = `
                         value="test@example.com"
                       />
                     </div>
-                    <div
-                      class="makeStyles-error-93"
-                    />
                   </div>
                   <div
                     class="MuiFormControl-root makeStyles-input-94"
@@ -235,9 +232,6 @@ exports[`Index should fail to login (invalid header) 1`] = `
                         </button>
                       </div>
                     </div>
-                    <div
-                      class="makeStyles-error-93"
-                    />
                   </div>
                   <div
                     class="makeStyles-login-92"
@@ -459,9 +453,6 @@ exports[`Index should fail to login 1`] = `
                         value="test@example.com"
                       />
                     </div>
-                    <div
-                      class="makeStyles-error-56"
-                    />
                   </div>
                   <div
                     class="MuiFormControl-root makeStyles-input-57"
@@ -515,9 +506,6 @@ exports[`Index should fail to login 1`] = `
                         </button>
                       </div>
                     </div>
-                    <div
-                      class="makeStyles-error-56"
-                    />
                   </div>
                   <div
                     class="makeStyles-login-55"
@@ -679,9 +667,6 @@ exports[`Index should show login form 1`] = `
                         value=""
                       />
                     </div>
-                    <div
-                      class="makeStyles-error-26"
-                    />
                   </div>
                   <div
                     class="MuiFormControl-root makeStyles-input-27"
@@ -735,9 +720,6 @@ exports[`Index should show login form 1`] = `
                         </button>
                       </div>
                     </div>
-                    <div
-                      class="makeStyles-error-26"
-                    />
                   </div>
                   <div
                     class="makeStyles-login-25"

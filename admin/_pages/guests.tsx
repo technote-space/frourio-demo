@@ -11,11 +11,11 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
     model={'guests'}
     columns={[
       { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-      { title: '名前', field: 'name' },
-      { title: 'かな名', field: 'nameKana' },
-      { title: '郵便番号', field: 'zipCode' },
-      { title: '住所', field: 'address' },
-      { title: '電話番号', field: 'phone' },
+      { title: '名前', field: 'name', validate: data => !!data['name'] },
+      { title: 'かな名', field: 'nameKana', validate: data => !!data['nameKana'] },
+      { title: '郵便番号', field: 'zipCode', validate: data => !!data['zipCode'] },
+      { title: '住所', field: 'address', validate: data => !!data['address'] },
+      { title: '電話番号', field: 'phone', validate: data => !!data['phone'] },
     ]}
     authHeader={authHeader}
     unmountRef={unmountRef}

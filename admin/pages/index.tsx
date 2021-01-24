@@ -5,6 +5,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ja } from 'date-fns/locale';
 import Route from '~/components/Route';
+import Auth from '~/components/Auth';
 import useTheme from '~/hooks/useTheme';
 import useDarkMode from '~/hooks/useDarkMode';
 import SnackbarWrapper from '~/components/SnackbarWrapper';
@@ -22,6 +23,7 @@ const Index = () => {
       <Layout>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
           <Route/>
+          <Auth/>
         </MuiPickersUtilsProvider>
       </Layout>
     </ThemeProvider>

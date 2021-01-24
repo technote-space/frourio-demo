@@ -3,18 +3,8 @@ import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import MaterialTable from '@technote-space/material-table';
-import {
-  FormControl,
-  InputLabel,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  TextField,
-  Select,
-  MenuItem,
-} from '@material-ui/core';
+import { FormControl, InputLabel, Button, Card, CardContent, Grid } from '@material-ui/core';
+import { Typography, TextField, Select, MenuItem } from '@material-ui/core';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import { differenceInCalendarDays, format } from 'date-fns';
@@ -30,6 +20,7 @@ import { client, handleAuthError } from '~/utils/api';
 import { getPriceCalc } from '~/utils/calc';
 import { setNotice } from '~/utils/actions';
 import useTableIcons from '~/hooks/useTableIcons';
+import useTableLocalization from '~/hooks/useTableLocalization';
 import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -81,6 +72,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const tableIcons = useTableIcons();
+  const tableLocalization = useTableLocalization();
   const [date, setDate] = useState<Date>(new Date());
   const [salesDate, setSalesDate] = useState<Date>(new Date());
   const [roomId, setRoomId] = useState<number>(0);
@@ -121,33 +113,37 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const handleCloseCancel = useCallback(() => {
     setCancelId(undefined);
   }, []);
-  const handleCancel = useCallback(async() => {
-    await client.dashboard.cancel.patch({
-      headers: authHeader,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      body: { id: cancelId! },
-    });
-    setCancelId(undefined);
+  const handleRequest = async(request: Promise<{ id?: number }>, onSuccess: () => void) => {
+    const result = await request;
+    if ('id' in result) {
+      onSuccess();
+    }
+  };
+  const handleCancel = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.cancel.patch, {
+    headers: authHeader,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    body: { id: cancelId! },
+  }), () => {
     refreshTables();
     refreshSales();
+    setCancelId(undefined);
     setNotice(dispatch, 'キャンセルしました。');
-  }, [cancelId]);
+  }), [cancelId]);
   const handleCloseCheckout = useCallback(() => {
     setCheckoutId(undefined);
     setAmount(undefined);
   }, []);
-  const handleCheckout = useCallback(async() => {
-    await client.dashboard.checkout.patch({
-      headers: authHeader,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      body: { id: checkoutId!, payment: amount },
-    });
+  const handleCheckout = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkout.patch, {
+    headers: authHeader,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    body: { id: checkoutId!, payment: amount },
+  }), () => {
     refreshTables();
     refreshSales();
     setCheckoutId(undefined);
     setAmount(undefined);
     setNotice(dispatch, '更新しました。');
-  }, [checkoutId, amount]);
+  }), [checkoutId, amount]);
   const handleChangeAmount = useCallback(event => {
     setAmount(Number(event.target.value));
   }, []);
@@ -194,6 +190,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <MaterialTable
       tableRef={checkinTableRef}
       icons={tableIcons}
+      localization={tableLocalization}
       title='チェックイン'
       columns={[
         { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
@@ -220,14 +217,13 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
               return <Button
                 className={classes.button}
                 startIcon={<HomeIcon/>}
-                onClick={async() => {
-                  await client.dashboard.checkin.patch({
-                    headers: authHeader,
-                    body: { id: data.id },
-                  });
+                onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
+                  headers: authHeader,
+                  body: { id: data.id },
+                }), () => {
                   refreshTables();
                   setNotice(dispatch, '更新しました。');
-                }}
+                })}
               >
                 チェックイン
               </Button>;
@@ -284,6 +280,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <MaterialTable
       tableRef={checkoutTableRef}
       icons={tableIcons}
+      localization={tableLocalization}
       title='チェックアウト'
       columns={[
         { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },

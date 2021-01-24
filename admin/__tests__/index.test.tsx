@@ -9,14 +9,14 @@ setup();
 
 describe('Index', () => {
   it('should show login form', async() => {
-    const { asFragment, getAllByText, getByText, getByLabelText } = render(<Index/>);
+    const { asFragment, findByText, getAllByText, getByText, getByLabelText } = render(<Index/>);
 
+    await findByText('Login');
     expect(getAllByText('予約システム')).toHaveLength(2); // header, footer
     expect(getByText('Email address')).toBeVisible();
     expect(getByLabelText(/Email address/)).toBeVisible();
     expect(getByText('Password')).toBeVisible();
     expect(getByLabelText(/Password/)).toBeVisible();
-    expect(getByText('Login')).toBeVisible();
     expect(asFragment()).toMatchSnapshot();
   });
 
@@ -31,6 +31,7 @@ describe('Index', () => {
 
     const { asFragment, getByText, getByLabelText, getByTestId, findByText } = render(<Index/>);
 
+    await findByText('Login');
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
     user.click(getByTestId('password-switch'));
@@ -54,6 +55,7 @@ describe('Index', () => {
 
     const { asFragment, getByText, getByLabelText, findByText } = render(<Index/>);
 
+    await findByText('Login');
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
     await act(async() => {
@@ -75,7 +77,13 @@ describe('Index', () => {
       }).reply(204, undefined, {
         authorization: 'test-token',
       })
-      .get('/admin').reply(200, { name: null, icon: 'http://localhost:8080/api/icons/dummy.svg' })
+      .get('/admin').reply(200, {
+        name: null,
+        icon: 'http://localhost:8080/api/icons/dummy.svg',
+        roles: [
+          { 'role': 'dashboard', 'name': 'Dashboard' },
+        ],
+      })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
@@ -84,10 +92,11 @@ describe('Index', () => {
       })
       .get(/\/dashboard\/sales/).reply(200, []);
 
-    const { getByText, getByLabelText, findAllByText, getAllByText, container, findByTestId } = render(
+    const { getByText, getByLabelText, findByText, findAllByText, getAllByText, container, findByTestId } = render(
       <Index/>,
     );
 
+    await findByText('Login');
     user.type(getByLabelText(/Email address/), 'test@example.com');
     user.type(getByLabelText(/Password/), 'password');
     await act(async() => {
@@ -117,6 +126,7 @@ describe('Index', () => {
     useNock()
       .get('/admin').reply(401, {
         message: 'test error',
+        tokenExpired: true,
       })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
@@ -132,9 +142,69 @@ describe('Index', () => {
     await findByText('Login');
   });
 
+  it('should logout automatically if no appropriate roles', async() => {
+    useNock().get('/admin').reply(200, {
+      name: 'test name', icon: null, roles: [],
+    });
+    setToken('token');
+
+    const { findByText } = render(<Index/>);
+
+    await findByText('Login');
+  });
+
+  it('should not logout automatically', async() => {
+    useNock()
+      .get('/admin').reply(200, {
+        name: 'test name',
+        icon: null,
+        roles: [
+          { 'role': 'dashboard', 'name': 'Dashboard' },
+        ],
+      })
+      .get('/dashboard/rooms').reply(401)
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+    setToken('token');
+
+    const { findByTestId } = render(<Index/>);
+
+    await findByTestId('select-date');
+  });
+
+  it('should show fallback page', async() => {
+    useNock()
+      .get('/admin').reply(200, {
+        name: 'test name', icon: null, roles: [
+          { 'role': 'rooms', 'name': 'Rooms' },
+        ],
+      })
+      .get(/rooms\?/)
+      .reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      });
+    setToken('token');
+
+    const { findByTestId } = render(<Index/>);
+
+    await findByTestId('page-rooms');
+  });
+
   it('should login automatically and logout', async() => {
     useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/admin').reply(200, {
+        name: 'test name',
+        icon: null,
+        roles: [
+          { 'role': 'dashboard', 'name': 'Dashboard' },
+        ],
+      })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
@@ -160,7 +230,13 @@ describe('Index', () => {
 
   it('should show license dialog', async() => {
     useNock()
-      .get('/admin').reply(200, { name: 'test name', icon: null })
+      .get('/admin').reply(200, {
+        name: 'test name',
+        icon: null,
+        roles: [
+          { 'role': 'dashboard', 'name': 'Dashboard' },
+        ],
+      })
       .get('/dashboard/rooms').reply(200, [])
       .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
         'data': [],
@@ -173,6 +249,19 @@ describe('Index', () => {
     const { findByText, findByTestId, findAllByTestId, container } = render(<Index/>);
 
     await findByTestId('select-date');
+
+    const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
+    user.click(buttons[0]);
+    user.click(await findByText('ライセンス'));
+    user.click((await findAllByTestId('license-item'))[0]);
+    user.click(await findByTestId('close-license'));
+    user.click(await findByTestId('close-license-list'));
+  });
+
+  it('should show license dialog without login', async() => {
+    const { findByText, findByTestId, findAllByTestId, container } = render(<Index/>);
+
+    await findByText('Login');
 
     const buttons = container.querySelectorAll('header .MuiSvgIcon-root');
     user.click(buttons[0]);

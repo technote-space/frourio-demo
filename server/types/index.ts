@@ -56,3 +56,5 @@ export const ReservationStatus = {
   checkout: 'チェックアウト',
 } as const;
 export type ReservationStatus = keyof typeof ReservationStatus;
+
+export type MaybeUndefined<T> = undefined extends T ? undefined : never;

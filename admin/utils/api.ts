@@ -7,7 +7,7 @@ import aspida from '@aspida/axios';
 import { AxiosError } from 'axios';
 import { singular } from 'pluralize';
 import api from '$/api/$api';
-import { logout, setError } from '~/utils/actions';
+import { logout, setError, onRefreshToken } from '~/utils/actions';
 
 export const client = api(aspida());
 
@@ -33,12 +33,16 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
     if (isAxiosError(error)) {
       console.log(error.response);
       if (error.response && 401 === error.response.status) {
-        setError(dispatch, error.response.data?.message);
-        logout(dispatch);
-        /* istanbul ignore next */
+        if (error.response.data?.tokenExpired) {
+          setError(dispatch, error.response.data?.message);
+          logout(dispatch);
+        } else {
+          setError(dispatch, error.response.data?.message ?? error.response.config.method?.toUpperCase() === 'GET' ? '' : 'その操作をする権限がありません。');
+          onRefreshToken(dispatch);
+        }
+
         if (!fallback) {
-          /* istanbul ignore next */
-          return undefined as MaybeUndefined<T>;
+          throw error;
         }
 
         return fallback;

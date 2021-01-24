@@ -11,7 +11,7 @@ import { startOfDay, isAfter } from 'date-fns';
 import { Models } from '.';
 
 @ValidatorConstraint({ async: true })
-class IsIdExistsConstrains implements ValidatorConstraintInterface {
+class IsIdExistsConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     if (typeof value !== 'number') {
       return false;
@@ -25,7 +25,7 @@ class IsIdExistsConstrains implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Data not exists';
+    return 'データが存在しません';
   }
 }
 
@@ -36,35 +36,100 @@ export function IsIdExists(table: Models, validationOptions?: ValidationOptions)
       propertyName: propertyName,
       options: validationOptions,
       constraints: [table],
-      validator: IsIdExistsConstrains,
+      validator: IsIdExistsConstraint,
     });
   };
 }
 
 @ValidatorConstraint({ async: true })
-class IsReservableConstrains implements ValidatorConstraintInterface {
+class IsUniqueValueConstraint implements ValidatorConstraintInterface {
+  async validate(value: any, args: ValidationArguments) {
+    const data = args.object as any;
+    const table = args.constraints[0] as Models;
+    const prisma = new PrismaClient();
+    const findFirst = prisma[table].findFirst as ((args?: { where: { [key: string]: any } }) => Promise<object | null>);
+    const where = { [args.property]: value };
+    if ('id' in data) {
+      where['id'] = {
+        not: Number(data['id']),
+      };
+    }
+    const item = await findFirst({ where });
+    return item === null;
+  }
+
+  defaultMessage() {
+    return 'すでに登録されている値です';
+  }
+}
+
+export function IsUniqueValue(table: Models, validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [table],
+      validator: IsUniqueValueConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: true })
+class IsOptionalWhenUpdateConstraint implements ValidatorConstraintInterface {
+  async validate(value: any, args: ValidationArguments) {
+    const data = args.object as any;
+    if ('id' in data) {
+      return true;
+    }
+    if (typeof value === 'object') {
+      return false;
+    }
+
+    return !!value;
+  }
+
+  defaultMessage() {
+    return '有効な値を入力してください';
+  }
+}
+
+export function IsOptionalWhenUpdate(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsOptionalWhenUpdateConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: true })
+class IsReservableConstraint implements ValidatorConstraintInterface {
   private reason?: string;
 
   async validate(value: any, args: ValidationArguments) {
     const data = args.object as any;
     if (!('roomId' in data) || typeof data['roomId'] !== 'number') {
-      this.reason = 'The room is not selected.';
+      this.reason = '部屋が選択されていません';
       return false;
     }
     if (!('guestId' in data) || typeof data['guestId'] !== 'number') {
-      this.reason = 'The guest is not selected.';
+      this.reason = '宿泊客が選択されていません';
       return false;
     }
 
     if (!('checkin' in data) || !('checkout' in data) || !data['checkin'] || !data['checkout']) {
-      this.reason = 'The date and time of your stay have not been specified.';
+      this.reason = '宿泊期間が指定されていません';
       return false;
     }
 
     const checkin = new Date(data['checkin']);
     const checkout = new Date(data['checkout']);
     if (!isAfter(startOfDay(checkout), startOfDay(checkin))) {
-      this.reason = 'The checkout date must be after the checkin date.';
+      this.reason = 'チェックアウトはチェックインよりも後である必要があります';
       return false;
     }
 
@@ -103,7 +168,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
       where,
     });
     if (reservation) {
-      this.reason = 'This period is already reserved.';
+      this.reason = 'この期間はすでに予約されています';
       return false;
     }
 
@@ -115,7 +180,7 @@ class IsReservableConstrains implements ValidatorConstraintInterface {
       return this.reason;
     }
 
-    return 'Invalid value';
+    return '有効な値ではありません';
   }
 }
 
@@ -126,13 +191,13 @@ export function IsReservable(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsReservableConstrains,
+      validator: IsReservableConstraint,
     });
   };
 }
 
 @ValidatorConstraint({ async: true })
-class IsWithinLimitConstrains implements ValidatorConstraintInterface {
+class IsWithinLimitConstraint implements ValidatorConstraintInterface {
   private limit?: number;
 
   async validate(value: any, args: ValidationArguments) {
@@ -161,10 +226,10 @@ class IsWithinLimitConstrains implements ValidatorConstraintInterface {
 
   defaultMessage() {
     if (this.limit === undefined) {
-      return 'Invalid value';
+      return '有効な値ではありません';
     }
 
-    return 'The value must be less than or equal to ' + this.limit;
+    return `${this.limit}以下を指定してください`;
   }
 }
 
@@ -175,7 +240,7 @@ export function IsWithinLimit(table: Models, field: string, validationOptions?: 
       propertyName: propertyName,
       options: validationOptions,
       constraints: [table, field],
-      validator: IsWithinLimitConstrains,
+      validator: IsWithinLimitConstraint,
     });
   };
 }

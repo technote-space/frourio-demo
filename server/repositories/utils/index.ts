@@ -1,6 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import type { Prisma, PrismaClient } from '$/prisma/client';
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
+import type { Prisma, PrismaClient, StringFieldUpdateOperationsInput } from '$/prisma/client';
 import type { Column, Query, Filter } from '@technote-space/material-table';
+import type { MaybeUndefined } from '$/types';
+import type { Multipart } from 'fastify-multipart';
+import bcrypt from 'bcryptjs';
 import createError from 'fastify-error';
 import { startOfDay, addDays } from 'date-fns';
 
@@ -20,18 +23,44 @@ export type Models = {
   } ? key : never
 }[keyof PrismaClient]
 type ModelWhere<T extends object> = {
-  [key in keyof T]?: T[key] extends number ? (Prisma.IntFilter | number) :
-    T[key] extends string ? (Prisma.StringFilter | string) :
-      T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
-        never
+  [key in keyof T]?: T[key] extends undefined ? never :
+    T[key] extends number ? (Prisma.IntFilter | number) :
+      T[key] extends string ? (Prisma.StringFilter | string) :
+        T[key] extends Date ? (Prisma.DateTimeFilter | Date | string) :
+          never
 };
-type WhereSub<T extends object> = ModelWhere<T> | {
-  AND?: Prisma.Enumerable<WhereSub<T>>;
-  OR?: Prisma.Enumerable<WhereSub<T>>;
-  NOT?: Prisma.Enumerable<WhereSub<T>>;
+type ModelWhereSub<T extends object> = ModelWhere<T> | {
+  AND?: Prisma.Enumerable<ModelWhereSub<T> & ModelWhere<T>>;
+  OR?: Prisma.Enumerable<ModelWhereSub<T> & ModelWhere<T>>;
+  NOT?: Prisma.Enumerable<ModelWhereSub<T> & ModelWhere<T>>;
 };
+
+type RelationFilterWhereInput = {
+  AND?: Prisma.Enumerable<RelationFilterWhereInput & {
+    [key: string]: any;
+  }>;
+  OR?: Prisma.Enumerable<RelationFilterWhereInput & {
+    [key: string]: any;
+  }>;
+  NOT?: Prisma.Enumerable<RelationFilterWhereInput & {
+    [key: string]: any;
+  }>;
+} & {
+  [key: string]: any;
+};
+type RelationFilterWhere = {
+  every?: RelationFilterWhereInput;
+  some?: RelationFilterWhereInput;
+  none?: RelationFilterWhereInput;
+};
+type RelationFilterWhereSub<T extends object> = {
+  [key in keyof T]?: T[key] extends undefined ? never :
+    T[key] extends {}[] ? RelationFilterWhere :
+      never;
+};
+
 type Where<T extends object> = {
-  AND: Array<WhereSub<T>>;
+  AND: Array<ModelWhereSub<T> | RelationFilterWhereSub<T>>;
 };
 type OrderBy<T extends object> = {
   [key in keyof T]?: Prisma.SortOrder
@@ -43,7 +72,6 @@ type DateConstraint<T extends object> = {
   date?: Date;
   key: keyof T;
 }
-type MaybeUndefined<T> = undefined extends T ? undefined : never;
 
 export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T | never => {
   if (!item) {
@@ -58,7 +86,7 @@ export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T 
 const mergeConstraints = <T extends object>(
   where: Where<T> | undefined,
   dateConstraint: ModelWhere<T> | undefined,
-  additional: ModelWhere<T>[],
+  additional: (ModelWhere<T> | RelationFilterWhereSub<T>)[],
 ): Where<T> | undefined => {
   if (!where) {
     if (!dateConstraint) {
@@ -124,7 +152,7 @@ export const getWhere = <T extends object>(
   stringKeys: TypeKey<T, string>[],
   numberKeys: TypeKey<T, number>[],
   date?: DateConstraint<T>,
-  ...additional: ModelWhere<T>[]
+  ...additional: (ModelWhere<T> | RelationFilterWhereSub<T>)[]
 ): Where<T> | undefined => {
   let dateConstraint;
   if (date?.date) {
@@ -177,13 +205,11 @@ export const getDateConstraint = (date: Date) => ({
   lt: addDays(startOfDay(date), 1),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(data: T): Omit<T, 'id'> => {
   delete data.id;
   return data;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseQuery = <T extends object, U extends undefined | Query<T> | any>(query: U): Query<T> | MaybeUndefined<U> => {
   if (!query) {
     return undefined as MaybeUndefined<U>;
@@ -219,4 +245,38 @@ export const parseQuery = <T extends object, U extends undefined | Query<T> | an
   });
 
   return _query;
+};
+
+export const isMultipartFile = (value: any): value is Multipart => {
+  return typeof value === 'object' && 'filename' in value && 'toBuffer' in value;
+};
+
+export const parseBody = (body: Record<string, any>) => {
+  Object.keys(body).forEach(key => {
+    if (typeof body[key] === 'string' && /^\{[\s\S]*\}$/.test(body[key])) {
+      try {
+        body[key] = JSON.parse(body[key]);
+      } catch {
+        //
+      }
+    } else if (body[key] && typeof body[key] === 'object' && !isMultipartFile(body[key])) {
+      body[key] = parseBody(body[key]);
+    }
+  });
+
+  return body;
+};
+
+export const createHash = (data: string): string => bcrypt.hashSync(data, 10);
+export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);
+export const createAdminPasswordHash = <T extends StringFieldUpdateOperationsInput | string | undefined>(password?: T): string | MaybeUndefined<T> => {
+  if (password && typeof password === 'object') {
+    return createAdminPasswordHash(password.set);
+  }
+
+  if (!password) {
+    return undefined as MaybeUndefined<T>;
+  }
+
+  return createHash(password as string);
 };

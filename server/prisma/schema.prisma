@@ -15,9 +15,15 @@ model Admin {
   email     String   @unique
   password  String
   icon      String?
-  roles     String?
+  roles     Role[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Role {
+  role   String @id
+  name   String
+  admins Admin[]
 }
 
 model Guest {

@@ -1,7 +1,7 @@
 import type { AuthorizationPayload } from '$/types';
 import { defineHooks } from './$relay';
 import { verifyAdmin } from '$/service/auth';
-import { parseQuery } from '$/repositories/utils';
+import { parseQuery, parseBody } from '$/repositories/utils';
 
 export type AdditionalRequest = {
   user: AuthorizationPayload;
@@ -10,7 +10,7 @@ export type AdditionalRequest = {
 export default defineHooks(() => ({
   onRequest: async(request, reply) => {
     if (!await verifyAdmin(request)) {
-      reply.status(401).send();
+      reply.status(401).send({ tokenExpired: true });
     }
   },
   preHandler: (request, reply, done) => {
@@ -19,6 +19,9 @@ export default defineHooks(() => ({
         request.query['query'] = parseQuery(request.query['query']);
       }
       request.query = parseQuery(request.query);
+    }
+    if (typeof request.body === 'object' && request.headers['content-type'] && /^multipart\/form-data/.test(request.headers['content-type'])) {
+      request.body = parseBody(request.body as {});
     }
 
     done();

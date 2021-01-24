@@ -1,13 +1,9 @@
 import type { FC } from 'react';
-import { useEffect } from 'react';
-import { client, handleAuthError } from '~/utils/api';
 import Login from '~/components/Login';
-import { useStoreContext, useDispatchContext } from '~/store';
+import { useStoreContext } from '~/store';
 import useAuthToken from '~/hooks/useAuthToken';
-import { setAdmin } from '~/utils/actions';
 import { addDisplayName } from '~/utils/component';
 import { makeStyles } from '@material-ui/core/styles';
-import useUnmountRef from '~/hooks/useUnmountRef';
 
 const useStyles = makeStyles({
   wrap: {
@@ -20,31 +16,18 @@ export type AuthenticatedPageProps = {
   authHeader: { authorization: string };
 }
 
-const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
-  const classes = useStyles();
-  const unmountRef = useUnmountRef();
-  const [auth, , removeToken] = useAuthToken();
-  const { name, page } = useStoreContext();
-  const { dispatch } = useDispatchContext();
+type Props = {
+  page: string;
+}
 
-  useEffect(() => {
-    if (auth && !name) {
-      (async() => {
-        const admin = await handleAuthError(dispatch, {}, client.admin.get, { headers: auth.authHeader });
-        if ('name' in admin) {
-          if (!unmountRef.current) {
-            setAdmin(dispatch, admin);
-          }
-        } else {
-          removeToken();
-        }
-      })();
-    }
-  }, [auth, name, unmountRef.current]);
+const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC<Props> = WrappedComponent => addDisplayName<FC<Props>>('AuthenticatedPage', props => {
+  const classes = useStyles();
+  const [auth] = useAuthToken();
+  const { page, onRemoveToken, roles } = useStoreContext();
 
   return <div className={classes.wrap} data-testid={`page-${page}`}>
-    {!auth && <Login {...props} />}
-    {auth && <WrappedComponent {...auth} {...props} />}
+    {(!auth || onRemoveToken) && <Login {...props} />}
+    {!(!auth || onRemoveToken) && !!roles && roles.includes(props.page) && <WrappedComponent {...auth} {...props} />}
   </div>;
 }, WrappedComponent);
 

@@ -123,7 +123,7 @@ describe('Reservations', () => {
     expect(getAllByText('予約済み')).toHaveLength(4);
   });
 
-  it('should handle validation error', async() => {
+  it('should handle validation error (create)', async() => {
     const save = jest.fn();
     mockFullCalendar(
       startOfMonth(startOfToday()),
@@ -249,7 +249,7 @@ describe('Reservations', () => {
         ]),
     );
 
-    const button = container.querySelectorAll('[title="Add"]');
+    const button = container.querySelectorAll('[title="追加"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
     const select = await findAllByText('選択');
@@ -276,7 +276,7 @@ describe('Reservations', () => {
     user.click(await findByTestId('checkout-mock-calendar')); // click after loading (valid date)
     await findByText(format(addDays(startOfMonth(startOfToday()), 6), 'yyyy-MM-dd'));
 
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('Invalid guestId.');
     await findByText('Invalid roomId.');
     await findByText('Invalid number.');
@@ -286,6 +286,150 @@ describe('Reservations', () => {
     user.click(await findByText('清水 結菜'));
     user.click(findElement(await findByRole('presentation'), '.MuiBackdrop-root'));
     expect(queryAllByText('Invalid guestId.')).toHaveLength(0);
+  });
+
+  it('should handle validation error (update)', async() => {
+    const update = jest.fn();
+    mockFullCalendar(
+      startOfMonth(startOfToday()),
+      endOfMonth(startOfToday()),
+      {
+        'checkin': [
+          addDays(startOfMonth(startOfToday()), 4), // click after loading (valid date)
+        ],
+      },
+      {},
+    );
+    const {
+      findByText,
+      findByTestId,
+      getByTestId,
+      container,
+    } = await loadPage(
+      'reservations',
+      scope => scope
+        .get(/reservations\?/).reply(200, {
+          'data': [{
+            'id': 1011,
+            'guestId': 10,
+            'guestName': 'test-name',
+            'guestNameKana': 'テスト',
+            'guestZipCode': '100-0001',
+            'guestAddress': 'テスト県テスト市テスト町',
+            'guestPhone': '090-0000-0000',
+            'roomId': 1,
+            'roomName': '颯太83958',
+            'number': 3,
+            'amount': 18255,
+            'checkin': '2020-12-28T06:00:00.000Z',
+            'checkout': '2020-12-29T01:00:00.000Z',
+            'status': 'reserved',
+            'payment': null,
+            'createdAt': '2021-01-13T05:42:30.903Z',
+            'updatedAt': '2021-01-13T05:42:30.903Z',
+            'room': { 'number': 8, 'price': 6085 },
+          }],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get(/reservations\/calendar\/checkin/).reply(200, [
+          {
+            'start': format(startOfMonth(startOfToday()), 'yyyy-MM-dd'),
+            'end': format(startOfMonth(addDays(startOfToday(), 3)), 'yyyy-MM-dd'),
+            'allDay': true,
+            'color': '#a99',
+            'textColor': 'black',
+            'display': 'background',
+          },
+        ])
+        .patch('/reservations/1011', body => {
+          update(body);
+          return body;
+        }).reply(400, [
+          {
+            'value': '2020-12-31T01:00:00.000Z',
+            'property': 'checkin',
+            'children': [],
+          },
+          {
+            'value': '2020-12-31T01:00:00.000Z',
+            'property': 'checkout',
+            'children': [],
+            'constraints': { 'Test5': 'Invalid checkout.' },
+          },
+        ]),
+    );
+
+    await findByText('test-name');
+
+    const button = container.querySelectorAll('[title="編集"]');
+    expect(button).toHaveLength(1);
+    user.click(button[0]);
+
+    // select checkin
+    user.click(getByTestId('select-checkin-date-link'));
+    await findByTestId('checkin-mock-calendar-not-loading');
+    user.click(await findByTestId('checkin-mock-calendar')); // click after loading (valid date)
+    await findByText(format(addDays(startOfMonth(startOfToday()), 4), 'yyyy-MM-dd'));
+
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
+    await findByText('Invalid checkout.');
+    expect(update).toBeCalledTimes(1);
+  });
+
+  it('should handle validation error (delete)', async() => {
+    const del = jest.fn();
+    mockFullCalendar(
+      startOfMonth(startOfToday()),
+      endOfMonth(startOfToday()),
+      {},
+      {},
+    );
+    const {
+      findByText,
+      container,
+    } = await loadPage(
+      'reservations',
+      scope => scope
+        .get(/reservations\?/).reply(200, {
+          'data': [{
+            'id': 1011,
+            'guestId': 10,
+            'guestName': 'test-name',
+            'guestNameKana': 'テスト',
+            'guestZipCode': '100-0001',
+            'guestAddress': 'テスト県テスト市テスト町',
+            'guestPhone': '090-0000-0000',
+            'roomId': 1,
+            'roomName': '颯太83958',
+            'number': 3,
+            'amount': 18255,
+            'checkin': '2020-12-28T06:00:00.000Z',
+            'checkout': '2020-12-29T01:00:00.000Z',
+            'status': 'reserved',
+            'payment': null,
+            'createdAt': '2021-01-13T05:42:30.903Z',
+            'updatedAt': '2021-01-13T05:42:30.903Z',
+            'room': { 'number': 8, 'price': 6085 },
+          }],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .delete('/reservations/1011').reply(400, () => {
+          del();
+          return [];
+        }),
+    );
+
+    await findByText('test-name');
+
+    const button = container.querySelectorAll('[title="削除"]');
+    expect(button).toHaveLength(1);
+    user.click(button[0]);
+
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
+    await findByText('この行を削除しますか？');
+    expect(del).toBeCalledTimes(1);
   });
 
   it('should add reservation', async() => {
@@ -385,7 +529,7 @@ describe('Reservations', () => {
         }).reply(201),
     );
 
-    const button = container.querySelectorAll('[title="Add"]');
+    const button = container.querySelectorAll('[title="追加"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
     const select = await findAllByText('選択');
@@ -437,7 +581,7 @@ describe('Reservations', () => {
 
     // save
     await findByText('¥298552 = ¥37319 * 4人 * 2泊');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('追加しました。');
@@ -492,19 +636,19 @@ describe('Reservations', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Delete"]');
+    const button = container.querySelectorAll('[title="削除"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
-    await findByText('Are you sure you want to delete this row?');
+    await findByText('この行を削除しますか？');
 
     // cancel delete
-    user.click(container.querySelectorAll('[title="Cancel"]')[0]);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
     await findByText('test-name');
 
     // delete
-    user.click(container.querySelectorAll('[title="Delete"]')[0]);
-    await findByText('Are you sure you want to delete this row?');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="削除"]')[0]);
+    await findByText('この行を削除しますか？');
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('削除しました。');
@@ -551,20 +695,20 @@ describe('Reservations', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Edit"]');
+    const button = container.querySelectorAll('[title="編集"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
     // cancel edit
-    user.click(container.querySelectorAll('[title="Cancel"]')[0]);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
     await findByText('test-name');
 
     // edit
-    user.click(container.querySelectorAll('[title="Edit"]')[0]);
+    user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
     expect(input).toHaveLength(3);
     user.type(input[2], '12345');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('更新しました。');

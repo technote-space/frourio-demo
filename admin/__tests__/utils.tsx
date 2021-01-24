@@ -93,6 +93,10 @@ export const mockStdout = () => {
   console.error = jest.fn();
 };
 
+export const mockCreateObjectUrl = () => {
+  global.URL.createObjectURL = jest.fn(() => 'blob:http://localhost:3000/b7547d11-e9b5-4819-b0fe-4b505ee50fc9');
+};
+
 export const mockFullCalendar = (start: Date, end: Date, dates: Record<string, Date[]>, events: Record<string, { start: Date; end: Date; }[][]>) => {
   (FullCalendar as jest.Mock).mockImplementation(props => <MockFullCalendar
     start={start}
@@ -125,15 +129,27 @@ export const findElement = (node: ParentNode, selectors: string): HTMLElement | 
 
 type SetupNock = (scope: nock.Scope) => void;
 export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderResult> => {
-  setup(useNock()
-    .get('/admin').reply(200, { name: 'test name', icon: null })
-    .get('/dashboard/rooms').reply(200, [])
-    .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
-      'data': [],
-      'page': 0,
-      'totalCount': 0,
-    })
-    .get(/\/dashboard\/sales/).reply(200, []));
+  const scope = useNock()
+    .get('/admin').reply(200, {
+      name: 'test name', icon: null, roles: [
+        { 'role': 'dashboard', 'name': 'Dashboard' },
+        { 'role': 'guests', 'name': 'Guests' },
+        { 'role': 'reservations', 'name': 'Reservations' },
+        { 'role': 'rooms', 'name': 'Rooms' },
+        { 'role': 'admins', 'name': 'Admins' },
+      ],
+    });
+  if (page !== 'dashboard') {
+    scope
+      .get('/dashboard/rooms').reply(200, [])
+      .get(/\/dashboard\/(checkin|checkout)/).reply(200, {
+        'data': [],
+        'page': 0,
+        'totalCount': 0,
+      })
+      .get(/\/dashboard\/sales/).reply(200, []);
+  }
+  setup(scope);
   setToken('token');
 
   const result = customRender(<Index/>);
@@ -152,6 +168,7 @@ export const setup = () => {
   setupLocalStorage();
   setupTimers();
   mockStdout();
+  mockCreateObjectUrl();
 };
 
 export * from '@testing-library/react';
