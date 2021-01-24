@@ -249,7 +249,7 @@ describe('Reservations', () => {
         ]),
     );
 
-    const button = container.querySelectorAll('[title="Add"]');
+    const button = container.querySelectorAll('[title="追加"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
     const select = await findAllByText('選択');
@@ -276,7 +276,7 @@ describe('Reservations', () => {
     user.click(await findByTestId('checkout-mock-calendar')); // click after loading (valid date)
     await findByText(format(addDays(startOfMonth(startOfToday()), 6), 'yyyy-MM-dd'));
 
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('Invalid guestId.');
     await findByText('Invalid roomId.');
     await findByText('Invalid number.');
@@ -362,7 +362,7 @@ describe('Reservations', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Edit"]');
+    const button = container.querySelectorAll('[title="編集"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
@@ -372,7 +372,7 @@ describe('Reservations', () => {
     user.click(await findByTestId('checkin-mock-calendar')); // click after loading (valid date)
     await findByText(format(addDays(startOfMonth(startOfToday()), 4), 'yyyy-MM-dd'));
 
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('Invalid checkout.');
     expect(update).toBeCalledTimes(1);
   });
@@ -423,12 +423,12 @@ describe('Reservations', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Delete"]');
+    const button = container.querySelectorAll('[title="削除"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
-    await findByText('Are you sure you want to delete this row?');
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
+    await findByText('この行を削除しますか？');
     expect(del).toBeCalledTimes(1);
   });
 
@@ -529,7 +529,7 @@ describe('Reservations', () => {
         }).reply(201),
     );
 
-    const button = container.querySelectorAll('[title="Add"]');
+    const button = container.querySelectorAll('[title="追加"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
     const select = await findAllByText('選択');
@@ -581,7 +581,7 @@ describe('Reservations', () => {
 
     // save
     await findByText('¥298552 = ¥37319 * 4人 * 2泊');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('追加しました。');
@@ -636,19 +636,19 @@ describe('Reservations', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Delete"]');
+    const button = container.querySelectorAll('[title="削除"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
-    await findByText('Are you sure you want to delete this row?');
+    await findByText('この行を削除しますか？');
 
     // cancel delete
-    user.click(container.querySelectorAll('[title="Cancel"]')[0]);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
     await findByText('test-name');
 
     // delete
-    user.click(container.querySelectorAll('[title="Delete"]')[0]);
-    await findByText('Are you sure you want to delete this row?');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="削除"]')[0]);
+    await findByText('この行を削除しますか？');
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('削除しました。');
@@ -695,20 +695,20 @@ describe('Reservations', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Edit"]');
+    const button = container.querySelectorAll('[title="編集"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
     // cancel edit
-    user.click(container.querySelectorAll('[title="Cancel"]')[0]);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
     await findByText('test-name');
 
     // edit
-    user.click(container.querySelectorAll('[title="Edit"]')[0]);
+    user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
     expect(input).toHaveLength(3);
     user.type(input[2], '12345');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('更新しました。');

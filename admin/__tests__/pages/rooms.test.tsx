@@ -154,7 +154,7 @@ describe('Rooms', () => {
         ]),
     );
 
-    const button = container.querySelectorAll('[title="Add"]');
+    const button = container.querySelectorAll('[title="追加"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
@@ -165,7 +165,7 @@ describe('Rooms', () => {
     user.type(input[1], '3');
     user.type(input[2], '10000');
 
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('name must be longer than or equal to 1 characters');
     await findByText('number must be a positive number');
     await findByText('price must not be less than 0');
@@ -195,7 +195,7 @@ describe('Rooms', () => {
         }).reply(201),
     );
 
-    const button = container.querySelectorAll('[title="Add"]');
+    const button = container.querySelectorAll('[title="追加"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
@@ -207,7 +207,7 @@ describe('Rooms', () => {
     user.type(input[2], '10000');
 
     // save
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('追加しました。');
@@ -244,19 +244,19 @@ describe('Rooms', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Delete"]');
+    const button = container.querySelectorAll('[title="削除"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
-    await findByText('Are you sure you want to delete this row?');
+    await findByText('この行を削除しますか？');
 
     // cancel delete
-    user.click(container.querySelectorAll('[title="Cancel"]')[0]);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
     await findByText('test-name');
 
     // delete
-    user.click(container.querySelectorAll('[title="Delete"]')[0]);
-    await findByText('Are you sure you want to delete this row?');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="削除"]')[0]);
+    await findByText('この行を削除しますか？');
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('削除しました。');
@@ -289,21 +289,21 @@ describe('Rooms', () => {
 
     await findByText('test-name');
 
-    const button = container.querySelectorAll('[title="Edit"]');
+    const button = container.querySelectorAll('[title="編集"]');
     expect(button).toHaveLength(1);
     user.click(button[0]);
 
     // cancel edit
-    user.click(container.querySelectorAll('[title="Cancel"]')[0]);
+    user.click(container.querySelectorAll('[title="キャンセル"]')[0]);
     await findByText('test-name');
 
     // edit
-    user.click(container.querySelectorAll('[title="Edit"]')[0]);
+    user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
     expect(input).toHaveLength(3);
     user.clear(input[0]);
     user.type(input[0], 'update-name');
-    user.click(container.querySelectorAll('[title="Save"]')[0]);
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
     await findByText('更新しました。');
