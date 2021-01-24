@@ -15,7 +15,7 @@
     "migrate:dev": "prisma migrate dev --preview-feature",
     "migrate:init": "prisma migrate dev --name init --preview-feature",
     "migrate:reset": "prisma migrate reset --preview-feature",
-    "migrate:seed": "yarn ts-node -r tsconfig-paths/register ./prisma/seeds/seeder.ts",
+    "migrate:seed": "yarn ts-node -r tsconfig-paths/register ./prisma/seed.ts",
     "setup": "yarn install --prefer-offline --network-timeout 1000000 && run-s setup:*",
     "setup:config": "npx shx cp -u .env.example ./.env && npx shx cp -u prisma/.env.example prisma/.env",
     "setup:db": "npx shx rm -f prisma/dev.db && yarn migrate:dev",

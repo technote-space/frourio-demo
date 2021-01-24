@@ -1,10 +1,10 @@
 import { PrismaClient } from '$/prisma/client';
 import '../factories';
-import { RoleSeeder } from './role';
-import { AdminSeeder } from './admin';
-import { GuestSeeder } from './guest';
-import { ReservationSeeder } from './reservation';
-import { RoomSeeder } from './room';
+import { RoleSeeder } from './seed/role';
+import { AdminSeeder } from './seed/admin';
+import { GuestSeeder } from './seed/guest';
+import { ReservationSeeder } from './seed/reservation';
+import { RoomSeeder } from './seed/room';
 
 const prisma  = new PrismaClient();
 const seeders = [
