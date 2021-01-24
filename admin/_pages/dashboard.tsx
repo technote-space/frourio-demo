@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Query, QueryResult } from '@technote-space/material-table';
+import type { CheckinReservation, CheckoutReservation } from '$/domains/admin/dashboard';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import MaterialTable from '@technote-space/material-table';
 import { FormControl, InputLabel, Button, Card, CardContent, Grid } from '@material-ui/core';
@@ -21,7 +22,6 @@ import { getPriceCalc } from '~/utils/calc';
 import { setNotice } from '~/utils/actions';
 import useTableIcons from '~/hooks/useTableIcons';
 import useTableLocalization from '~/hooks/useTableLocalization';
-import { CheckinReservation, CheckoutReservation } from '$/domains/dashboard';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
