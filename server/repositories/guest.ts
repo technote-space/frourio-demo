@@ -4,8 +4,8 @@ import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma, Guest } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
 
-export type SearchGuestArgs = Prisma.FindManyGuestArgs;
-export type FindGuestArgs = Prisma.FindFirstGuestArgs;
+export type SearchGuestArgs = Prisma.GuestFindManyArgs;
+export type FindGuestArgs = Prisma.GuestFindFirstArgs;
 export type CreateGuestData = Prisma.GuestCreateInput;
 export type CreateGuestArgs = Prisma.GuestCreateArgs;
 export type UpdateGuestData = Prisma.GuestUpdateInput;
@@ -38,17 +38,17 @@ export const getGuest = depend(
 export const createGuest = depend(
   { prisma: prisma as { guest: { create: typeof prisma.guest.create } } },
   async({ prisma }, data: CreateGuestData, args?: Partial<CreateGuestArgs>) => prisma.guest.create({
-    data,
     ...args,
+    data,
   }),
 );
 
 export const updateGuest = depend(
   { prisma: prisma as { guest: { update: typeof prisma.guest.update } } },
   async({ prisma }, id: number | undefined, data: UpdateGuestData, args?: Partial<UpdateGuestArgs>) => prisma.guest.update({
-    data: dropId(data),
     where: { id },
     ...args,
+    data: dropId(data),
   }),
 );
 

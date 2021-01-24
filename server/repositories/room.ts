@@ -4,8 +4,8 @@ import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
 
-export type SearchRoomArgs = Prisma.FindManyRoomArgs;
-export type FindRoomArgs = Prisma.FindFirstRoomArgs;
+export type SearchRoomArgs = Prisma.RoomFindManyArgs;
+export type FindRoomArgs = Prisma.RoomFindFirstArgs;
 export type CreateRoomData = Prisma.RoomCreateInput;
 export type CreateRoomArgs = Prisma.RoomCreateArgs;
 export type UpdateRoomData = Prisma.RoomUpdateInput;
@@ -38,17 +38,17 @@ export const getRoom = depend(
 export const createRoom = depend(
   { prisma: prisma as { room: { create: typeof prisma.room.create } } },
   async({ prisma }, data: CreateRoomData, args?: Partial<CreateRoomArgs>) => prisma.room.create({
-    data,
     ...args,
+    data,
   }),
 );
 
 export const updateRoom = depend(
   { prisma: prisma as { room: { update: typeof prisma.room.update } } },
   async({ prisma }, id: number | undefined, data: UpdateRoomData, args?: Partial<UpdateRoomArgs>) => prisma.room.update({
-    data: dropId(data),
     where: { id },
     ...args,
+    data: dropId(data),
   }),
 );
 

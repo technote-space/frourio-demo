@@ -4,8 +4,8 @@ import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
 
-export type SearchReservationArgs = Prisma.FindManyReservationArgs;
-export type FindReservationArgs = Prisma.FindFirstReservationArgs;
+export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
+export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
 export type CreateReservationData = Prisma.ReservationCreateInput;
 export type CreateReservationArgs = Prisma.ReservationCreateArgs;
 export type UpdateReservationData = Prisma.ReservationUpdateInput;
@@ -38,17 +38,17 @@ export const getReservation = depend(
 export const createReservation = depend(
   { prisma: prisma as { reservation: { create: typeof prisma.reservation.create } } },
   async({ prisma }, data: CreateReservationData, args?: Partial<CreateReservationArgs>) => prisma.reservation.create({
-    data,
     ...args,
+    data,
   }),
 );
 
 export const updateReservation = depend(
   { prisma: prisma as { reservation: { update: typeof prisma.reservation.update } } },
   async({ prisma }, id: number | undefined, data: UpdateReservationData, args?: Partial<UpdateReservationArgs>) => prisma.reservation.update({
-    data: dropId(data),
     where: { id },
     ...args,
+    data: dropId(data),
   }),
 );
 

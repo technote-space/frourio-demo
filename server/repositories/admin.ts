@@ -6,8 +6,8 @@ import type { Prisma, Admin as _Admin } from '$/prisma/client';
 import type { Role } from '$/repositories/role';
 import { dropId } from '$/repositories/utils';
 
-export type SearchAdminArgs = Prisma.FindManyAdminArgs;
-export type FindAdminArgs = Prisma.FindFirstAdminArgs;
+export type SearchAdminArgs = Prisma.AdminFindManyArgs;
+export type FindAdminArgs = Prisma.AdminFindFirstArgs;
 export type CreateAdminData = Prisma.AdminCreateInput;
 export type CreateAdminArgs = Prisma.AdminCreateArgs;
 export type UpdateAdminData = Prisma.AdminUpdateInput;
@@ -107,7 +107,6 @@ export const createAdmin = depend(
     ...args,
     data: {
       ...data,
-      ...args?.data,
       password: createAdminPasswordHash(args?.data?.password ?? data.password),
     },
   })),
@@ -123,7 +122,6 @@ export const updateAdmin = depend(
     },
     data: dropId({
       ...data,
-      ...args?.data,
       password: createAdminPasswordHash(data.password),
     }),
   })),

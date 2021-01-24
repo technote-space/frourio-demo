@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
-import type { Prisma, PrismaClient, StringFieldUpdateOperationsInput } from '$/prisma/client';
+import type { Prisma, PrismaClient } from '$/prisma/client';
 import type { Column, Query, Filter } from '@technote-space/material-table';
 import type { MaybeUndefined } from '$/types';
 import type { Multipart } from 'fastify-multipart';
@@ -10,15 +10,14 @@ import { startOfDay, addDays } from 'date-fns';
 export type Models = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {
     findUnique,
-    findFirst,
     findMany,
+    findFirst,
     create,
-    delete,
     update,
-    deleteMany,
     updateMany,
     upsert,
-    findOne,
+    delete,
+    deleteMany,
     count,
   } ? key : never
 }[keyof PrismaClient]
@@ -269,7 +268,7 @@ export const parseBody = (body: Record<string, any>) => {
 
 export const createHash = (data: string): string => bcrypt.hashSync(data, 10);
 export const validateHash = (data: string, hash: string): boolean => bcrypt.compareSync(data, hash);
-export const createAdminPasswordHash = <T extends StringFieldUpdateOperationsInput | string | undefined>(password?: T): string | MaybeUndefined<T> => {
+export const createAdminPasswordHash = <T extends Prisma.StringFieldUpdateOperationsInput | string | undefined>(password?: T): string | MaybeUndefined<T> => {
   if (password && typeof password === 'object') {
     return createAdminPasswordHash(password.set);
   }

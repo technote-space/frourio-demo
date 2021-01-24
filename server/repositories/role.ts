@@ -3,9 +3,9 @@ import { PrismaClient } from '$/prisma/client';
 import type { Prisma } from '$/prisma/client';
 // import { ensureNotNull } from '$/repositories/utils';
 
-export type SearchRoleArgs = Prisma.FindManyRoleArgs;
-export type FindRoleArgs = Prisma.FindFirstRoleArgs;
 export type { Role } from '$/prisma/client';
+export type SearchRoleArgs = Prisma.RoleFindManyArgs;
+export type FindRoleArgs = Prisma.RoleFindFirstArgs;
 
 const prisma = new PrismaClient();
 
