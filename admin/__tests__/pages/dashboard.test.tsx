@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import { loadPage, setup, findElement, act, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
-
-dotenv.config({ path: '../server/.env' });
 
 setup();
 

@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import Index from '~/pages/index';
 import { render, setup, useNock, setToken, setInvalidToken, setDarkMode, loadPage, act } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
-
-dotenv.config({ path: '../server/.env' });
 
 setup();
 

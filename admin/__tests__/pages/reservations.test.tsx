@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import { setup, mockFullCalendar, loadPage, findElement, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, startOfMonth, endOfMonth, addDays, format, setHours } from 'date-fns';
-
-dotenv.config({ path: '../server/.env' });
 
 setup();
 
