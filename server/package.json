@@ -1,5 +1,6 @@
 {
   "name": "frourio-app-server",
+  "private": true,
   "license": "MIT",
   "scripts": {
     "build": "yarn build:frourio && webpack --mode=production",

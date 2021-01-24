@@ -1,5 +1,6 @@
 {
   "name": "frourio-demo-admin",
+  "private": true,
   "keywords": [
     "frourio"
   ],
@@ -17,7 +18,6 @@
     "email": "technote.space@gmail.com",
     "url": "https://technote.space"
   },
-  "port": 3000,
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build && next export",
@@ -76,5 +76,6 @@
   },
   "engines": {
     "yarn": "1.x"
-  }
+  },
+  "port": 3000
 }
