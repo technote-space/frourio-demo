@@ -4,17 +4,17 @@ import { IsNotEmpty, Length, IsEmail, MinLength, IsOptional } from 'class-valida
 import { IsUniqueValue, IsOptionalWhenUpdate } from '$/repositories/utils/validator';
 
 export class AdminBody {
-  @IsNotEmpty()
-  @Length(1, 100)
+  @IsNotEmpty({ message: '値を入力してください' })
+  @Length(1, 100, { message: '1~100文字で入力してください' })
   name: string;
 
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsEmail(undefined, { message: '正しいメールアドレスを入力してください' })
   @IsUniqueValue('admin')
   email: string;
 
   @IsOptional()
-  @MinLength(4)
+  @MinLength(4, { message: 'パスワードが短すぎます' })
   @IsOptionalWhenUpdate()
   password?: string;
 

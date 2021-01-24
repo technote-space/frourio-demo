@@ -3,45 +3,45 @@ import { IsIdExists, IsWithinLimit, IsReservable } from '$/repositories/utils/va
 import { ReservationStatus } from '$/types';
 
 export class ReservationBody {
-  @IsInt()
-  @IsPositive()
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
   @IsOptional()
   @IsIdExists('reservation')
   id?: number;
 
-  @IsNotEmpty()
-  @IsInt()
-  @IsPositive()
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
   @IsIdExists('guest')
   guestId: number;
 
-  @IsNotEmpty()
-  @IsInt()
-  @IsPositive()
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
   @IsIdExists('room')
   roomId: number;
 
-  @IsNotEmpty()
-  @IsInt()
-  @IsPositive()
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
   @IsWithinLimit('room', 'number')
   number: number;
 
-  @IsNotEmpty()
-  @IsDateString()
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsDateString(undefined, { message: '正しい日付を入力してください' })
   checkin: string;
 
-  @IsNotEmpty()
-  @IsDateString()
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsDateString(undefined, { message: '正しい日付を入力してください' })
   @IsReservable()
   checkout: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(ReservationStatus))
+  @IsEnum(Object.keys(ReservationStatus), { message: '正しいステータスを指定してください' })
   status?: string;
 
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsInt({ message: '整数値を指定してください' })
+  @Min(0, { message: '0以上を指定してください' })
   payment?: number;
 }

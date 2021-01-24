@@ -25,7 +25,7 @@ class IsIdExistsConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Data not exists';
+    return 'データが存在しません';
   }
 }
 
