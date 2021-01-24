@@ -1,11 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import useAuthToken from '~/hooks/useAuthToken';
+import useUnmountRef from '~/hooks/useUnmountRef';
 import { useDispatchContext, useStoreContext } from '~/store';
 import { changePage, logout, offRefreshToken, setAdmin, tokenRemoved } from '~/utils/actions';
 import { client, handleAuthError } from '~/utils/api';
 import pages from '~/_pages';
 
 const Auth: FC = () => {
+  const unmountRef = useUnmountRef();
   const [auth, , removeToken] = useAuthToken();
   const { name, page, roles, onRemoveToken, onRefreshToken } = useStoreContext();
   const { dispatch } = useDispatchContext();
@@ -25,17 +27,19 @@ const Auth: FC = () => {
     if (!isLoading && auth && (onRefreshToken || (!name && !onRemoveToken))) {
       setIsLoading(true);
       (async() => {
-        const admin = await handleAuthError(dispatch, {}, client.admin.get, { headers: auth.authHeader });
-        if ('name' in admin) {
-          setAdmin(dispatch, admin);
+        const admin = await handleAuthError(dispatch, {}, client.get, { headers: auth.authHeader });
+        if (!unmountRef.current) {
+          if ('name' in admin) {
+            setAdmin(dispatch, admin);
+          }
+          offRefreshToken(dispatch);
+          setIsLoading(false);
         }
-        offRefreshToken(dispatch);
-        setIsLoading(false);
       })();
     }
   }, [dispatch, auth, name, onRemoveToken, onRefreshToken, isLoading, page]);
   useEffect(() => {
-    if (roles && !(page in roles)) {
+    if (roles && !roles.includes(page)) {
       const available = Object.keys(pages).find(page => roles.includes(page));
       if (available) {
         changePage(dispatch, available);
