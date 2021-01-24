@@ -7,7 +7,6 @@ import {
   parseBody,
   getWhere,
   getFilterConstraints,
-  ensureNotNull,
   createAdminPasswordHash,
 } from '$/repositories/utils';
 import { saveFile } from '$/service/multipart';
@@ -276,19 +275,6 @@ describe('getWhere', () => {
           },
         }],
     });
-  });
-});
-
-describe('ensureNotNull', () => {
-  it('should return not empty value', () => {
-    expect(ensureNotNull('test')).toBe('test');
-    expect(ensureNotNull(123)).toBe(123);
-    expect(ensureNotNull({})).toEqual({});
-  });
-
-  it('should throw error', () => {
-    expect(() => ensureNotNull(null)).toThrow();
-    expect(() => ensureNotNull(null, 'error message')).toThrow();
   });
 });
 

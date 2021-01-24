@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import { API_URL } from '$/service/env';
-import { ensureNotNull, createAdminPasswordHash, validateHash } from '$/repositories/utils';
+import { createAdminPasswordHash, validateHash } from '$/repositories/utils';
 import type { Prisma, Admin as _Admin } from '$/prisma/client';
 import type { Role } from '$/repositories/role';
 import { dropId } from '$/repositories/utils';
@@ -53,7 +53,7 @@ const processRoles = <T extends Record<string, any> & DropPassword<_Admin>>(admi
   };
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const filterAdmin = <T extends _Admin>(admin: T | null): Admin | never => processRoles(removePassword(convertToIconUrl(ensureNotNull(admin))));
+const filterAdmin = <T extends _Admin>(admin: T): Admin | never => processRoles(removePassword(convertToIconUrl(admin)));
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const includeRoles = <T extends Record<string, any> & { include?: any; select?: any; }>(args: T | undefined): any => {
   if (!args) {
@@ -97,8 +97,9 @@ export const getAdmin = depend(
   { prisma: prisma as { admin: { findFirst: typeof prisma.admin.findFirst } } },
   async({ prisma }, id: number, args?: FindAdminArgs) => filterAdmin(await prisma.admin.findFirst(includeRoles({
     where: { id },
+    rejectOnNotFound: true,
     ...args,
-  }))),
+  })) as _Admin),
 );
 
 export const createAdmin = depend(

@@ -1,6 +1,5 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
-import { ensureNotNull } from '$/repositories/utils';
 import type { Prisma, Guest } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
 
@@ -29,10 +28,11 @@ export const getGuestCount = depend(
 
 export const getGuest = depend(
   { prisma: prisma as { guest: { findFirst: typeof prisma.guest.findFirst } } },
-  async({ prisma }, id: number | undefined, args?: FindGuestArgs) => ensureNotNull(await prisma.guest.findFirst({
+  async({ prisma }, id: number | undefined, args?: FindGuestArgs): Promise<Guest> | never => await prisma.guest.findFirst({
     where: { id },
+    rejectOnNotFound: true,
     ...args,
-  })),
+  }) as Guest,
 );
 
 export const createGuest = depend(

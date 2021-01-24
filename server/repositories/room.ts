@@ -1,7 +1,6 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
-import { ensureNotNull } from '$/repositories/utils';
-import type { Prisma } from '$/prisma/client';
+import type { Prisma, Room } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
 
 export type SearchRoomArgs = Prisma.RoomFindManyArgs;
@@ -13,7 +12,7 @@ export type UpdateRoomArgs = Prisma.RoomUpdateArgs;
 export type DeleteRoomArgs = Prisma.RoomDeleteArgs;
 export type RoomOrderByInput = Prisma.RoomOrderByInput;
 export type RoomWhereInput = Prisma.RoomWhereInput;
-export type { Room } from '$/prisma/client';
+export type { Room };
 
 const prisma = new PrismaClient();
 
@@ -29,10 +28,11 @@ export const getRoomCount = depend(
 
 export const getRoom = depend(
   { prisma: prisma as { room: { findFirst: typeof prisma.room.findFirst } } },
-  async({ prisma }, id: number | undefined, args?: FindRoomArgs) => ensureNotNull(await prisma.room.findFirst({
+  async({ prisma }, id: number | undefined, args?: FindRoomArgs): Promise<Room> | never => await prisma.room.findFirst({
     where: { id },
+    rejectOnNotFound: true,
     ...args,
-  })),
+  }) as Room,
 );
 
 export const createRoom = depend(

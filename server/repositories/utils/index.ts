@@ -4,7 +4,6 @@ import type { Column, Query, Filter } from '@technote-space/material-table';
 import type { MaybeUndefined } from '$/types';
 import type { Multipart } from 'fastify-multipart';
 import bcrypt from 'bcryptjs';
-import createError from 'fastify-error';
 import { startOfDay, addDays } from 'date-fns';
 
 export type Models = {
@@ -71,16 +70,6 @@ type DateConstraint<T extends object> = {
   date?: Date;
   key: keyof T;
 }
-
-export const ensureNotNull = <T>(item: T | null, errorMessage = 'Not Found'): T | never => {
-  if (!item) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    throw new createError('FST_TARGET_NOT_FOUND', errorMessage, 404);
-  }
-
-  return item;
-};
 
 const mergeConstraints = <T extends object>(
   where: Where<T> | undefined,
