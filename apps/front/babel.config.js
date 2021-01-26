@@ -2,7 +2,8 @@ module.exports = {
   presets: ['next/babel'],
   overrides: [{
     include: [
-      './node_modules/@fullcalendar',
+      /@fullcalendar/,
+      /@frourio-demo/,
     ],
     plugins: [
       ['babel-plugin-transform-require-ignore', {

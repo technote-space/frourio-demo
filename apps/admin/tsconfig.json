@@ -6,7 +6,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "electron"
+    "node_modules"
   ]
 }
