@@ -60,20 +60,16 @@
     "setup": "yarn install --prefer-offline --network-timeout 1000000 && yarn setup:server && yarn setup:admin && yarn build",
     "setup:admin": "yarn workspace @frourio-demo/admin setup",
     "setup:config": "yarn workspace @frourio-demo/server setup:config",
+    "setup:electron": "yarn workspace @frourio-demo/electron setup",
     "setup:install": "yarn install --prefer-offline --network-timeout 1000000",
     "setup:server": "yarn workspace @frourio-demo/server setup && yarn migrate:seed",
-    "setup:electron": "yarn workspace @frourio-demo/electron setup",
     "start": "run-p start:*",
     "start:admin": "yarn workspace @frourio-demo/admin start",
     "start:server": "yarn workspace @frourio-demo/server start",
     "test": "yarn lint && yarn typecheck && yarn cover",
     "typecheck": "yarn build:types && tsc --noEmit -p apps/admin && tsc --noEmit -p apps/front && tsc --noEmit -p apps/server",
-    "update": "yarn install && run-s update:*",
-    "update:admin": "yarn workspace @frourio-demo/admin update",
-    "update:electron": "yarn workspace @frourio-demo/electron update",
-    "update:shared": "yarn workspace @frourio-demo/utils update && yarn workspace @frourio-demo/types update",
-    "update:core": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit",
-    "update:server": "yarn workspace @frourio-demo/server update"
+    "update": "yarn update:core && yarn workspaces run update && yarn install && yarn upgrade && yarn audit",
+    "update:core": "npx npm-check-updates -u --timeout 100000"
   },
   "dependencies": {},
   "devDependencies": {
