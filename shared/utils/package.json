@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "update": "npx npm-check-updates -u --timeout 100000 && yarn install && yarn upgrade && yarn audit"
+    "update": "npx npm-check-updates -u --timeout 100000"
   },
   "dependencies": {},
   "devDependencies": {
