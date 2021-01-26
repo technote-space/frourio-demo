@@ -1,16 +1,52 @@
 import { PrismaClient } from './prisma/client';
 import bcrypt from 'bcryptjs';
 import { startOfToday, addDays, setHours } from 'date-fns';
+import { getRolesValue } from '@frourio-demo/server/service/auth';
 
 const prisma = new PrismaClient();
 
 (async() => {
+  await getRolesValue([
+    { domain: 'dashboard', targets: ['create', 'read', 'update', 'delete'] },
+    { domain: 'admins', targets: ['create', 'read', 'update', 'delete'] },
+    { domain: 'rooms', targets: ['create', 'read', 'update', 'delete'] },
+    { domain: 'guests', targets: ['create', 'read', 'update', 'delete'] },
+    { domain: 'reservations', targets: ['create', 'read', 'update', 'delete'] },
+  ]).reduce(async(prev, role) => {
+    await prev;
+    await prisma.role.create({ data: role });
+  }, Promise.resolve());
+  await prisma.admin.create({
+    data: {
+      name: 'Admin',
+      email: 'admin@example.com',
+      password: bcrypt.hashSync('test1234', 10),
+      icon: 'dummy.svg',
+      roles: {
+        connect: getRolesValue([
+          { domain: 'dashboard', targets: ['all'] },
+          { domain: 'admins', targets: ['all'] },
+          { domain: 'rooms', targets: ['all'] },
+          { domain: 'guests', targets: ['all'] },
+          { domain: 'reservations', targets: ['all'] },
+        ]).map(role => ({ role: role.role })),
+      },
+    },
+  });
   await prisma.admin.create({
     data: {
       name: 'Test User',
       email: 'test@example.com',
       password: bcrypt.hashSync('test1234', 10),
       icon: 'dummy.svg',
+      roles: {
+        connect: getRolesValue([
+          { domain: 'dashboard', targets: ['all'] },
+          { domain: 'rooms', targets: ['all'] },
+          { domain: 'guests', targets: ['all'] },
+          { domain: 'reservations', targets: ['all'] },
+        ]).map(role => ({ role: role.role })),
+      },
     },
   });
   await prisma.room.create({
