@@ -12,6 +12,7 @@ const fastify = Fastify();
 fastify.register(helmet);
 fastify.register(cors, {
   exposedHeaders: ['Authorization'],
+  origin: ['https://technote-space.github.io', /localhost/],
 });
 fastify.register(fastifyStatic, {
   root: resolve(process.cwd(), 'public'),
