@@ -32,7 +32,9 @@
         "./apps/server/*"
       ],
       "~/*": [
-        "./apps/admin/*",
+        "./apps/admin/*"
+      ],
+      "^/*": [
         "./apps/front/*"
       ]
     }

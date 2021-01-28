@@ -6,6 +6,10 @@ export type AdminAuthorizationPayload = {
   roles: string[];
 };
 
+export type GuestAuthorizationPayload = {
+  id: number;
+};
+
 export type HttpStatusNg =
   | 400
   | 401

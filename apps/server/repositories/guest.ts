@@ -10,6 +10,7 @@ export type CreateGuestArgs = Prisma.GuestCreateArgs;
 export type UpdateGuestData = Prisma.GuestUpdateInput;
 export type UpdateGuestArgs = Prisma.GuestUpdateArgs;
 export type DeleteGuestArgs = Prisma.GuestDeleteArgs;
+export type DeleteManyGuestArgs = Prisma.GuestDeleteManyArgs;
 export type GuestOrderByInput = Prisma.GuestOrderByInput;
 export type GuestWhereInput = Prisma.GuestWhereInput;
 export type { Guest };
@@ -56,6 +57,16 @@ export const deleteGuest = depend(
   { prisma: prisma as { guest: { delete: typeof prisma.guest.delete } } },
   async({ prisma }, id: number | undefined, args?: Partial<DeleteGuestArgs>) => prisma.guest.delete({
     where: { id },
+    ...args,
+  }),
+);
+
+export const deleteGuests = depend(
+  { prisma: prisma as { guest: { deleteMany: typeof prisma.guest.deleteMany } } },
+  async({ prisma }, ids: number[] | undefined, args?: Partial<DeleteManyGuestArgs>) => prisma.guest.deleteMany({
+    where: {
+      OR: ids?.map(id => ({ id })),
+    },
     ...args,
   }),
 );

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
 import { startOfDay, addDays } from 'date-fns';
-import { verifyAdmin, getRolesValue } from '$/service/auth';
+import { verifyAdmin, getRolesValue, verifyGuest } from '$/service/auth';
 import {
   parseQuery,
   parseBody,
@@ -125,6 +125,32 @@ describe('getRolesValue', () => {
       { role: 'test5_domain_update', name: 'Update in Test5 domain' },
       { role: 'test5_domain_delete', name: 'Delete in Test5 domain' },
     ]);
+  });
+});
+
+describe('verifyGuest', () => {
+  it('should return true if verified', async() => {
+    const jwtVerify = jest.fn(() => ({
+      id: 123,
+    }));
+    expect(await verifyGuest({ url: '/test', method: 'GET', jwtVerify } as any)).toBe(true);
+  });
+
+  it('should return false if failed to authorize', async() => {
+    expect(await verifyGuest({
+      url: '/test', method: 'GET', jwtVerify: () => ({
+        id: 0,
+      }),
+    } as any)).toBe(false);
+    expect(await verifyGuest({
+      url: '/test', method: 'GET', jwtVerify: () => null,
+    } as any)).toBe(false);
+
+    expect(await verifyGuest({
+      url: '/test', method: 'GET', jwtVerify: () => {
+        throw new Error();
+      },
+    } as any)).toBe(false);
   });
 });
 

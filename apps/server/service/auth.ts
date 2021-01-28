@@ -1,5 +1,5 @@
 import type { FastifyRequest } from 'fastify';
-import type { AdminAuthorizationPayload } from '$/types';
+import type { AdminAuthorizationPayload, GuestAuthorizationPayload } from '$/types';
 import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
 import { getAdmin } from '$/repositories/admin';
@@ -12,6 +12,10 @@ export const createAdminAuthorizationPayload = depend(
     roles: (await getAdmin(id)).roles.map(role => role.role),
   }),
 );
+export const createGuestAuthorizationPayload = (id: number): GuestAuthorizationPayload => ({
+  id,
+});
+
 const getRole = (domain: string, method: string, hasParams?: boolean): string => {
   switch (method.trim().toLocaleUpperCase()) {
     case 'GET':
@@ -47,6 +51,18 @@ export const verifyAdmin = async(request: FastifyRequest, domain?: string): Prom
   try {
     const payload = await request.jwtVerify() as AdminAuthorizationPayload | null;
     if (!payload?.id || (roles.length && (!payload.roles.length || roles.some(role => !payload.roles.includes(role))))) {
+      return false;
+    }
+  } catch {
+    return false;
+  }
+
+  return true;
+};
+export const verifyGuest = async(request: FastifyRequest): Promise<boolean> => {
+  try {
+    const payload = await request.jwtVerify() as GuestAuthorizationPayload | null;
+    if (!payload?.id) {
       return false;
     }
   } catch {
