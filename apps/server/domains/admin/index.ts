@@ -1,7 +1,7 @@
-import { depend } from 'velona';
-import { getAdmin } from '$/repositories/admin';
 import type { BodyResponse, AdminAuthorizationPayload } from '$/types';
 import type { Admin } from '$/repositories/admin';
+import { depend } from 'velona';
+import { getAdmin } from '$/repositories/admin';
 
 export const get = depend(
   { getAdmin },
