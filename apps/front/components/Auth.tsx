@@ -9,11 +9,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 const Auth: FC = () => {
   const unmountRef = useUnmountRef();
   const [auth, setToken, removeToken] = useAuthToken();
-  const { name, page, onRemoveToken, onRefreshToken } = useStoreContext();
+  const { name, onRemoveToken, onRefreshToken } = useStoreContext();
   const { dispatch } = useDispatchContext();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
+    isLoading: isAuth0Loading,
     isAuthenticated,
     logout,
     getAccessTokenSilently,
@@ -34,7 +35,7 @@ const Auth: FC = () => {
   }, [auth, isAuthenticated]);
 
   useEffect(() => {
-    if (onRemoveToken) {
+    if (onRemoveToken || (!isAuth0Loading && !isAuthenticated)) {
       removeToken();
     }
   }, [onRemoveToken]);
@@ -57,7 +58,7 @@ const Auth: FC = () => {
         }
       })();
     }
-  }, [dispatch, auth, name, onRemoveToken, onRefreshToken, isLoading, page]);
+  }, [dispatch, auth, name, onRemoveToken, onRefreshToken, isLoading]);
 
   return null;
 };

@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import type { PageKeys } from '^/_pages';
 
 export type NoticeType = {
   title: string,
@@ -9,7 +8,6 @@ export type NoticeType = {
 export type ContextState = {
   name?: string;
   icon?: string;
-  page: PageKeys;
   title?: string;
   notices: NoticeType[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +17,8 @@ export type ContextState = {
 };
 
 export type Page = {
+  path?: string;
+  exact?: boolean;
   label: string;
   page: FC;
 };

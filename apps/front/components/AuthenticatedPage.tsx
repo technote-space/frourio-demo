@@ -10,13 +10,9 @@ export type AuthenticatedPageProps = {
   authHeader: AuthHeader;
 }
 
-type Props = {
-  page: string;
-}
-
-const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC<Props> = WrappedComponent => addDisplayName<FC<Props>>('AuthenticatedPage', props => {
+const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
   const [auth] = useAuthToken();
-  const { page, onRemoveToken } = useStoreContext();
+  const { onRemoveToken } = useStoreContext();
   const {
     isLoading,
     isAuthenticated,
@@ -32,12 +28,14 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC<Pr
   }
 
   if (!isAuthenticated) {
-    loginWithRedirect().then();
+    loginWithRedirect({
+      appState: { page: window.location.pathname },
+    }).then();
   }
 
-  return <div data-testid={`page-${page}`}>
+  return <>
     {!(!auth || onRemoveToken) && <WrappedComponent {...auth} {...props} />}
-  </div>;
+  </>;
 }, WrappedComponent);
 
 export default AuthenticatedPage;

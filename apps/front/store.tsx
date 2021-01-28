@@ -6,7 +6,6 @@ import type { ContextState, NoticeType } from '^/types';
 const initialState: ContextState = {
   name: undefined,
   icon: undefined,
-  page: 'top',
   title: undefined,
   notices: [] as NoticeType[],
   onRemoveToken: false,
@@ -22,7 +21,6 @@ const reducerActions = {
   CLOSE_SIDEBAR: (store) => ({ ...store, isSidebarOpen: false }),
   OPEN_LICENSE: (store) => ({ ...store, isLicenseOpen: true }),
   CLOSE_LICENSE: (store) => ({ ...store, isLicenseOpen: false }),
-  PAGE: (store, action) => ({ ...store, page: action.page }),
   TITLE: (store, action) => ({ ...store, title: action.title }),
   LOGOUT: (store) => ({
     ...store,
@@ -32,7 +30,7 @@ const reducerActions = {
     roles: undefined,
     onRemoveToken: true,
   }),
-  TOKEN_REMOVED: (store) => ({ ...store, onRemoveToken: false, page: 'top' }),
+  TOKEN_REMOVED: (store) => ({ ...store, onRemoveToken: false }),
   ON_REFRESH_TOKEN: (store) => ({ ...store, onRefreshToken: true }),
   OFF_REFRESH_TOKEN: (store) => ({ ...store, onRefreshToken: false }),
   SET_NOTICE: (store, action) => ({

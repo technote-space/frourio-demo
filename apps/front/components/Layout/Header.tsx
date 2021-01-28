@@ -1,33 +1,23 @@
 import type { FC } from 'react';
 import type { PageKeys } from '^/_pages';
-import { useCallback, useMemo } from 'react';
-import { Flex, Image, Button, Link, HStack, Box, IconButton } from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Flex, Image, Link, HStack, Box, IconButton } from '@chakra-ui/react';
 import { useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import { useDispatchContext } from '^/store';
-import { changePage } from '^/utils/actions';
 import pages from '^/_pages';
 
 const Header: FC = () => {
-  const { dispatch } = useDispatchContext();
   const { toggleColorMode: toggleMode } = useColorMode();
   const colorModeText = useColorModeValue('dark', 'light');
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
   const menuBgColor = useColorModeValue('green.300', 'green.700');
   const menuHoverBgColor = useColorModeValue('green.400', 'green.600');
 
-  const handleClickTop = useCallback(() => {
-    changePage(dispatch, 'top');
-  }, []);
-  const handleClickAccount = useCallback(() => {
-    changePage(dispatch, 'account');
-  }, []);
   const NavigationItem: FC<{ page: PageKeys; }> = ({ page }) => {
-    const handleClick = useCallback(() => {
-      changePage(dispatch, page);
-    }, []);
     return useMemo(() => <Link
-      onClick={handleClick}
+      as={RouterLink}
+      to={`/${page}`}
       flexGrow={1}
       p={2}
       bg={menuBgColor}
@@ -45,7 +35,7 @@ const Header: FC = () => {
         w="100%"
         p={8}
       >
-        <Link onClick={handleClickTop} marginRight="auto">
+        <Link as={RouterLink} to="/" marginRight="auto">
           <HStack>
             <Image src="favicon.png" alt="logo"/>
             <Box>Frourioの宿</Box>
@@ -61,9 +51,9 @@ const Header: FC = () => {
           onClick={toggleMode}
           icon={<SwitchIcon/>}
         />
-        <Button onClick={handleClickAccount}>
+        <Link as={RouterLink} to="/account">
           アカウント
-        </Button>
+        </Link>
       </Flex>
       <Flex
         as="nav"

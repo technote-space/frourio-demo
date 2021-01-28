@@ -5,6 +5,8 @@ import Rooms from './rooms';
 
 const pages: Record<string, Page> = {
   top: {
+    path: '/',
+    exact: true,
     label: 'トップ',
     page: Top,
   },

@@ -1,12 +1,10 @@
 import type { Dispatch } from '@frourio-demo/types';
-import type { PageKeys } from '^/_pages';
 
 export const setGuest = (dispatch: Dispatch, guest: { name?: string }) => dispatch({
   type: 'SET_GUEST',
   guest,
 });
 
-export const changePage = (dispatch: Dispatch, page: PageKeys) => dispatch({ type: 'PAGE', page });
 export const changeTitle = (dispatch: Dispatch, title?: string) => dispatch({ type: 'TITLE', title });
 export const logout = (dispatch: Dispatch) => dispatch({ type: 'LOGOUT' });
 export const tokenRemoved = (dispatch: Dispatch) => dispatch({ type: 'TOKEN_REMOVED' });
