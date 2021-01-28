@@ -14,12 +14,14 @@ export const client = {
   login: apiClient.login.admin,
 };
 
-export const handleAuthError = async <T, U, V, API extends (...args: Array<any>) => Promise<AspidaResponse<T, U, V>>>(
+type ApiType<T, U, V> = (...args: Array<any>) => Promise<AspidaResponse<T, U, V>>;
+type ApiResponse<T> = T extends ApiType<infer R, any, any> ? R : any;
+export const handleAuthError = async <T, U, V, F extends ApiResponse<ApiType<T, U, V>>>(
   dispatch: Dispatch,
-  fallback: T,
-  api: API,
-  ...option: Parameters<API>
-): Promise<T | MaybeUndefined<T>> | never => {
+  fallback: F | {} | undefined,
+  api: ApiType<T, U, V>,
+  ...option: Parameters<ApiType<T, U, V>>
+): Promise<ApiResponse<ApiType<T, U, V> | {}> | MaybeUndefined<F>> | never => {
   try {
     const result = await api(...option);
     return result.body;
@@ -43,18 +45,15 @@ export const handleAuthError = async <T, U, V, API extends (...args: Array<any>)
 
         return fallback;
       }
+    }
 
-      /* istanbul ignore next */
-      if (error.response) {
-        setError(dispatch, error.response.data?.message);
-        throw error;
-      }
+    if (!fallback) {
+      throw error;
     }
 
     /* istanbul ignore next */
-    setError(dispatch, error.message);
-    /* istanbul ignore next */
-    throw error;
+    setError(dispatch, error.response?.data?.message ?? error.message);
+    return fallback;
   }
 };
 
