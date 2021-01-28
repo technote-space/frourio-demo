@@ -6,17 +6,24 @@
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build && next export",
-    "dev": "yarn kill && next dev -p $npm_package_port",
+    "dev": "yarn kill && PORT=$npm_package_port NODE_ENV=development yarn ts-node ./server.ts",
     "kill": "lsof -i:$npm_package_port -t | xargs kill -9",
     "license:check": "npx license-checker --excludePrivatePackages --production --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
     "license:generate": "npx license-checker --excludePrivatePackages --json --customPath ../../license-format.json > ./license.json",
-    "setup": "yarn install --prefer-offline --network-timeout 1000000",
-    "start": "yarn kill && next start -p $npm_package_port",
+    "setup": "yarn install --prefer-offline --network-timeout 1000000 && yarn setup:hosts && yarn setup:ssl",
+    "setup:hosts": "if [[ $(cat /etc/hosts | grep localhost\\.frourio-demo\\.com -c) == 0 ]]; then echo \"127.0.0.1 localhost.frourio-demo.com\" | sudo tee -a /etc/hosts; fi",
+    "setup:ssl": "brew install mkcert nss && mkcert -install && mkcert 'localhost.frourio-demo.com'",
+    "start": "yarn kill && PORT=$npm_package_port NODE_ENV=production yarn ts-node ./server.ts",
     "update": "npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
   },
   "dependencies": {
     "@aspida/axios": "^1.3.0",
     "@aspida/swr": "^1.3.0",
+    "@auth0/auth0-react": "^1.2.0",
+    "@chakra-ui/icons": "^1.0.3",
+    "@chakra-ui/react": "^1.1.6",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
     "@frourio-demo/types": "*",
     "@frourio-demo/utils": "*",
     "@fullcalendar/common": "^5.5.1",
@@ -27,10 +34,13 @@
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "formik": "^2.2.6",
-    "next": "latest",
+    "framer-motion": "^3.2.2-rc.1",
+    "next": "^10.0.5",
     "pluralize": "^8.0.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-icons": "^4.1.0",
+    "react-slick": "^0.28.0",
     "swr": "^0.4.0"
   },
   "devDependencies": {
@@ -38,10 +48,10 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
-    "@types/node": "^12.12.21",
+    "@types/node": "^14.14.22",
     "@types/pluralize": "^0.0.29",
-    "@types/react": "^16.9.16",
-    "@types/react-dom": "^16.9.4",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
     "babel-plugin-transform-require-ignore": "^0.1.1",
     "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
@@ -51,10 +61,13 @@
     "sass": "^1.32.5",
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
-    "typescript": "4.0"
+    "typescript": "4.1"
   },
   "engines": {
     "yarn": "1.x"
   },
+  "os": [
+    "darwin"
+  ],
   "port": 3001
 }

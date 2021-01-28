@@ -1,15 +1,13 @@
-import Link from 'next/link';
-import Layout from '../components/Layout';
+import { useMemo } from 'react';
+import Route from '^/components/Route';
+import Auth from '^/components/Auth';
+import Layout from '^/components/Layout';
+import ToastWrapper from '^/components/ToastWrapper';
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-);
+const Index = () => useMemo(() => <Layout>
+  <ToastWrapper/>
+  <Route/>
+  <Auth/>
+</Layout>, []);
 
-export default IndexPage;
+export default Index;
