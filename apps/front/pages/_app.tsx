@@ -24,6 +24,9 @@ const theme = extendTheme({
         color: mode('gray.800', 'whiteAlpha.900')(props),
         bg: mode('orange.50', 'gray.800')(props),
       },
+      main: {
+        width: '100%',
+      },
     }),
   },
 });

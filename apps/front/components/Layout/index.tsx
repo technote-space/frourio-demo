@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 import Header from './Header';
 import Footer from './Footer';
@@ -17,7 +17,7 @@ const Layout = ({ children }: Props) => useMemo(() =>
     minHeight="100vh"
   >
     <Header/>
-    <Flex grow={1}>
+    <Flex grow={1} width="100%">
       <main>
         {children}
       </main>

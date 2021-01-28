@@ -1,4 +1,4 @@
-import React, { useReducer, createContext, useContext, useMemo } from 'react';
+import { useReducer, createContext, useContext, useMemo } from 'react';
 import type { FC } from 'react';
 import type { Dispatch } from '@frourio-demo/types';
 import type { ContextState } from '~/types';
