@@ -1,7 +1,7 @@
 import type { Dispatch } from '@frourio-demo/types';
 import type { PageKeys } from '~/_pages';
 
-export const setAdmin = (dispatch: Dispatch, admin: { name?: string; icon?: string }) => dispatch({
+export const setAdmin = (dispatch: Dispatch, admin: { name?: string | null; icon?: string | null }) => dispatch({
   type: 'SET_ADMIN',
   admin,
 });

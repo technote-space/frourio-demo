@@ -157,8 +157,9 @@ const DataTable = <T extends Model, >({
       setValidationErrors(Object.assign({}, ...validationError.map(error => error.constraints ? {
         [error.property]: Object.values(error.constraints)[0],
       } : undefined)));
+    } else {
+      throw error;
     }
-    throw error;
   };
   const handleUpdated = () => {
     if (onUpdated) {

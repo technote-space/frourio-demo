@@ -15,7 +15,7 @@ const ToastWrapper: FC = () => {
       notices.filter(notice => notice.title || notice.description).forEach(notice => {
         toast({
           ...notice,
-          duration: 9000,
+          duration: 5000,
           isClosable: true,
         });
       });

@@ -1,6 +1,6 @@
 import type { Dispatch } from '@frourio-demo/types';
 
-export const setGuest = (dispatch: Dispatch, guest: { name?: string }) => dispatch({
+export const setGuest = (dispatch: Dispatch, guest: { name?: string | null }) => dispatch({
   type: 'SET_GUEST',
   guest,
 });
