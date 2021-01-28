@@ -13,17 +13,8 @@ import useFetch from '~/hooks/useFetch';
 import { useDispatchContext } from '~/store';
 import { client } from '~/utils/api';
 import { onRefreshToken } from '~/utils/actions';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-  avatar: {
-    background: 'white',
-    marginRight: '1rem',
-  },
-});
 
 const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
-  const classes = useStyles();
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const roles = useFetch(dispatch, {}, client.admins.roles, { headers: authHeader });
@@ -55,6 +46,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         title: 'パスワード',
         field: 'password',
         filtering: false,
+        sorting: false,
         cellStyle: { width: 'auto', whiteSpace: 'nowrap' },
         headerStyle: { width: 'auto', whiteSpace: 'nowrap' },
         render: () => '******',
@@ -64,13 +56,17 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         title: 'アイコン',
         field: 'icon',
         filtering: false,
+        sorting: false,
         cellStyle: { width: 'auto' },
         headerStyle: { width: 'auto', whiteSpace: 'nowrap' },
         // eslint-disable-next-line react/display-name
         render: data => data['icon'] && <Avatar
-          className={classes.avatar}
           src={data['icon']}
           alt={data['name']}
+          style={{
+            background: 'white',
+            marginRight: '1rem',
+          }}
         />,
         // eslint-disable-next-line react/display-name
         editComponentWithError: (props: EditComponentPropsWithError<Model>) => <SelectIcon props={props}/>,
@@ -78,6 +74,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
       {
         title: '権限',
         field: 'roles',
+        sorting: false,
         lookup: roles.data,
         cellStyle: { width: '100%' },
         headerStyle: { width: '100%' },
@@ -95,7 +92,7 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
     }}
     unmountRef={unmountRef}
     onUpdated={onUpdated}
-  /> : null, [classes, roles.data]);
+  /> : null, [roles.data]);
 };
 
 export default AuthenticatedPage(Admins);
