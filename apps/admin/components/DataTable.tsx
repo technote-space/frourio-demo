@@ -115,7 +115,6 @@ const DataTable = <T extends Model, >({
       // eslint-disable-next-line react/display-name
       column.editComponent = (props: EditComponentProps<T>) => {
         const key = props.columnDef.field as string;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return column.editComponentWithError!({
           ...props,
           error: key in validationErrors,

@@ -85,7 +85,6 @@ const Admins: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
         render: data => <RenderRoles rowData={data}/>,
         // eslint-disable-next-line react/display-name
         editComponentWithError: (props: EditComponentPropsWithError<Model>) =>
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           <EditRoles props={props} roles={roles.data!}/>,
         validate: data => !!data['roles'] && !!data['roles'].length,
       },

@@ -24,7 +24,6 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
   const classes = useStyles();
   const [preview, setPreview] = useState<string | undefined>();
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     props.onChange(event.target.files![0]);
   }, []);
 
