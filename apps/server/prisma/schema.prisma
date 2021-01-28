@@ -28,12 +28,14 @@ model Role {
 
 model Guest {
   id           Int           @id @default(autoincrement())
-  name         String
-  nameKana     String
-  zipCode      String
-  address      String
-  phone        String
+  email        String        @unique
+  name         String?
+  nameKana     String?
+  zipCode      String?
+  address      String?
+  phone        String?
   reservations Reservation[]
+  auth0Sub     String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }

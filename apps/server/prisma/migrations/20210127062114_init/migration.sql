@@ -18,11 +18,13 @@ CREATE TABLE "Role" (
 -- CreateTable
 CREATE TABLE "Guest" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
-    "nameKana" TEXT NOT NULL,
-    "zipCode" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "nameKana" TEXT,
+    "zipCode" TEXT,
+    "address" TEXT,
+    "phone" TEXT,
+    "auth0Sub" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -70,6 +72,9 @@ CREATE TABLE "_AdminToRole" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Admin.email_unique" ON "Admin"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Guest.email_unique" ON "Guest"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_AdminToRole_AB_unique" ON "_AdminToRole"("A", "B");
