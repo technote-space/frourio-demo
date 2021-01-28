@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { AuthHeader } from '@frourio-demo/types';
 import { useAuth0 } from '@auth0/auth0-react';
+import { HStack, Box, Spinner } from '@chakra-ui/react';
 import { useStoreContext } from '^/store';
 import useAuthToken from '^/hooks/useAuthToken';
 import { addDisplayName } from '@frourio-demo/utils/component';
@@ -21,7 +22,10 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
   } = useAuth0();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <HStack>
+      <Box>Loading...</Box>
+      <Box><Spinner/></Box>
+    </HStack>;
   }
   if (error) {
     return <div>Oops... {error.message}</div>;
