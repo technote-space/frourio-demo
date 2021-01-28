@@ -1,7 +1,7 @@
 import type { Guest } from '$/repositories/guest';
 import type { Room } from '$/repositories/room';
 import type { BodyResponse } from '$/types';
-import type { Reservation } from '$/repositories/reservation';
+import type { Reservation, CreateReservationData } from '$/repositories/reservation';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import type { ReservationBody } from './validators';
 import { depend } from 'velona';
@@ -97,12 +97,16 @@ export const get = depend(
   }),
 );
 
-const getData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>) => {
+export const fillReservationData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<CreateReservationData> | never => {
   const guest = await getGuest(data.guestId);
   const room = await getRoom(data.roomId);
   const checkin = new Date(data.checkin);
   const checkout = new Date(data.checkout);
   const nights = differenceInCalendarDays(checkout, checkin);
+  if (!guest.name || !guest.nameKana || !guest.zipCode || !guest.address || !guest.phone) {
+    throw new Error('必須項目が登録されていないゲストは指定できません。');
+  }
+
   return {
     guest: {
       connect: {
@@ -133,7 +137,7 @@ export const create = depend(
   { createReservation, getGuest, getRoom },
   async({ createReservation, getGuest, getRoom }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
     status: 201,
-    body: await createReservation(await getData(data, getGuest, getRoom)),
+    body: await createReservation(await fillReservationData(data, getGuest, getRoom)),
   }),
 );
 
@@ -153,7 +157,7 @@ export const update = depend(
     data: ReservationBody,
   ): Promise<BodyResponse<Reservation>> => ({
     status: 200,
-    body: await updateReservation(id, await getData(data, getGuest, getRoom)),
+    body: await updateReservation(id, await fillReservationData(data, getGuest, getRoom)),
   }),
 );
 
@@ -161,7 +165,7 @@ export const searchGuest = depend(
   { getGuests, getGuestCount },
   async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize = query.pageSize;
-    const where = getWhere<Guest>(query.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const where = getWhere<Guest>(query.search, ['email', 'name', 'nameKana', 'zipCode', 'address', 'phone'], []);
     const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({
       where,

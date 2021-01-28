@@ -1,7 +1,7 @@
 import type { HttpStatusOk } from 'aspida';
 import type { AuthHeader } from '@frourio-demo/types';
 
-export type AuthorizationPayload = {
+export type AdminAuthorizationPayload = {
   id: number;
   roles: string[];
 };

@@ -11,6 +11,7 @@ describe('Guests', () => {
         'data': [
           {
             'id': 1,
+            'email': 'test@example.com',
             'name': '山本 蓮',
             'nameKana': '中村 太一',
             'zipCode': '993-6803',
@@ -52,6 +53,7 @@ describe('Guests', () => {
             'zipCode': '922-5891',
             'address': 'British Indian Ocean Territory (Chagos Archipelago) 井上区 木村 Village',
             'phone': '01165-3-9928',
+            'auth0Sub': '1234567890',
             'createdAt': '2021-01-04T09:36:28.454Z',
             'updatedAt': '2021-01-04T09:36:28.454Z',
           },
@@ -62,10 +64,12 @@ describe('Guests', () => {
     );
 
     await findByText('山本 蓮');
+    expect(getByText('test@example.com')).toBeVisible();
     expect(getByText('清水 蒼空')).toBeVisible();
     expect(getByText('368-0205')).toBeVisible();
     expect(getByText('Montserrat 佐々木村 木村 Row')).toBeVisible();
     expect(getByText('004-297-8015')).toBeVisible();
+    expect(getByText('1234567890')).toBeVisible();
   });
 
   it('should handle validation error', async() => {
@@ -126,12 +130,13 @@ describe('Guests', () => {
 
     // input
     const input = container.querySelectorAll('[mode="add"] input');
-    expect(input).toHaveLength(5);
-    user.type(input[0], 'test-name');
-    user.type(input[1], 'テスト');
-    user.type(input[2], '100-0001');
-    user.type(input[3], 'テスト県テスト市テスト町');
-    user.type(input[4], '090-0000-0000');
+    expect(input).toHaveLength(7);
+    user.type(input[0], 'test@example.com');
+    user.type(input[1], 'test-name');
+    user.type(input[2], 'テスト');
+    user.type(input[3], '100-0001');
+    user.type(input[4], 'テスト県テスト市テスト町');
+    user.type(input[5], '090-0000-0000');
 
     user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('name must be longer than or equal to 1 characters');
@@ -173,12 +178,13 @@ describe('Guests', () => {
 
     // input
     const input = container.querySelectorAll('[mode="add"] input');
-    expect(input).toHaveLength(5);
-    user.type(input[0], 'test-name');
-    user.type(input[1], 'テスト');
-    user.type(input[2], '100-0001');
-    user.type(input[3], 'テスト県テスト市テスト町');
-    user.type(input[4], '090-0000-0000');
+    expect(input).toHaveLength(7);
+    user.type(input[0], 'test@example.com');
+    user.type(input[1], 'test-name');
+    user.type(input[2], 'テスト');
+    user.type(input[3], '100-0001');
+    user.type(input[4], 'テスト県テスト市テスト町');
+    user.type(input[5], '090-0000-0000');
 
     // save
     user.click(container.querySelectorAll('[title="保存"]')[0]);
@@ -187,6 +193,7 @@ describe('Guests', () => {
     await findByText('追加しました。');
 
     expect(save).toBeCalledWith({
+      email: 'test@example.com',
       name: 'test-name',
       nameKana: 'テスト',
       zipCode: '100-0001',
@@ -204,6 +211,7 @@ describe('Guests', () => {
           'data': [
             {
               'id': 11,
+              'email': 'test@example.com',
               'name': 'test-name',
               'nameKana': 'テスト',
               'zipCode': '100-0001',
@@ -252,11 +260,13 @@ describe('Guests', () => {
         .get(/guests\?/).reply(200, {
           'data': [{
             'id': 11,
+            'email': 'test@example.com',
             'name': 'test-name',
             'nameKana': 'テスト',
             'zipCode': '100-0001',
             'address': 'テスト県テスト市テスト町',
             'phone': '090-0000-0000',
+            'auth0Sub': 'test',
             'createdAt': '2021-01-13T06:37:37.996Z',
             'updatedAt': '2021-01-13T06:37:37.997Z',
           }],
@@ -282,9 +292,9 @@ describe('Guests', () => {
     // edit
     user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
-    expect(input).toHaveLength(5);
-    user.clear(input[0]);
-    user.type(input[0], 'update-name');
+    expect(input).toHaveLength(7);
+    user.clear(input[1]);
+    user.type(input[1], 'update-name');
     user.click(container.querySelectorAll('[title="保存"]')[0]);
 
     // notice
@@ -292,11 +302,13 @@ describe('Guests', () => {
 
     expect(update).toBeCalledWith({
       id: 11,
+      email: 'test@example.com',
       name: 'update-name',
       nameKana: 'テスト',
       zipCode: '100-0001',
       address: 'テスト県テスト市テスト町',
       phone: '090-0000-0000',
+      auth0Sub: 'test',
     });
   });
 });

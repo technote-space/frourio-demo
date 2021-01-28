@@ -1,10 +1,10 @@
-import type { AuthorizationPayload } from '$/types';
+import type { AdminAuthorizationPayload } from '$/types';
 import { defineHooks } from './$relay';
 import { verifyAdmin } from '$/service/auth';
 import { parseQuery, parseBody } from '$/repositories/utils';
 
 export type AdditionalRequest = {
-  user: AuthorizationPayload;
+  user: AdminAuthorizationPayload;
 }
 
 export default defineHooks(() => ({

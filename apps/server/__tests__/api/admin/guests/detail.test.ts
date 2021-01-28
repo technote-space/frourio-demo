@@ -5,7 +5,7 @@ import { get, update, remove } from '$/domains/admin/guests';
 
 describe('guests/detail', () => {
   it('should get guest', async() => {
-    const getGuestMock       = jest.fn(() => getPromiseLikeItem({
+    const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       name: 'test',
       nameKana: 'テスト',
@@ -49,7 +49,7 @@ describe('guests/detail', () => {
   });
 
   it('should update guest', async() => {
-    const updateGuestMock    = jest.fn();
+    const updateGuestMock = jest.fn();
     const injectedController = controller.inject({
       update: update.inject({
         updateGuest: updateGuest.inject({
@@ -67,6 +67,7 @@ describe('guests/detail', () => {
       user: { id: 1, roles: [] },
       params: { guestId: 123 },
       body: {
+        email: 'test@example.com',
         name: 'test',
         nameKana: 'テスト',
         zipCode: '100-0001',
@@ -77,6 +78,7 @@ describe('guests/detail', () => {
     expect(res.status).toBe(200);
     expect(updateGuestMock).toBeCalledWith({
       data: {
+        email: 'test@example.com',
         name: 'test',
         nameKana: 'テスト',
         zipCode: '100-0001',
@@ -90,7 +92,7 @@ describe('guests/detail', () => {
   });
 
   it('should delete guest', async() => {
-    const deleteGuestMock    = jest.fn();
+    const deleteGuestMock = jest.fn();
     const injectedController = controller.inject({
       remove: remove.inject({
         deleteGuest: deleteGuest.inject({

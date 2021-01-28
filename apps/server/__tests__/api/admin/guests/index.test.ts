@@ -73,6 +73,11 @@ describe('guests', () => {
         {
           OR: [
             {
+              email: {
+                contains: 'test',
+              },
+            },
+            {
               name: {
                 contains: 'test',
               },
@@ -101,6 +106,11 @@ describe('guests', () => {
         },
         {
           OR: [
+            {
+              email: {
+                contains: 'name',
+              },
+            },
             {
               name: {
                 contains: 'name',
@@ -159,6 +169,7 @@ describe('guests', () => {
       headers: getAuthorizationHeader(1),
       user: { id: 1, roles: [] },
       body: {
+        email: 'test@example.com',
         name: 'test name',
         nameKana: 'テスト',
         zipCode: '100-0001',
@@ -169,6 +180,7 @@ describe('guests', () => {
     expect(res.status).toBe(201);
     expect(createGuestMock).toBeCalledWith({
       data: {
+        email: 'test@example.com',
         name: 'test name',
         nameKana: 'テスト',
         zipCode: '100-0001',

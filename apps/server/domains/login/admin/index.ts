@@ -1,15 +1,15 @@
-import { depend } from 'velona';
-import { validateUser } from '$/repositories/admin';
-import { createAuthorizationPayload } from '$/service/auth';
 import type { LoginBody } from './validators';
 import type { FastifyInstance } from 'fastify';
 import type { LoginResponse } from '$/types';
+import { depend } from 'velona';
+import { validateUser } from '$/repositories/admin';
+import { createAdminAuthorizationPayload } from '$/service/auth';
 import 'fastify-jwt';
 
 export const login = depend(
-  { createAuthorizationPayload, validateUser },
+  { createAdminAuthorizationPayload, validateUser },
   async(
-    { createAuthorizationPayload, validateUser },
+    { createAdminAuthorizationPayload, validateUser },
     body: LoginBody,
     fastify: FastifyInstance,
   ): Promise<LoginResponse> => {
@@ -20,7 +20,7 @@ export const login = depend(
 
     return {
       status: 204,
-      headers: { authorization: fastify.jwt.sign(await createAuthorizationPayload(id)) },
+      headers: { authorization: fastify.jwt.sign(await createAdminAuthorizationPayload(id)) },
     };
   },
 );

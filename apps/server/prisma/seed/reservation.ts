@@ -19,11 +19,11 @@ export class ReservationSeeder extends Seeder {
             id: guest.id,
           },
         },
-        guestName: guest.name,
-        guestNameKana: guest.nameKana,
-        guestZipCode: guest.zipCode,
-        guestAddress: guest.address,
-        guestPhone: guest.phone,
+        guestName: guest.name ?? '',
+        guestNameKana: guest.nameKana ?? '',
+        guestZipCode: guest.zipCode ?? '',
+        guestAddress: guest.address ?? '',
+        guestPhone: guest.phone ?? '',
         room: {
           connect: {
             id: room.id,

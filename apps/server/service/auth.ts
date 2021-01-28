@@ -1,13 +1,13 @@
 import type { FastifyRequest } from 'fastify';
-import type { AuthorizationPayload } from '$/types';
+import type { AdminAuthorizationPayload } from '$/types';
 import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
 import { getAdmin } from '$/repositories/admin';
 import 'fastify-jwt';
 
-export const createAuthorizationPayload = depend(
+export const createAdminAuthorizationPayload = depend(
   { getAdmin },
-  async({ getAdmin }, id: number): Promise<AuthorizationPayload> => ({
+  async({ getAdmin }, id: number): Promise<AdminAuthorizationPayload> => ({
     id,
     roles: (await getAdmin(id)).roles.map(role => role.role),
   }),
@@ -45,7 +45,7 @@ const getRoles = (request: FastifyRequest, domain: string | undefined): string[]
 export const verifyAdmin = async(request: FastifyRequest, domain?: string): Promise<boolean> => {
   const roles = getRoles(request, domain);
   try {
-    const payload = await request.jwtVerify() as AuthorizationPayload | null;
+    const payload = await request.jwtVerify() as AdminAuthorizationPayload | null;
     if (!payload?.id || (roles.length && (!payload.roles.length || roles.some(role => !payload.roles.includes(role))))) {
       return false;
     }

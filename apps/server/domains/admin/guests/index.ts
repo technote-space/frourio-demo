@@ -10,7 +10,7 @@ export const list = depend(
   { getGuests, getGuestCount },
   async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize = query.pageSize;
-    const where = getWhere<Guest>(query.search, ['name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const where = getWhere<Guest>(query.search, ['email', 'name', 'nameKana', 'zipCode', 'address', 'phone'], []);
     const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);

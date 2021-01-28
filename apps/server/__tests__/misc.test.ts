@@ -12,6 +12,7 @@ import {
 import { saveFile } from '$/service/multipart';
 import { includeRoles } from '$/repositories/admin';
 import { processRoleConnections, getAdminFilterConstraints } from '$/domains/admin/admins/utils';
+import { fillReservationData } from '$/domains/admin/reservations';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs') as {},
@@ -383,5 +384,37 @@ describe('getAdminFilterConstraints', () => {
         test: 123,
       },
     ]);
+  });
+});
+
+describe('fillReservationData', () => {
+  it('should throw error', async() => {
+    await expect(fillReservationData({
+        guestId: 1,
+        roomId: 1,
+        checkin: '2020-01-01',
+        checkout: '2020-01-10',
+        number: 1,
+      },
+      jest.fn(() => Promise.resolve({
+        id: 1,
+        email: '',
+        name: null,
+        nameKana: null,
+        zipCode: null,
+        address: null,
+        phone: null,
+        auth0Sub: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+      jest.fn(() => Promise.resolve({
+        id: 1,
+        name: '',
+        number: 1,
+        price: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })))).rejects.toThrow('必須項目が登録されていないゲストは指定できません。');
   });
 });

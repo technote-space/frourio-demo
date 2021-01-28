@@ -1,5 +1,5 @@
 import controller from '$/api/login/admin/controller';
-import { createAuthorizationPayload } from '$/service/auth';
+import { createAdminAuthorizationPayload } from '$/service/auth';
 import { getAdmin, validateUser } from '$/repositories/admin';
 import { createHash } from '$/repositories/utils';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
@@ -19,7 +19,7 @@ describe('login', () => {
     }));
     const injectedController = controller.inject({
       login: login.inject({
-        createAuthorizationPayload: createAuthorizationPayload.inject({
+        createAdminAuthorizationPayload: createAdminAuthorizationPayload.inject({
           getAdmin: getAdmin.inject({
             prisma: {
               admin: {
@@ -60,7 +60,7 @@ describe('login', () => {
     }));
     const injectedController = controller.inject({
       login: login.inject({
-        createAuthorizationPayload: createAuthorizationPayload.inject({
+        createAdminAuthorizationPayload: createAdminAuthorizationPayload.inject({
           getAdmin: getAdmin.inject({
             prisma: {
               admin: {

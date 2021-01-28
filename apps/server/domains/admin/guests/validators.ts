@@ -1,6 +1,10 @@
-import { IsNotEmpty, Length, Matches } from 'class-validator';
+import { IsNotEmpty, IsEmail, Length, Matches } from 'class-validator';
 
 export class GuestBody {
+  @IsNotEmpty({ message: '値を入力してください' })
+  @IsEmail(undefined, { message: 'メールアドレスを入力してください' })
+  email: string;
+
   @IsNotEmpty({ message: '値を入力してください' })
   @Length(1, 100, { message: '1~100文字で入力してください' })
   name: string;
