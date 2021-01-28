@@ -1,4 +1,5 @@
-import React, { FC, useMemo, useCallback } from 'react';
+import type { FC } from 'react';
+import { useMemo, useCallback } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import SnackbarContentWrapper from './SnackbarContentWrapper';

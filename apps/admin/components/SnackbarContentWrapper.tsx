@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler } from 'react';
+import type { FC, MouseEventHandler } from 'react';
 import clsx from 'clsx';
 import {
   CheckCircle as CheckCircleIcon,
