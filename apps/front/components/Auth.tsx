@@ -39,7 +39,7 @@ const Auth: FC = () => {
     if (onRemoveToken || (!isAuth0Loading && !isAuthenticated)) {
       removeToken();
     }
-  }, [onRemoveToken]);
+  }, [onRemoveToken, isAuth0Loading, isAuthenticated]);
   useEffect(() => {
     if (!auth) {
       tokenRemoved(dispatch);
