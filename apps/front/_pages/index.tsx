@@ -4,6 +4,10 @@ import Account from './account';
 import Reservations from './reservations';
 import Reservation from './reservation';
 import Rooms from './rooms';
+import Meal from './meal';
+import Facility from './facility';
+import Price from './price';
+import Info from './info';
 
 const pages: Record<string, Page> = {
   top: {
@@ -31,19 +35,19 @@ const pages: Record<string, Page> = {
   },
   meal: {
     label: 'お食事',
-    page: Rooms,
+    page: Meal,
   },
   facility: {
     label: '設備',
-    page: Rooms,
+    page: Facility,
   },
   price: {
     label: '料金',
-    page: Rooms,
+    page: Price,
   },
   info: {
     label: 'お知らせ',
-    page: Rooms,
+    page: Info,
   },
 };
 
