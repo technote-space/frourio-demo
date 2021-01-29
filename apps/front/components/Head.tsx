@@ -1,10 +1,23 @@
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import NextHead from 'next/head';
-import { useStoreContext } from '^/store';
+import { useLocation, matchPath } from 'react-router-dom';
+import { useStoreContext, useDispatchContext } from '^/store';
+import { changeTitle } from '^/utils/actions';
+import pages from '^/_pages';
 
 const Head: FC = () => {
+  const { dispatch } = useDispatchContext();
   const { title } = useStoreContext();
+  const location = useLocation();
+
+  useEffect(() => {
+    const page = Object.entries(pages).find(([key, value]) => !!matchPath(location.pathname, {
+      path: value.path ?? `/${key}`,
+      exact: value.exact,
+    }));
+    changeTitle(dispatch, page ? page[1].label : undefined);
+  }, [location?.pathname]);
 
   return useMemo(() => <NextHead>
     <meta name="viewport" content="initial-scale=1, width=device-width"/>

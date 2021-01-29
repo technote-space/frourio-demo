@@ -4,6 +4,7 @@ import type { AppState } from '@auth0/auth0-react';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
+import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import Head from '^/components/Head';
 import { StoreContextProvider } from '^/store';
 import history from '^/utils/history';
@@ -45,8 +46,10 @@ const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHy
         redirectUri={getRedirectUri()}
         onRedirectCallback={onRedirectCallback}
       >
-        <Head/>
-        <Component {...pageProps} />
+        <Router history={history}>
+          <Head/>
+          <Component {...pageProps} />
+        </Router>
       </Auth0Provider>
     </StoreContextProvider>
   </ChakraProvider>
