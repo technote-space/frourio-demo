@@ -36,6 +36,7 @@ export const getReservedReservations = depend(
     }),
   }),
 );
+
 export const getPaidReservations = depend(
   { getReservations },
   async({ getReservations }, user: GuestAuthorizationPayload): Promise<BodyResponse<Reservation[]>> => ({
@@ -52,6 +53,7 @@ export const getPaidReservations = depend(
     }),
   }),
 );
+
 export const getCancelledReservations = depend(
   { getReservations },
   async({ getReservations }, user: GuestAuthorizationPayload): Promise<BodyResponse<Reservation[]>> => ({

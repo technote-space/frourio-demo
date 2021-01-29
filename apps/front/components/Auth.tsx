@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { useDispatchContext, useStoreContext } from '^/store';
@@ -52,6 +53,8 @@ const Auth: FC = () => {
         if (!unmountRef.current) {
           if ('name' in guest || 'email' in guest) {
             setGuest(dispatch, guest);
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 3000));
           }
           offRefreshToken(dispatch);
           setIsLoading(false);

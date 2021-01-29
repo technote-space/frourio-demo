@@ -17,7 +17,7 @@ const Header: FC = () => {
   const NavigationItem: FC<{ page: PageKeys; }> = ({ page }) => {
     return useMemo(() => <Link
       as={RouterLink}
-      to={`/${page}`}
+      to={pages[page].path ?? `/${page}`}
       flexGrow={1}
       p={2}
       bg={menuBgColor}
@@ -37,7 +37,7 @@ const Header: FC = () => {
       >
         <Link as={RouterLink} to="/" marginRight="auto">
           <HStack>
-            <Image src="favicon.png" alt="logo"/>
+            <Image src="/favicon.png" alt="logo"/>
             <Box>Frourioの宿</Box>
           </HStack>
         </Link>
@@ -51,9 +51,7 @@ const Header: FC = () => {
           onClick={toggleMode}
           icon={<SwitchIcon/>}
         />
-        <Link as={RouterLink} to="/account">
-          アカウント
-        </Link>
+        <Link as={RouterLink} to="/account">アカウント</Link>
       </Flex>
       <Flex
         as="nav"

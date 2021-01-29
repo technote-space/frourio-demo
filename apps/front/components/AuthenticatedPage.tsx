@@ -38,7 +38,7 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
   }
 
   return <>
-    {!(!auth || onRemoveToken) && <WrappedComponent {...auth} {...props} />}
+    {!(!auth || onRemoveToken || !isAuthenticated) && <WrappedComponent {...auth} {...props} />}
   </>;
 }, WrappedComponent);
 

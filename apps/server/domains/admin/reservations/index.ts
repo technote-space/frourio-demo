@@ -99,13 +99,14 @@ export const get = depend(
 
 export const fillReservationData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<CreateReservationData> | never => {
   const guest = await getGuest(data.guestId);
+  if (!guest.name || !guest.nameKana || !guest.zipCode || !guest.address || !guest.phone) {
+    throw new Error('必須項目が登録されていないゲストは指定できません。');
+  }
+
   const room = await getRoom(data.roomId);
   const checkin = new Date(data.checkin);
   const checkout = new Date(data.checkout);
   const nights = differenceInCalendarDays(checkout, checkin);
-  if (!guest.name || !guest.nameKana || !guest.zipCode || !guest.address || !guest.phone) {
-    throw new Error('必須項目が登録されていないゲストは指定できません。');
-  }
 
   return {
     guest: {
@@ -174,6 +175,7 @@ export const searchGuest = depend(
     const data = await getGuests({
       select: {
         id: true,
+        email: true,
         name: true,
         nameKana: true,
         zipCode: true,
