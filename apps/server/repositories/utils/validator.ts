@@ -12,6 +12,8 @@ import { Models } from '.';
 
 @ValidatorConstraint({ async: true })
 class IsIdExistsConstraint implements ValidatorConstraintInterface {
+  private reason?: string;
+
   async validate(value: any, args: ValidationArguments) {
     if (typeof value !== 'number') {
       return false;
@@ -21,21 +23,31 @@ class IsIdExistsConstraint implements ValidatorConstraintInterface {
     const prisma = new PrismaClient();
     const findFirst = prisma[table].findFirst as ((args?: { where: { id: number } }) => Promise<object | null>);
     const item = await findFirst({ where: { id: Number(value) } });
-    return item !== null;
+    if (item === null) {
+      return false;
+    }
+
+    const fields = args.constraints[1] as string[] | undefined;
+    if (fields && fields.some(field => !item[field])) {
+      this.reason = '登録されているデータが不足しています';
+      return false;
+    }
+
+    return true;
   }
 
   defaultMessage() {
-    return 'データが存在しません';
+    return this.reason ?? 'データが存在しません';
   }
 }
 
-export function IsIdExists(table: Models, validationOptions?: ValidationOptions) {
+export function IsIdExists(table: Models, fields?: string[], validationOptions?: ValidationOptions) {
   return function(object: Object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      constraints: [table],
+      constraints: [table, fields],
       validator: IsIdExistsConstraint,
     });
   };
@@ -176,11 +188,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    if (this.reason) {
-      return this.reason;
-    }
-
-    return '有効な値ではありません';
+    return this.reason ?? '有効な値ではありません';
   }
 }
 

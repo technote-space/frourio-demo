@@ -26,7 +26,7 @@ export type ListReservation = Reservation & {
   }
 }
 export type SelectedRoom = Pick<Room, 'id' | 'name' | 'number' | 'price'>;
-export type SelectedGuest = Pick<Guest, 'id' | 'name'>;
+export type SelectedGuest = Pick<Guest, 'id' | 'name' | 'email'>;
 export type CheckinNotSelectableEvent = {
   start: string;
   end: string;
@@ -253,13 +253,14 @@ export const getSelectedRoom = depend(
 export const getSelectedGuest = depend(
   { getGuest },
   async({ getGuest }, guestId: number): Promise<BodyResponse<SelectedGuest>> => {
-    const room = await getGuest(guestId);
+    const guest = await getGuest(guestId);
 
     return {
       status: 200,
       body: {
-        id: room.id,
-        name: room.name,
+        id: guest.id,
+        name: guest.name,
+        email: guest.email,
       },
     };
   },

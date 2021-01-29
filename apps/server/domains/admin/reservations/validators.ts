@@ -12,7 +12,7 @@ export class ReservationBody {
   @IsNotEmpty({ message: '値を入力してください' })
   @IsInt({ message: '整数値を指定してください' })
   @IsPositive({ message: '1以上を指定してください' })
-  @IsIdExists('guest')
+  @IsIdExists('guest', ['name', 'nameKana', 'zipCode', 'address', 'phone'])
   guestId: number;
 
   @IsNotEmpty({ message: '値を入力してください' })
