@@ -12,15 +12,19 @@ type Options<T extends (option: any) => Promise<any>> = Parameters<Parameters<T>
   enabled?: boolean;
 }) => void>;
 type Res<T extends (option: any) => Promise<any>> = responseInterface<ReturnType<T> extends Promise<infer S> ? S : never, any>;
-type PromiseType<T extends Promise<any>> = T extends Promise<infer P> ? P : never;
 
-const useFetch = <API extends Record<string, any> & {
-  get: (option?: any) => Promise<AspidaResponse<any, any, any>>;
-  $get: (option?: any) => Promise<any>;
+export type ApiType<B> = Record<string, any> & {
+  get: (option?: any) => Promise<AspidaResponse<B, any, any>>;
+  $get: (option?: any) => Promise<B>;
   $path: (option?: any) => string;
-}, T extends PromiseType<ReturnType<API['$get']>> | undefined>(dispatch: Dispatch, fallback: T, api: API, ...option: Options<API['$get']>): Res<API['$get']> | MaybeUndefined<T> | never => useAspidaSWR({
+};
+export type ApiOptions<API extends ApiType<any>> = Options<API['$get']>;
+export type ApiResponse<API extends ApiType<any>> = Res<API['$get']>;
+export type FallbackType<API extends ApiType<any>> = API extends ApiType<infer B> ? B extends [] ? B | undefined : Partial<B> | undefined : never;
+
+const useFetch = <B, F extends FallbackType<ApiType<B>>>(dispatch: Dispatch, fallback: F, api: ApiType<B>, ...option: ApiOptions<ApiType<B>>): ApiResponse<ApiType<B>> | MaybeUndefined<F> | never => useAspidaSWR({
   $get: option => handleAuthError(dispatch, fallback, api.get, option),
   $path: api.$path,
-} as API, ...option);
+}, ...option);
 
 export default useFetch;
