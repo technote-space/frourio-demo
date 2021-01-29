@@ -11,7 +11,7 @@ const Head: FC = () => {
   return useMemo(() => <NextHead>
     <meta name="viewport" content="initial-scale=1, width=device-width"/>
     <title>{auth ? (title ? `${title} - ` : '') : 'ログイン - '}Reservation System</title>
-    <link rel="shortcut icon" href="favicon.png"/>
+    <link rel="shortcut icon" href="/favicon.png"/>
     {/*<meta name="description" content={description} />*/}
     {/*/!* Twitter *!/*/}
     {/*<meta name="twitter:card" content={largeCard ? 'summary_large_image' : 'summary'} />*/}

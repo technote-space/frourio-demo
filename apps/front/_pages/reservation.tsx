@@ -61,7 +61,7 @@ const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPa
       </Grid>
       <Divider/>
       <Grid templateColumns="repeat(2, 1fr)" gap={5}>
-        <Box>お支払い金額</Box>
+        <Box>宿泊料金</Box>
         <Box>¥{reservation.data.amount.toLocaleString()}</Box>
       </Grid>
     </Grid>
