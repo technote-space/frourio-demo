@@ -41,6 +41,7 @@
     "react-icons": "^4.1.0",
     "react-router-dom": "^5.2.0",
     "react-slick": "^0.28.0",
+    "slick-carousel": "^1.8.1",
     "swr": "^0.4.1"
   },
   "devDependencies": {
@@ -53,6 +54,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
+    "@types/react-slick": "^0.23.4",
     "babel-plugin-transform-require-ignore": "^0.1.1",
     "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",

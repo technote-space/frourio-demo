@@ -4,6 +4,7 @@ module.exports = {
     include: [
       /@fullcalendar/,
       /@frourio-demo/,
+      /slick-carousel/,
     ],
     plugins: [
       ['babel-plugin-transform-require-ignore', {
