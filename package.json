@@ -66,6 +66,7 @@
     "prepare:eslint": "yarn setup:install",
     "prepare:pages": "yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/server build:frourio && aspida && yarn workspace @frourio-demo/admin license:generate",
     "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/admin license:generate",
+    "prepare:license": "yarn setup:install",
     "setup": "yarn setup:install && yarn setup:server && yarn setup:admin && yarn build",
     "setup:admin": "yarn workspace @frourio-demo/admin setup",
     "setup:front": "yarn workspace @frourio-demo/front setup",
