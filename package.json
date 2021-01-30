@@ -64,7 +64,7 @@
     "setup:admin": "yarn workspace @frourio-demo/admin setup",
     "setup:front": "yarn workspace @frourio-demo/front setup",
     "setup:config": "yarn workspace @frourio-demo/server setup:config",
-    "setup:install": "yarn install --prefer-offline --network-timeout 1000000",
+    "setup:install": "yarn install --ignore-platform --prefer-offline --network-timeout 1000000",
     "setup:server": "yarn workspace @frourio-demo/server setup && yarn migrate:seed",
     "start": "run-p start:*",
     "start:admin": "yarn workspace @frourio-demo/admin start",
