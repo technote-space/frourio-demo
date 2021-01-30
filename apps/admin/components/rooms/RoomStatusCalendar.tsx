@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import type { RoomStatusEvent } from '@frourio-demo/server/domains/admin/rooms';
 import type { AuthHeader } from '@frourio-demo/types';
 import { useState, useMemo, useCallback } from 'react';
 import { IconButton, Dialog } from '@material-ui/core';
@@ -36,7 +35,7 @@ const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
     setOpen(false);
   }, []);
   const fetchEvents = useCallback((info, successCallback) => {
-    handleAuthError(dispatch, [] as Array<RoomStatusEvent>, client.rooms.calendar.get, {
+    handleAuthError(dispatch, [], client.rooms.calendar.get, {
       headers: authHeader,
       query: {
         roomId,

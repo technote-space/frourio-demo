@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import type { CheckinNotSelectableEvent } from '@frourio-demo/server/domains/admin/reservations';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import type { AuthHeader } from '@frourio-demo/types';
 import { useMemo, useCallback } from 'react';
@@ -13,7 +12,7 @@ type Props = {
 }
 
 const SelectCheckinDate: FC<Props> = ({ authHeader, props }: Props) => {
-  const fetchCallback = useCallback((dispatch, rowData, info) => handleAuthError(dispatch, [] as Array<CheckinNotSelectableEvent>, client.reservations.calendar.checkin.get, {
+  const fetchCallback = useCallback((dispatch, rowData, info) => handleAuthError(dispatch, [], client.reservations.calendar.checkin.get, {
     headers: authHeader,
     query: {
       roomId: rowData['roomId'],

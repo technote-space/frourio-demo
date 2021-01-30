@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AspidaResponse } from 'aspida';
 import type { ApiInstance } from '@frourio-demo/server/api/$api';
-import type { MaybeUndefined, Dispatch, DataTableApi } from '@frourio-demo/types';
+import type {
+  MaybeUndefined,
+  Dispatch,
+  DataTableApi,
+  ApiOptions,
+  ApiResponse,
+  ApiType,
+  FallbackType,
+} from '@frourio-demo/types';
 import aspida from '@aspida/axios';
 import { singular } from 'pluralize';
 import api from '@frourio-demo/server/api/$api';
@@ -14,17 +21,15 @@ export const client = {
   login: apiClient.login.admin,
 };
 
-type ApiType<T, U, V> = (...args: Array<any>) => Promise<AspidaResponse<T, U, V>>;
-type ApiResponse<T> = T extends ApiType<infer R, any, any> ? R : any;
-export const handleAuthError = async <T, U, V, F extends ApiResponse<ApiType<T, U, V>>>(
+export const handleAuthError = async <B, API extends ApiType<B>, F extends FallbackType<API>>(
   dispatch: Dispatch,
-  fallback: F | {} | undefined,
-  api: ApiType<T, U, V>,
-  ...option: Parameters<ApiType<T, U, V>>
-): Promise<ApiResponse<ApiType<T, U, V> | {}> | MaybeUndefined<F>> | never => {
+  fallback: F,
+  api: API,
+  ...option: ApiOptions<API>
+): Promise<ApiResponse<API> | MaybeUndefined<F>> | never => {
   try {
     const result = await api(...option);
-    return result.body;
+    return result.body as ApiResponse<API>;
   } catch (error) {
     console.log(error);
     /* istanbul ignore next */
@@ -43,7 +48,7 @@ export const handleAuthError = async <T, U, V, F extends ApiResponse<ApiType<T, 
           throw error;
         }
 
-        return fallback;
+        return fallback as MaybeUndefined<F>;
       }
     }
 
@@ -53,7 +58,7 @@ export const handleAuthError = async <T, U, V, F extends ApiResponse<ApiType<T, 
 
     /* istanbul ignore next */
     setError(dispatch, error.response?.data?.message ?? error.message);
-    return fallback;
+    return fallback as MaybeUndefined<F>;
   }
 };
 
