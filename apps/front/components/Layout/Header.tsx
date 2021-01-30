@@ -20,6 +20,7 @@ const Header: FC = () => {
       to={pages[page].path ?? `/${page}`}
       flexGrow={1}
       p={2}
+      mx={1}
       bg={menuBgColor}
       _hover={{ bg: menuHoverBgColor }}
     >
@@ -60,13 +61,12 @@ const Header: FC = () => {
         wrap="nowrap"
         textAlign="center"
         w="100%"
-        mb={8}
+        mb={1}
       >
         <NavigationItem page='top'/>
         <NavigationItem page='rooms'/>
         <NavigationItem page='meal'/>
         <NavigationItem page='facility'/>
-        <NavigationItem page='price'/>
         <NavigationItem page='info'/>
       </Flex>
     </>, [colorModeText]);

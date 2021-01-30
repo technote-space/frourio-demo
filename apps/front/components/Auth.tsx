@@ -54,7 +54,7 @@ const Auth: FC = () => {
           if ('name' in guest || 'email' in guest) {
             setGuest(dispatch, guest);
           } else {
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
           }
           offRefreshToken(dispatch);
           setIsLoading(false);

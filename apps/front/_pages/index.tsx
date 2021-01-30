@@ -6,7 +6,6 @@ import Reservation from './reservation';
 import Rooms from './rooms';
 import Meal from './meal';
 import Facility from './facility';
-import Price from './price';
 import Info from './info';
 
 const pages: Record<string, Page> = {
@@ -40,10 +39,6 @@ const pages: Record<string, Page> = {
   facility: {
     label: '設備',
     page: Facility,
-  },
-  price: {
-    label: '料金',
-    page: Price,
   },
   info: {
     label: 'お知らせ',

@@ -31,6 +31,8 @@ const Auth: FC = () => {
         if (!unmountRef.current) {
           if ('name' in admin) {
             setAdmin(dispatch, admin);
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 5000));
           }
           offRefreshToken(dispatch);
           setIsLoading(false);
