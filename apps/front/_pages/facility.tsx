@@ -1,11 +1,13 @@
 import type { FC } from 'react';
-import { Icon } from '@chakra-ui/react';
-import { IoMdConstruct } from 'react-icons/io';
+import { Box, Image } from '@chakra-ui/react';
 
 const Facility: FC = () => {
-  return <div>
-    <Icon as={IoMdConstruct}/> 工事中...
-  </div>;
+  return <Box m={4}>
+    <Image width="100%" height={400} p={1} objectFit="cover" src="/facility1.jpg"/>
+    <Image width="100%" height={400} p={1} objectFit="cover" src="/facility2.jpg"/>
+    <Image width="100%" height={400} p={1} objectFit="cover" src="/facility3.jpg"/>
+    <Image width="100%" height={400} p={1} objectFit="cover" src="/facility4.jpg"/>
+  </Box>;
 };
 
 export default Facility;
