@@ -116,11 +116,8 @@ export const createAdmin = depend(
 export const updateAdmin = depend(
   { prisma: prisma as { admin: { update: typeof prisma.admin.update } } },
   async({ prisma }, id: number | undefined, data: UpdateAdminData, args?: Partial<UpdateAdminArgs>) => filterAdmin(await prisma.admin.update({
+    where: { id },
     ...args,
-    where: {
-      id,
-      ...args?.where,
-    },
     data: dropId({
       ...data,
       password: createAdminPasswordHash(data.password),

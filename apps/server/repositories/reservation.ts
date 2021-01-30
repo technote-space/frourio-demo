@@ -29,9 +29,12 @@ export const getReservationCount = depend(
 export const getReservation = depend(
   { prisma: prisma as { reservation: { findFirst: typeof prisma.reservation.findFirst } } },
   async({ prisma }, id: number | undefined, args?: FindReservationArgs): Promise<Reservation> | never => await prisma.reservation.findFirst({
-    where: { id },
     rejectOnNotFound: true,
     ...args,
+    where: {
+      id,
+      ...args?.where,
+    },
   }) as Reservation,
 );
 

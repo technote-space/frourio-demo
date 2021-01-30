@@ -30,9 +30,12 @@ export const getGuestCount = depend(
 export const getGuest = depend(
   { prisma: prisma as { guest: { findFirst: typeof prisma.guest.findFirst } } },
   async({ prisma }, id: number | undefined, args?: FindGuestArgs): Promise<Guest> | never => await prisma.guest.findFirst({
-    where: { id },
     rejectOnNotFound: true,
     ...args,
+    where: {
+      id,
+      ...args?.where,
+    },
   }) as Guest,
 );
 

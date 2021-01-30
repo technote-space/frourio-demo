@@ -29,9 +29,12 @@ export const getRoomCount = depend(
 export const getRoom = depend(
   { prisma: prisma as { room: { findFirst: typeof prisma.room.findFirst } } },
   async({ prisma }, id: number | undefined, args?: FindRoomArgs): Promise<Room> | never => await prisma.room.findFirst({
-    where: { id },
     rejectOnNotFound: true,
     ...args,
+    where: {
+      id,
+      ...args?.where,
+    },
   }) as Room,
 );
 
