@@ -81,7 +81,7 @@ export const getCancelledReservations = depend(
 
 export const getReservationDetail = depend(
   { getReservation },
-  async({ getReservation }, id: number): Promise<BodyResponse<ReservationDetail>> => {
+  async({ getReservation }, user: GuestAuthorizationPayload, id: number): Promise<BodyResponse<ReservationDetail>> => {
     const reservation = await getReservation(id, {
       include: {
         room: {
@@ -89,6 +89,9 @@ export const getReservationDetail = depend(
             price: true,
           },
         },
+      },
+      where: {
+        guestId: user.id,
       },
     }) as ReservationDetail;
     const nights = differenceInCalendarDays(reservation.checkout, reservation.checkin);
@@ -104,11 +107,23 @@ export const getReservationDetail = depend(
 );
 
 export const cancel = depend(
-  { updateReservation },
-  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => ({
-    status: 200,
-    body: await updateReservation(id, {
-      status: 'cancelled',
-    }),
-  }),
+  { getReservation, updateReservation },
+  async({
+    getReservation,
+    updateReservation,
+  }, user: GuestAuthorizationPayload, id: number): Promise<BodyResponse<Reservation>> => {
+    // check
+    await getReservation(id, {
+      where: {
+        guestId: user.id,
+      },
+    });
+
+    return {
+      status: 200,
+      body: await updateReservation(id, {
+        status: 'cancelled',
+      }),
+    };
+  },
 );
