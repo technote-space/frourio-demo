@@ -1,11 +1,40 @@
 import type { FC } from 'react';
-import { Icon } from '@chakra-ui/react';
-import { IoMdConstruct } from 'react-icons/io';
+import type { Room } from '$/repositories/room';
+import { useMemo } from 'react';
+import { Flex, Wrap, Box, Center, Image, Heading, Button } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { client } from '^/utils/api';
+import useFetch from '^/hooks/useFetch';
+import { useDispatchContext } from '^/store';
 
 const Rooms: FC = () => {
-  return <div>
-    <Icon as={IoMdConstruct}/> 工事中...
-  </div>;
+  const { dispatch } = useDispatchContext();
+  const rooms = useFetch(dispatch, [], client.rooms);
+
+  const RoomItem: FC<{ room: Room }> = ({ room }) => <Box
+    key={room.id}
+    shadow="md"
+    maxW="sm"
+    borderWidth="1px"
+    p="4"
+    m="2"
+  >
+    <Flex direction="column">
+      <Heading as="h4" size="md" mb={2}>
+        {room.name}
+      </Heading>
+      <Box>
+        <Image src="/cover2.jpg"/>
+      </Box>
+    </Flex>
+    <Center mt={3}>
+      <Button as={Link} to={`/room/${room.id}`}>お部屋の詳細</Button>
+    </Center>
+  </Box>;
+
+  return useMemo(() => rooms?.data ? <Wrap m={4}>
+    {rooms.data.map(room => <RoomItem key={room.id} room={room}/>)}
+  </Wrap> : null, [rooms?.data]);
 };
 
 export default Rooms;

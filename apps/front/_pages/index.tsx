@@ -4,6 +4,7 @@ import Account from './account';
 import Reservations from './reservations';
 import Reservation from './reservation';
 import Rooms from './rooms';
+import Room from './room';
 import Meal from './meal';
 import Facility from './facility';
 import Info from './info';
@@ -31,6 +32,11 @@ const pages: Record<string, Page> = {
   rooms: {
     label: 'お部屋',
     page: Rooms,
+  },
+  room: {
+    path: '/room/:id',
+    label: 'お部屋詳細',
+    page: Room,
   },
   meal: {
     label: 'お食事',
