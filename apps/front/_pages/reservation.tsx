@@ -32,7 +32,7 @@ const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPa
     await reservation?.revalidate();
   }, []);
 
-  return useMemo(() => reservation?.data ? <Box mx={4}>
+  return useMemo(() => reservation?.data ? <Box m={4}>
     <Grid templateColumns="repeat(1, 1fr)" gap={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={5}>
         <Box>チェックイン</Box>

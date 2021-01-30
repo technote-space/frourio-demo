@@ -14,7 +14,7 @@ const Account: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePr
   }, [edit]);
   const editButton = useMemo(() => <Link onClick={toggleEdit} float="right">{edit ? 'キャンセル' : '編集'}</Link>, [edit]);
 
-  return <Tabs defaultIndex={0}>
+  return <Tabs defaultIndex={0} m={4}>
     <SwitchTab/>
     <TabPanels>
       <TabPanel>

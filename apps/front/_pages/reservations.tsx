@@ -8,7 +8,7 @@ import Reservations from '^/components/account/Reservations';
 import SwitchTab from '^/components/account/SwitchTab';
 
 const Account: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
-  return useMemo(() => <Tabs defaultIndex={1}>
+  return useMemo(() => <Tabs defaultIndex={1} m={4}>
     <SwitchTab/>
     <TabPanels>
       <TabPanel/>
