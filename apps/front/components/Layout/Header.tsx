@@ -20,8 +20,8 @@ const Header: FC = () => {
       to={pages[page].path ?? `/${page}`}
       flexGrow={1}
       p={2}
-      mx={1}
       bg={menuBgColor}
+      borderWidth={1}
       _hover={{ bg: menuHoverBgColor }}
     >
       {pages[page].label}
