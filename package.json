@@ -32,7 +32,7 @@
   "scripts": {
     "analyze:admin": "yarn workspace @frourio-demo/admin analyze",
     "analyze:front": "yarn workspace @frourio-demo/front analyze",
-    "build": "yarn workspace @frourio-demo/admin license:generate && aspida && run-s build:server build:admin build:front",
+    "build": "yarn license:generate:admin && aspida && run-s build:server build:admin build:front",
     "build:admin": "yarn workspace @frourio-demo/admin build",
     "build:front": "yarn workspace @frourio-demo/front build",
     "build:server": "yarn workspace @frourio-demo/server build",
