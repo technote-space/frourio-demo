@@ -1,5 +1,5 @@
 import { startOfToday, startOfTomorrow } from 'date-fns';
-import { isAxiosError, handleApiError, processUpdateData } from '@/utils/api';
+import { isAxiosError, processUpdateData } from '@/utils/api';
 import { getPriceCalc } from '@/utils/calc';
 import { getEventDates } from '@/utils/calendar';
 import { addDisplayName } from '@/utils/component';
@@ -18,24 +18,6 @@ describe('isAxiosError', () => {
   it('should return false', () => {
     expect(isAxiosError({})).toBe(false);
     expect(isAxiosError(123)).toBe(false);
-  });
-});
-
-describe('handleApiError', () => {
-  it('should return result body', async() => {
-    const onError = jest.fn();
-    const api = jest.fn(() => Promise.resolve({ body: 123, status: 200, headers: [], originalResponse: {} }));
-    expect(await handleApiError(onError, api)).toBe(123);
-    expect(onError).not.toBeCalled();
-  });
-
-  it('should call onError callback', async() => {
-    const onError = jest.fn(() => 123);
-    const api = jest.fn(() => {
-      throw new Error();
-    });
-    expect(await handleApiError(onError, api)).toBe(123);
-    expect(onError).toBeCalled();
   });
 });
 

@@ -73,6 +73,7 @@ describe('reservations/search/guests', () => {
     expect(getGuestsMock).toBeCalledWith({
       select: {
         id: true,
+        email: true,
         name: true,
         nameKana: true,
         zipCode: true,

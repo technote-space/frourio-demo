@@ -37,7 +37,7 @@ const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
 
   const handleSave = async() => {
     try {
-      await handleAuthError(dispatch, undefined, client.account.guest.post, {
+      await handleAuthError(dispatch, undefined, client.account.guest.patch, {
         headers: authHeader,
         body: editInfo!,
       });

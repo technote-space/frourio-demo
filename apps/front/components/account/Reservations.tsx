@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { ApiType, ApiOptions } from '^/hooks/useFetch';
+import type { SwrApiType, SwrApiOptions } from '@frourio-demo/types';
 import type { Reservation } from '$/repositories/reservation';
 import { useMemo } from 'react';
 import { Flex, Wrap, Box, Heading, Button } from '@chakra-ui/react';
@@ -8,10 +8,10 @@ import useFetch from '^/hooks/useFetch';
 import { useDispatchContext } from '^/store';
 import MiniCalendar from '^/components/MiniCalendar';
 
-type API = ApiType<Reservation[]>;
+type API = SwrApiType<Reservation[]>;
 type Props = {
   api: API;
-  options: ApiOptions<API>;
+  options: SwrApiOptions<API>;
 }
 
 const Reservations: FC<Props> = ({ api, options }: Props) => {

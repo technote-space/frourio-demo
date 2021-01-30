@@ -7,7 +7,7 @@ export type Methods = {
     reqHeaders: AuthHeader;
     resBody: Guest;
   };
-  post: {
+  patch: {
     reqHeaders: AuthHeader;
     reqBody: AccountBody;
     resBody: Guest;

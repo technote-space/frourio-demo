@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Flex, Wrap, Box, Grid, Divider, Image, Heading, Button } from '@chakra-ui/react';
+import { Box, Grid, Divider, Image, Heading } from '@chakra-ui/react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { client, handleAuthError } from '^/utils/api';
