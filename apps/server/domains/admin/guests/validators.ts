@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsEmail, Length, Matches } from 'class-validator';
+import { IsNotEmpty, IsEmail, Length } from 'class-validator';
+import { IsKatakana, IsZipCode, IsPhoneNumber } from '$/repositories/utils/validator';
 
 export class GuestBody {
   @IsNotEmpty({ message: '値を入力してください' })
@@ -11,15 +12,11 @@ export class GuestBody {
 
   @IsNotEmpty({ message: '値を入力してください' })
   @Length(1, 100, { message: '1~100文字で入力してください' })
-  @Matches(/^[ァ-ヴー・　\s]+$/, { // eslint-disable-line no-irregular-whitespace
-    message: 'カタカナを入力してください',
-  })
+  @IsKatakana()
   nameKana: string;
 
   @IsNotEmpty({ message: '値を入力してください' })
-  @Matches(/^[0-9]{3}-[0-9]{4}$|^[0-9]{3}-[0-9]{2}$|^[0-9]{3}$|^[0-9]{5}$|^[0-9]{7}$/, {
-    message: '正しい郵便番号を入力してください',
-  })
+  @IsZipCode()
   zipCode: string;
 
   @IsNotEmpty({ message: '値を入力してください' })
@@ -27,8 +24,6 @@ export class GuestBody {
   address: string;
 
   @IsNotEmpty({ message: '値を入力してください' })
-  @Matches(/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/, {
-    message: '正しい電話番号を入力してください',
-  })
+  @IsPhoneNumber()
   phone: string;
 }

@@ -252,3 +252,84 @@ export function IsWithinLimit(table: Models, field: string, validationOptions?: 
     });
   };
 }
+
+@ValidatorConstraint({ async: false })
+class IsKatakanaConstraint implements ValidatorConstraintInterface {
+  validate(value: any, args: ValidationArguments) {
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    return /^[ァ-ヴー・　\s]+$/.test(value);
+  }
+
+  defaultMessage() {
+    return 'カタカナを入力してください';
+  }
+}
+
+export function IsKatakana(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsKatakanaConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: false })
+class IsZipCodeConstraint implements ValidatorConstraintInterface {
+  validate(value: any, args: ValidationArguments) {
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    return /^[0-9]{3}-[0-9]{4}$|^[0-9]{3}-[0-9]{2}$|^[0-9]{3}$|^[0-9]{5}$|^[0-9]{7}$/.test(value);
+  }
+
+  defaultMessage() {
+    return '正しい郵便番号を入力してください';
+  }
+}
+
+export function IsZipCode(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsZipCodeConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: false })
+class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
+  validate(value: any, args: ValidationArguments) {
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    return /^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/.test(value);
+  }
+
+  defaultMessage() {
+    return '正しい電話番号を入力してください';
+  }
+}
+
+export function IsPhoneNumber(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsPhoneNumberConstraint,
+    });
+  };
+}
