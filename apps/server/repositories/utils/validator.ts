@@ -255,12 +255,12 @@ export function IsWithinLimit(table: Models, field: string, validationOptions?: 
 
 @ValidatorConstraint({ async: false })
 class IsKatakanaConstraint implements ValidatorConstraintInterface {
-  validate(value: any, args: ValidationArguments) {
+  validate(value: any) {
     if (typeof value !== 'string') {
       return false;
     }
 
-    return /^[ァ-ヴー・　\s]+$/.test(value);
+    return /^[ァ-ヴー・　\s]+$/.test(value); // eslint-disable-line no-irregular-whitespace
   }
 
   defaultMessage() {
@@ -282,7 +282,7 @@ export function IsKatakana(validationOptions?: ValidationOptions) {
 
 @ValidatorConstraint({ async: false })
 class IsZipCodeConstraint implements ValidatorConstraintInterface {
-  validate(value: any, args: ValidationArguments) {
+  validate(value: any) {
     if (typeof value !== 'string') {
       return false;
     }
@@ -309,7 +309,7 @@ export function IsZipCode(validationOptions?: ValidationOptions) {
 
 @ValidatorConstraint({ async: false })
 class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
-  validate(value: any, args: ValidationArguments) {
+  validate(value: any) {
     if (typeof value !== 'string') {
       return false;
     }
