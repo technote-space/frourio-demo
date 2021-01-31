@@ -34,6 +34,14 @@ export const getSelectRooms = depend(
   }),
 );
 
+export const getRoomInfo = depend(
+  { getRoom },
+  async({ getRoom }, id: number): Promise<BodyResponse<Room>> => ({
+    status: 200,
+    body: await getRoom(id),
+  }),
+);
+
 export const getCheckinNotSelectable = depend(
   { getReservations },
   async({ getReservations }, roomId: number, start: Date, end: Date): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
