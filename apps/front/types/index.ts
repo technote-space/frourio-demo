@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import type { Guest } from '$/repositories/guest';
 
 export type NoticeType = {
   title: string,
@@ -6,8 +7,7 @@ export type NoticeType = {
   status: 'error' | 'info' | 'success' | 'warning',
 }
 export type ContextState = {
-  name?: string;
-  icon?: string;
+  guest?: Partial<Guest>;
   title?: string;
   notices: NoticeType[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

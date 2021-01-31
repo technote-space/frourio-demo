@@ -1,18 +1,17 @@
 import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import useAuthToken from '^/hooks/useAuthToken';
-import useUnmountRef from '^/hooks/useUnmountRef';
 import { useDispatchContext, useStoreContext } from '^/store';
 import { offRefreshToken, setGuest, setWarning, tokenRemoved } from '^/utils/actions';
-import { client, handleAuthError } from '^/utils/api';
-import { useAuth0 } from '@auth0/auth0-react';
+import { client } from '^/utils/api';
+import useFetch from '^/hooks/useFetch';
 
 const Auth: FC = () => {
-  const unmountRef = useUnmountRef();
   const [auth, setToken, removeToken] = useAuthToken();
-  const { name, onRemoveToken, onRefreshToken } = useStoreContext();
+  const { onRemoveToken, onRefreshToken } = useStoreContext();
   const { dispatch } = useDispatchContext();
-  const [isLoading, setIsLoading] = useState(false);
+  const guest = useFetch(dispatch, {}, client.guest, { headers: auth!.authHeader, enabled: !!auth });
 
   const {
     isLoading: isAuth0Loading,
@@ -46,22 +45,16 @@ const Auth: FC = () => {
     }
   }, [auth]);
   useEffect(() => {
-    if (!isLoading && auth && (onRefreshToken || (!name && !onRemoveToken))) {
-      setIsLoading(true);
-      (async() => {
-        const guest = await handleAuthError(dispatch, {}, client.guest.get, { headers: auth.authHeader });
-        if (!unmountRef.current) {
-          if ('name' in guest || 'email' in guest) {
-            setGuest(dispatch, guest);
-          } else {
-            await new Promise(resolve => setTimeout(resolve, 5000));
-          }
-          offRefreshToken(dispatch);
-          setIsLoading(false);
-        }
-      })();
+    if (onRefreshToken) {
+      offRefreshToken(dispatch);
+      guest.revalidate().then();
     }
-  }, [dispatch, auth, name, onRemoveToken, onRefreshToken, isLoading]);
+  }, [onRefreshToken]);
+  useEffect(() => {
+    if (guest.data) {
+      setGuest(dispatch, guest.data);
+    }
+  }, [guest.data]);
 
   return null;
 };

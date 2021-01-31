@@ -4,8 +4,6 @@ import type { Dispatch } from '@frourio-demo/types';
 import type { ContextState, NoticeType } from '^/types';
 
 const initialState: ContextState = {
-  name: undefined,
-  icon: undefined,
   title: undefined,
   notices: [] as NoticeType[],
   onRemoveToken: false,
@@ -15,7 +13,7 @@ const initialState: ContextState = {
 const reducerActions = {
   SET_GUEST: (store, action) => ({
     ...store,
-    name: action.guest.name ?? action.guest.email,
+    guest: 'name' in action.guest || 'email' in action.guest ? action.guest : undefined,
   }),
   OPEN_SIDEBAR: (store) => ({ ...store, isSidebarOpen: true }),
   CLOSE_SIDEBAR: (store) => ({ ...store, isSidebarOpen: false }),
@@ -24,8 +22,7 @@ const reducerActions = {
   TITLE: (store, action) => ({ ...store, title: action.title }),
   LOGOUT: (store) => ({
     ...store,
-    name: undefined,
-    icon: undefined,
+    guest: undefined,
     title: undefined,
     roles: undefined,
     onRemoveToken: true,
