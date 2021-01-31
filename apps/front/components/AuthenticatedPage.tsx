@@ -13,7 +13,7 @@ export type AuthenticatedPageProps = {
 
 const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = WrappedComponent => addDisplayName<FC>('AuthenticatedPage', props => {
   const [auth] = useAuthToken();
-  const { onRemoveToken } = useStoreContext();
+  const { guest, onRemoveToken } = useStoreContext();
   const {
     isLoading,
     isAuthenticated,
@@ -38,7 +38,7 @@ const AuthenticatedPage: (WrappedComponent: FC<AuthenticatedPageProps>) => FC = 
   }
 
   return <>
-    {!(!auth || onRemoveToken || !isAuthenticated) && <WrappedComponent {...auth} {...props} />}
+    {!(!auth || !guest || onRemoveToken || !isAuthenticated) && <WrappedComponent {...auth} {...props} />}
   </>;
 }, WrappedComponent);
 
