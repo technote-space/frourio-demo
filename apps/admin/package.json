@@ -6,10 +6,10 @@
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build && next export",
-    "dev": "yarn kill && next dev -p $npm_package_port",
+    "dev": "yarn kill && FRONT_URL=$npm_package_front next dev -p $npm_package_port",
     "kill": "lsof -i:$npm_package_port -t | xargs kill -9",
     "setup": "yarn install --prefer-offline --network-timeout 1000000",
-    "start": "yarn kill && next start -p $npm_package_port",
+    "start": "yarn kill && FRONT_URL=$npm_package_front next start -p $npm_package_port",
     "update": "npx npm-check-updates -u --timeout 100000 -x @date-io/date-fns,next-transpile-modules"
   },
   "dependencies": {
@@ -62,5 +62,6 @@
   "engines": {
     "yarn": "1.x"
   },
-  "port": 3000
+  "port": 3000,
+  "front": "https://localhost.frourio-demo.com:3001/"
 }

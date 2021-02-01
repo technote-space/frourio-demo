@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { memo, useCallback } from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, IconButton, Link } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Brightness4 from '@material-ui/icons/Brightness4';
 import Brightness5 from '@material-ui/icons/Brightness5';
@@ -18,8 +18,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1,
     cursor: 'pointer',
+    marginRight: theme.spacing(3),
+    color: theme.palette.primary.contrastText,
   },
   grow: {
     flex: '1 1 auto',
@@ -46,6 +47,17 @@ const Header: FC = memo(() => {
       <Typography variant="h6" className={classes.title} onClick={handleClickHome}>
         予約システム
       </Typography>
+      {process.env.FRONT_URL && <Link
+        className={classes.title}
+        target="_blank"
+        rel="noopener noreferrer"
+        underline="none"
+        href={process.env.FRONT_URL}
+      >
+        <Typography variant="h6">
+          フロントページ
+        </Typography>
+      </Link>}
       <div className={classes.grow}/>
       <IconButton onClick={toggleDarkMode}>
         {themeColor === 'dark' ? <Brightness5/> : <Brightness4/>}

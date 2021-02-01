@@ -7,6 +7,9 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer(withTranspileModules({
+  env: {
+    FRONT_URL: process.env.FRONT_URL,
+  },
   async rewrites() {
     return [
       {
