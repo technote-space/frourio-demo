@@ -22,7 +22,7 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx)
+          PATTERNS: apps/**/*.+(js|ts|jsx|tsx)
           FILES: |
             yarn.lock
             .eslintrc.js
@@ -69,7 +69,7 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx)
+          PATTERNS: apps/**/*.+(js|ts|jsx|tsx)
           FILES: |
             yarn.lock
             tsconfig.json
@@ -155,7 +155,7 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx|snap)
+          PATTERNS: apps/**/*.+(js|ts|jsx|tsx|snap)
           FILES: |
             yarn.lock
             jest.config.ts
