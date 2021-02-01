@@ -7,6 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { client, handleAuthError } from '^/utils/api';
 import useFetch from '^/hooks/useFetch';
 import { useDispatchContext } from '^/store';
+import Reservation from '^/components/Reservation';
 import '@fullcalendar/common/main.css';
 import '@fullcalendar/daygrid/main.css';
 
@@ -48,6 +49,7 @@ const Room: FC = memo(() => {
         events={fetchEvents}
       />
     </Box>
+    <Reservation roomId={Number(id)}/>
   </Box> : null;
 });
 
