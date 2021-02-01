@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
 import type { Room } from '$/repositories/room';
+import { memo } from 'react';
 import { Flex, Box, Grid, GridItem } from '@chakra-ui/react';
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
   reservation: ReservationData;
 }
 
-const Calc: FC<Props> = ({ reservation, room, nights, isValid }: Props) => {
+const Calc: FC<Props> = memo(({ reservation, room, nights, isValid }: Props) => {
   return isValid ? <Box>
     <Grid templateColumns="repeat(1, 1fr)" gap={2} m={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
@@ -31,6 +32,7 @@ const Calc: FC<Props> = ({ reservation, room, nights, isValid }: Props) => {
       <Box fontWeight="bold" fontSize="2rem">¥{(room!.price * reservation.number! * nights).toLocaleString()}</Box>
     </Flex>
   </Box> : null;
-};
+});
 
+Calc.displayName = 'Calc';
 export default Calc;

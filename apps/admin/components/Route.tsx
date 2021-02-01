@@ -1,11 +1,11 @@
 import type { FC, ReactElement } from 'react';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { memo, useEffect, useState, useRef } from 'react';
 import { useStoreContext, useDispatchContext } from '~/store';
 import { changeTitle } from '~/utils/actions';
 import useAuthToken from '~/hooks/useAuthToken';
 import pages from '~/_pages';
 
-const Route: FC = () => {
+const Route: FC = memo(() => {
   const [auth] = useAuthToken();
   const { page, roles } = useStoreContext();
   const { dispatch } = useDispatchContext();
@@ -27,7 +27,7 @@ const Route: FC = () => {
     changeTitle(dispatch, pages[page].label);
   }, [page, roles, auth]);
 
-  return useMemo(() => nextPage, [nextPage]);
-};
+  return nextPage;
+});
 
 export default Route;

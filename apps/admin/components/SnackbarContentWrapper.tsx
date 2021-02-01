@@ -1,4 +1,5 @@
 import type { FC, MouseEventHandler } from 'react';
+import { memo } from 'react';
 import clsx from 'clsx';
 import {
   CheckCircle as CheckCircleIcon,
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const SnackbarContentWrapper: FC<Props> = ({ className, message, onClose, variant, ...other }: Props) => {
+const SnackbarContentWrapper: FC<Props> = memo(({ className, message, onClose, variant, ...other }: Props) => {
   const Icon = variantIcon[variant];
   const classes = useStyles();
 
@@ -77,6 +78,7 @@ const SnackbarContentWrapper: FC<Props> = ({ className, message, onClose, varian
       {...other}
     />
   );
-};
+});
 
+SnackbarContentWrapper.displayName = 'SnackbarContentWrapper';
 export default SnackbarContentWrapper;

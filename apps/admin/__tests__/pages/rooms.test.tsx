@@ -1,6 +1,6 @@
 import { setup, loadPage, findElement } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
-import { startOfToday, startOfMonth, endOfMonth, addDays, format, setHours } from 'date-fns';
+import { startOfToday, startOfMonth, addDays, format } from 'date-fns';
 
 setup();
 

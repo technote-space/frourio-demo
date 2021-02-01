@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Page, Menu } from '~/types';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Avatar } from '@material-ui/core';
 import clsx from 'clsx';
 import useAuthToken from '~/hooks/useAuthToken';
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Sidebar: FC = () => {
+const Sidebar: FC = memo(() => {
   const classes = useStyles();
   const { isSidebarOpen, icon, name, page: _page, roles } = useStoreContext();
   const { dispatch } = useDispatchContext();
@@ -44,7 +44,7 @@ const Sidebar: FC = () => {
       closeSidebar(dispatch);
     }, []);
 
-    return useMemo(() => (!roles && !pages[slug].roleCheck) || (roles && roles.includes(slug)) ? <ListItem
+    return (!roles && !pages[slug].roleCheck) || (roles && roles.includes(slug)) ? <ListItem
       key={slug}
       className={clsx(classes.item, slug === _page ? classes.active : '')}
       onClick={handleClick}
@@ -54,7 +54,7 @@ const Sidebar: FC = () => {
         <page.icon/>
       </ListItemIcon>
       <ListItemText primary={page.label}/>
-    </ListItem> : null, [_page, page.label, roles]);
+    </ListItem> : null;
   };
   const MappedMenuItem: FC<{ slug: MenuKeys, menu: Menu }> = ({ slug, menu }) => {
     const handleClick = useCallback(() => {
@@ -62,7 +62,7 @@ const Sidebar: FC = () => {
       closeSidebar(dispatch);
     }, []);
 
-    return useMemo(() => <ListItem
+    return <ListItem
       key={slug}
       className={classes.item}
       onClick={handleClick}
@@ -72,49 +72,49 @@ const Sidebar: FC = () => {
         <menu.icon/>
       </ListItemIcon>
       <ListItemText primary={menu.label}/>
-    </ListItem>, [menu.label]);
+    </ListItem>;
   };
 
-  return useMemo(() =>
-    <Drawer
-      anchor='left'
-      onClose={onClose}
-      open={isSidebarOpen}
-      ModalProps={{
-        BackdropProps: {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          'data-testid': 'drawer-layer',
-        },
-      }}
-      PaperProps={{
+  return <Drawer
+    anchor='left'
+    onClose={onClose}
+    open={isSidebarOpen}
+    ModalProps={{
+      BackdropProps: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        'data-testid': 'drawer-paper',
-      }}
-    >
-      {(icon || name) && <>
-        <div className={classes.drawerHeader}>
-          {icon && <Avatar
-            className={classes.avatar}
-            src={icon}
-            alt={name ?? 'admin'}
-            data-testid="admin-avatar"
-          />}
-          {name}
-        </div>
-        <Divider/>
-      </>}
-      {auth && <List>
-        {Object.entries(pages).map(([key, page]) =>
-          <MappedPageItem key={`page-${key}`} slug={key as PageKeys} page={page}/>)}
-      </List>}
+        'data-testid': 'drawer-layer',
+      },
+    }}
+    PaperProps={{
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      'data-testid': 'drawer-paper',
+    }}
+  >
+    {(icon || name) && <>
+      <div className={classes.drawerHeader}>
+        {icon && <Avatar
+          className={classes.avatar}
+          src={icon}
+          alt={name ?? 'admin'}
+          data-testid="admin-avatar"
+        />}
+        {name}
+      </div>
       <Divider/>
-      <List>
-        {Object.entries(menus).map(([key, menu]) =>
-          auth || menu.always ? <MappedMenuItem key={`menu-${key}`} slug={key as PageKeys} menu={menu}/> : null)}
-      </List>
-    </Drawer>, [classes, isSidebarOpen, auth, name, icon, roles]);
-};
+    </>}
+    {auth && <List>
+      {Object.entries(pages).map(([key, page]) =>
+        <MappedPageItem key={`page-${key}`} slug={key as PageKeys} page={page}/>)}
+    </List>}
+    <Divider/>
+    <List>
+      {Object.entries(menus).map(([key, menu]) =>
+        auth || menu.always ? <MappedMenuItem key={`menu-${key}`} slug={key as PageKeys} menu={menu}/> : null)}
+    </List>
+  </Drawer>;
+});
 
+Sidebar.displayName = 'Sidebar';
 export default Sidebar;

@@ -1,5 +1,6 @@
 import type { FC, RefObject } from 'react';
 import type { CalendarOptions } from '@fullcalendar/react';
+import { memo } from 'react';
 import OriginalFullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -12,7 +13,7 @@ type Props = CalendarOptions & {
 }
 
 /* istanbul ignore next */
-const FullCalendar: FC<Props> = (props: Props) => {
+const FullCalendar: FC<Props> = memo((props: Props) => {
   /* istanbul ignore next */
   const { calendarRef, ...calendarOptions } = props;
   /* istanbul ignore next */
@@ -23,6 +24,7 @@ const FullCalendar: FC<Props> = (props: Props) => {
     {...calendarOptions}
     ref={calendarRef}
   />;
-};
+});
 
+FullCalendar.displayName = 'FullCalendar';
 export default FullCalendar;

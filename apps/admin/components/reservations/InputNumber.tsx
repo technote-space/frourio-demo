@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo, useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { FormControl, FormHelperText, TextField } from '@material-ui/core';
 import useFetch from '~/hooks/useFetch';
 import { client } from '~/utils/api';
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
+const InputNumber: FC<Props> = memo(({ authHeader, props }: Props) => {
   const classes = useStyles();
   const { dispatch } = useDispatchContext();
   const room = useFetch(dispatch, undefined, client.reservations.room, {
@@ -36,7 +36,7 @@ const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
     }
   }, [room.data, props.value]);
 
-  return useMemo(() => room.data && props.value ? <FormControl error={Boolean(props.error)}>
+  return room.data && props.value ? <FormControl error={Boolean(props.error)}>
     <TextField
       className={classes.input}
       fullWidth
@@ -55,7 +55,7 @@ const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
       data-testid="input-number"
     />
     {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
-  </FormControl> : null, [room.data, props.value]);
-};
+  </FormControl> : null;
+});
 
 export default InputNumber;

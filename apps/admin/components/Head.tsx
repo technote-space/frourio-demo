@@ -1,14 +1,14 @@
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import NextHead from 'next/head';
 import { useStoreContext } from '~/store';
 import useAuthToken from '~/hooks/useAuthToken';
 
-const Head: FC = () => {
+const Head: FC = memo(() => {
   const [auth] = useAuthToken();
   const { title } = useStoreContext();
 
-  return useMemo(() => <NextHead>
+  return <NextHead>
     <meta name="viewport" content="initial-scale=1, width=device-width"/>
     <title>{auth ? (title ? `${title} - ` : '') : 'ログイン - '}Reservation System</title>
     <link rel="shortcut icon" href="/favicon.png"/>
@@ -26,7 +26,8 @@ const Head: FC = () => {
     {/*<meta property="og:description" content={description} />*/}
     {/*<meta property="og:image" content={card} />*/}
     {/*<meta property="og:ttl" content="604800" />*/}
-  </NextHead>, [title, auth]);
-};
+  </NextHead>;
+});
 
+Head.displayName = 'Head';
 export default Head;

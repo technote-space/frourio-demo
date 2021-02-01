@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useMemo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { Select } from '@chakra-ui/react';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
   onChange: (value: string) => void;
 }
 
-const TimePicker: FC<Props> = ({ value, step, minHour, minMinute, maxHour, maxMinute, onChange }: Props) => {
+const TimePicker: FC<Props> = memo(({ value, step, minHour, minMinute, maxHour, maxMinute, onChange }: Props) => {
   const handleChange = useCallback(event => {
     onChange(event.target.value);
   }, []);
@@ -31,9 +31,10 @@ const TimePicker: FC<Props> = ({ value, step, minHour, minMinute, maxHour, maxMi
     });
   };
 
-  return useMemo(() => <Select value={value} onChange={handleChange}>
+  return <Select value={value} onChange={handleChange}>
     {getOptions().map(value => <option key={value} value={value}>{value}</option>)}
-  </Select>, [value, step, minHour, minMinute, maxHour, maxMinute]);
-};
+  </Select>;
+});
 
+TimePicker.displayName = 'TimePicker';
 export default TimePicker;

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Model } from '~/components/DataTable';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -14,12 +14,13 @@ type Props = {
   rowData: Partial<Model>;
 };
 
-const RenderRoles: FC<Props> = ({ rowData }: Props) => {
+const RenderRoles: FC<Props> = memo(({ rowData }: Props) => {
   const classes = useStyles();
 
-  return useMemo(() => <div data-testid="render-roles">
+  return <div data-testid="render-roles">
     {rowData['roles'].map(role => <Chip key={role.role} className={classes.chip} color="primary" label={role.name}/>)}
-  </div>, [classes, rowData['roles']]);
-};
+  </div>;
+});
 
+RenderRoles.displayName = 'RenderRoles';
 export default RenderRoles;

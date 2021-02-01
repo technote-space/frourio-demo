@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -16,14 +16,15 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const Footer: FC = () => {
+const Footer: FC = memo(() => {
   const classes = useStyles();
 
-  return useMemo(() => <footer className={classes.footer}>
+  return <footer className={classes.footer}>
     <div className={classes.wrap}>
       {(new Date()).getFullYear()} — <strong>予約システム</strong>
     </div>
-  </footer>, [classes]);
-};
+  </footer>;
+});
 
+Footer.displayName = 'Footer';
 export default Footer;

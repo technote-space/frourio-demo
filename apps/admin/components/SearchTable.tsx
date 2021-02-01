@@ -5,7 +5,7 @@ import type { DataTableApiModels } from '~/utils/api';
 import type { AspidaResponse } from 'aspida';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo, useCallback, useState } from 'react';
+import { memo, useMemo, useCallback, useState } from 'react';
 import MaterialTable from '@technote-space/material-table';
 import { Dialog, DialogTitle, Link, IconButton, Typography, FormControl, FormHelperText } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-type Props<T extends object> = {
+type Props<T extends Model> = {
   model: DataTableApiModels;
   api: (option?: any) => Promise<AspidaResponse<any, any, any>>;
   columns: Column<T>[];
@@ -41,9 +41,9 @@ type Props<T extends object> = {
   unmountRef: MutableRefObject<boolean>;
 }
 
-const SearchTable = <T extends {
-  id: number;
-}, >({ model, api, columns, authHeader, searchText, props, unmountRef }: Props<T>): ReactElement => {
+const SearchTable = memo(<T extends Model>({
+  model, api, columns, authHeader, searchText, props, unmountRef,
+}: Props<T>): ReactElement => {
   const classes = useStyles();
   const { dispatch } = useDispatchContext();
 
@@ -60,7 +60,6 @@ const SearchTable = <T extends {
   // material table
   const tableIcons = useTableIcons();
   const tableLocalization = useTableLocalization();
-  const title = useMemo(() => pages[model].label, []);
   const icon = useMemo(() => {
     const Icon = pages[model].icon;
     return <Icon/>;
@@ -79,49 +78,48 @@ const SearchTable = <T extends {
     totalCount: 0,
   }, api, { headers: authHeader, query }), []);
 
-  const cell = useMemo(() => <FormControl error={Boolean(props.error)}>
-    <Link
-      component="button"
-      variant="body2"
-      onClick={handleClickField}
-    >
-      {searchText || '選択'}
-    </Link>
-    {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
-  </FormControl>, [searchText, props.error, props.helperText]);
-  const editCell = useMemo(() => <Dialog open={open} onClose={handleClose}>
-    <div data-testid={`${model}-search-table`}>
-      <DialogTitle disableTypography className={classes.root}>
-        <Typography variant="h6" className={classes.title}>
-          {title}
-        </Typography>
-        <IconButton aria-label="close" onClick={handleClose}>
-          <CloseIcon/>
-        </IconButton>
-      </DialogTitle>
-      <MaterialTable
-        icons={tableIcons}
-        localization={tableLocalization}
-        title={icon}
-        columns={columns.map(col => {
-          const colClone = { ...col };
-          delete colClone['tableData'];
-          return colClone;
-        })}
-        data={fetchData}
-        actions={actions}
-        options={{
-          emptyRowsWhenPaging: false,
-          searchText,
-        }}
-        unmountRef={unmountRef}
-      />
-    </div>
-  </Dialog>, [classes, open, searchText, unmountRef]);
   return <>
-    {cell}
-    {editCell}
+    <FormControl error={Boolean(props.error)}>
+      <Link
+        component="button"
+        variant="body2"
+        onClick={handleClickField}
+      >
+        {searchText || '選択'}
+      </Link>
+      {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
+    </FormControl>
+    <Dialog open={open} onClose={handleClose}>
+      <div data-testid={`${model}-search-table`}>
+        <DialogTitle disableTypography className={classes.root}>
+          <Typography variant="h6" className={classes.title}>
+            {pages[model].label}
+          </Typography>
+          <IconButton aria-label="close" onClick={handleClose}>
+            <CloseIcon/>
+          </IconButton>
+        </DialogTitle>
+        <MaterialTable
+          icons={tableIcons}
+          localization={tableLocalization}
+          title={icon}
+          columns={columns.map(col => {
+            const colClone = { ...col };
+            delete colClone['tableData'];
+            return colClone;
+          })}
+          data={fetchData}
+          actions={actions}
+          options={{
+            emptyRowsWhenPaging: false,
+            searchText,
+          }}
+          unmountRef={unmountRef}
+        />
+      </div>
+    </Dialog>
   </>;
-};
+});
 
+SearchTable.displayName = 'SearchTable';
 export default SearchTable;

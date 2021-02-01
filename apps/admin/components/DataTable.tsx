@@ -4,7 +4,7 @@ import type { Column, Query, QueryResult, Options, EditComponentProps } from '@t
 import type { DataTableApiModels } from '~/utils/api';
 import type { ValidationError } from 'class-validator';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo, useCallback, useState } from 'react';
+import { memo, useMemo, useCallback, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import MaterialTable, { MTableEditField } from '@technote-space/material-table';
 import { useDispatchContext } from '~/store';
@@ -28,7 +28,7 @@ type CustomColumn<T extends Model> = Omit<Column<T>, 'field' | 'editable' | 'ren
   editable: 'never';
   render: Required<Pick<Column<T>, 'render'>['render']>;
 }
-type DataTableColumn<T extends Model> = (Omit<Column<T>, 'field'> & {
+export type DataTableColumn<T extends Model> = (Omit<Column<T>, 'field'> & {
   field: keyof T;
 }) | CustomColumn<T>;
 type Props<T extends Model> = {
@@ -86,7 +86,7 @@ const controlValidationEditField = <T extends Model>(
   })}/>;
 });
 
-const DataTable = <T extends Model, >({
+const DataTable = memo(<T extends Model, >({
   model,
   columns: columnsEx,
   authHeader,
@@ -229,6 +229,6 @@ const DataTable = <T extends Model, >({
     }}
     unmountRef={unmountRef}
   />, [validationErrors, unmountRef]);
-};
+});
 
 export default DataTable;

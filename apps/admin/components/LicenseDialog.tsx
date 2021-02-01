@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { License } from '@frourio-demo/types';
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const LicenseDialog: FC = () => {
+const LicenseDialog: FC = memo(() => {
   const classes = useStyles();
   const { isLicenseOpen } = useStoreContext();
   const { dispatch } = useDispatchContext();
@@ -75,15 +75,16 @@ const LicenseDialog: FC = () => {
   const handleCloseLicense = useCallback(() => {
     setSelectIndex(-1);
   }, []);
-  const MappedLicenseItem: FC<{ license: License; index: number; }> = ({ license, index }) => {
+  const MappedLicenseItem: FC<{ license: License; index: number; }> = memo(({ license, index }) => {
     const handleClick = useCallback(() => {
       setSelectIndex(index);
     }, []);
 
-    return useMemo(() => <ListItem className={classes.listItem} onClick={handleClick} data-testid="license-item">
+    return <ListItem className={classes.listItem} onClick={handleClick} data-testid="license-item">
       {license.name}@{license.version} : {license.licenses}
-    </ListItem>, [classes]);
-  };
+    </ListItem>;
+  });
+  MappedLicenseItem.displayName = 'MappedLicenseItem';
 
   useEffect(() => {
     if (!isLicenseOpen) {
@@ -91,14 +92,19 @@ const LicenseDialog: FC = () => {
     }
   }, [isLicenseOpen]);
 
-  return useMemo(() => <>
+  return <>
     <Dialog open={isLicenseOpen} onClose={handleCloseLicenseList} fullScreen>
       <div data-testid="license-list">
         <DialogTitle disableTypography className={classes.root}>
           <Typography variant="h6" className={classes.title}>
             ライセンス
           </Typography>
-          <IconButton aria-label="close" onClick={handleCloseLicenseList} className={classes.close} data-testid="close-license-list">
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseLicenseList}
+            className={classes.close}
+            data-testid="close-license-list"
+          >
             <CloseIcon/>
           </IconButton>
         </DialogTitle>
@@ -116,7 +122,12 @@ const LicenseDialog: FC = () => {
           <Typography variant="h6" className={classes.title}>
             {licenses[selectIndex].name}@{licenses[selectIndex].version}<br/>
           </Typography>
-          <IconButton aria-label="close" onClick={handleCloseLicense} className={classes.close} data-testid="close-license">
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseLicense}
+            className={classes.close}
+            data-testid="close-license"
+          >
             <CloseIcon/>
           </IconButton>
         </DialogTitle>
@@ -132,7 +143,8 @@ const LicenseDialog: FC = () => {
         </DialogContent>
       </>}
     </Dialog>
-  </>, [classes, isLicenseOpen, selectIndex]);
-};
+  </>;
+});
 
+LicenseDialog.displayName = 'LicenseDialog';
 export default LicenseDialog;

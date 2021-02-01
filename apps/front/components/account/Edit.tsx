@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { AuthHeader } from '@frourio-demo/types';
 import type { ValidationError } from 'class-validator';
 import type { Guest } from '$/repositories/guest';
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect, useCallback } from 'react';
 import { Box, Input, Button, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { useDispatchContext } from '^/store';
@@ -20,7 +20,7 @@ type Props = {
   setEdit: (flag: boolean) => void;
 }
 
-const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
+const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const [editInfo, setEditInfo] = useState<EditGuest | undefined>();
@@ -35,7 +35,7 @@ const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
     }
   }, [guestInfo.data]);
 
-  const handleSave = async() => {
+  const handleSave = useCallback(async() => {
     try {
       await handleAuthError(dispatch, undefined, client.account.guest.patch, {
         headers: authHeader,
@@ -52,10 +52,10 @@ const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
         } : undefined)));
       }
     }
-  };
-  const handleClose = () => {
+  }, [editInfo]);
+  const handleClose = useCallback(() => {
     setEdit(false);
-  };
+  }, []);
   const handleEditChange = (name: string) => event => {
     setEditInfo({
       ...editInfo!,
@@ -87,6 +87,7 @@ const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
       <Button width={120} m={2} colorScheme="red" onClick={handleClose}>キャンセル</Button>
     </Box>
   </Box> : null;
-};
+});
 
+Edit.displayName = 'Edit';
 export default Edit;

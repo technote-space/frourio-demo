@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
-import { useMemo, useState, useCallback } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { Box, Link, Input, FormControl, FormLabel, Heading, Checkbox } from '@chakra-ui/react';
 import {
   Modal,
@@ -23,7 +23,7 @@ type Props = {
   onChangeUpdateInfo: (updateInfo: string) => void;
 }
 
-const GuestInfo: FC<Props> = (props: Props) => {
+const GuestInfo: FC<Props> = memo((props: Props) => {
   const reservation = props.reservation;
   const { guest } = useStoreContext();
   const [open, setOpen] = useState(false);
@@ -38,38 +38,34 @@ const GuestInfo: FC<Props> = (props: Props) => {
     const key = name.charAt(0).toUpperCase() + name.slice(1);
     props[`onChange${key}`](event.target.value);
   };
-  const fieldView = useMemo(() => <Box m={1} p={2} borderWidth={1}>
-    <Link onClick={handleOpen}>
-      <Heading as="h4" size="md">お客様情報</Heading>
-      {reservation.guestName && <Box>{reservation.guestName}</Box>}
-    </Link>
-  </Box>, [reservation.guestName]);
-  const modalBodyView = useMemo(() => {
-    return ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
-      const key = field.name.charAt(0).toUpperCase() + field.name.slice(1);
-      return <FormControl
-        key={field.name}
-        id={`edit-${field.name}`}
-        mb={2}
-      >
-        <FormLabel htmlFor={`edit-${field.name}`}>{field.label}</FormLabel>
-        <Input
-          value={reservation[`guest${key}`]}
-          onChange={handleEditChange(field.name)}
-        />
-      </FormControl>;
-    });
-  }, [reservation]);
 
   return <>
-    {fieldView}
+    <Box m={1} p={2} borderWidth={1}>
+      <Link onClick={handleOpen}>
+        <Heading as="h4" size="md">お客様情報</Heading>
+        {reservation.guestName && <Box>{reservation.guestName}</Box>}
+      </Link>
+    </Box>
     <Modal isOpen={open} onClose={handleClose}>
       <ModalOverlay/>
       <ModalContent>
         <ModalHeader>お客様情報</ModalHeader>
         <ModalCloseButton/>
         <ModalBody>
-          {modalBodyView}
+          {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
+            const key = field.name.charAt(0).toUpperCase() + field.name.slice(1);
+            return <FormControl
+              key={field.name}
+              id={`edit-${field.name}`}
+              mb={2}
+            >
+              <FormLabel htmlFor={`edit-${field.name}`}>{field.label}</FormLabel>
+              <Input
+                value={reservation[`guest${key}`]}
+                onChange={handleEditChange(field.name)}
+              />
+            </FormControl>;
+          })}
           {guest && <Checkbox
             my={2}
             isChecked={reservation.updateInfo}
@@ -79,6 +75,7 @@ const GuestInfo: FC<Props> = (props: Props) => {
       </ModalContent>
     </Modal>
   </>;
-};
+});
 
+GuestInfo.displayName = 'GuestInfo';
 export default GuestInfo;

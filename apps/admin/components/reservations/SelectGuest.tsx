@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
+import type { Column } from '@technote-space/material-table';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback } from 'react';
 import useFetch from '~/hooks/useFetch';
 import useUnmountRef from '~/hooks/useUnmountRef';
 import SearchTable from '~/components/SearchTable';
@@ -13,7 +14,7 @@ type Props = {
   props: EditComponentPropsWithError<Model>;
 }
 
-const SelectGuest: FC<Props> = ({ authHeader, props }: Props) => {
+const SelectGuest: FC<Props> = memo(({ authHeader, props }: Props) => {
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const guest = useFetch(dispatch, undefined, client.reservations.guest, {
@@ -24,27 +25,29 @@ const SelectGuest: FC<Props> = ({ authHeader, props }: Props) => {
   const handleChange = useCallback(value => {
     props.onChange(value.id);
   }, []);
+  const columns = useMemo(() => [
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: 'メールアドレス', field: 'email' },
+    { title: '名前', field: 'name' },
+    { title: 'かな名', field: 'nameKana' },
+    { title: '郵便番号', field: 'zipCode' },
+    { title: '住所', field: 'address' },
+    { title: '電話番号', field: 'phone' },
+  ] as Column<Model>[], []);
+  const tableProps = useMemo(() => ({
+    ...props,
+    onChange: handleChange,
+  }), [props]);
 
-  return useMemo(() => <SearchTable
+  return <SearchTable
     model='guests'
     api={client.reservations.search.guests.get}
-    columns={[
-      { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-      { title: 'メールアドレス', field: 'email' },
-      { title: '名前', field: 'name' },
-      { title: 'かな名', field: 'nameKana' },
-      { title: '郵便番号', field: 'zipCode' },
-      { title: '住所', field: 'address' },
-      { title: '電話番号', field: 'phone' },
-    ]}
+    columns={columns}
     searchText={guest.data?.name ?? guest.data?.email ?? ''}
     authHeader={authHeader}
-    props={{
-      ...props,
-      onChange: handleChange,
-    }}
+    props={tableProps}
     unmountRef={unmountRef}
-  />, [guest.data, props.helperText, unmountRef]);
-};
+  />;
+});
 
 export default SelectGuest;

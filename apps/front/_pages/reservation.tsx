@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { FocusableElement } from '@chakra-ui/utils';
 import type { AuthenticatedPageProps } from '^/components/AuthenticatedPage';
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { memo, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Center, Box, Divider, Button, Grid } from '@chakra-ui/react';
 import {
@@ -18,7 +18,7 @@ import { useDispatchContext } from '^/store';
 import { client, handleAuthError } from '^/utils/api';
 import { getFormattedDate } from '^/utils/date';
 
-const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
+const Reservation: FC<AuthenticatedPageProps> = memo(({ authHeader }: AuthenticatedPageProps) => {
   const { id } = useParams<{ id: string }>();
   const { dispatch } = useDispatchContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,7 @@ const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPa
     await reservation.revalidate();
   }, []);
 
-  return useMemo(() => reservation.data ? <Box m={4}>
+  return reservation.data ? <Box m={4}>
     <Grid templateColumns="repeat(1, 1fr)" gap={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={5}>
         <Box>チェックイン</Box>
@@ -88,7 +88,8 @@ const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPa
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
-  </Box> : null, [reservation.data, isOpen]);
-};
+  </Box> : null;
+});
 
+Reservation.displayName = 'Reservation';
 export default AuthenticatedPage(Reservation);

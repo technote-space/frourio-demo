@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Grid, GridItem } from '@chakra-ui/react';
 import useFetch from '^/hooks/useFetch';
 import { useDispatchContext } from '^/store';
@@ -11,7 +11,7 @@ type Props = {
   authHeader: AuthHeader;
 }
 
-const Detail: FC<Props> = ({ authHeader }: Props) => {
+const Detail: FC<Props> = memo(({ authHeader }: Props) => {
   const { dispatch } = useDispatchContext();
   const guestInfo = useFetch(dispatch, {}, client.account.guest, {
     headers: authHeader,
@@ -20,7 +20,8 @@ const Detail: FC<Props> = ({ authHeader }: Props) => {
     <GridItem>{label}</GridItem>
     <GridItem>{guestInfo.data![name]}</GridItem>
   </>;
-  return useMemo(() => guestInfo.data ? <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+
+  return guestInfo.data ? <Grid templateColumns="repeat(2, 1fr)" gap={4}>
     <Grid templateColumns="repeat(2, 1fr)" gap={5}>
       {ACCOUNT_FIELDS.slice(0, ACCOUNT_FIELDS.length / 2).map(field =>
         <InfoItem key={`group-${field.name}`} name={field.name} label={field.label}/>)}
@@ -29,7 +30,8 @@ const Detail: FC<Props> = ({ authHeader }: Props) => {
       {ACCOUNT_FIELDS.slice(ACCOUNT_FIELDS.length / 2).map(field =>
         <InfoItem key={`group-${field.name}`} name={field.name} label={field.label}/>)}
     </Grid>
-  </Grid> : null, [guestInfo.data]);
-};
+  </Grid> : null;
+});
 
+Detail.displayName = 'Detail';
 export default Detail;

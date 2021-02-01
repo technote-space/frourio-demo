@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { Card, CardContent, FormControl, FormLabel, Input, Button } from '@material-ui/core';
 import useAuthToken from '~/hooks/useAuthToken';
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Login: FC = () => {
+const Login: FC = memo(() => {
   const classes = useStyles();
   const { dispatch } = useDispatchContext();
   const [, setToken] = useAuthToken();
@@ -63,39 +63,39 @@ const Login: FC = () => {
     },
   ], []);
 
-  return useMemo(() =>
-    <div className={classes.wrap}>
-      <Card>
-        <CardContent>
-          <Formik
-            initialValues={Object.assign({}, ...settings.map(setting => ({ [setting.id]: setting.initialValue })))}
-            onSubmit={handleSubmit}
-          >
-            {((props) => <Form onSubmit={props.handleSubmit}>
-              {settings.map(setting => <Field name={setting.id} key={setting.id}>
-                {({ field }) =>
-                  <FormControl
-                    required={setting.isRequired}
-                    className={classes.input}
-                  >
-                    <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
-                    <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
-                  </FormControl>}
-              </Field>)}
-              <div className={classes.login}>
-                <Button
-                  size="medium"
-                  type="submit"
-                  disabled={props.isSubmitting}
+  return <div className={classes.wrap}>
+    <Card>
+      <CardContent>
+        <Formik
+          initialValues={Object.assign({}, ...settings.map(setting => ({ [setting.id]: setting.initialValue })))}
+          onSubmit={handleSubmit}
+        >
+          {((props) => <Form onSubmit={props.handleSubmit}>
+            {settings.map(setting => <Field name={setting.id} key={setting.id}>
+              {({ field }) =>
+                <FormControl
+                  required={setting.isRequired}
+                  className={classes.input}
                 >
-                  Login
-                </Button>
-              </div>
-            </Form>)}
-          </Formik>
-        </CardContent>
-      </Card>
-    </div>, [classes]);
-};
+                  <FormLabel htmlFor={setting.id}>{setting.label}</FormLabel>
+                  <setting.component {...{ ...field, id: setting.id, disabled: props.isSubmitting }}/>
+                </FormControl>}
+            </Field>)}
+            <div className={classes.login}>
+              <Button
+                size="medium"
+                type="submit"
+                disabled={props.isSubmitting}
+              >
+                Login
+              </Button>
+            </div>
+          </Form>)}
+        </Formik>
+      </CardContent>
+    </Card>
+  </div>;
+});
 
+Login.displayName = 'Login';
 export default Login;

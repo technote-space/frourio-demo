@@ -11,7 +11,7 @@ const Auth: FC = () => {
   const [auth, setToken, removeToken] = useAuthToken();
   const { onRemoveToken, onRefreshToken } = useStoreContext();
   const { dispatch } = useDispatchContext();
-  const guest = useFetch(dispatch, {}, client.guest, { headers: auth!.authHeader, enabled: !!auth });
+  const guest = useFetch(dispatch, {}, client.guest, { headers: auth?.authHeader!, enabled: !!auth });
 
   const {
     isLoading: isAuth0Loading,

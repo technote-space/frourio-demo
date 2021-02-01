@@ -1,13 +1,13 @@
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import Slider from 'react-slick';
 import { Box, Image } from '@chakra-ui/react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Reservation from '^/components/Reservation';
 
-const Top: FC = () => {
-  return useMemo(() => <Box>
+const Top: FC = memo(() => {
+  return <Box>
     <Box width="100vw" marginLeft="calc((100% - 100vw) / 2)" bg="black">
       <Box maxW="1000px" margin="auto">
         <Slider
@@ -30,7 +30,8 @@ const Top: FC = () => {
       </Box>
     </Box>
     <Reservation/>
-  </Box>, []);
-};
+  </Box>;
+});
 
+Top.displayName = 'Top';
 export default Top;

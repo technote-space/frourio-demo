@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { EventRefined } from '@fullcalendar/react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import type { Dispatch } from '@frourio-demo/types';
-import { useMemo, useCallback, useState, useRef } from 'react';
+import { memo, useCallback, useState, useRef } from 'react';
 import { Dialog, Link, FormControl, FormHelperText } from '@material-ui/core';
 import { TimePicker } from '@material-ui/pickers';
 import OriginalFullCalendar from '@fullcalendar/react';
@@ -39,7 +39,7 @@ const getDateTime = (date: Date | string, time: Date | string): Date => set(new 
   milliseconds: 0,
 });
 
-const Calendar: FC<Props> = ({
+const Calendar: FC<Props> = memo(({
   props,
   requiredFields,
   fetchCallback,
@@ -75,7 +75,7 @@ const Calendar: FC<Props> = ({
   }, []);
 
   const getResultDate = (date: Date): Date => getDateTime(date, time);
-  const isFilledData = useMemo(() => !requiredFields.some(field => !props.rowData[field]), [props.rowData]);
+  const isFilledData = !requiredFields.some(field => !props.rowData[field]);
   const fetchEvents = useCallback((info, successCallback) => {
     fetchCallback(dispatch, props.rowData, info).then(data => {
       if (props.rowData['checkin']) {
@@ -135,42 +135,35 @@ const Calendar: FC<Props> = ({
     </>;
   };
 
-  const field = useMemo(() => {
-    if (!isFilledData) {
-      return null;
-    }
-    return <>
-      <Link
-        component="button"
-        variant="body2"
-        onClick={handleOpenCalendar}
-        data-testid={`select-${target}-date-link`}
-      >
-        {props.value ? format(new Date(props.value), 'yyyy-MM-dd') : '選択'}
-      </Link>
-      {props.value && <TimePickerComponent/>}
-    </>;
-  }, [isFilledData, props.value, time, openTimePicker]);
-  const calendar = useMemo(() => <Dialog open={openCalendar} onClose={handleCloseCalendar}>
-    <div className={classes.calendar} data-testid={`select-${target}-date-calendar`}>
-      <FullCalendar
-        events={fetchEvents}
-        dateClick={handleDateClick}
-        calendarRef={calendarRef}
-        loading={handleEventLoading}
-        initialDate={getInitialDate(props.rowData, props.value)}
-        target={target}
-      />
-    </div>
-  </Dialog>, [classes, openCalendar, isLoading]);
-
   return <>
     <FormControl error={Boolean(props.error)}>
-      {field}
+      {isFilledData && <>
+        <Link
+          component="button"
+          variant="body2"
+          onClick={handleOpenCalendar}
+          data-testid={`select-${target}-date-link`}
+        >
+          {props.value ? format(new Date(props.value), 'yyyy-MM-dd') : '選択'}
+        </Link>
+        {props.value && <TimePickerComponent/>}
+      </>}
       {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
     </FormControl>
-    {calendar}
+    <Dialog open={openCalendar} onClose={handleCloseCalendar}>
+      <div className={classes.calendar} data-testid={`select-${target}-date-calendar`}>
+        <FullCalendar
+          events={fetchEvents}
+          dateClick={handleDateClick}
+          calendarRef={calendarRef}
+          loading={handleEventLoading}
+          initialDate={getInitialDate(props.rowData, props.value)}
+          target={target}
+        />
+      </div>
+    </Dialog>
   </>;
-};
+});
 
+Calendar.displayName = 'Calendar';
 export default Calendar;

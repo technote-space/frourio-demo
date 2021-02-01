@@ -1,6 +1,6 @@
 import type { FC, ChangeEvent } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
-import { useMemo, useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { Chip, Select, MenuItem, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -22,7 +22,7 @@ type Props = {
   roles: Record<string, string>;
 };
 
-const EditRoles: FC<Props> = ({ props, roles }: Props) => {
+const EditRoles: FC<Props> = memo(({ props, roles }: Props) => {
   const classes = useStyles();
   const handleChange = useCallback((event: ChangeEvent<{ value: string[] }>) => {
     props.onChange(event.target.value.map(role => JSON.stringify({ role, name: roles[role] })));
@@ -35,7 +35,7 @@ const EditRoles: FC<Props> = ({ props, roles }: Props) => {
     }
   }, [isNotProcessed]);
 
-  return useMemo(() => isNotProcessed ? null : <div data-testid="edit-roles">
+  return isNotProcessed ? null : <div data-testid="edit-roles">
     <Select
       multiple
       className={classes.select}
@@ -54,7 +54,8 @@ const EditRoles: FC<Props> = ({ props, roles }: Props) => {
         {name}
       </MenuItem>)}
     </Select>
-  </div>, [classes, props.value, roles]);
-};
+  </div>;
+});
 
+EditRoles.displayName = 'EditRoles';
 export default EditRoles;

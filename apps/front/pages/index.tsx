@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Auth from '^/components/Auth';
 import Layout from '^/components/Layout';
 import ToastWrapper from '^/components/ToastWrapper';
 import pages from '^/_pages';
 
-const Index = () => useMemo(() => <>
+const Index = memo(() => <>
   <ToastWrapper/>
   <Auth/>
   <Layout>
@@ -21,6 +21,7 @@ const Index = () => useMemo(() => <>
       <Redirect to='/'/>
     </Switch>
   </Layout>
-</>, []);
+</>);
 
+Index.displayName = 'Index';
 export default Index;

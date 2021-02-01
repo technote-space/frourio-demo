@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Room } from '$/repositories/room';
-import { useMemo, useState, useCallback } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { Box, Wrap, Grid, GridItem, Center, Button, Image, Heading, Link } from '@chakra-ui/react';
 import {
   Modal,
@@ -19,7 +19,7 @@ type Props = {
   onChangeRoomId: (id: number) => void;
 }
 
-const SelectRoom: FC<Props> = ({ room, onChangeRoomId }: Props) => {
+const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
   const { dispatch } = useDispatchContext();
   const [open, setOpen] = useState(false);
   const handleOpen = useCallback(() => {
@@ -36,7 +36,7 @@ const SelectRoom: FC<Props> = ({ room, onChangeRoomId }: Props) => {
       handleClose();
     }, [onChangeRoomId]);
 
-    return useMemo(() => <Box shadow="md" p={2} m={2} maxW={400}>
+    return <Box shadow="md" p={2} m={2} maxW={400}>
       <Heading as="h5" size="sm">{room.name}</Heading>
       <Box>
         <Image src="/cover2.jpg"/>
@@ -54,10 +54,10 @@ const SelectRoom: FC<Props> = ({ room, onChangeRoomId }: Props) => {
       <Center>
         <Button width={120} onClick={handleClick}>選択</Button>
       </Center>
-    </Box>, [handleClick]);
+    </Box>;
   };
 
-  return useMemo(() => <>
+  return <>
     <Box m={1} p={2} borderWidth={1}>
       <Link onClick={handleOpen}>
         <Heading as="h4" size="md">お部屋</Heading>
@@ -78,7 +78,8 @@ const SelectRoom: FC<Props> = ({ room, onChangeRoomId }: Props) => {
         </ModalBody>
       </ModalContent>
     </Modal>
-  </>, [room, rooms.data, onChangeRoomId]);
-};
+  </>;
+});
 
+SelectRoom.displayName = 'SelectRoom';
 export default SelectRoom;

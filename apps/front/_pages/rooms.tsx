@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import type { Room } from '$/repositories/room';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Flex, Wrap, Box, Center, Image, Heading, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { client } from '^/utils/api';
 import useFetch from '^/hooks/useFetch';
 import { useDispatchContext } from '^/store';
 
-const Rooms: FC = () => {
+const Rooms: FC = memo(() => {
   const { dispatch } = useDispatchContext();
   const rooms = useFetch(dispatch, [], client.rooms);
 
@@ -32,9 +32,10 @@ const Rooms: FC = () => {
     </Center>
   </Box>;
 
-  return useMemo(() => rooms.data ? <Wrap m={4}>
+  return rooms.data ? <Wrap m={4}>
     {rooms.data.map(room => <RoomItem key={room.id} room={room}/>)}
-  </Wrap> : null, [rooms.data]);
-};
+  </Wrap> : null;
+});
 
+Rooms.displayName = 'Rooms';
 export default Rooms;

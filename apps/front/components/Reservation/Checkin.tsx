@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
-import { useMemo, useCallback, useEffect, useState, useRef } from 'react';
+import { memo, useCallback, useEffect, useState, useRef } from 'react';
 import { Box, Link, Heading } from '@chakra-ui/react';
 import {
   Modal,
@@ -33,7 +33,7 @@ const getDateTime = (date: Date | string, time: string): Date => set(new Date(da
   milliseconds: 0,
 });
 
-const Checkin: FC<Props> = ({ reservation, onChange }: Props) => {
+const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
   const { dispatch } = useDispatchContext();
   const calendarRef = useRef<FullCalendar>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +94,7 @@ const Checkin: FC<Props> = ({ reservation, onChange }: Props) => {
     }, 500);
   }, [open]);
 
-  return useMemo(() => <>
+  return <>
     {reservation.roomId && <Box m={1} p={2} borderWidth={1}>
       <Link onClick={handleOpen}>
         <Heading as="h4" size="md">チェックイン</Heading>
@@ -129,7 +129,8 @@ const Checkin: FC<Props> = ({ reservation, onChange }: Props) => {
         </ModalBody>
       </ModalContent>
     </Modal>
-  </>, [open, isLoading, time, reservation]);
-};
+  </>;
+});
 
+Checkin.displayName = 'Checkin';
 export default Checkin;

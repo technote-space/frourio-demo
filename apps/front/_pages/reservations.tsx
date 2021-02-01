@@ -1,14 +1,14 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '^/components/AuthenticatedPage';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Heading } from '@chakra-ui/react';
 import AuthenticatedPage from '^/components/AuthenticatedPage';
 import { client } from '^/utils/api';
-import Reservations from '^/components/account/Reservations';
+import ReservationList from '^/components/account/ReservationList';
 import SwitchTab from '^/components/account/SwitchTab';
 
-const Account: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
-  return useMemo(() => <Tabs defaultIndex={1} m={4}>
+const Reservations: FC<AuthenticatedPageProps> = memo(({ authHeader }: AuthenticatedPageProps) => {
+  return <Tabs defaultIndex={1} m={4}>
     <SwitchTab/>
     <TabPanels>
       <TabPanel/>
@@ -22,19 +22,20 @@ const Account: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePr
           </TabList>
           <TabPanels>
             <TabPanel>
-              <Reservations api={client.account.reservations.reserved} options={[{ headers: authHeader }]}/>
+              <ReservationList api={client.account.reservations.reserved} options={[{ headers: authHeader }]}/>
             </TabPanel>
             <TabPanel>
-              <Reservations api={client.account.reservations.paid} options={[{ headers: authHeader }]}/>
+              <ReservationList api={client.account.reservations.paid} options={[{ headers: authHeader }]}/>
             </TabPanel>
             <TabPanel>
-              <Reservations api={client.account.reservations.cancelled} options={[{ headers: authHeader }]}/>
+              <ReservationList api={client.account.reservations.cancelled} options={[{ headers: authHeader }]}/>
             </TabPanel>
           </TabPanels>
         </Tabs>
       </TabPanel>
     </TabPanels>
-  </Tabs>, []);
-};
+  </Tabs>;
+});
 
-export default AuthenticatedPage(Account);
+Reservations.displayName = 'Reservations';
+export default AuthenticatedPage(Reservations);

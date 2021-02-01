@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useMemo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Grid, Divider, Image, Heading } from '@chakra-ui/react';
 import FullCalendar from '@fullcalendar/react';
@@ -10,7 +10,7 @@ import { useDispatchContext } from '^/store';
 import '@fullcalendar/common/main.css';
 import '@fullcalendar/daygrid/main.css';
 
-const Room: FC = () => {
+const Room: FC = memo(() => {
   const { id } = useParams<{ id: string }>();
   const { dispatch } = useDispatchContext();
   const fetchEvents = useCallback((info, successCallback) => {
@@ -25,7 +25,7 @@ const Room: FC = () => {
   }, []);
   const room = useFetch(dispatch, undefined, client.rooms._roomId(Number(id)));
 
-  return useMemo(() => room.data ? <Box m={4}>
+  return room.data ? <Box m={4}>
     <Heading m={2}>{room.data.name}</Heading>
     <Image width="100%" height={400} p={1} objectFit="cover" src="/cover2.jpg"/>
     <Grid templateColumns="repeat(1, 1fr)" gap={4} m={4}>
@@ -48,7 +48,8 @@ const Room: FC = () => {
         events={fetchEvents}
       />
     </Box>
-  </Box> : null, [room.data]);
-};
+  </Box> : null;
+});
 
+Room.displayName = 'Room';
 export default Room;

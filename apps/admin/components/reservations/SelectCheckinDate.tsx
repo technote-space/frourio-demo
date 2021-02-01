@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { format, startOfToday } from 'date-fns';
 import { client, handleAuthError } from '~/utils/api';
 import Calendar from '~/components/reservations/Calendar';
@@ -11,7 +11,7 @@ type Props = {
   props: EditComponentPropsWithError<Model>;
 }
 
-const SelectCheckinDate: FC<Props> = ({ authHeader, props }: Props) => {
+const SelectCheckinDate: FC<Props> = memo(({ authHeader, props }: Props) => {
   const fetchCallback = useCallback((dispatch, rowData, info) => handleAuthError(dispatch, [], client.reservations.calendar.checkin.get, {
     headers: authHeader,
     query: {
@@ -26,7 +26,7 @@ const SelectCheckinDate: FC<Props> = ({ authHeader, props }: Props) => {
   }, []);
   const getInitialDate = useCallback((rowData, value) => value ? value : startOfToday(), []);
 
-  return useMemo(() => <Calendar
+  return <Calendar
     props={props}
     requiredFields={['roomId']}
     fetchCallback={fetchCallback}
@@ -34,7 +34,8 @@ const SelectCheckinDate: FC<Props> = ({ authHeader, props }: Props) => {
     getInitialDate={getInitialDate}
     resultHour={15}
     target="checkin"
-  />, [props]);
-};
+  />;
+});
 
+SelectCheckinDate.displayName = 'SelectCheckinDate';
 export default SelectCheckinDate;

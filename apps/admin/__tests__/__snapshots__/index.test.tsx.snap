@@ -3,17 +3,17 @@
 exports[`Index should show login form 1`] = `
 <DocumentFragment>
   <div
-    class="makeStyles-wrap-10"
+    class="makeStyles-wrap-32"
   >
     <header
-      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-13 MuiPaper-elevation4"
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-root-35 MuiPaper-elevation4"
     >
       <div
         class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
       >
         <button
           aria-label="menu"
-          class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-14 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-36 MuiIconButton-colorInherit MuiIconButton-edgeStart"
           tabindex="0"
           type="button"
         >
@@ -36,12 +36,12 @@ exports[`Index should show login form 1`] = `
           />
         </button>
         <h6
-          class="MuiTypography-root makeStyles-title-15 MuiTypography-h6"
+          class="MuiTypography-root makeStyles-title-37 MuiTypography-h6"
         >
           予約システム
         </h6>
         <div
-          class="makeStyles-grow-16"
+          class="makeStyles-grow-38"
         />
         <button
           class="MuiButtonBase-root MuiIconButton-root"
@@ -69,17 +69,17 @@ exports[`Index should show login form 1`] = `
       </div>
     </header>
     <main
-      class="makeStyles-main-11"
+      class="makeStyles-main-33"
     >
       <div
-        class="makeStyles-contents-12"
+        class="makeStyles-contents-34"
       >
         <div
-          class="makeStyles-wrap-23"
+          class="makeStyles-wrap-43"
           data-testid="page-dashboard"
         >
           <div
-            class="makeStyles-wrap-24"
+            class="makeStyles-wrap-44"
           >
             <div
               class="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
@@ -91,7 +91,7 @@ exports[`Index should show login form 1`] = `
                   action="#"
                 >
                   <div
-                    class="MuiFormControl-root makeStyles-input-27"
+                    class="MuiFormControl-root makeStyles-input-47"
                   >
                     <label
                       class="MuiFormLabel-root Mui-required"
@@ -121,7 +121,7 @@ exports[`Index should show login form 1`] = `
                     </div>
                   </div>
                   <div
-                    class="MuiFormControl-root makeStyles-input-27"
+                    class="MuiFormControl-root makeStyles-input-47"
                   >
                     <label
                       class="MuiFormLabel-root Mui-required"
@@ -136,10 +136,10 @@ exports[`Index should show login form 1`] = `
                       </span>
                     </label>
                     <div
-                      class="makeStyles-wrap-28"
+                      class="makeStyles-wrap-48"
                     >
                       <div
-                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-29 MuiInputBase-formControl MuiInput-formControl"
+                        class="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-input-49 MuiInputBase-formControl MuiInput-formControl"
                       >
                         <input
                           aria-invalid="false"
@@ -153,7 +153,7 @@ exports[`Index should show login form 1`] = `
                         />
                       </div>
                       <div
-                        class="makeStyles-toggle-30"
+                        class="makeStyles-toggle-50"
                       >
                         <button
                           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
@@ -174,7 +174,7 @@ exports[`Index should show login form 1`] = `
                     </div>
                   </div>
                   <div
-                    class="makeStyles-login-25"
+                    class="makeStyles-login-45"
                   >
                     <button
                       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -199,10 +199,10 @@ exports[`Index should show login form 1`] = `
       </div>
     </main>
     <footer
-      class="makeStyles-footer-21"
+      class="makeStyles-footer-51"
     >
       <div
-        class="makeStyles-wrap-22"
+        class="makeStyles-wrap-52"
       >
         2021 — 
         <strong>

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const Layout: FC = ({ children }: PropsWithChildren<{}>) => {
+const Layout: FC = memo(({ children }: PropsWithChildren<{}>) => {
   const classes = useStyles();
 
-  return useMemo(() => <div className={classes.wrap}>
+  return <div className={classes.wrap}>
     <Header/>
     <Sidebar/>
     <main className={classes.main}>
@@ -40,7 +40,8 @@ const Layout: FC = ({ children }: PropsWithChildren<{}>) => {
       </div>
     </main>
     <Footer/>
-  </div>, [classes, children]);
-};
+  </div>;
+});
 
+Layout.displayName = 'Layout';
 export default Layout;

@@ -1,6 +1,6 @@
 import type { FC, ChangeEvent } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
-import { useMemo, useCallback, useState, useEffect } from 'react';
+import { memo, useCallback, useState, useEffect } from 'react';
 import { Avatar, Button } from '@material-ui/core';
 import { CloudUpload as CloudUploadIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ type Props = {
   props: EditComponentPropsWithError<Model>;
 };
 
-const SelectIcon: FC<Props> = ({ props }: Props) => {
+const SelectIcon: FC<Props> = memo(({ props }: Props) => {
   const classes = useStyles();
   const [preview, setPreview] = useState<string | undefined>();
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
     }
   }, [props.value]);
 
-  return useMemo(() => <div>
+  return <div>
     {preview && <Avatar
       className={classes.avatar}
       src={preview}
@@ -61,7 +61,8 @@ const SelectIcon: FC<Props> = ({ props }: Props) => {
         選択
       </Button>
     </label>
-  </div>, [classes, preview]);
-};
+  </div>;
+});
 
+SelectIcon.displayName = 'SelectIcon';
 export default SelectIcon;

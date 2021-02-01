@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Room } from '$/prisma/client';
 import type { ReservationData } from '^/components/Reservation/index';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { format } from 'date-fns';
 import { Flex, Box, Center, Grid, GridItem, Divider, Button } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
@@ -19,7 +19,7 @@ type Props = {
   onCancel: () => void;
 }
 
-const Confirm: FC<Props> = ({ reservation, room, nights, onCancel }: Props) => {
+const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel }: Props) => {
   const { dispatch } = useDispatchContext();
   const history = useHistory();
   const [auth] = useAuthToken();
@@ -83,6 +83,7 @@ const Confirm: FC<Props> = ({ reservation, room, nights, onCancel }: Props) => {
       <Button width={120} m={1} colorScheme="red" onClick={onCancel}>戻る</Button>
     </Center>
   </Box>;
-};
+});
 
+Confirm.displayName = 'Confirm';
 export default Confirm;

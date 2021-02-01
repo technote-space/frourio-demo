@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
+import type { Column } from '@technote-space/material-table';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback } from 'react';
 import useFetch from '~/hooks/useFetch';
 import useUnmountRef from '~/hooks/useUnmountRef';
 import SearchTable from '~/components/SearchTable';
@@ -13,7 +14,7 @@ type Props = {
   props: EditComponentPropsWithError<Model>;
 }
 
-const SelectRoom: FC<Props> = ({ authHeader, props }: Props) => {
+const SelectRoom: FC<Props> = memo(({ authHeader, props }: Props) => {
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const room = useFetch(dispatch, undefined, client.reservations.room, {
@@ -24,24 +25,26 @@ const SelectRoom: FC<Props> = ({ authHeader, props }: Props) => {
   const handleChange = useCallback(value => {
     props.onChange(value.id);
   }, []);
+  const columns = useMemo(() => [
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: '部屋名', field: 'name' },
+    { title: '最大人数', field: 'number', type: 'numeric' },
+    { title: '料金(円/人泊)', field: 'price', type: 'numeric' },
+  ] as Column<Model>[], []);
+  const tableProps = useMemo(() => ({
+    ...props,
+    onChange: handleChange,
+  }), [props]);
 
-  return useMemo(() => <SearchTable
+  return <SearchTable
     model='rooms'
     api={client.reservations.search.rooms.get}
-    columns={[
-      { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-      { title: '部屋名', field: 'name' },
-      { title: '最大人数', field: 'number', type: 'numeric' },
-      { title: '料金(円/人泊)', field: 'price', type: 'numeric' },
-    ]}
+    columns={columns}
     searchText={room.data?.name}
     authHeader={authHeader}
-    props={{
-      ...props,
-      onChange: handleChange,
-    }}
+    props={tableProps}
     unmountRef={unmountRef}
-  />, [room.data, props.helperText, unmountRef]);
-};
+  />;
+});
 
 export default SelectRoom;

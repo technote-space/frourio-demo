@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { AuthHeader } from '@frourio-demo/types';
-import { useState, useMemo, useCallback } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { IconButton, Dialog } from '@material-ui/core';
 import { Today as TodayIcon } from '@material-ui/icons';
 import { useTheme } from '@material-ui/styles';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
+const RoomStatusCalendar: FC<Props> = memo(({ authHeader, roomId }: Props) => {
   const classes = useStyles();
   const theme = useTheme() as Theme;
   const { dispatch } = useDispatchContext();
@@ -51,24 +51,22 @@ const RoomStatusCalendar: FC<Props> = ({ authHeader, roomId }: Props) => {
     });
   }, []);
 
-  const button = useMemo(() => <IconButton onClick={handleOpen} data-testid="room-status">
-    <TodayIcon/>
-  </IconButton>, [classes]);
-  const calendar = useMemo(() => <Dialog open={open} onClose={handleClose}>
-    <div className={classes.calendar}>
-      <FullCalendar
-        plugins={[dayGridPlugin]}
-        initialView="dayGridMonth"
-        events={fetchEvents}
-        height="auto"
-      />
-    </div>
-  </Dialog>, [classes, open]);
-
   return <>
-    {button}
-    {calendar}
+    <IconButton onClick={handleOpen} data-testid="room-status">
+      <TodayIcon/>
+    </IconButton>
+    <Dialog open={open} onClose={handleClose}>
+      <div className={classes.calendar}>
+        <FullCalendar
+          plugins={[dayGridPlugin]}
+          initialView="dayGridMonth"
+          events={fetchEvents}
+          height="auto"
+        />
+      </div>
+    </Dialog>
   </>;
-};
+});
 
+RoomStatusCalendar.displayName = 'RoomStatusCalendar';
 export default RoomStatusCalendar;

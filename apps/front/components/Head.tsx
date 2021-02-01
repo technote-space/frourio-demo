@@ -1,12 +1,12 @@
 import type { FC } from 'react';
-import { useMemo, useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import NextHead from 'next/head';
 import { useLocation, matchPath } from 'react-router-dom';
 import { useStoreContext, useDispatchContext } from '^/store';
 import { changeTitle } from '^/utils/actions';
 import pages from '^/_pages';
 
-const Head: FC = () => {
+const Head: FC = memo(() => {
   const { dispatch } = useDispatchContext();
   const { title } = useStoreContext();
   const location = useLocation();
@@ -19,7 +19,7 @@ const Head: FC = () => {
     changeTitle(dispatch, page ? page[1].label : undefined);
   }, [location?.pathname]);
 
-  return useMemo(() => <NextHead>
+  return <NextHead>
     <meta name="viewport" content="initial-scale=1, width=device-width"/>
     <title>{title ? `${title} - ` : ''}Reservation System</title>
     <link rel="shortcut icon" href="/favicon.png"/>
@@ -37,7 +37,8 @@ const Head: FC = () => {
     {/*<meta property="og:description" content={description} />*/}
     {/*<meta property="og:image" content={card} />*/}
     {/*<meta property="og:ttl" content="604800" />*/}
-  </NextHead>, [title]);
-};
+  </NextHead>;
+});
 
+Head.displayName = 'Head';
 export default Head;

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { SwrApiType, SwrApiOptions } from '@frourio-demo/types';
 import type { Reservation } from '$/repositories/reservation';
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Flex, Wrap, Box, Heading, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import useFetch from '^/hooks/useFetch';
@@ -14,7 +14,7 @@ type Props = {
   options: SwrApiOptions<API>;
 }
 
-const Reservations: FC<Props> = ({ api, options }: Props) => {
+const ReservationList: FC<Props> = memo(({ api, options }: Props) => {
   const { dispatch } = useDispatchContext();
   const reservations = useFetch(dispatch, [], api, ...options);
 
@@ -42,9 +42,10 @@ const Reservations: FC<Props> = ({ api, options }: Props) => {
     </Box>
   </Box>;
 
-  return useMemo(() => reservations.data ? <Wrap>
+  return reservations.data ? <Wrap>
     {reservations.data.map(reservation => <ReservationItem key={reservation.id} reservation={reservation}/>)}
-  </Wrap> : null, [reservations.data]);
-};
+  </Wrap> : null;
+});
 
-export default Reservations;
+ReservationList.displayName = 'ReservationList';
+export default ReservationList;
