@@ -247,6 +247,7 @@ jobs:
           mv ./apps/admin/out out/admin
           mv ./apps/front/out out/front
           mv ./gh-pages/* out/
+          cp out/front/index.html out/404.html
         env:
           FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
       - name: Deploy
