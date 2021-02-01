@@ -1,2 +1,2 @@
-jest.retryTimes(5);
+jest.retryTimes(3);
 export {};

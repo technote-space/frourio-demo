@@ -47,7 +47,7 @@ const Header: FC = memo(() => {
       <Typography variant="h6" className={classes.title} onClick={handleClickHome}>
         予約システム
       </Typography>
-      {process.env.FRONT_URL && <Link
+      {process.env.FRONT_URL && /* istanbul ignore next */ <Link
         className={classes.title}
         target="_blank"
         rel="noopener noreferrer"
