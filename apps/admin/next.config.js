@@ -7,6 +7,7 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer(withTranspileModules({
+  assetPrefix: process.env.CI ? '/frourio-demo/admin/' : '',
   env: {
     FRONT_URL: process.env.FRONT_URL,
   },
