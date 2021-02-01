@@ -65,7 +65,7 @@
     "prepare:cover": "yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/server build:frourio && aspida && yarn license:generate:admin",
     "prepare:eslint": "yarn setup:install",
     "prepare:license": "yarn setup:install",
-    "prepare:pages": "yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/server build:frourio && aspida && yarn license:generate:admin",
+    "prepare:pages": "< apps/front/package.json jq 'del(.os)' > tmp.json && npx shx cp -u tmp.json apps/front/package.json && yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/server build:frourio && aspida && yarn license:generate:admin",
     "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn license:generate:admin",
     "setup": "yarn setup:install && yarn setup:server && yarn setup:admin && yarn build",
     "setup:admin": "yarn workspace @frourio-demo/admin setup",
