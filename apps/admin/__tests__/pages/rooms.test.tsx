@@ -1,5 +1,6 @@
 import { setup, loadPage, findElement } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
+import { startOfToday, startOfMonth, endOfMonth, addDays, format, setHours } from 'date-fns';
 
 setup();
 
@@ -77,8 +78,8 @@ describe('Rooms', () => {
         .get(/rooms\/calendar/).reply(200, [
           {
             'title': '清水 蒼空 (4人)',
-            'start': '2021-01-03',
-            'end': '2021-01-07',
+            'start': format(addDays(startOfMonth(startOfToday()), 2), 'yyyy-MM-dd'),
+            'end': format(addDays(startOfMonth(startOfToday()), 6), 'yyyy-MM-dd'),
             'allDay': true,
             'displayEventTime': false,
             'startEditable': false,
@@ -87,8 +88,8 @@ describe('Rooms', () => {
           },
           {
             'title': '田中 心愛 (1人)',
-            'start': '2021-01-09',
-            'end': '2021-01-14',
+            'start': format(addDays(startOfMonth(startOfToday()), 8), 'yyyy-MM-dd'),
+            'end': format(addDays(startOfMonth(startOfToday()), 13), 'yyyy-MM-dd'),
             'allDay': true,
             'displayEventTime': false,
             'startEditable': false,
