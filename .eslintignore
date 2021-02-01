@@ -2,9 +2,9 @@ node_modules
 .next
 dist
 out
-server/migration
-server/index.js
-server/prisma/client/*
+**/server/migration
+**/server/index.js
+**/server/prisma/client/*
 **/electron/index.js
 **/electron/prisma
 **/electron/dist

@@ -25,11 +25,17 @@
     "strictPropertyInitialization": false,
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "./admin/*"
+      "@/*": [
+        "./shared/*"
       ],
       "$/*": [
-        "./server/*"
+        "./apps/server/*"
+      ],
+      "~/*": [
+        "./apps/admin/*"
+      ],
+      "^/*": [
+        "./apps/front/*"
       ]
     }
   }

@@ -5,17 +5,29 @@ import { compilerOptions } from './tsconfig.json';
 const config: { projects: Config.InitialOptions[] } = {
   projects: [
     {
+      displayName: 'shared',
+      clearMocks: true,
+      testRunner: 'jest-circus/runner',
+      preset: 'ts-jest',
+      testMatch: ['<rootDir>/shared/**/__tests__/**/*.test.ts?(x)'],
+      moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+        prefix: '<rootDir>/',
+      }),
+      globalSetup: './jest.global.setup.ts',
+      setupFilesAfterEnv: ['./jest.setup.ts'],
+    },
+    {
       displayName: 'admin',
       clearMocks: true,
       testRunner: 'jest-circus/runner',
-      testMatch: ['<rootDir>/admin/__tests__/**/*.test.ts?(x)'],
+      testMatch: ['<rootDir>/apps/admin/__tests__/**/*.test.ts?(x)'],
       transform: {
-        '^.+\\.tsx$': ['babel-jest', { configFile: './admin/babel.config.js' }],
+        '^.+\\.tsx$': ['babel-jest', { configFile: './apps/admin/babel.config.js' }],
         '^.+\\.ts$': 'ts-jest',
       },
       moduleNameMapper: {
         '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
-        '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/test/__mocks__/fileMock.js',
+        '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/apps/admin/__tests__/__mocks__/fileMock.js',
         ...pathsToModuleNameMapper(compilerOptions.paths, {
           prefix: '<rootDir>/',
         }),
@@ -33,13 +45,13 @@ const config: { projects: Config.InitialOptions[] } = {
       testRunner: 'jest-circus/runner',
       preset: 'ts-jest',
       testEnvironment: 'node',
-      testMatch: ['<rootDir>/server/__tests__/**/*.test.ts'],
+      testMatch: ['<rootDir>/apps/server/__tests__/**/*.test.ts'],
       moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
         prefix: '<rootDir>/',
       }),
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
-        '<rootDir>/server/prisma/client/',
+        '<rootDir>/apps/server/prisma/client/',
       ],
       globalSetup: './jest.global.setup.ts',
       setupFilesAfterEnv: ['./jest.setup.ts'],
