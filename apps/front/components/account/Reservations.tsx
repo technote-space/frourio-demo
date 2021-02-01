@@ -42,9 +42,9 @@ const Reservations: FC<Props> = ({ api, options }: Props) => {
     </Box>
   </Box>;
 
-  return useMemo(() => reservations?.data ? <Wrap>
+  return useMemo(() => reservations.data ? <Wrap>
     {reservations.data.map(reservation => <ReservationItem key={reservation.id} reservation={reservation}/>)}
-  </Wrap> : null, [reservations?.data]);
+  </Wrap> : null, [reservations.data]);
 };
 
 export default Reservations;

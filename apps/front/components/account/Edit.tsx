@@ -30,10 +30,10 @@ const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
   });
 
   useEffect(() => {
-    if (guestInfo?.data) {
+    if (guestInfo.data) {
       setEditInfo(Object.assign({}, ...Object.entries(guestInfo.data).map(([key, value]) => ({ [key]: value ?? '' }))));
     }
-  }, [guestInfo?.data]);
+  }, [guestInfo.data]);
 
   const handleSave = async() => {
     try {
@@ -42,7 +42,7 @@ const Edit: FC<Props> = ({ authHeader, setEdit }: Props) => {
         body: editInfo!,
       });
       setNotice(dispatch, '更新しました。');
-      await guestInfo?.revalidate();
+      await guestInfo.revalidate();
       handleClose();
     } catch (error) {
       if (!unmountRef.current && isAxiosError(error) && error.response?.data) {

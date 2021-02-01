@@ -20,7 +20,7 @@ const RenderAmount: FC<Props> = ({ authHeader, rowData }: Props) => {
     enabled: !!rowData['roomId'],
   });
 
-  return useMemo(() => room?.data && rowData['checkin'] && rowData['checkout'] && rowData['number'] ? <>
+  return useMemo(() => room.data && rowData['checkin'] && rowData['checkout'] && rowData['number'] ? <>
     <div
       style={{
         whiteSpace: 'nowrap',
@@ -29,7 +29,7 @@ const RenderAmount: FC<Props> = ({ authHeader, rowData }: Props) => {
     >
       {getPriceCalc(room.data.price, rowData['number'], rowData['checkin'], rowData['checkout'], 0)}
     </div>
-  </> : null, [room?.data, rowData['checkin'], rowData['checkout'], rowData['number']]);
+  </> : null, [room.data, rowData['checkin'], rowData['checkout'], rowData['number']]);
 };
 
 export default RenderAmount;

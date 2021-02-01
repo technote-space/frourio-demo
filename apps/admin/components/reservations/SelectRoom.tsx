@@ -34,14 +34,14 @@ const SelectRoom: FC<Props> = ({ authHeader, props }: Props) => {
       { title: '最大人数', field: 'number', type: 'numeric' },
       { title: '料金(円/人泊)', field: 'price', type: 'numeric' },
     ]}
-    searchText={room?.data?.name}
+    searchText={room.data?.name}
     authHeader={authHeader}
     props={{
       ...props,
       onChange: handleChange,
     }}
     unmountRef={unmountRef}
-  />, [room?.data, props.helperText, unmountRef]);
+  />, [room.data, props.helperText, unmountRef]);
 };
 
 export default SelectRoom;

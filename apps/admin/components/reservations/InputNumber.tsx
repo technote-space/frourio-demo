@@ -31,12 +31,12 @@ const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
     props.onChange(Number(event.target.value));
   }, []);
   useEffect(() => {
-    if (room?.data && (!props.value || props.value > room.data.number)) {
+    if (room.data && (!props.value || props.value > room.data.number)) {
       props.onChange(room.data.number);
     }
-  }, [room?.data, props.value]);
+  }, [room.data, props.value]);
 
-  return useMemo(() => room?.data && props.value ? <FormControl error={Boolean(props.error)}>
+  return useMemo(() => room.data && props.value ? <FormControl error={Boolean(props.error)}>
     <TextField
       className={classes.input}
       fullWidth
@@ -55,7 +55,7 @@ const InputNumber: FC<Props> = ({ authHeader, props }: Props) => {
       data-testid="input-number"
     />
     {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
-  </FormControl> : null, [room?.data, props.value]);
+  </FormControl> : null, [room.data, props.value]);
 };
 
 export default InputNumber;

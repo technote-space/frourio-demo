@@ -32,9 +32,9 @@ const Rooms: FC = () => {
     </Center>
   </Box>;
 
-  return useMemo(() => rooms?.data ? <Wrap m={4}>
+  return useMemo(() => rooms.data ? <Wrap m={4}>
     {rooms.data.map(room => <RoomItem key={room.id} room={room}/>)}
-  </Wrap> : null, [rooms?.data]);
+  </Wrap> : null, [rooms.data]);
 };
 
 export default Rooms;

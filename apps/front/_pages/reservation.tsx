@@ -29,10 +29,10 @@ const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPa
   const handleCancel = useCallback(async() => {
     onClose();
     await handleAuthError(dispatch, {}, client.account.reservations._reservationId(Number(id)).cancel.patch, { headers: authHeader });
-    await reservation?.revalidate();
+    await reservation.revalidate();
   }, []);
 
-  return useMemo(() => reservation?.data ? <Box m={4}>
+  return useMemo(() => reservation.data ? <Box m={4}>
     <Grid templateColumns="repeat(1, 1fr)" gap={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={5}>
         <Box>チェックイン</Box>
@@ -88,7 +88,7 @@ const Reservation: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPa
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
-  </Box> : null, [reservation?.data, isOpen]);
+  </Box> : null, [reservation.data, isOpen]);
 };
 
 export default AuthenticatedPage(Reservation);

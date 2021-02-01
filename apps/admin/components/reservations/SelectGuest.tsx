@@ -37,14 +37,14 @@ const SelectGuest: FC<Props> = ({ authHeader, props }: Props) => {
       { title: '住所', field: 'address' },
       { title: '電話番号', field: 'phone' },
     ]}
-    searchText={guest?.data?.name ?? guest?.data?.email ?? ''}
+    searchText={guest.data?.name ?? guest.data?.email ?? ''}
     authHeader={authHeader}
     props={{
       ...props,
       onChange: handleChange,
     }}
     unmountRef={unmountRef}
-  />, [guest?.data, props.helperText, unmountRef]);
+  />, [guest.data, props.helperText, unmountRef]);
 };
 
 export default SelectGuest;
