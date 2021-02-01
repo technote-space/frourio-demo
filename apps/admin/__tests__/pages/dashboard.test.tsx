@@ -1,4 +1,4 @@
-import { loadPage, setup, findElement, act, waitFor } from '~/__tests__/utils';
+import { loadPage, setup, findElement, waitFor } from '~/__tests__/utils';
 import user from '@testing-library/user-event';
 import { startOfToday, addYears, format } from 'date-fns';
 
@@ -189,11 +189,6 @@ describe('Dashboard', () => {
     expect(getAllByText('チェックアウト済み')).toHaveLength(2);
     expect(getAllByText('未チェックイン')).toHaveLength(1);
 
-    // change date
-    user.click(findElement(await getByTestId('select-date'), 'input'));
-    await findByText(format(startOfToday(), 'M月 yyyy'));
-    user.click(await findByText('17'));
-
     // test checkin
     user.click(getAllByText('チェックイン')[2]);
     await findByText('更新しました。');
@@ -213,6 +208,11 @@ describe('Dashboard', () => {
     user.click(getAllByText('キャンセル')[4]);
     user.click(await findByText('はい'));
     await findByText('キャンセルしました。');
+
+    // change date
+    user.click(findElement(await getByTestId('select-date'), 'input'));
+    await findByText(format(startOfToday(), 'M月 yyyy'));
+    user.click(await findByText('17'));
 
     expect(checkin).toBeCalledWith({ id: 831 });
     expect(checkout).toBeCalledWith({ id: 315, payment: 1 });
@@ -341,18 +341,14 @@ describe('Dashboard', () => {
     expect(getByTestId('monthly-sales')).toBeVisible();
 
     // change room
-    await act(async() => {
-      user.click(getByText('全部屋'));
-      user.click(await findByText('大翔75634'));
-    });
+    user.click(getByText('全部屋'));
+    user.click(await findByText('大翔75634'));
 
     // change date
-    await act(async() => {
-      user.click(findElement(await getByTestId('select-sales-date'), 'input'));
-      await findByText(format(startOfToday(), 'yyyy'));
-      user.click(await findByText(format(addYears(startOfToday(), 2), 'yyyy')));
-      user.click(await findByText('5月'));
-    });
+    user.click(findElement(await getByTestId('select-sales-date'), 'input'));
+    await findByText(format(startOfToday(), 'yyyy'));
+    user.click(await findByText(format(addYears(startOfToday(), 2), 'yyyy')));
+    user.click(await findByText('5月'));
 
     await waitFor(() => expect(daily.mock.calls.length).toBeGreaterThanOrEqual(3)); // 1 + change room + change date
     await waitFor(() => expect(monthly.mock.calls.length).toBeGreaterThanOrEqual(3)); // 1 + change room + change date
