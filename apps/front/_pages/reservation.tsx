@@ -4,6 +4,7 @@ import type { AuthenticatedPageProps } from '^/components/AuthenticatedPage';
 import { memo, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Center, Box, Divider, Button, Grid } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -66,6 +67,7 @@ const Reservation: FC<AuthenticatedPageProps> = memo(({ authHeader }: Authentica
       </Grid>
     </Grid>
     <Center mt={6}>
+      <Button width={120} m={2} colorScheme="teal" as={Link} to={`/reservations`}>予約一覧</Button>
       {reservation.data.status === 'cancelled' && <Button width={120} m={2} colorScheme="red" disabled>キャンセル済み</Button>}
       {reservation.data.status === 'checkout' && <Button width={120} m={2} colorScheme="teal" disabled>宿泊済み</Button>}
       {reservation.data.status === 'checkin' && <Button width={120} m={2} colorScheme="teal" disabled>チェックイン済み</Button>}
