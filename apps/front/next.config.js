@@ -8,7 +8,10 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer(withTranspileModules({
-  assetPrefix: '.',
+  assetPrefix: process.env.CI ? '/frourio-demo/front' : '',
+  env: {
+    BASE_PATH: process.env.CI ? '/frourio-demo/front' : '',
+  },
   async rewrites() {
     return [
       {

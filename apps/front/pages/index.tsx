@@ -14,7 +14,7 @@ const Index = memo(() => <>
         <Route
           key={page}
           exact={pages[page].exact}
-          path={pages[page].path ?? `/${page}`}
+          path={`${process.env.BASE_PATH}${pages[page].path ?? `/${page}`}`}
           component={pages[page].page}
         />,
       )}

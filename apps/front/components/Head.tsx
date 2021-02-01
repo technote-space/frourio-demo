@@ -13,7 +13,7 @@ const Head: FC = memo(() => {
 
   useEffect(() => {
     const page = Object.entries(pages).find(([key, value]) => !!matchPath(location.pathname, {
-      path: value.path ?? `/${key}`,
+      path: `${process.env.BASE_PATH}${value.path ?? `/${key}`}`,
       exact: value.exact,
     }));
     changeTitle(dispatch, page ? page[1].label : undefined);

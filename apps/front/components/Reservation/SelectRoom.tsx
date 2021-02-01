@@ -39,7 +39,7 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
     return <Box shadow="md" p={2} m={2} maxW={400}>
       <Heading as="h5" size="sm">{room.name}</Heading>
       <Box>
-        <Image src="/cover2.jpg"/>
+        <Image src={`${process.env.BASE_PATH}/cover2.jpg`}/>
       </Box>
       <Grid templateColumns="repeat(1, 1fr)" gap={4} m={4}>
         <Grid templateColumns="repeat(2, 1fr)" gap={5}>

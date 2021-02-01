@@ -20,12 +20,12 @@ const Top: FC = memo(() => {
           slidesToShow={1}
           slidesToScroll={1}
         >
-          <div><Image width="100%" height={400} p={1} objectFit="cover" src="/cover1.jpg"/></div>
-          <div><Image width="100%" height={400} p={1} objectFit="cover" src="/cover2.jpg"/></div>
-          <div><Image width="100%" height={400} p={1} objectFit="cover" src="/cover3.jpg"/></div>
-          <div><Image width="100%" height={400} p={1} objectFit="cover" src="/cover4.jpg"/></div>
-          <div><Image width="100%" height={400} p={1} objectFit="cover" src="/cover5.jpg"/></div>
-          <div><Image width="100%" height={400} p={1} objectFit="cover" src="/cover6.jpg"/></div>
+          <div><Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover1.jpg`}/></div>
+          <div><Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover2.jpg`}/></div>
+          <div><Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover3.jpg`}/></div>
+          <div><Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover4.jpg`}/></div>
+          <div><Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover5.jpg`}/></div>
+          <div><Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover6.jpg`}/></div>
         </Slider>
       </Box>
     </Box>
