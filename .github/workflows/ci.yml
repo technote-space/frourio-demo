@@ -239,16 +239,21 @@ jobs:
           API_ORIGIN: ${{ env.ADMIN_PAGES_API_ORIGIN }}
           SERVER_PORT: ${{ env.ADMIN_PAGES_SERVER_PORT }}
           BASE_PATH: ${{ env.ADMIN_PAGES_BASE_PATH }}
+          FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
       - name: Build
-        run: yarn build:admin
-      - name: add nojekyll
-        run: touch ./admin/out/.nojekyll
+        run: |
+          yarn build:admin
+          yarn build:front
+          mkdir out
+          mv ./apps/admin/out out/admin
+          mv ./apps/front/out out/front
+          mv ./gh-pages/* out/
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: ./admin/out
+          FOLDER: ./out
 
   publishRelease:
     name: Create Release
