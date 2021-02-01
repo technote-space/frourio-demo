@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
 import { memo, useCallback, useEffect, useState, useRef } from 'react';
-import { Box, Link, Heading } from '@chakra-ui/react';
+import { Box, Link, Heading, GridItem } from '@chakra-ui/react';
 import {
   Modal,
   ModalOverlay,
@@ -66,7 +66,7 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
       successCallback(data);
     });
   }, [reservation.roomId, reservation.checkin]);
-  const handleDateClick = useCallback(args => {
+  const handleDateClick = args => {
     if (isLoading) {
       return;
     }
@@ -78,12 +78,12 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
 
     onChange(getDateTime(args.date, time));
     handleClose();
-  }, [isLoading, reservation, time]);
-  const handleTimeChange = useCallback((time: string) => {
+  };
+  const handleTimeChange = (time: string) => {
     const datetime = getDateTime(reservation.checkin!, time);
     setTime(time);
     onChange(datetime, true);
-  }, [reservation, reservation.checkout]);
+  };
   const handleEventLoading = useCallback(flag => {
     setIsLoading(flag);
   }, []);
@@ -95,21 +95,23 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
   }, [open]);
 
   return <>
-    {reservation.roomId && <Box m={1} p={2} borderWidth={1}>
-      <Link onClick={handleOpen}>
-        <Heading as="h4" size="md">チェックイン</Heading>
-        {reservation.checkin && <Box>
-          {format(new Date(reservation.checkin), 'yyyy-MM-dd')}
-        </Box>}
-      </Link>
-      {reservation.checkin && <TimePicker
-        value={time}
-        step={30}
-        minHour={15}
-        maxHour={18}
-        onChange={handleTimeChange}
-      />}
-    </Box>}
+    {reservation.roomId && <GridItem>
+      <Box m={1} p={2} borderWidth={1} height="100%">
+        <Link onClick={handleOpen}>
+          <Heading as="h4" size="md">チェックイン</Heading>
+          {reservation.checkin && <Box>
+            {format(new Date(reservation.checkin), 'yyyy-MM-dd')}
+          </Box>}
+        </Link>
+        {reservation.checkin && <TimePicker
+          value={time}
+          step={30}
+          minHour={15}
+          maxHour={18}
+          onChange={handleTimeChange}
+        />}
+      </Box>
+    </GridItem>}
     <Modal isOpen={open} onClose={handleClose} size="4xl">
       <ModalOverlay/>
       <ModalContent>

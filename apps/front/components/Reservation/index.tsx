@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import { Box, Center, Heading, Button } from '@chakra-ui/react';
+import { memo, useState, useEffect, useCallback } from 'react';
+import { Box, Center, Heading, Button, Grid, GridItem } from '@chakra-ui/react';
 import { useDispatchContext, useStoreContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client } from '^/utils/api';
@@ -19,7 +19,7 @@ type Props = {
   roomId?: number;
 }
 
-const Reservation: FC<Props> = ({ roomId }: Props) => {
+const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const { dispatch } = useDispatchContext();
   const { guest } = useStoreContext();
   const [confirm, setConfirm] = useState(false);
@@ -31,7 +31,7 @@ const Reservation: FC<Props> = ({ roomId }: Props) => {
   const nights = reservation.checkin && reservation.checkout ? getNights(reservation.checkin, reservation.checkout) : -1;
   const isValid = !!room.data && !!reservation.number && nights > 0;
 
-  const onChangeRoomId = useCallback((id: number) => {
+  const onChangeRoomId = (id: number) => {
     setReservation({
       ...reservation,
       roomId: id,
@@ -39,39 +39,39 @@ const Reservation: FC<Props> = ({ roomId }: Props) => {
       checkin: undefined,
       checkout: undefined,
     });
-  }, [reservation]);
-  const onChangeNumber = useCallback((number: number) => {
+  };
+  const onChangeNumber = (number: number) => {
     setReservation({ ...reservation, number });
-  }, [reservation]);
-  const onChangeCheckin = useCallback((checkin: Date, isChangeTime?: boolean) => {
+  };
+  const onChangeCheckin = (checkin: Date, isChangeTime?: boolean) => {
     setReservation({
       ...reservation,
       ...(isChangeTime ? {} : { checkout: undefined }),
       checkin: checkin.toISOString(),
     });
-  }, [reservation]);
-  const onChangeCheckout = useCallback((checkout: Date) => {
+  };
+  const onChangeCheckout = (checkout: Date) => {
     setReservation({ ...reservation, checkout: checkout.toISOString() });
-  }, [reservation]);
-  const onChangeName = useCallback((name: string) => {
+  };
+  const onChangeName = (name: string) => {
     setReservation({ ...reservation, guestName: name });
-  }, [reservation]);
-  const onChangeNameKana = useCallback((name: string) => {
+  };
+  const onChangeNameKana = (name: string) => {
     setReservation({ ...reservation, guestNameKana: name });
-  }, [reservation]);
-  const onChangeZipCode = useCallback((zipcode: string) => {
+  };
+  const onChangeZipCode = (zipcode: string) => {
     setReservation({ ...reservation, guestZipCode: zipcode });
-  }, [reservation]);
-  const onChangeAddress = useCallback((address: string) => {
+  };
+  const onChangeAddress = (address: string) => {
     setReservation({ ...reservation, guestAddress: address });
-  }, [reservation]);
-  const onChangePhone = useCallback((phone: string) => {
+  };
+  const onChangePhone = (phone: string) => {
     setReservation({ ...reservation, guestPhone: phone });
-  }, [reservation]);
-  const onChangeUpdateInfo = useCallback((updateInfo: string) => {
+  };
+  const onChangeUpdateInfo = (updateInfo: string) => {
     console.log(updateInfo);
     setReservation({ ...reservation, updateInfo: !reservation.updateInfo });
-  }, [reservation]);
+  };
   const handleClickConfirm = useCallback(() => {
     setConfirm(true);
   }, []);
@@ -95,42 +95,43 @@ const Reservation: FC<Props> = ({ roomId }: Props) => {
     }
   }, [guest]);
 
-  console.log(reservation);
-  return useMemo(() => confirm ? <Box shadow="md" maxW="sm" p="4" m="2">
+  return guest ? confirm ? <Box shadow="md" p="4" m="2" borderWidth={1}>
     <Confirm
       room={room.data}
       reservation={reservation}
       nights={nights}
       onCancel={handleClickCancel}
     />
-  </Box> : <Box shadow="md" maxW="sm" p="4" m="2">
+  </Box> : <Box shadow="md" p="4" m="2" borderWidth={1}>
     <Heading as="h4" size="lg">ご予約</Heading>
-    <SelectRoom
-      room={room.data}
-      onChangeRoomId={onChangeRoomId}
-    />
-    <SelectNumber
-      reservation={reservation}
-      room={room.data}
-      onChangeNumber={onChangeNumber}
-    />
-    <Checkin
-      reservation={reservation}
-      onChange={onChangeCheckin}
-    />
-    <Checkout
-      reservation={reservation}
-      onChange={onChangeCheckout}
-    />
-    <GuestInfo
-      reservation={reservation}
-      onChangeName={onChangeName}
-      onChangeNameKana={onChangeNameKana}
-      onChangeZipCode={onChangeZipCode}
-      onChangeAddress={onChangeAddress}
-      onChangePhone={onChangePhone}
-      onChangeUpdateInfo={onChangeUpdateInfo}
-    />
+    <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+      <SelectRoom
+        room={room.data}
+        onChangeRoomId={onChangeRoomId}
+      />
+      <SelectNumber
+        reservation={reservation}
+        room={room.data}
+        onChangeNumber={onChangeNumber}
+      />
+      <Checkin
+        reservation={reservation}
+        onChange={onChangeCheckin}
+      />
+      <Checkout
+        reservation={reservation}
+        onChange={onChangeCheckout}
+      />
+      <GuestInfo
+        reservation={reservation}
+        onChangeName={onChangeName}
+        onChangeNameKana={onChangeNameKana}
+        onChangeZipCode={onChangeZipCode}
+        onChangeAddress={onChangeAddress}
+        onChangePhone={onChangePhone}
+        onChangeUpdateInfo={onChangeUpdateInfo}
+      />
+    </Grid>
     <Calc
       room={room.data}
       reservation={reservation}
@@ -140,7 +141,7 @@ const Reservation: FC<Props> = ({ roomId }: Props) => {
     {isValid && <Center>
       <Button width={120} m={1} colorScheme="teal" onClick={handleClickConfirm}>確認</Button>
     </Center>}
-  </Box>, [confirm, isValid, reservation, room.data]);
-};
+  </Box> : null;
+});
 
 export default Reservation;

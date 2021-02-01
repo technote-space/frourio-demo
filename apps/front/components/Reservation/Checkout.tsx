@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
 import { memo, useCallback, useEffect, useState, useRef } from 'react';
-import { Box, Link, Heading } from '@chakra-ui/react';
+import { Box, Link, Heading, GridItem } from '@chakra-ui/react';
 import {
   Modal,
   ModalOverlay,
@@ -63,8 +63,8 @@ const Checkout: FC<Props> = memo(({ reservation, onChange }: Props) => {
       } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       successCallback(data);
     });
-  }, [reservation.roomId, reservation.checkin]);
-  const handleDateClick = useCallback(args => {
+  }, [reservation]);
+  const handleDateClick = args => {
     if (isLoading) {
       return;
     }
@@ -76,12 +76,12 @@ const Checkout: FC<Props> = memo(({ reservation, onChange }: Props) => {
 
     onChange(getDateTime(args.date, time));
     handleClose();
-  }, [isLoading, reservation, time]);
-  const handleTimeChange = useCallback((time: string) => {
+  };
+  const handleTimeChange = (time: string) => {
     const datetime = getDateTime(reservation.checkout!, time);
     setTime(time);
     onChange(datetime, true);
-  }, [reservation]);
+  };
   const handleEventLoading = useCallback(flag => {
     setIsLoading(flag);
   }, []);
@@ -93,21 +93,23 @@ const Checkout: FC<Props> = memo(({ reservation, onChange }: Props) => {
   }, [open]);
 
   return <>
-    {reservation.checkin && <Box m={1} p={2} borderWidth={1}>
-      <Link onClick={handleOpen}>
-        <Heading as="h4" size="md">チェックアウト</Heading>
-        {reservation.checkout && <Box>
-          {format(new Date(reservation.checkout), 'yyyy/MM/dd')}
-        </Box>}
-      </Link>
-      {reservation.checkout && <TimePicker
-        value={time}
-        step={30}
-        minHour={6}
-        maxHour={10}
-        onChange={handleTimeChange}
-      />}
-    </Box>}
+    {reservation.checkin && <GridItem>
+      <Box m={1} p={2} borderWidth={1} height="100%">
+        <Link onClick={handleOpen}>
+          <Heading as="h4" size="md">チェックアウト</Heading>
+          {reservation.checkout && <Box>
+            {format(new Date(reservation.checkout), 'yyyy/MM/dd')}
+          </Box>}
+        </Link>
+        {reservation.checkout && <TimePicker
+          value={time}
+          step={30}
+          minHour={6}
+          maxHour={10}
+          onChange={handleTimeChange}
+        />}
+      </Box>
+    </GridItem>}
     <Modal isOpen={open} onClose={handleClose} size="4xl">
       <ModalOverlay/>
       <ModalContent>

@@ -31,10 +31,10 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
   const rooms = useFetch(dispatch, [], client.reservation.rooms, { enabled: open });
 
   const RoomItem: FC<{ room: Room }> = ({ room }) => {
-    const handleClick = useCallback(() => {
+    const handleClick = () => {
       onChangeRoomId(room.id);
       handleClose();
-    }, [onChangeRoomId]);
+    };
 
     return <Box shadow="md" p={2} m={2} maxW={400}>
       <Heading as="h5" size="sm">{room.name}</Heading>
@@ -57,8 +57,8 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
     </Box>;
   };
 
-  return <>
-    <Box m={1} p={2} borderWidth={1}>
+  return <GridItem>
+    <Box m={1} p={2} borderWidth={1} height="100%">
       <Link onClick={handleOpen}>
         <Heading as="h4" size="md">お部屋</Heading>
         {room && <Box>
@@ -78,7 +78,7 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
         </ModalBody>
       </ModalContent>
     </Modal>
-  </>;
+  </GridItem>;
 });
 
 SelectRoom.displayName = 'SelectRoom';

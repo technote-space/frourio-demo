@@ -15,7 +15,7 @@ type Props = {
 const TimePicker: FC<Props> = memo(({ value, step, minHour, minMinute, maxHour, maxMinute, onChange }: Props) => {
   const handleChange = useCallback(event => {
     onChange(event.target.value);
-  }, []);
+  }, [onChange]);
   const getOptions = (): string[] => {
     const min = (minHour ?? 0) * 60 + (minMinute ?? 0);
     const max = (maxHour ?? 0) * 60 + (maxMinute ?? 0);

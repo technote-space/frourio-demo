@@ -42,7 +42,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel }: Props)
     }
   }, []);
 
-  return <Box>
+  return <Box px={5}>
     <Grid templateColumns="repeat(1, 1fr)" gap={2} m={4}>
       {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
         const key = field.name.charAt(0).toUpperCase() + field.name.slice(1);

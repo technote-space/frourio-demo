@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
 import { memo, useState, useCallback } from 'react';
-import { Box, Link, Input, FormControl, FormLabel, Heading, Checkbox } from '@chakra-ui/react';
+import { Box, Link, Input, FormControl, FormLabel, Heading, Checkbox, GridItem } from '@chakra-ui/react';
 import {
   Modal,
   ModalOverlay,
@@ -39,8 +39,8 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
     props[`onChange${key}`](event.target.value);
   };
 
-  return <>
-    <Box m={1} p={2} borderWidth={1}>
+  return <GridItem>
+    <Box m={1} p={2} borderWidth={1} height="100%">
       <Link onClick={handleOpen}>
         <Heading as="h4" size="md">お客様情報</Heading>
         {reservation.guestName && <Box>{reservation.guestName}</Box>}
@@ -74,7 +74,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
         </ModalBody>
       </ModalContent>
     </Modal>
-  </>;
+  </GridItem>;
 });
 
 GuestInfo.displayName = 'GuestInfo';
