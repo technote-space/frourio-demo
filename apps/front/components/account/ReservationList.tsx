@@ -38,7 +38,7 @@ const ReservationList: FC<Props> = memo(({ api, options }: Props) => {
           <MiniCalendar date={reservation.checkout}/>
         </Box>
       </Flex>
-      <Button as={Link} to={`/reservation/${reservation.id}`}>詳細を確認</Button>
+      <Button as={Link} to={`${process.env.BASE_PATH}/reservation/${reservation.id}`}>詳細を確認</Button>
     </Box>
   </Box>;
 
