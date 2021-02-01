@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 import { Box, Image } from '@chakra-ui/react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Reservation from '^/components/Reservation';
 
 const Top: FC = () => {
   return useMemo(() => <Box>
@@ -28,6 +29,7 @@ const Top: FC = () => {
         </Slider>
       </Box>
     </Box>
+    <Reservation/>
   </Box>, []);
 };
 
