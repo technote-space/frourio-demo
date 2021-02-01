@@ -9,6 +9,12 @@ import {
 } from '$/repositories/utils/validator';
 
 export class CreateReservationBody {
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
+  @IsOptional()
+  @IsIdExists('guest', ['name', 'nameKana', 'zipCode', 'address', 'phone'])
+  guestId?: number;
+
   @IsNotEmpty({ message: '値を入力してください' })
   @Length(1, 100, { message: '1~100文字で入力してください' })
   guestName: string;
@@ -48,7 +54,7 @@ export class CreateReservationBody {
 
   @IsNotEmpty({ message: '値を入力してください' })
   @IsDateString(undefined, { message: '正しい日付を入力してください' })
-  @IsReservable()
+  @IsReservable(true)
   checkout: string;
 
   @IsOptional()

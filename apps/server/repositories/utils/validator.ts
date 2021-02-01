@@ -124,11 +124,12 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
 
   async validate(value: any, args: ValidationArguments) {
     const data = args.object as any;
+    const notCheckGuest = !!args.constraints[0];
     if (!('roomId' in data) || typeof data['roomId'] !== 'number') {
       this.reason = '部屋が選択されていません';
       return false;
     }
-    if (!('guestId' in data) || typeof data['guestId'] !== 'number') {
+    if (!notCheckGuest && (!('guestId' in data) || typeof data['guestId'] !== 'number')) {
       this.reason = '宿泊客が選択されていません';
       return false;
     }
@@ -164,9 +165,9 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
             {
               roomId: Number(data['roomId']),
             },
-            {
+            ...(notCheckGuest ? [] : [{
               guestId: Number(data['guestId']),
-            },
+            }]),
           ],
         },
       ],
@@ -192,13 +193,13 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsReservable(validationOptions?: ValidationOptions) {
+export function IsReservable(notCheckGuest?: boolean, validationOptions?: ValidationOptions) {
   return function(object: Object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      constraints: [],
+      constraints: [notCheckGuest],
       validator: IsReservableConstraint,
     });
   };
