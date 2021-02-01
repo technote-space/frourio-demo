@@ -8,6 +8,7 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer(withTranspileModules({
+  assetPrefix: '.',
   async rewrites() {
     return [
       {
