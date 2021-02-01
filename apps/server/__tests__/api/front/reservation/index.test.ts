@@ -45,6 +45,7 @@ describe('reservation', () => {
         checkin: '2020-01-01',
         checkout: '2020-01-03',
       },
+      headers: undefined,
     });
     expect(res.body).toEqual({
       id: 123,
@@ -128,6 +129,7 @@ describe('reservation', () => {
         updateInfo: 1,
       },
       user: { id: 321 },
+      headers: undefined,
     });
     expect(res.body).toEqual({
       id: 123,

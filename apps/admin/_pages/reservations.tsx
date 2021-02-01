@@ -33,7 +33,6 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         />,
         // eslint-disable-next-line react/display-name
         render: data => data['guestName'],
-        validate: data => !!data['guestName'],
       },
       {
         title: '部屋名',
@@ -46,7 +45,6 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         />,
         // eslint-disable-next-line react/display-name
         render: data => data['roomName'],
-        validate: data => !!data['roomName'],
       },
       {
         title: '人数',
