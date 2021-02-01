@@ -18,7 +18,7 @@ const Index = memo(() => <>
           component={pages[page].page}
         />,
       )}
-      <Redirect to='/'/>
+      <Redirect to={`${process.env.BASE_PATH}/`}/>
     </Switch>
   </Layout>
 </>);
