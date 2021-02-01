@@ -28,7 +28,7 @@ const Room: FC = memo(() => {
 
   return room.data ? <Box m={4}>
     <Heading m={2}>{room.data.name}</Heading>
-    <Image width="100%" height={400} p={1} objectFit="cover" src="/cover2.jpg"/>
+    <Image width="100%" height={400} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover2.jpg`}/>
     <Grid templateColumns="repeat(1, 1fr)" gap={4} m={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={5}>
         <Box>ご利用可能最大人数</Box>

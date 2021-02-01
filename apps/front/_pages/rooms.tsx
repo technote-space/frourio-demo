@@ -24,7 +24,7 @@ const Rooms: FC = memo(() => {
         {room.name}
       </Heading>
       <Box>
-        <Image src="/cover2.jpg"/>
+        <Image src={`${process.env.BASE_PATH}/cover2.jpg`}/>
       </Box>
     </Flex>
     <Center mt={3}>

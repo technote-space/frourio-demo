@@ -17,7 +17,7 @@ const Header: FC = memo(() => {
   const NavigationItem: FC<{ page: PageKeys; }> = ({ page }) => {
     return <Link
       as={RouterLink}
-      to={pages[page].path ?? `/${page}`}
+      to={`${process.env.BASE_PATH}${pages[page].path ?? `/${page}`}`}
       flexGrow={1}
       p={2}
       bg={menuBgColor}
@@ -37,7 +37,7 @@ const Header: FC = memo(() => {
     >
       <Link as={RouterLink} to="/" marginRight="auto">
         <HStack>
-          <Image src="/favicon.png" alt="logo"/>
+          <Image src={`${process.env.BASE_PATH}/favicon.png`} alt="logo"/>
           <Box>Frourioの宿</Box>
         </HStack>
       </Link>
