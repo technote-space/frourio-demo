@@ -17,7 +17,7 @@ const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
     </div>
   );
 };
-const getRedirectUri = () => typeof window === 'undefined' ? '' : window.location.origin;
+const getRedirectUri = () => typeof window === 'undefined' ? '' : `${window.location.origin}${process.env.BASE_PATH}`;
 const theme = extendTheme({
   styles: {
     global: (props) => ({
