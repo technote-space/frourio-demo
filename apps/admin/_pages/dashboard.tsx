@@ -1,8 +1,10 @@
 import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Query, QueryResult } from '@technote-space/material-table';
+import type { Model } from '~/components/DataTable';
 import type { CheckinReservation, CheckoutReservation } from '@frourio-demo/server/domains/admin/dashboard';
-import { useState, useCallback, useRef } from 'react';
+import type { Column } from '@technote-space/material-table';
+import { useState, useCallback, useRef, useMemo } from 'react';
 import MaterialTable from '@technote-space/material-table';
 import { FormControl, InputLabel, Button, Card, CardContent, Grid } from '@material-ui/core';
 import { Typography, TextField, Select, MenuItem } from '@material-ui/core';
@@ -184,236 +186,246 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       </Select>
     </FormControl>
   </div>;
+  const checkinTableColumns = useMemo(() => [
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: '名前', field: 'guestName' },
+    { title: 'かな名', field: 'guestNameKana' },
+    { title: '電話番号', field: 'guestPhone' },
+    { title: '部屋名', field: 'roomName' },
+    {
+      title: '泊数',
+      sorting: false,
+      // eslint-disable-next-line react/display-name
+      render: data => {
+        const nights = differenceInCalendarDays(new Date(data.checkout), new Date(data.checkin));
+        return `${nights}泊`;
+      },
+    },
+    {
+      title: 'チェックイン',
+      align: 'center',
+      sorting: false,
+      // eslint-disable-next-line react/display-name
+      render: data => {
+        if (data.status === 'reserved') {
+          return <Button
+            className={classes.button}
+            startIcon={<HomeIcon/>}
+            onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
+              headers: authHeader,
+              body: { id: data.id },
+            }), () => {
+              refreshTables();
+              setNotice(dispatch, '更新しました。');
+            })}
+          >
+            チェックイン
+          </Button>;
+        }
+        if (data.status === 'checkin') {
+          return <Button className={classes.button} disabled>
+            チェックイン済み
+          </Button>;
+        }
+        if (data.status === 'checkout') {
+          return <Button className={classes.button} disabled>
+            チェックアウト済み
+          </Button>;
+        }
+
+        return '';
+      },
+    },
+    {
+      title: 'キャンセル',
+      align: 'center',
+      sorting: false,
+      // eslint-disable-next-line react/display-name
+      render: data => {
+        if (data.status === 'cancelled') {
+          return <Button className={classes.button} disabled>
+            キャンセル済み
+          </Button>;
+        }
+
+        return <Button
+          className={clsx(classes.button, classes.cancel)}
+          startIcon={<CancelIcon/>}
+          onClick={() => setCancelId(data.id)}
+        >
+          キャンセル
+        </Button>;
+      },
+    },
+  ] as Column<Model>[], [classes]);
+  const checkinTableOptions = useMemo(() => ({
+    emptyRowsWhenPaging: false,
+    draggable: false,
+  }), []);
+  const checkinTableData = useCallback(async(query: Query<CheckinReservation>): Promise<QueryResult<CheckinReservation>> => handleAuthError(dispatch, {
+    data: [],
+    page: 0,
+    totalCount: 0,
+  }, client.dashboard.checkin.get, { headers: authHeader, query: { query, date } }), [authHeader, date]);
   const checkinTable = <div className={classes.table} data-testid="checkin-table">
     <MaterialTable
       tableRef={checkinTableRef}
       icons={tableIcons}
       localization={tableLocalization}
       title='チェックイン'
-      columns={[
-        { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-        { title: '名前', field: 'guestName' },
-        { title: 'かな名', field: 'guestNameKana' },
-        { title: '電話番号', field: 'guestPhone' },
-        { title: '部屋名', field: 'roomName' },
-        {
-          title: '泊数',
-          sorting: false,
-          // eslint-disable-next-line react/display-name
-          render: data => {
-            const nights = differenceInCalendarDays(new Date(data.checkout), new Date(data.checkin));
-            return `${nights}泊`;
-          },
-        },
-        {
-          title: 'チェックイン',
-          align: 'center',
-          sorting: false,
-          // eslint-disable-next-line react/display-name
-          render: data => {
-            if (data.status === 'reserved') {
-              return <Button
-                className={classes.button}
-                startIcon={<HomeIcon/>}
-                onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
-                  headers: authHeader,
-                  body: { id: data.id },
-                }), () => {
-                  refreshTables();
-                  setNotice(dispatch, '更新しました。');
-                })}
-              >
-                チェックイン
-              </Button>;
-            }
-            if (data.status === 'checkin') {
-              return <Button className={classes.button} disabled>
-                チェックイン済み
-              </Button>;
-            }
-            if (data.status === 'checkout') {
-              return <Button className={classes.button} disabled>
-                チェックアウト済み
-              </Button>;
-            }
-
-            return '';
-          },
-        },
-        {
-          title: 'キャンセル',
-          align: 'center',
-          sorting: false,
-          // eslint-disable-next-line react/display-name
-          render: data => {
-            if (data.status === 'cancelled') {
-              return <Button className={classes.button} disabled>
-                キャンセル済み
-              </Button>;
-            }
-
-            return <Button
-              className={clsx(classes.button, classes.cancel)}
-              startIcon={<CancelIcon/>}
-              onClick={() => setCancelId(data.id)}
-            >
-              キャンセル
-            </Button>;
-          },
-        },
-      ]}
-      data={async(query: Query<CheckinReservation>): Promise<QueryResult<CheckinReservation>> => handleAuthError(dispatch, {
-        data: [] as CheckinReservation[],
-        page: 0,
-        totalCount: 0,
-      }, client.dashboard.checkin.get, { headers: authHeader, query: { query, date } })}
-      options={{
-        emptyRowsWhenPaging: false,
-        draggable: false,
-      }}
+      columns={checkinTableColumns}
+      data={checkinTableData}
+      options={checkinTableOptions}
       unmountRef={unmountRef}
     />
   </div>;
+  const checkoutTableColumns = useMemo(() => [
+    { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: '名前', field: 'guestName' },
+    { title: 'かな名', field: 'guestNameKana' },
+    { title: '部屋名', field: 'roomName' },
+    {
+      title: 'チェックアウト時間',
+      sorting: false,
+      // eslint-disable-next-line react/display-name
+      render: data => {
+        const checkout = new Date(data.checkout);
+        return `${('0' + checkout.getHours()).slice(-2)}:${('0' + checkout.getMinutes()).slice(-2)}`;
+      },
+    },
+    {
+      title: '請求額',
+      sorting: false,
+      // eslint-disable-next-line react/display-name
+      render: data => {
+        if (!data.room) {
+          return data.amount;
+        }
+
+        return <>
+          <div>¥{data.amount}</div>
+          <div style={{
+            whiteSpace: 'nowrap',
+          }}>{`(${getPriceCalc(data.room.price, data.number, data.checkin, data.checkout, data.amount)})`}</div>
+        </>;
+      },
+    },
+    {
+      title: 'チェックアウト',
+      align: 'center',
+      sorting: false,
+      // eslint-disable-next-line react/display-name
+      render: data => {
+        if (data.status === 'reserved') {
+          return <Button className={classes.button} disabled>
+            未チェックイン
+          </Button>;
+        }
+        if (data.status === 'checkin') {
+          return <Button
+            className={classes.button}
+            startIcon={<HomeIcon/>}
+            onClick={() => {
+              setCheckoutId(data.id);
+              setAmount(data.amount);
+            }}
+          >
+            チェックアウト
+          </Button>;
+        }
+        if (data.status === 'checkout') {
+          if (data.payment !== data.amount) {
+            return <Button className={classes.button} disabled>
+              チェックアウト済み (¥{data.payment})
+            </Button>;
+          }
+
+          return <Button className={classes.button} disabled>
+            チェックアウト済み
+          </Button>;
+        }
+
+        return '';
+      },
+    },
+  ] as Column<Model>[], [classes]);
+  const checkoutTableOptions = useMemo(() => ({
+    emptyRowsWhenPaging: false,
+    draggable: false,
+  }), []);
+  const checkoutTableData = useCallback(async(query: Query<CheckoutReservation>): Promise<QueryResult<CheckoutReservation>> => handleAuthError(dispatch, {
+    data: [] as CheckoutReservation[],
+    page: 0,
+    totalCount: 0,
+  }, client.dashboard.checkout.get, { headers: authHeader, query: { query, date } }), [authHeader, date]);
   const checkoutTable = <div className={classes.table} data-testid="checkout-table">
     <MaterialTable
       tableRef={checkoutTableRef}
       icons={tableIcons}
       localization={tableLocalization}
       title='チェックアウト'
-      columns={[
-        { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-        { title: '名前', field: 'guestName' },
-        { title: 'かな名', field: 'guestNameKana' },
-        { title: '部屋名', field: 'roomName' },
-        {
-          title: 'チェックアウト時間',
-          sorting: false,
-          // eslint-disable-next-line react/display-name
-          render: data => {
-            const checkout = new Date(data.checkout);
-            return `${('0' + checkout.getHours()).slice(-2)}:${('0' + checkout.getMinutes()).slice(-2)}`;
-          },
-        },
-        {
-          title: '請求額',
-          sorting: false,
-          // eslint-disable-next-line react/display-name
-          render: data => {
-            if (!data.room) {
-              return data.amount;
-            }
-
-            return <>
-              <div>¥{data.amount}</div>
-              <div style={{
-                whiteSpace: 'nowrap',
-              }}>{`(${getPriceCalc(data.room.price, data.number, data.checkin, data.checkout, data.amount)})`}</div>
-            </>;
-          },
-        },
-        {
-          title: 'チェックアウト',
-          align: 'center',
-          sorting: false,
-          // eslint-disable-next-line react/display-name
-          render: data => {
-            if (data.status === 'reserved') {
-              return <Button className={classes.button} disabled>
-                未チェックイン
-              </Button>;
-            }
-            if (data.status === 'checkin') {
-              return <Button
-                className={classes.button}
-                startIcon={<HomeIcon/>}
-                onClick={() => {
-                  setCheckoutId(data.id);
-                  setAmount(data.amount);
-                }}
-              >
-                チェックアウト
-              </Button>;
-            }
-            if (data.status === 'checkout') {
-              if (data.payment !== data.amount) {
-                return <Button className={classes.button} disabled>
-                  チェックアウト済み (¥{data.payment})
-                </Button>;
-              }
-
-              return <Button className={classes.button} disabled>
-                チェックアウト済み
-              </Button>;
-            }
-
-            return '';
-          },
-        },
-      ]}
-      data={async(query: Query<CheckoutReservation>): Promise<QueryResult<CheckoutReservation>> => handleAuthError(dispatch, {
-        data: [] as CheckoutReservation[],
-        page: 0,
-        totalCount: 0,
-      }, client.dashboard.checkout.get, { headers: authHeader, query: { query, date } })}
-      options={{
-        emptyRowsWhenPaging: false,
-        draggable: false,
-      }}
+      columns={checkoutTableColumns}
+      data={checkoutTableData}
+      options={checkoutTableOptions}
       unmountRef={unmountRef}
     />
   </div>;
+  const dailySalesData = useMemo(() => ({
+    labels: dailySales.data?.map(item => format(new Date(item.day), 'd')) ?? [],
+    datasets: [
+      {
+        label: dailySales.data?.length ? `日別売上（${format(new Date(dailySales.data[0].day), 'yyyy年M月')}）` : '日別売上',
+        data: dailySales.data?.map(item => item.sales) ?? [],
+        borderColor: 'rgba(0,128,0)',
+        backgroundColor: 'rgba(64,128,64)',
+        borderWidth: 1,
+      },
+    ],
+  }), [dailySales]);
+  const dailySalesOptions = useMemo(() => ({
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  }), []);
   const dailySalesBar = <div className={classes.chart} data-testid="daily-sales">
     <Bar
-      data={{
-        labels: dailySales.data?.map(item => format(new Date(item.day), 'd')) ?? [],
-        datasets: [
-          {
-            label: dailySales.data?.length ? `日別売上（${format(new Date(dailySales.data[0].day), 'yyyy年M月')}）` : '日別売上',
-            data: dailySales.data?.map(item => item.sales) ?? [],
-            borderColor: 'rgba(0,128,0)',
-            backgroundColor: 'rgba(64,128,64)',
-            borderWidth: 1,
-          },
-        ],
-      }}
-      options={{
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-        },
-      }}
+      data={dailySalesData}
+      options={dailySalesOptions}
     />
   </div>;
+  const monthlySalesData = useMemo(() => ({
+    labels: monthlySales.data?.map(item => format(new Date(item.month), 'M月')) ?? [],
+    datasets: [
+      {
+        label: monthlySales.data?.length ? `月別売上（${format(new Date(monthlySales.data[0].month), 'yyyy年')}）` : '月別売上',
+        data: monthlySales.data?.map(item => item.sales) ?? [],
+        borderColor: 'rgba(0,0,255)',
+        backgroundColor: 'rgba(128,128,255)',
+        borderWidth: 1,
+      },
+    ],
+  }), [monthlySales]);
+  const monthlySalesOptions = useMemo(() => ({
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  }), []);
   const monthlySalesBar = <div className={classes.chart} data-testid="monthly-sales">
     <Bar
-      data={{
-        labels: monthlySales.data?.map(item => format(new Date(item.month), 'M月')) ?? [],
-        datasets: [
-          {
-            label: monthlySales.data?.length ? `月別売上（${format(new Date(monthlySales.data[0].month), 'yyyy年')}）` : '月別売上',
-            data: monthlySales.data?.map(item => item.sales) ?? [],
-            borderColor: 'rgba(0,0,255)',
-            backgroundColor: 'rgba(128,128,255)',
-            borderWidth: 1,
-          },
-        ],
-      }}
-      options={{
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-        },
-      }}
+      data={monthlySalesData}
+      options={monthlySalesOptions}
     />
   </div>;
   const cancelDialog = <Dialog
