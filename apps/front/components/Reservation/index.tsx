@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
 import { memo, useState, useEffect, useCallback } from 'react';
-import { Box, Center, Heading, Button, Grid, GridItem } from '@chakra-ui/react';
+import { Box, Center, Heading, Button, Grid } from '@chakra-ui/react';
 import { useDispatchContext, useStoreContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client } from '^/utils/api';

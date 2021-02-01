@@ -11,6 +11,7 @@ const Auth: FC = () => {
   const [auth, setToken, removeToken] = useAuthToken();
   const { onRemoveToken, onRefreshToken } = useStoreContext();
   const { dispatch } = useDispatchContext();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const guest = useFetch(dispatch, {}, client.guest, { headers: auth?.authHeader!, enabled: !!auth });
 
   const {
