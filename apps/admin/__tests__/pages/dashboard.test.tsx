@@ -33,7 +33,7 @@ describe('Dashboard', () => {
     const checkout = jest.fn();
     const cancel = jest.fn();
 
-    const { getByTestId, findAllByText, findByText, getAllByText } = await loadPage(
+    const { getByTestId, findAllByText, findByText, getByRole, getAllByText } = await loadPage(
       'dashboard',
       scope => scope
         .get('/dashboard/rooms').reply(200, [])
@@ -194,20 +194,28 @@ describe('Dashboard', () => {
     await findByText('更新しました。');
 
     // test checkout
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('チェックアウト')[2]);
+    await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
     user.click(await findByText('閉じる'));
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('チェックアウト')[2]);
+    await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
     user.clear(findElement(getByTestId('checkout-payment'), '.MuiInputBase-input'));
     user.type(findElement(getByTestId('checkout-payment'), '.MuiInputBase-input'), '1');
     user.click(await findByText('確定'));
     await findByText('更新しました。');
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
     // test cancel
     user.click(getAllByText('キャンセル')[4]);
+    await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
     user.click(await findByText('閉じる'));
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('キャンセル')[4]);
     user.click(await findByText('はい'));
     await findByText('キャンセルしました。');
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
     // change date
     user.click(findElement(await getByTestId('select-date'), 'input'));

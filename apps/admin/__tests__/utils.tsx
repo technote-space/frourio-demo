@@ -157,11 +157,13 @@ export const loadPage = async(page: PageKeys, setup: SetupNock): Promise<RenderR
   setToken('token');
 
   const result = customRender(<Index/>);
+  if (page !== 'dashboard') {
+    const buttons = result.container.querySelectorAll('header .MuiSvgIcon-root');
+    user.click(buttons[0]);
+    await result.findByText('test name');
+    user.click(result.getByTestId(`page-item-${page}`));
+  }
 
-  const buttons = result.container.querySelectorAll('header .MuiSvgIcon-root');
-  user.click(buttons[0]);
-  await result.findByText('test name');
-  user.click(result.getByTestId(`page-item-${page}`));
   await result.findByTestId(`page-${page}`);
 
   return result;
