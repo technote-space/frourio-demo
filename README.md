@@ -57,7 +57,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 https://technote-space.github.io/frourio-demo/
 
-* id: test@example.com
+* id: admin@example.com
 * pass: test1234
 
 ## 要件
