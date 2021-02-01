@@ -6,12 +6,12 @@
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build && next export",
-    "dev": "yarn kill && PORT=$npm_package_port NODE_ENV=development yarn ts-node ./server.ts",
+    "dev": "yarn kill && HOST=$npm_package_host PORT=$npm_package_port NODE_ENV=development yarn ts-node ./server.ts",
     "kill": "lsof -i:$npm_package_port -t | xargs kill -9",
     "setup": "yarn install --prefer-offline --network-timeout 1000000 && yarn setup:hosts && yarn setup:ssl",
-    "setup:hosts": "if [[ $(cat /etc/hosts | grep localhost\\.frourio-demo\\.com -c) == 0 ]]; then echo \"127.0.0.1 localhost.frourio-demo.com\" | sudo tee -a /etc/hosts; fi",
+    "setup:hosts": "if [[ $(cat /etc/hosts | grep $npm_package_host -c) == 0 ]]; then echo \"127.0.0.1 $npm_package_host\" | sudo tee -a /etc/hosts; fi",
     "setup:ssl": "brew install mkcert nss && mkcert -install && mkcert 'localhost.frourio-demo.com'",
-    "start": "yarn kill && PORT=$npm_package_port NODE_ENV=production yarn ts-node ./server.ts",
+    "start": "yarn kill && HOST=$npm_package_host PORT=$npm_package_port NODE_ENV=production yarn ts-node ./server.ts",
     "update": "npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
   },
   "dependencies": {
@@ -69,5 +69,6 @@
   "os": [
     "darwin"
   ],
+  "host": "localhost.frourio-demo.com",
   "port": 3001
 }
