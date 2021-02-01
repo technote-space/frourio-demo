@@ -28,12 +28,10 @@ describe('Dashboard', () => {
     expect(getByText('全部屋')).toBeVisible();
   });
 
-  it('should checkin and checkout', async() => {
+  it('should checkin', async() => {
     const checkin = jest.fn();
-    const checkout = jest.fn();
-    const cancel = jest.fn();
 
-    const { getByTestId, findAllByText, findByText, getByRole, getAllByText } = await loadPage(
+    const { findAllByText, findByText, getByRole, getAllByText } = await loadPage(
       'dashboard',
       scope => scope
         .get('/dashboard/rooms').reply(200, [])
@@ -168,30 +166,170 @@ describe('Dashboard', () => {
         .patch('/dashboard/checkin', body => {
           checkin(body);
           return body;
-        }).reply(200, () => ({ id: 123 }))
-        .patch('/dashboard/checkout', body => {
-          checkout(body);
-          return body;
-        }).reply(200, () => ({ id: 123 }))
-        .patch('/dashboard/cancel', body => {
-          cancel(body);
-          return body;
         }).reply(200, () => ({ id: 123 })),
     );
 
     await findByText('山本 美咲');
     await findByText('山本 蓮');
     expect(await findAllByText('チェックイン')).toHaveLength(4); // table title, table header, button * 2
-    expect(getAllByText('チェックアウト')).toHaveLength(3); // table title, table header, button
-    expect(getAllByText('キャンセル')).toHaveLength(5); // table header, button * 4
     expect(getAllByText('チェックイン済み')).toHaveLength(1);
-    expect(getAllByText('キャンセル済み')).toHaveLength(1);
-    expect(getAllByText('チェックアウト済み')).toHaveLength(2);
-    expect(getAllByText('未チェックイン')).toHaveLength(1);
 
     // test checkin
     user.click(getAllByText('チェックイン')[2]);
     await findByText('更新しました。');
+
+    // close alert
+    user.click(findElement(getByRole('alert'), 'button'));
+    await waitFor(() => expect(() => getByRole('alert')).toThrow());
+
+    expect(checkin).toBeCalledWith({ id: 831 });
+  });
+
+  it('should checkout', async() => {
+    const checkout = jest.fn();
+
+    const { getByTestId, findAllByText, findByText, getByRole, getAllByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [
+            {
+              'id': 831,
+              'guestName': '山本 美咲',
+              'guestNameKana': 'テスト',
+              'guestPhone': '060-844-7544',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 127,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'guestPhone': '01165-3-9928',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 731,
+              'guestName': '清水 結菜',
+              'guestNameKana': 'テスト',
+              'guestPhone': '089-159-0016',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'checkin',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'cancelled',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'checkout',
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [
+            {
+              'id': 578,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-09T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 4,
+              'status': 'checkout',
+              'amount': 323552,
+              'payment': 323552,
+              'room': { 'number': 5, 'price': 80888 },
+            },
+            {
+              'id': 315,
+              'guestName': '山本 蓮',
+              'guestNameKana': 'テスト',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkin',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkout',
+              'amount': 36510,
+              'payment': 365100,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'reserved',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'cancelled',
+              'amount': 36510,
+              'payment': null,
+              'room': null,
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/sales/).reply(200, [])
+        .patch('/dashboard/checkout', body => {
+          checkout(body);
+          return body;
+        }).reply(200, () => ({ id: 123 })),
+    );
+
+    await findByText('山本 美咲');
+    await findByText('山本 蓮');
+    expect(await findAllByText('チェックアウト')).toHaveLength(3); // table title, table header, button
+    expect(getAllByText('チェックアウト済み')).toHaveLength(2);
 
     // test checkout
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
@@ -207,6 +345,157 @@ describe('Dashboard', () => {
     await findByText('更新しました。');
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
+    expect(checkout).toBeCalledWith({ id: 315, payment: 1 });
+  });
+
+  it('should cancel', async() => {
+    const cancel = jest.fn();
+
+    const { findAllByText, findByText, getByRole, getAllByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [
+            {
+              'id': 831,
+              'guestName': '山本 美咲',
+              'guestNameKana': 'テスト',
+              'guestPhone': '060-844-7544',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 127,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'guestPhone': '01165-3-9928',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 731,
+              'guestName': '清水 結菜',
+              'guestNameKana': 'テスト',
+              'guestPhone': '089-159-0016',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'checkin',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'cancelled',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'checkout',
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [
+            {
+              'id': 578,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-09T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 4,
+              'status': 'checkout',
+              'amount': 323552,
+              'payment': 323552,
+              'room': { 'number': 5, 'price': 80888 },
+            },
+            {
+              'id': 315,
+              'guestName': '山本 蓮',
+              'guestNameKana': 'テスト',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkin',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkout',
+              'amount': 36510,
+              'payment': 365100,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'reserved',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'cancelled',
+              'amount': 36510,
+              'payment': null,
+              'room': null,
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/sales/).reply(200, [])
+        .patch('/dashboard/cancel', body => {
+          cancel(body);
+          return body;
+        }).reply(200, () => ({ id: 123 })),
+    );
+
+    await findByText('山本 美咲');
+    await findByText('山本 蓮');
+    expect(await findAllByText('キャンセル')).toHaveLength(5); // table header, button * 4
+    expect(getAllByText('キャンセル済み')).toHaveLength(1);
+    expect(getAllByText('チェックアウト済み')).toHaveLength(2);
+    expect(getAllByText('未チェックイン')).toHaveLength(1);
+
     // test cancel
     user.click(getAllByText('キャンセル')[4]);
     await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
@@ -217,14 +506,158 @@ describe('Dashboard', () => {
     await findByText('キャンセルしました。');
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
+    expect(cancel).toBeCalledWith({ id: 227 });
+  });
+
+  it('should change date', async() => {
+    const sales = jest.fn();
+
+    const { getByTestId, findByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [
+            {
+              'id': 831,
+              'guestName': '山本 美咲',
+              'guestNameKana': 'テスト',
+              'guestPhone': '060-844-7544',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 127,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'guestPhone': '01165-3-9928',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'reserved',
+            },
+            {
+              'id': 731,
+              'guestName': '清水 結菜',
+              'guestNameKana': 'テスト',
+              'guestPhone': '089-159-0016',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-17T01:00:00.000Z',
+              'status': 'checkin',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'cancelled',
+            },
+            {
+              'id': 227,
+              'guestName': '吉田 大和',
+              'guestNameKana': 'テスト',
+              'guestPhone': '05469-0-9629',
+              'roomName': '杏19119',
+              'checkin': '2021-01-10T06:00:00.000Z',
+              'checkout': '2021-01-14T01:00:00.000Z',
+              'status': 'checkout',
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [
+            {
+              'id': 578,
+              'guestName': '清水 蒼空',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-09T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 4,
+              'status': 'checkout',
+              'amount': 323552,
+              'payment': 323552,
+              'room': { 'number': 5, 'price': 80888 },
+            },
+            {
+              'id': 315,
+              'guestName': '山本 蓮',
+              'guestNameKana': 'テスト',
+              'roomName': '颯太83958',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkin',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'checkout',
+              'amount': 36510,
+              'payment': 365100,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'reserved',
+              'amount': 36510,
+              'payment': null,
+              'room': { 'number': 8, 'price': 6085 },
+            },
+            {
+              'id': 415,
+              'guestName': '伊藤 颯太',
+              'guestNameKana': 'テスト',
+              'roomName': '大翔75634',
+              'checkin': '2021-01-08T06:00:00.000Z',
+              'checkout': '2021-01-10T01:00:00.000Z',
+              'number': 3,
+              'status': 'cancelled',
+              'amount': 36510,
+              'payment': null,
+              'room': null,
+            },
+          ],
+          'page': 0,
+          'totalCount': 5,
+        })
+        .get(/\/dashboard\/sales/).reply(200, () => {
+          sales();
+          return [];
+        }),
+    );
+
+    await findByText('山本 美咲');
+    await findByText('山本 蓮');
+
     // change date
     user.click(findElement(await getByTestId('select-date'), 'input'));
     await findByText(format(startOfToday(), 'M月 yyyy'));
     user.click(await findByText('17'));
 
-    expect(checkin).toBeCalledWith({ id: 831 });
-    expect(checkout).toBeCalledWith({ id: 315, payment: 1 });
-    expect(cancel).toBeCalledWith({ id: 227 });
+    await waitFor(() => expect(sales.mock.calls.length).toBeGreaterThanOrEqual(3));
   });
 
   it('should fail to checkin', async() => {
