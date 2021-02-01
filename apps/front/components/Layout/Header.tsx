@@ -35,7 +35,7 @@ const Header: FC = memo(() => {
       w="100%"
       p={8}
     >
-      <Link as={RouterLink} to="/" marginRight="auto">
+      <Link as={RouterLink} to={`${process.env.BASE_PATH}/`} marginRight="auto">
         <HStack>
           <Image src={`${process.env.BASE_PATH}/favicon.png`} alt="logo"/>
           <Box>Frourioの宿</Box>
@@ -51,7 +51,7 @@ const Header: FC = memo(() => {
         onClick={toggleMode}
         icon={<SwitchIcon/>}
       />
-      <Link as={RouterLink} to="/account">アカウント</Link>
+      <Link as={RouterLink} to={`${process.env.BASE_PATH}/account`}>アカウント</Link>
     </Flex>
     <Flex
       as="nav"

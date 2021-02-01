@@ -11,8 +11,8 @@ const SwitchTab: FC = memo(() => {
   }, []);
 
   return <TabList>
-    <Tab as={RouterLink} to='/account'>会員情報</Tab>
-    <Tab as={RouterLink} to='/reservations'>予約一覧</Tab>
+    <Tab as={RouterLink} to={`${process.env.BASE_PATH}/account`}>会員情報</Tab>
+    <Tab as={RouterLink} to={`${process.env.BASE_PATH}/reservations`}>予約一覧</Tab>
     <Tab onClick={handleLogout}>ログアウト</Tab>
   </TabList>;
 });

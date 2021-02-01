@@ -239,7 +239,6 @@ jobs:
           API_ORIGIN: ${{ env.ADMIN_PAGES_API_ORIGIN }}
           SERVER_PORT: ${{ env.ADMIN_PAGES_SERVER_PORT }}
           BASE_PATH: ${{ env.ADMIN_PAGES_BASE_PATH }}
-          FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
       - name: Build
         run: |
           yarn build:admin
@@ -248,6 +247,9 @@ jobs:
           mv ./apps/admin/out out/admin
           mv ./apps/front/out out/front
           mv ./gh-pages/* out/
+          cp out/front/index.html out/404.html
+        env:
+          FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
