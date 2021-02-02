@@ -25,7 +25,7 @@
   "dependencies": {
     "@frourio-demo/types": "*",
     "@frourio-demo/utils": "*",
-    "@prisma/client": "^2.15.0",
+    "@prisma/client": "^2.16.0",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.1",
     "date-fns": "^2.16.1",
@@ -39,7 +39,7 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.15.0",
+    "@prisma/cli": "^2.16.0",
     "@technote-space/material-table": "^2.3.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/faker": "^5.1.6",
