@@ -72,7 +72,7 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
     }
 
     const eventDates = getEventDates(calendarRef.current);
-    if (eventDates.includes(format(args.date, 'yyyy/MM/dd'))) {
+    if (eventDates.includes(format(args.date, 'yyyy-MM-dd'))) {
       return;
     }
 
