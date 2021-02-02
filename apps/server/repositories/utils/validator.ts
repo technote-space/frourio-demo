@@ -338,7 +338,7 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
 
 @ValidatorConstraint({ async: false })
 class NotPastDateStringConstraint implements ValidatorConstraintInterface {
-  validate(value: any, args: ValidationArguments) {
+  validate(value: any) {
     if (!value || typeof value !== 'string') {
       return false;
     }
