@@ -21,7 +21,7 @@ type Props = {
   onChangeZipCode: (zipcode: string) => void;
   onChangeAddress: (address: string) => void;
   onChangePhone: (phone: string) => void;
-  onChangeUpdateInfo: (updateInfo: string) => void;
+  onChangeUpdateInfo: () => void;
 }
 
 const GuestInfo: FC<Props> = memo((props: Props) => {

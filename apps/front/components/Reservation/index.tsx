@@ -26,6 +26,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const [reservation, setReservation] = useState<ReservationData>({
     roomId,
     number: 1,
+    updateInfo: true,
   });
   const room = useFetch(dispatch, undefined, client.reservation.rooms._roomId(reservation.roomId!), { enabled: !!reservation.roomId });
   const nights = reservation.checkin && reservation.checkout ? getNights(reservation.checkin, reservation.checkout) : -1;
@@ -68,8 +69,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const onChangePhone = (phone: string) => {
     setReservation({ ...reservation, guestPhone: phone });
   };
-  const onChangeUpdateInfo = (updateInfo: string) => {
-    console.log(updateInfo);
+  const onChangeUpdateInfo = () => {
     setReservation({ ...reservation, updateInfo: !reservation.updateInfo });
   };
   const handleClickConfirm = useCallback(() => {
