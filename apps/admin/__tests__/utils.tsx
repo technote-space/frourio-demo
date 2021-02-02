@@ -31,7 +31,7 @@ const customRender = (ui: ReactElement) => {
   window.scrollTo = jest.fn();
   return render(ui, {
     wrapper: Providers,
-  });
+  }) as RenderResult;
 };
 
 export const setupNock = () => {

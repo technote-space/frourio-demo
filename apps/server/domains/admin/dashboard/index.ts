@@ -103,7 +103,7 @@ export const getCheckout = depend(
         not: 'cancelled',
       },
     });
-    const orderBy = getOrderBy<CheckoutReservation>(query.orderBy, query.orderDirection);
+    const orderBy = getOrderBy<Reservation>(query.orderBy, query.orderDirection);
     const totalCount = await getReservationCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);
     const data = await getReservations({
