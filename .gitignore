@@ -18,6 +18,7 @@ out/
 # misc
 .DS_Store
 /bin/
+tmp.json
 
 # debug
 npm-debug.log*

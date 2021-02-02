@@ -22,7 +22,7 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx)
+          PATTERNS: apps/**/*.+(js|ts|jsx|tsx)
           FILES: |
             yarn.lock
             .eslintrc.js
@@ -69,7 +69,7 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx)
+          PATTERNS: apps/**/*.+(js|ts|jsx|tsx)
           FILES: |
             yarn.lock
             tsconfig.json
@@ -93,7 +93,8 @@ jobs:
       - name: Prepare
         run: yarn prepare:typecheck
         if: env.RUNNING
-      - run: yarn typecheck
+      - name: Type check
+        run: yarn typecheck
         if: env.RUNNING
 
   license:
@@ -116,6 +117,21 @@ jobs:
         run: echo "RUNNING=" >> $GITHUB_ENV
         if: "! env.GIT_DIFF"
 
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        if: env.RUNNING
+      - name: Cache node dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-15-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-15-yarn-
+        if: env.RUNNING
+      - name: Prepare
+        run: yarn prepare:license
+        if: env.RUNNING
       - name: License check
         run: yarn license:check
         if: env.RUNNING
@@ -139,7 +155,7 @@ jobs:
       - uses: technote-space/get-git-comment-action@v1
       - uses: technote-space/get-diff-action@v4
         with:
-          PATTERNS: +(admin|server)/**/*.+(js|ts|jsx|tsx|snap)
+          PATTERNS: apps/**/*.+(js|ts|jsx|tsx|snap)
           FILES: |
             yarn.lock
             jest.config.ts
@@ -224,15 +240,22 @@ jobs:
           SERVER_PORT: ${{ env.ADMIN_PAGES_SERVER_PORT }}
           BASE_PATH: ${{ env.ADMIN_PAGES_BASE_PATH }}
       - name: Build
-        run: yarn build:admin
-      - name: add nojekyll
-        run: touch ./admin/out/.nojekyll
+        run: |
+          yarn build:admin
+          yarn build:front
+          mkdir out
+          mv ./apps/admin/out out/admin
+          mv ./apps/front/out out/front
+          mv ./gh-pages/* out/
+          cp out/front/index.html out/404.html
+        env:
+          FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: ./admin/out
+          FOLDER: ./out
 
   publishRelease:
     name: Create Release
