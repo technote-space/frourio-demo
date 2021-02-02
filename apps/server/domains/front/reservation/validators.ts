@@ -7,6 +7,7 @@ import {
   IsKatakana,
   IsZipCode,
   IsPhoneNumber,
+  NotPastDateString,
 } from '$/repositories/utils/validator';
 
 export class CreateReservationBody {
@@ -54,6 +55,7 @@ export class CreateReservationBody {
 
   @IsNotEmpty({ message: '値を入力してください' })
   @IsDateString(undefined, { message: '正しい日付を入力してください' })
+  @NotPastDateString()
   checkin: string;
 
   @IsNotEmpty({ message: '値を入力してください' })
