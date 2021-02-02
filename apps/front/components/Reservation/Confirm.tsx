@@ -35,7 +35,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
       });
       onSubmit();
       setNotice(dispatch, '予約が完了しました。', '予約完了');
-      history.push(`/reservation/${created.body.id}`);
+      history.push(`${process.env.BASE_PATH}/reservation/${created.body.id}`);
     } catch (error) {
       if (error.response?.data) {
         error.response.data.forEach(({ constraints, property }) => {
