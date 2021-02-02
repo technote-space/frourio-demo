@@ -4,6 +4,7 @@ import { getPriceCalc } from '@/utils/calc';
 import { getEventDates } from '@/utils/calendar';
 import { addDisplayName } from '@/utils/component';
 import { ensureString, processLicenses } from '@/utils/license';
+import { startWithUppercase } from '@/utils/string';
 
 beforeAll(() => {
   console.log = jest.fn();
@@ -132,5 +133,14 @@ describe('processLicenses', () => {
         licenseText: 'This is license',
       },
     ]);
+  });
+});
+
+describe('startWithUppercase', () => {
+  it('should return string which starts with uppercase', () => {
+    expect(startWithUppercase('')).toBe('');
+    expect(startWithUppercase('test')).toBe('Test');
+    expect(startWithUppercase('test-abc')).toBe('Test-abc');
+    expect(startWithUppercase('test abc')).toBe('Test abc');
   });
 });

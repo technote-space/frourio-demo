@@ -7,7 +7,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { PrismaClient } from '$/prisma/client';
-import { startOfDay, isAfter } from 'date-fns';
+import { startOfDay, isAfter, isBefore, startOfToday } from 'date-fns';
 import { Models } from '.';
 
 @ValidatorConstraint({ async: true })
@@ -28,7 +28,8 @@ class IsIdExistsConstraint implements ValidatorConstraintInterface {
     }
 
     const fields = args.constraints[1] as string[] | undefined;
-    if (fields && fields.some(field => !item[field])) {
+    const checkBody = args.constraints[2] as ((field: string, body: Record<string, any>) => boolean) | undefined;
+    if (fields && fields.some(field => !item[field] && (!checkBody || !checkBody(field, args.object)))) {
       this.reason = '登録されているデータが不足しています';
       return false;
     }
@@ -41,13 +42,13 @@ class IsIdExistsConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsIdExists(table: Models, fields?: string[], validationOptions?: ValidationOptions) {
+export function IsIdExists(table: Models, fields?: string[], checkBody?: (field: string, body: Record<string, any>) => boolean, validationOptions?: ValidationOptions) {
   return function(object: Object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      constraints: [table, fields],
+      constraints: [table, fields, checkBody],
       validator: IsIdExistsConstraint,
     });
   };
@@ -331,6 +332,33 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
       options: validationOptions,
       constraints: [],
       validator: IsPhoneNumberConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: false })
+class NotPastDateStringConstraint implements ValidatorConstraintInterface {
+  validate(value: any) {
+    if (!value || typeof value !== 'string') {
+      return false;
+    }
+
+    return !isBefore(new Date(value), startOfToday());
+  }
+
+  defaultMessage() {
+    return '過去の日付は選択できません';
+  }
+}
+
+export function NotPastDateString(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: NotPastDateStringConstraint,
     });
   };
 }

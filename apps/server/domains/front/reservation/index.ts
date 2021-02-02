@@ -5,9 +5,10 @@ import type { CreateReservationBody } from './validators';
 import type { GuestAuthorizationPayload } from '$/types';
 import { depend } from 'velona';
 import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import { getReservations, createReservation } from '$/repositories/reservation';
 import { getRoom, getRooms } from '$/repositories/room';
-import { updateGuest } from '$/repositories/guest';
+import { getGuest, updateGuest } from '$/repositories/guest';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -157,9 +158,9 @@ export const getCheckoutSelectable = depend(
 );
 
 export const reserve = depend(
-  { getRoom, createReservation, updateGuest },
+  { getRoom, createReservation, getGuest, updateGuest },
   async(
-    { getRoom, createReservation, updateGuest },
+    { getRoom, createReservation, getGuest, updateGuest },
     body: CreateReservationBody,
     user?: GuestAuthorizationPayload,
   ): Promise<BodyResponse<Reservation>> => {
@@ -192,14 +193,18 @@ export const reserve = depend(
       checkout,
       status: 'reserved',
     };
-    if (body.updateInfo && user?.id) {
-      await updateGuest(user.id, {
-        name: body.guestName,
-        nameKana: body.guestNameKana,
-        zipCode: body.guestZipCode,
-        address: body.guestAddress,
-        phone: body.guestPhone,
+
+    if (user?.id) {
+      const fields = ['name', 'nameKana', 'zipCode', 'address', 'phone'];
+      const guest = await getGuest(user.id, {
+        select: Object.assign({}, ...fields.map(field => ({ [field]: true }))),
       });
+      fields.forEach(field => {
+        if (body.updateInfo || !guest[field]) {
+          guest[field] = body[`guest${startWithUppercase(field)}`];
+        }
+      });
+      await updateGuest(user.id, guest);
     }
 
     return {

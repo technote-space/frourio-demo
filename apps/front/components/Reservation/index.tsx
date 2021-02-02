@@ -20,13 +20,15 @@ type Props = {
 }
 
 const Reservation: FC<Props> = memo(({ roomId }: Props) => {
+  const initialReservation = {
+    roomId,
+    number: 1,
+    updateInfo: true,
+  };
   const { dispatch } = useDispatchContext();
   const { guest } = useStoreContext();
   const [confirm, setConfirm] = useState(false);
-  const [reservation, setReservation] = useState<ReservationData>({
-    roomId,
-    number: 1,
-  });
+  const [reservation, setReservation] = useState<ReservationData>(initialReservation);
   const room = useFetch(dispatch, undefined, client.reservation.rooms._roomId(reservation.roomId!), { enabled: !!reservation.roomId });
   const nights = reservation.checkin && reservation.checkout ? getNights(reservation.checkin, reservation.checkout) : -1;
   const isValid = !!room.data && !!reservation.number && nights > 0;
@@ -68,8 +70,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const onChangePhone = (phone: string) => {
     setReservation({ ...reservation, guestPhone: phone });
   };
-  const onChangeUpdateInfo = (updateInfo: string) => {
-    console.log(updateInfo);
+  const onChangeUpdateInfo = () => {
     setReservation({ ...reservation, updateInfo: !reservation.updateInfo });
   };
   const handleClickConfirm = useCallback(() => {
@@ -77,6 +78,9 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   }, []);
   const handleClickCancel = useCallback(() => {
     setConfirm(false);
+  }, []);
+  const handleSubmit = useCallback(() => {
+    setReservation(initialReservation);
   }, []);
 
   useEffect(() => {
@@ -101,6 +105,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
       reservation={reservation}
       nights={nights}
       onCancel={handleClickCancel}
+      onSubmit={handleSubmit}
     />
   </Box> : <Box shadow="md" p="4" m="2" borderWidth={1}>
     <Heading as="h4" size="lg">ご予約</Heading>

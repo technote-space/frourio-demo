@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsPositive, IsDateString, IsInt, IsOptional, Length } from 'class-validator';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import {
   IsIdExists,
   IsWithinLimit,
@@ -6,13 +7,17 @@ import {
   IsKatakana,
   IsZipCode,
   IsPhoneNumber,
+  NotPastDateString,
 } from '$/repositories/utils/validator';
 
 export class CreateReservationBody {
   @IsInt({ message: '整数値を指定してください' })
   @IsPositive({ message: '1以上を指定してください' })
   @IsOptional()
-  @IsIdExists('guest', ['name', 'nameKana', 'zipCode', 'address', 'phone'])
+  @IsIdExists('guest', ['name', 'nameKana', 'zipCode', 'address', 'phone'], (field, body) => {
+    const key = `guest${startWithUppercase(field)}`;
+    return !!body[key];
+  })
   guestId?: number;
 
   @IsNotEmpty({ message: '値を入力してください' })
@@ -50,6 +55,7 @@ export class CreateReservationBody {
 
   @IsNotEmpty({ message: '値を入力してください' })
   @IsDateString(undefined, { message: '正しい日付を入力してください' })
+  @NotPastDateString()
   checkin: string;
 
   @IsNotEmpty({ message: '値を入力してください' })

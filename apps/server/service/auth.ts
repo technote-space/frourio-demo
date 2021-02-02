@@ -2,6 +2,7 @@ import type { FastifyRequest } from 'fastify';
 import type { AdminAuthorizationPayload, GuestAuthorizationPayload } from '$/types';
 import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import { getAdmin } from '$/repositories/admin';
 import 'fastify-jwt';
 
@@ -77,7 +78,7 @@ export const getRolesValue = (settings: { domain: string, targets: Crud[] }[]): 
   const roles: Role[] = [];
   settings.forEach(setting => {
     const domain = setting.domain.replace(/[\s-.]+/g, '_');
-    const label = domain.slice(0, 1).toUpperCase() + domain.slice(1).replace('_', ' ');
+    const label = startWithUppercase(domain).replace('_', ' ');
     roles.push({ role: domain, name: label });
     setting.targets.forEach(target => {
       if (target === 'create' || target === 'all') {
