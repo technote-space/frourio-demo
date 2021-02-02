@@ -6,6 +6,7 @@ import { memo, useCallback } from 'react';
 import { format } from 'date-fns';
 import { Flex, Box, Center, Grid, GridItem, Divider, Button } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import useAuthToken from '^/hooks/useAuthToken';
 import { client } from '^/utils/api';
 import { setNotice, setError } from '^/utils/actions';
@@ -45,7 +46,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel }: Props)
   return <Box px={5}>
     <Grid templateColumns="repeat(1, 1fr)" gap={2} m={4}>
       {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
-        const key = field.name.charAt(0).toUpperCase() + field.name.slice(1);
+        const key = startWithUppercase(field.name);
         return <Grid key={key} templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
           <GridItem>{field.label}</GridItem>
           <GridItem>{reservation[`guest${key}`]}</GridItem>

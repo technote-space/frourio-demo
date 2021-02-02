@@ -10,6 +10,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import { useStoreContext } from '^/store';
 import { ACCOUNT_FIELDS } from '^/utils/constants';
 
@@ -35,7 +36,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
   }, []);
 
   const handleEditChange = (name: string) => event => {
-    const key = name.charAt(0).toUpperCase() + name.slice(1);
+    const key = startWithUppercase(name);
     props[`onChange${key}`](event.target.value);
   };
 
@@ -53,7 +54,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
         <ModalCloseButton/>
         <ModalBody>
           {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
-            const key = field.name.charAt(0).toUpperCase() + field.name.slice(1);
+            const key = startWithUppercase(field.name);
             return <FormControl
               key={field.name}
               id={`edit-${field.name}`}
