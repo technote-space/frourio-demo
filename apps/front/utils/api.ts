@@ -40,6 +40,10 @@ export const handleAuthError = async <B, API extends ApiType<B>, F extends Fallb
 
         return fallback as MaybeUndefined<F>;
       }
+
+      if (error.response && 500 === error.response.status && 'No Guest found' === error.response.data?.message) {
+        logout(dispatch);
+      }
     }
 
     if (!fallback) {

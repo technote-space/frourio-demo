@@ -3,12 +3,12 @@ import { memo } from 'react';
 import { Box, Heading, Icon } from '@chakra-ui/react';
 import { IoMdConstruct } from 'react-icons/io';
 
-const Info: FC = memo(() => {
+const Terms: FC = memo(() => {
   return <Box m={4}>
-    <Heading m={2}>お知らせ</Heading>
+    <Heading m={2}>利用規約</Heading>
     <Icon as={IoMdConstruct}/> 工事中...
   </Box>;
 });
 
-Info.displayName = 'Info';
-export default Info;
+Terms.displayName = 'Terms';
+export default Terms;

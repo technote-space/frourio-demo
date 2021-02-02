@@ -8,6 +8,9 @@ import Room from './room';
 import Meal from './meal';
 import Facility from './facility';
 import Info from './info';
+import Terms from './terms';
+import Privacy from './privacy';
+import Contact from './contact';
 
 const pages: Record<string, Page> = {
   top: {
@@ -49,6 +52,18 @@ const pages: Record<string, Page> = {
   info: {
     label: 'お知らせ',
     page: Info,
+  },
+  terms: {
+    label: '利用規約',
+    page: Terms,
+  },
+  privacy: {
+    label: 'プライバシーポリシー',
+    page: Privacy,
+  },
+  contact: {
+    label: 'お問い合わせ',
+    page: Contact,
   },
 };
 
