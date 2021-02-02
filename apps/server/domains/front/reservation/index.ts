@@ -199,13 +199,11 @@ export const reserve = depend(
       const guest = await getGuest(user.id, {
         select: Object.assign({}, ...fields.map(field => ({ [field]: true }))),
       });
-      console.log(guest);
       fields.forEach(field => {
         if (body.updateInfo || !guest[field]) {
           guest[field] = body[`guest${startWithUppercase(field)}`];
         }
       });
-      console.log(guest);
       await updateGuest(user.id, guest);
     }
 
