@@ -10,7 +10,7 @@ import { SERVER_PORT, SERVER_ADDRESS } from './service/env';
     const pidFile = 'server.pid';
     const findPidByFile = async() => {
       if (existsSync(pidFile)) {
-        return (await promises.readFile(pidFile)).toString();
+        return (await promises.readFile(pidFile)).toString().trim();
       }
 
       return '';
@@ -19,7 +19,7 @@ import { SERVER_PORT, SERVER_ADDRESS } from './service/env';
       console.log('pid:', process.pid);
       await promises.writeFile(pidFile, `${process.pid}`);
     };
-    const findPidByPort = async() => (await execAsync(`lsof -i:${SERVER_PORT} -t || :`)).stdout;
+    const findPidByPort = async() => (await execAsync(`lsof -i:${SERVER_PORT} -t || :`)).stdout.trim();
     const kill = async(pid: string) => {
       if (pid) {
         console.log('kill:', pid);
