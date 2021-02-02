@@ -127,6 +127,7 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
             ref={calendarRef}
             loading={handleEventLoading}
             initialDate={reservation.checkin ?? startOfToday()}
+            validRange={{ start: startOfToday() }}
           />
         </ModalBody>
       </ModalContent>

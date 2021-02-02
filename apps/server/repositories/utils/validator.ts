@@ -7,7 +7,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { PrismaClient } from '$/prisma/client';
-import { startOfDay, isAfter } from 'date-fns';
+import { startOfDay, isAfter, isBefore, startOfToday } from 'date-fns';
 import { Models } from '.';
 
 @ValidatorConstraint({ async: true })
@@ -332,6 +332,33 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
       options: validationOptions,
       constraints: [],
       validator: IsPhoneNumberConstraint,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: false })
+class NotPastDateStringConstraint implements ValidatorConstraintInterface {
+  validate(value: any, args: ValidationArguments) {
+    if (!value || typeof value !== 'string') {
+      return false;
+    }
+
+    return !isBefore(new Date(value), startOfToday());
+  }
+
+  defaultMessage() {
+    return '過去の日付は選択できません';
+  }
+}
+
+export function NotPastDateString(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: NotPastDateStringConstraint,
     });
   };
 }

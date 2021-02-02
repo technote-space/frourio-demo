@@ -13,7 +13,7 @@ import {
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { format, set } from 'date-fns';
+import { format, set, startOfToday } from 'date-fns';
 import { getEventDates } from '@frourio-demo/utils/calendar';
 import { useDispatchContext } from '^/store';
 import { client, handleAuthError } from '^/utils/api';
@@ -125,6 +125,7 @@ const Checkout: FC<Props> = memo(({ reservation, onChange }: Props) => {
             ref={calendarRef}
             loading={handleEventLoading}
             initialDate={reservation.checkin}
+            validRange={{ start: startOfToday() }}
           />
         </ModalBody>
       </ModalContent>
