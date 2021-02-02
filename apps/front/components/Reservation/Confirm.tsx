@@ -18,9 +18,10 @@ type Props = {
   nights: number;
   reservation: ReservationData;
   onCancel: () => void;
+  onSubmit: () => void;
 }
 
-const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel }: Props) => {
+const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit }: Props) => {
   const { dispatch } = useDispatchContext();
   const history = useHistory();
   const [auth] = useAuthToken();
@@ -32,6 +33,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel }: Props)
           headers: auth.authHeader,
         } : {}),
       });
+      onSubmit();
       setNotice(dispatch, '予約が完了しました。', '予約完了');
       history.push(`/reservation/${created.body.id}`);
     } catch (error) {
