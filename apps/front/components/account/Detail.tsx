@@ -21,12 +21,12 @@ const Detail: FC<Props> = memo(({ authHeader }: Props) => {
     <GridItem mb={[3, 0]}>{guestInfo.data![name]}</GridItem>
   </>;
 
-  return guestInfo.data ? <Grid templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]} gap={4}>
-    <Grid templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]} gap={[1, 5]}>
+  return guestInfo.data ? <Grid templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']} gap={4}>
+    <Grid templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']} gap={[1, 5]}>
       {ACCOUNT_FIELDS.slice(0, ACCOUNT_FIELDS.length / 2).map(field =>
         <InfoItem key={`group-${field.name}`} name={field.name} label={field.label}/>)}
     </Grid>
-    <Grid templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]} gap={[1, 5]}>
+    <Grid templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']} gap={[1, 5]}>
       {ACCOUNT_FIELDS.slice(ACCOUNT_FIELDS.length / 2).map(field =>
         <InfoItem key={`group-${field.name}`} name={field.name} label={field.label}/>)}
     </Grid>

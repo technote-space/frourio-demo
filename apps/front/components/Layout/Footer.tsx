@@ -5,7 +5,7 @@ import { Flex, Box, Text, Link } from '@chakra-ui/react';
 
 const Footer: FC = memo(() => {
   return <Flex as="footer" m={4} flexDirection="column" alignItems="center">
-    <Flex mb={2} flexDirection={["column", "row"]} alignItems="center">
+    <Flex mb={2} flexDirection={['column', 'row']} alignItems="center">
       <Link as={RouterLink} to={`${process.env.BASE_PATH}/terms`} mx={2}>利用規約</Link>
       <Link as={RouterLink} to={`${process.env.BASE_PATH}/privacy`} mx={2}>プライバシーポリシー</Link>
       <Link as={RouterLink} to={`${process.env.BASE_PATH}/contact`} mx={2}>お問い合わせ</Link>
