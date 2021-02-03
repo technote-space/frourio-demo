@@ -9,7 +9,7 @@ type AuthValue = {
 
 const useAuthToken = (): [AuthValue | undefined, (value: string) => void, () => void] => {
   const getAuth = token => token ? { authToken: token, authHeader: { authorization: `Bearer ${token}` } } : undefined;
-  const [token, setToken] = useLocalStorage('auth-token', '');
+  const [token, setToken] = useLocalStorage('auth-token-admin', '');
   const [auth, setAuth] = useState<AuthValue | undefined>(getAuth(token));
   const removeToken = useCallback(() => {
     setToken('');

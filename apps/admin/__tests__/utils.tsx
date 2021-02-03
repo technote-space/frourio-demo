@@ -83,10 +83,10 @@ export const setupLocalStorage = () => {
 };
 
 export const setToken = (token: string) => {
-  window.localStorage.setItem('auth-token', JSON.stringify(token));
+  window.localStorage.setItem('auth-token-admin', JSON.stringify(token));
 };
 export const setInvalidToken = () => {
-  window.localStorage.setItem('auth-token', 'invalid');
+  window.localStorage.setItem('auth-token-admin', 'invalid');
 };
 export const setDarkMode = (mode: boolean) => {
   window.localStorage.setItem('dark-mode-enabled', JSON.stringify(mode));
