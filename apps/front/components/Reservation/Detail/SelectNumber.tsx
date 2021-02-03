@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import type { ReservationData } from './index';
+import type { ReservationData } from '../index';
 import type { Room } from '$/repositories/room';
 import { memo } from 'react';
-import { Box, Heading, Select, GridItem } from '@chakra-ui/react';
+import { Box, Heading, Select } from '@chakra-ui/react';
 
 type Props = {
   reservation: ReservationData;

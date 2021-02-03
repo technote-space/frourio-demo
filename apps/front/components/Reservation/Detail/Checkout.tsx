@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import type { ReservationData } from './index';
+import type { ReservationData } from '../index';
 import { memo, useCallback, useEffect, useState, useRef } from 'react';
-import { Box, Link, Heading, GridItem } from '@chakra-ui/react';
+import { Box, Link, Heading } from '@chakra-ui/react';
 import {
   Modal,
   ModalOverlay,
@@ -17,13 +17,13 @@ import { format, set, startOfToday } from 'date-fns';
 import { getEventDates } from '@frourio-demo/utils/calendar';
 import { useDispatchContext } from '^/store';
 import { client, handleAuthError } from '^/utils/api';
-import TimePicker from './TimePicker';
+import TimePicker from '../TimePicker';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 type Props = {
   reservation: ReservationData;
-  onChange: (checkin: Date, isChangeTime?: boolean) => void;
+  onChange: (checkout: Date, isChangeTime?: boolean) => void;
 }
 
 const getDateTime = (date: Date | string, time: string): Date => set(new Date(date), {
@@ -33,12 +33,12 @@ const getDateTime = (date: Date | string, time: string): Date => set(new Date(da
   milliseconds: 0,
 });
 
-const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
+const Checkout: FC<Props> = memo(({ reservation, onChange }: Props) => {
   const { dispatch } = useDispatchContext();
   const calendarRef = useRef<FullCalendar>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [time, setTime] = useState(reservation.checkin ? format(new Date(reservation.checkin), 'HH:mm') : '15:00');
+  const [time, setTime] = useState(reservation.checkout ? format(new Date(reservation.checkout), 'HH:mm') : '10:00');
   const handleOpen = useCallback(() => {
     setOpen(true);
   }, []);
@@ -46,33 +46,31 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
     setOpen(false);
   }, []);
   const fetchEvents = useCallback((info, successCallback) => {
-    handleAuthError(dispatch, [], client.reservation.calendar.checkin.get, {
+    handleAuthError(dispatch, [], client.reservation.calendar.checkout.get, {
       query: {
         roomId: reservation.roomId!,
-        start: info.start,
+        checkin: new Date(reservation.checkin!),
         end: info.end,
       },
     }).then(data => {
-      if (reservation.checkin) {
-        data.push({
-          title: 'チェックイン',
-          start: reservation.checkin,
-          end: reservation.checkin,
-          allDay: true,
-          color: '#0ec',
-          textColor: 'black',
-        } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
-      }
+      data.push({
+        title: 'チェックイン',
+        start: reservation.checkin,
+        end: reservation.checkin,
+        allDay: true,
+        color: '#0ec',
+        textColor: 'black',
+      } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       successCallback(data);
     });
-  }, [reservation.roomId, reservation.checkin]);
+  }, [reservation]);
   const handleDateClick = args => {
     if (isLoading) {
       return;
     }
 
     const eventDates = getEventDates(calendarRef.current);
-    if (eventDates.includes(format(args.date, 'yyyy-MM-dd'))) {
+    if (!eventDates.includes(format(args.date, 'yyyy-MM-dd'))) {
       return;
     }
 
@@ -80,7 +78,7 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
     handleClose();
   };
   const handleTimeChange = (time: string) => {
-    const datetime = getDateTime(reservation.checkin!, time);
+    const datetime = getDateTime(reservation.checkout!, time);
     setTime(time);
     onChange(datetime, true);
   };
@@ -96,23 +94,23 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
 
   return <>
     <Box m={1} p={[1, 1, 2]} height="100%" flexGrow={1}>
-      <Heading as="h4" size="md">チェックイン</Heading>
-      {reservation.roomId && <Link onClick={handleOpen}>
-        {reservation.checkin ? format(new Date(reservation.checkin), 'yyyy-MM-dd') : '選択してください'}
+      <Heading as="h4" size="md">チェックアウト</Heading>
+      {reservation.checkin && <Link onClick={handleOpen}>
+        {reservation.checkout ? format(new Date(reservation.checkout), 'yyyy/MM/dd') : '選択してください'}
       </Link>}
       <TimePicker
         value={time}
         step={30}
-        minHour={15}
-        maxHour={18}
+        minHour={6}
+        maxHour={10}
         onChange={handleTimeChange}
-        disabled={!reservation.checkin}
+        disabled={!reservation.checkout}
       />
     </Box>
     <Modal isOpen={open} onClose={handleClose} size="4xl">
       <ModalOverlay/>
       <ModalContent>
-        <ModalHeader>チェックイン日</ModalHeader>
+        <ModalHeader>チェックアウト日</ModalHeader>
         <ModalCloseButton/>
         <ModalBody>
           <FullCalendar
@@ -123,7 +121,7 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
             dateClick={handleDateClick}
             ref={calendarRef}
             loading={handleEventLoading}
-            initialDate={reservation.checkin ?? startOfToday()}
+            initialDate={reservation.checkin}
             validRange={{ start: startOfToday() }}
           />
         </ModalBody>
@@ -132,5 +130,5 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
   </>;
 });
 
-Checkin.displayName = 'Checkin';
-export default Checkin;
+Checkout.displayName = 'Checkout';
+export default Checkout;

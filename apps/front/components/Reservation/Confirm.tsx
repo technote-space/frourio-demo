@@ -45,7 +45,14 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
     }
   }, []);
 
-  return <Box px={5}>
+  return <Box
+    shadow="md"
+    p="4"
+    m="2"
+    borderWidth={1}
+    display="inline-block"
+    minW={400}
+  >
     <Grid templateColumns="repeat(1, 1fr)" gap={2} m={4}>
       {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
         const key = startWithUppercase(field.name);
@@ -54,6 +61,9 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
           <GridItem>{reservation[`guest${key}`]}</GridItem>
         </Grid>;
       })}
+      {reservation.updateInfo && <Grid templateColumns="repeat(1, 1fr)" gap={3} textAlign="right" fontSize="0.9rem">
+        <GridItem>お客様の登録情報を更新する</GridItem>
+      </Grid>}
       <Divider/>
       <Grid templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
         <GridItem>チェックイン</GridItem>
