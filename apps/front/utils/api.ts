@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MaybeUndefined, Dispatch, ApiType, ApiResponse, ApiOptions, FallbackType } from '@frourio-demo/types';
+import type { ValidationError } from 'class-validator';
 import aspida from '@aspida/axios';
 import api from '@frourio-demo/server/api/$api';
 import { isAxiosError } from '@frourio-demo/utils/api';
@@ -54,4 +55,15 @@ export const handleAuthError = async <B, API extends ApiType<B>, F extends Fallb
     setError(dispatch, error.response?.data?.message ?? error.message);
     return fallback as MaybeUndefined<F>;
   }
+};
+
+export const processValidationError = (error: any): Record<string, string> => {
+  if (isAxiosError(error) && error.response?.data) {
+    const validationError = error.response.data as ValidationError[];
+    return Object.assign({}, ...validationError.map(error => error.constraints ? {
+      [error.property]: Object.values(error.constraints)[0],
+    } : undefined));
+  }
+
+  return {};
 };

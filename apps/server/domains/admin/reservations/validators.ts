@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsPositive, IsDateString, IsEnum, Min, IsInt, IsOptional } from 'class-validator';
 import { IsIdExists, IsWithinLimit, IsReservable } from '$/repositories/utils/validator';
 import { ReservationStatus } from '@frourio-demo/types';
+import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 export class ReservationBody {
   @IsInt({ message: '整数値を指定してください' })
@@ -12,7 +13,7 @@ export class ReservationBody {
   @IsNotEmpty({ message: '値を入力してください' })
   @IsInt({ message: '整数値を指定してください' })
   @IsPositive({ message: '1以上を指定してください' })
-  @IsIdExists('guest', ['name', 'nameKana', 'zipCode', 'address', 'phone'])
+  @IsIdExists('guest', RESERVATION_GUEST_FIELDS)
   guestId: number;
 
   @IsNotEmpty({ message: '値を入力してください' })

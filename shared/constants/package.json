@@ -1,0 +1,16 @@
+{
+  "name": "@frourio-demo/constants",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "update": "npx npm-check-updates -u --timeout 100000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  },
+  "engines": {
+    "yarn": "1.x"
+  }
+}

@@ -1,10 +1,11 @@
 import type { Room } from '$/repositories/room';
-import type { BodyResponse } from '$/types';
+import type { BasicResponse, BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import type { CreateReservationBody } from './validators';
 import type { GuestAuthorizationPayload } from '$/types';
 import { depend } from 'velona';
 import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
+import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import { getReservations, createReservation } from '$/repositories/reservation';
 import { getRoom, getRooms } from '$/repositories/room';
@@ -157,6 +158,10 @@ export const getCheckoutSelectable = depend(
   },
 );
 
+export const validate = (): BasicResponse => ({
+  status: 200,
+});
+
 export const reserve = depend(
   { getRoom, createReservation, getGuest, updateGuest },
   async(
@@ -195,11 +200,10 @@ export const reserve = depend(
     };
 
     if (user?.id) {
-      const fields = ['name', 'nameKana', 'zipCode', 'address', 'phone'];
       const guest = await getGuest(user.id, {
-        select: Object.assign({}, ...fields.map(field => ({ [field]: true }))),
+        select: Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [field]: true }))),
       });
-      fields.forEach(field => {
+      RESERVATION_GUEST_FIELDS.forEach(field => {
         if (body.updateInfo || !guest[field]) {
           guest[field] = body[`guest${startWithUppercase(field)}`];
         }

@@ -1,15 +1,13 @@
 import type { FC } from 'react';
 import type { AuthHeader } from '@frourio-demo/types';
-import type { ValidationError } from 'class-validator';
 import type { Guest } from '$/repositories/guest';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { Box, Input, Button, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
-import { client, handleAuthError } from '^/utils/api';
+import { client, handleAuthError, processValidationError } from '^/utils/api';
 import { setNotice } from '^/utils/actions';
-import { isAxiosError } from '@frourio-demo/utils/api';
 import { ACCOUNT_FIELDS } from '^/utils/constants';
 
 type EditGuest = {
@@ -45,11 +43,8 @@ const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
       await guestInfo.revalidate();
       handleClose();
     } catch (error) {
-      if (!unmountRef.current && isAxiosError(error) && error.response?.data) {
-        const validationError = error.response.data as ValidationError[];
-        setValidationErrors(Object.assign({}, ...validationError.map(error => error.constraints ? {
-          [error.property]: Object.values(error.constraints)[0],
-        } : undefined)));
+      if (!unmountRef.current) {
+        setValidationErrors(processValidationError(error));
       }
     }
   }, [editInfo]);

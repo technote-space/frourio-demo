@@ -6,6 +6,8 @@ import type { Query, QueryResult } from '@technote-space/material-table';
 import type { ReservationBody } from './validators';
 import { depend } from 'velona';
 import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
+import { ACCOUNT_FIELDS, RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import {
   getReservations,
   getReservationCount,
@@ -99,7 +101,7 @@ export const get = depend(
 
 export const fillReservationData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<CreateReservationData> | never => {
   const guest = await getGuest(data.guestId);
-  if (!guest.name || !guest.nameKana || !guest.zipCode || !guest.address || !guest.phone) {
+  if (RESERVATION_GUEST_FIELDS.some(field => !guest[field])) {
     throw new Error('必須項目が登録されていないゲストは指定できません。');
   }
 
@@ -109,16 +111,12 @@ export const fillReservationData = async(data: ReservationBody, getGuest: (id: n
   const nights = differenceInCalendarDays(checkout, checkin);
 
   return {
+    ...Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [`guest${startWithUppercase(field)}`]: guest[field] }))),
     guest: {
       connect: {
         id: data.guestId,
       },
     },
-    guestName: guest.name,
-    guestNameKana: guest.nameKana,
-    guestZipCode: guest.zipCode,
-    guestAddress: guest.address,
-    guestPhone: guest.phone,
     room: {
       connect: {
         id: data.roomId,
@@ -166,7 +164,7 @@ export const searchGuest = depend(
   { getGuests, getGuestCount },
   async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize = query.pageSize;
-    const where = getWhere<Guest>(query.search, ['email', 'name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const where = getWhere<Guest>(query.search, ACCOUNT_FIELDS.map(field => field.name), []);
     const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({
       where,
@@ -176,11 +174,7 @@ export const searchGuest = depend(
       select: {
         id: true,
         email: true,
-        name: true,
-        nameKana: true,
-        zipCode: true,
-        address: true,
-        phone: true,
+        ...Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [field]: true }))),
         reservations: {
           take: 3,
           orderBy: {

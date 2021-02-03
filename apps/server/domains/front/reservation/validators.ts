@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsPositive, IsDateString, IsInt, IsOptional, Length } from 'class-validator';
+import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import {
   IsIdExists,
@@ -14,7 +15,7 @@ export class CreateReservationBody {
   @IsInt({ message: '整数値を指定してください' })
   @IsPositive({ message: '1以上を指定してください' })
   @IsOptional()
-  @IsIdExists('guest', ['name', 'nameKana', 'zipCode', 'address', 'phone'], (field, body) => {
+  @IsIdExists('guest', RESERVATION_GUEST_FIELDS, (field, body) => {
     const key = `guest${startWithUppercase(field)}`;
     return !!body[key];
   })

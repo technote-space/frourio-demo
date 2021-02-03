@@ -2,6 +2,7 @@ import type { BodyResponse } from '$/types';
 import type { Guest, CreateGuestData, UpdateGuestData } from '$/repositories/guest';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import { depend } from 'velona';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { getGuests, getGuestCount, getGuest, createGuest, updateGuest, deleteGuest } from '$/repositories/guest';
 import { getSkip, getCurrentPage } from '$/service/pages';
 import { getWhere, getOrderBy } from '$/repositories/utils';
@@ -10,7 +11,7 @@ export const list = depend(
   { getGuests, getGuestCount },
   async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize = query.pageSize;
-    const where = getWhere<Guest>(query.search, ['email', 'name', 'nameKana', 'zipCode', 'address', 'phone'], []);
+    const where = getWhere<Guest>(query.search, ACCOUNT_FIELDS.map(field => field.name), []);
     const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);

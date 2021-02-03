@@ -3,6 +3,7 @@ import type { Model, EditComponentPropsWithError } from '~/components/DataTable'
 import type { Column } from '@technote-space/material-table';
 import type { AuthHeader } from '@frourio-demo/types';
 import { memo, useMemo, useCallback } from 'react';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import useFetch from '~/hooks/useFetch';
 import useUnmountRef from '~/hooks/useUnmountRef';
 import SearchTable from '~/components/SearchTable';
@@ -27,12 +28,9 @@ const SelectGuest: FC<Props> = memo(({ authHeader, props }: Props) => {
   }, []);
   const columns = useMemo(() => [
     { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
-    { title: 'メールアドレス', field: 'email' },
-    { title: '名前', field: 'name' },
-    { title: 'かな名', field: 'nameKana' },
-    { title: '郵便番号', field: 'zipCode' },
-    { title: '住所', field: 'address' },
-    { title: '電話番号', field: 'phone' },
+    ...ACCOUNT_FIELDS.map(field => ({
+      title: field.label, field: field.name,
+    })),
   ] as Column<Model>[], []);
   const tableProps = useMemo(() => ({
     ...props,

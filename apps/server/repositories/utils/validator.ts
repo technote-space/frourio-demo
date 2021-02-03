@@ -42,7 +42,7 @@ class IsIdExistsConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsIdExists(table: Models, fields?: string[], checkBody?: (field: string, body: Record<string, any>) => boolean, validationOptions?: ValidationOptions) {
+export function IsIdExists(table: Models, fields?: readonly string[], checkBody?: (field: string, body: Record<string, any>) => boolean, validationOptions?: ValidationOptions) {
   return function(object: Object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
