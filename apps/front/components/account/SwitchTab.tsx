@@ -7,7 +7,9 @@ import { Link as RouterLink } from 'react-router-dom';
 const SwitchTab: FC = memo(() => {
   const { logout } = useAuth0();
   const handleLogout = useCallback(() => {
-    logout();
+    logout({
+      returnTo: `${window.location.origin}${process.env.BASE_PATH}`,
+    });
   }, []);
 
   return <TabList>
