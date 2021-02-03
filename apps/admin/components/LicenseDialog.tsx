@@ -10,9 +10,10 @@ import {
   Link,
   IconButton,
   Typography,
-  TextareaAutosize,
   Button,
 } from '@material-ui/core';
+import marked from 'marked';
+import sanitizeHtml from 'sanitize-html';
 import CloseIcon from '@material-ui/icons/Close';
 import { useDispatchContext, useStoreContext } from '~/store';
 import { closeLicense } from '~/utils/actions';
@@ -37,6 +38,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   license: {
     width: '100%',
+    border: 'solid 1px #ccc',
+    padding: theme.spacing(1, 2),
   },
   button: {
     display: 'flex',
@@ -132,7 +135,9 @@ const LicenseDialog: FC = memo(() => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <TextareaAutosize defaultValue={licenses[selectIndex].licenseText} readOnly className={classes.license}/>
+          <div className={classes.license} dangerouslySetInnerHTML={{
+            __html: sanitizeHtml(marked(licenses[selectIndex].licenseText)),
+          }}/>
           {licenses[selectIndex].repository && <div className={classes.button}>
             <Link target="_blank" rel="noopener noreferrer" href={licenses[selectIndex].repository} underline="none">
               <Button variant="contained" color="primary">
