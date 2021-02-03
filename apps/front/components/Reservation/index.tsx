@@ -2,10 +2,12 @@ import type { FC } from 'react';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { Box, Center, Heading, Button, Grid } from '@chakra-ui/react';
+import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { useDispatchContext, useStoreContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client } from '^/utils/api';
 import { getNights } from '@frourio-demo/utils/calc';
+import { startWithUppercase } from '@frourio-demo/utils/string';
 import SelectRoom from './SelectRoom';
 import SelectNumber from './SelectNumber';
 import GuestInfo from './GuestInfo';
@@ -89,11 +91,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
       setReservation(
         {
           guestId: guest.id,
-          guestName: guest.name ?? undefined,
-          guestNameKana: guest.nameKana ?? undefined,
-          guestZipCode: guest.zipCode ?? undefined,
-          guestAddress: guest.address ?? undefined,
-          guestPhone: guest.phone ?? undefined,
+          ...Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [`guest${startWithUppercase(field)}`]: guest[field] ?? undefined }))),
           ...reservation,
         },
       );
