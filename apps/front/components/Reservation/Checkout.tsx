@@ -93,23 +93,20 @@ const Checkout: FC<Props> = memo(({ reservation, onChange }: Props) => {
   }, [open]);
 
   return <>
-    {reservation.checkin && <GridItem>
-      <Box m={1} p={2} borderWidth={1} height="100%">
-        <Link onClick={handleOpen}>
-          <Heading as="h4" size="md">チェックアウト</Heading>
-          {reservation.checkout && <Box>
-            {format(new Date(reservation.checkout), 'yyyy/MM/dd')}
-          </Box>}
-        </Link>
-        {reservation.checkout && <TimePicker
-          value={time}
-          step={30}
-          minHour={6}
-          maxHour={10}
-          onChange={handleTimeChange}
-        />}
-      </Box>
-    </GridItem>}
+    <Box m={1} p={[1, 1, 2]} height="100%" flexGrow={1}>
+      <Heading as="h4" size="md">チェックアウト</Heading>
+      {reservation.checkin && <Link onClick={handleOpen}>
+        {reservation.checkout ? format(new Date(reservation.checkout), 'yyyy/MM/dd') : '選択してください'}
+      </Link>}
+      <TimePicker
+        value={time}
+        step={30}
+        minHour={6}
+        maxHour={10}
+        onChange={handleTimeChange}
+        disabled={!reservation.checkout}
+      />
+    </Box>
     <Modal isOpen={open} onClose={handleClose} size="4xl">
       <ModalOverlay/>
       <ModalContent>

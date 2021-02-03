@@ -57,13 +57,11 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
     </Box>;
   };
 
-  return <GridItem>
-    <Box m={1} p={2} borderWidth={1} height="100%">
+  return <Box>
+    <Box m={1} p={2} height="100%">
+      <Heading as="h4" size="md">お部屋</Heading>
       <Link onClick={handleOpen}>
-        <Heading as="h4" size="md">お部屋</Heading>
-        {room && <Box>
-          {room.name}
-        </Box>}
+        {room ? room.name : '選択してください'}
       </Link>
     </Box>
     <Modal isOpen={open} onClose={handleClose} size="4xl">
@@ -78,7 +76,7 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
         </ModalBody>
       </ModalContent>
     </Modal>
-  </GridItem>;
+  </Box>;
 });
 
 SelectRoom.displayName = 'SelectRoom';
