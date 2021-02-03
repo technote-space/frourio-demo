@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "yarn build:frourio && webpack --mode=production",
+    "build": "yarn build:frourio && node --max_old_space_size=2048 --gc_interval=100 node_modules/webpack/bin/webpack.js --mode=production",
     "build:frourio": "yarn migrate:deploy && frourio",
     "build:prisma": "prisma generate",
     "build:types": "yarn build:frourio",
