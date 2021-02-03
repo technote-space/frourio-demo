@@ -80,6 +80,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     setConfirm(false);
   }, []);
   const handleSubmit = useCallback(() => {
+    setConfirm(false);
     setReservation(initialReservation);
   }, []);
 
