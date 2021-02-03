@@ -1,15 +1,9 @@
-import type { BasicResponse } from '$/types';
 import controller from '$/api/front/reservation/validate/controller';
 import { getFastify } from '$/__tests__/utils';
 
 describe('validate', () => {
   it('should validate reservation body', async() => {
-    const validateMock = jest.fn(() => ({
-      status: 200,
-    }) as BasicResponse);
-    const injectedController = controller.inject({
-      validate: validateMock,
-    })(getFastify());
+    const injectedController = controller.inject({})(getFastify());
 
     const res = await injectedController.post({
       body: {
@@ -26,6 +20,6 @@ describe('validate', () => {
       headers: undefined,
     });
     expect(res).not.toHaveProperty('body');
-    expect(validateMock).toBeCalledTimes(1);
+    expect(res.status).toBe(200);
   });
 });
