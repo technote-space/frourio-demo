@@ -1,18 +1,16 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
+import type { CreateReservationBody } from '$/domains/front/reservation/validators';
 import { memo, useState, useCallback } from 'react';
-import { Box, Link, Input, FormControl, FormLabel, Heading, Checkbox, GridItem } from '@chakra-ui/react';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-} from '@chakra-ui/react';
+import { Box, Input, Heading, Checkbox, Center, Button } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import { useStoreContext } from '^/store';
+import useAuthToken from '^/hooks/useAuthToken';
+import useUnmountRef from '^/hooks/useUnmountRef';
+import { client, processValidationError } from '^/utils/api';
 import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
   reservation: ReservationData;
@@ -22,60 +20,94 @@ type Props = {
   onChangeAddress: (address: string) => void;
   onChangePhone: (phone: string) => void;
   onChangeUpdateInfo: () => void;
+  onConfirm: () => void;
+  onDetail: () => void;
 }
 
 const GuestInfo: FC<Props> = memo((props: Props) => {
-  const reservation = props.reservation;
+  const { reservation, onConfirm, onDetail } = props;
+  const unmountRef = useUnmountRef();
   const { guest } = useStoreContext();
-  const [open, setOpen] = useState(false);
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+  const [auth] = useAuthToken();
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const handleClickConfirm = useCallback(async() => {
+    setIsConfirming(true);
+    try {
+      await client.reservation.validate.post({
+        body: reservation as CreateReservationBody,
+        ...(auth ? {
+          headers: auth.authHeader,
+        } : {}),
+      });
+      onConfirm();
+    } catch (error) {
+      if (!unmountRef.current) {
+        setValidationErrors(processValidationError(error));
+      }
+    } finally {
+      if (!unmountRef.current) {
+        setIsConfirming(false);
+      }
+    }
+  }, [reservation]);
+  const getGuestKey = (name: string): string => `guest${startWithUppercase(name)}`;
+  const isValidGuest = !RESERVATION_GUEST_FIELDS.some(field => !reservation[getGuestKey(field)]);
 
   const handleEditChange = (name: string) => event => {
-    const key = startWithUppercase(name);
-    props[`onChange${key}`](event.target.value);
+    props[`onChange${startWithUppercase(name)}`](event.target.value);
+    if (validationErrors[getGuestKey(name)]) {
+      delete validationErrors[getGuestKey(name)];
+      setValidationErrors(validationErrors);
+    }
   };
 
-  return <GridItem>
-    <Box m={1} p={2} borderWidth={1} height="100%">
-      <Link onClick={handleOpen}>
-        <Heading as="h4" size="md">お客様情報</Heading>
-        {reservation.guestName && <Box>{reservation.guestName}</Box>}
-      </Link>
+  return <Box
+    shadow="md"
+    p="4"
+    m="2"
+    borderWidth={1}
+    display="inline-block"
+    minW={400}
+  >
+    <Heading as="h4" size="lg">ご予約</Heading>
+    <Box m={1} p={2} height="100%">
+      <Heading as="h4" size="md">お客様情報</Heading>
+      {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
+        return <FormControl
+          key={field.name}
+          id={`edit-${field.name}`}
+          isInvalid={!!validationErrors[getGuestKey(field.name)]}
+          isRequired
+          mb={2}
+        >
+          <FormLabel htmlFor={`edit-${field.name}`}>{field.label}</FormLabel>
+          <Input
+            value={reservation[getGuestKey(field.name)]}
+            onChange={handleEditChange(field.name)}
+          />
+          <FormErrorMessage>{validationErrors[getGuestKey(field.name)]}</FormErrorMessage>
+        </FormControl>;
+      })}
+      {guest && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
+        お客様の登録情報を更新する
+      </Checkbox>}
     </Box>
-    <Modal isOpen={open} onClose={handleClose}>
-      <ModalOverlay/>
-      <ModalContent>
-        <ModalHeader>お客様情報</ModalHeader>
-        <ModalCloseButton/>
-        <ModalBody>
-          {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
-            const key = startWithUppercase(field.name);
-            return <FormControl
-              key={field.name}
-              id={`edit-${field.name}`}
-              mb={2}
-            >
-              <FormLabel htmlFor={`edit-${field.name}`}>{field.label}</FormLabel>
-              <Input
-                value={reservation[`guest${key}`]}
-                onChange={handleEditChange(field.name)}
-              />
-            </FormControl>;
-          })}
-          {guest && <Checkbox
-            my={2}
-            isChecked={reservation.updateInfo}
-            onChange={handleEditChange('updateInfo')}
-          >お客様情報を更新する</Checkbox>}
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  </GridItem>;
+    <Center>
+      <Button
+        width={120}
+        m={1}
+        colorScheme="teal"
+        onClick={handleClickConfirm}
+        disabled={!isValidGuest || isConfirming}
+      >
+        確認
+      </Button>
+      <Button width={120} m={1} onClick={onDetail} disabled={isConfirming}>
+        戻る
+      </Button>
+    </Center>
+  </Box>;
 });
 
 GuestInfo.displayName = 'GuestInfo';

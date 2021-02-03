@@ -1,5 +1,5 @@
 import type { Room } from '$/repositories/room';
-import type { BodyResponse } from '$/types';
+import type { BasicResponse, BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import type { CreateReservationBody } from './validators';
 import type { GuestAuthorizationPayload } from '$/types';
@@ -157,6 +157,10 @@ export const getCheckoutSelectable = depend(
     };
   },
 );
+
+export const validate = (): BasicResponse => ({
+  status: 200,
+});
 
 export const reserve = depend(
   { getRoom, createReservation, getGuest, updateGuest },

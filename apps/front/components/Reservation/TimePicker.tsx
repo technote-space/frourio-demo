@@ -9,10 +9,13 @@ type Props = {
   minMinute?: number;
   maxHour?: number;
   maxMinute?: number;
+  disabled?: boolean;
   onChange: (value: string) => void;
 }
 
-const TimePicker: FC<Props> = memo(({ value, step, minHour, minMinute, maxHour, maxMinute, onChange }: Props) => {
+const TimePicker: FC<Props> = memo(({
+  value, step, minHour, minMinute, maxHour, maxMinute, disabled, onChange,
+}: Props) => {
   const handleChange = useCallback(event => {
     onChange(event.target.value);
   }, [onChange]);
@@ -31,7 +34,7 @@ const TimePicker: FC<Props> = memo(({ value, step, minHour, minMinute, maxHour, 
     });
   };
 
-  return <Select value={value} onChange={handleChange}>
+  return <Select value={value} onChange={handleChange} disabled={disabled}>
     {getOptions().map(value => <option key={value} value={value}>{value}</option>)}
   </Select>;
 });

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import type { ReservationData } from './index';
+import type { ReservationData } from '../index';
 import { memo, useCallback, useEffect, useState, useRef } from 'react';
-import { Box, Link, Heading, GridItem } from '@chakra-ui/react';
+import { Box, Link, Heading } from '@chakra-ui/react';
 import {
   Modal,
   ModalOverlay,
@@ -17,7 +17,7 @@ import { format, set, startOfToday } from 'date-fns';
 import { getEventDates } from '@frourio-demo/utils/calendar';
 import { useDispatchContext } from '^/store';
 import { client, handleAuthError } from '^/utils/api';
-import TimePicker from './TimePicker';
+import TimePicker from '../TimePicker';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -95,23 +95,20 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
   }, [open]);
 
   return <>
-    {reservation.roomId && <GridItem>
-      <Box m={1} p={2} borderWidth={1} height="100%">
-        <Link onClick={handleOpen}>
-          <Heading as="h4" size="md">チェックイン</Heading>
-          {reservation.checkin && <Box>
-            {format(new Date(reservation.checkin), 'yyyy-MM-dd')}
-          </Box>}
-        </Link>
-        {reservation.checkin && <TimePicker
-          value={time}
-          step={30}
-          minHour={15}
-          maxHour={18}
-          onChange={handleTimeChange}
-        />}
-      </Box>
-    </GridItem>}
+    <Box m={1} p={[1, 1, 2]} height="100%" flexGrow={1}>
+      <Heading as="h4" size="md">チェックイン</Heading>
+      {reservation.roomId && <Link onClick={handleOpen}>
+        {reservation.checkin ? format(new Date(reservation.checkin), 'yyyy-MM-dd') : '選択してください'}
+      </Link>}
+      <TimePicker
+        value={time}
+        step={30}
+        minHour={15}
+        maxHour={18}
+        onChange={handleTimeChange}
+        disabled={!reservation.checkin}
+      />
+    </Box>
     <Modal isOpen={open} onClose={handleClose} size="4xl">
       <ModalOverlay/>
       <ModalContent>
