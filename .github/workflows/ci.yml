@@ -248,7 +248,6 @@ jobs:
           mv ./apps/front/out out/front
           mv ./gh-pages/* out/
           cp out/front/index.html out/404.html
-          cp ./apps/front/license.json out/front/
         env:
           FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
       - name: Deploy
