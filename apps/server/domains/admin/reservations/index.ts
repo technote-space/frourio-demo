@@ -54,6 +54,7 @@ export const list = depend(
   ): Promise<BodyResponse<QueryResult<ListReservation>>> => {
     const pageSize = query.pageSize;
     const where = getWhere<ListReservation>(query.search, [
+      'code',
       'guestName',
       'guestNameKana',
       'guestPhone',

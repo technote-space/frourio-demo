@@ -1,7 +1,8 @@
 import type { Room } from '$/prisma/client';
+import type { ReservationStatus } from '@frourio-demo/types';
 import { isBefore } from 'date-fns';
+import { generateCode } from '$/service/reservation';
 import { define } from '../tools/define';
-import { ReservationStatus } from '@frourio-demo/types';
 
 define('reservation', ((faker, params) => {
   const number = faker.random.number({ min: 1, max: (params[0] as Room).number });
@@ -30,6 +31,7 @@ define('reservation', ((faker, params) => {
   }
 
   return {
+    code: generateCode(),
     checkin,
     checkout,
     status,
