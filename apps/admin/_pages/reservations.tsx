@@ -20,6 +20,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
   const unmountRef = useUnmountRef();
   const columns = useMemo(() => [
     { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: '予約番号', field: 'code', editable: 'never', filtering: false },
     {
       title: '名前',
       field: 'guestId',

@@ -9,6 +9,7 @@ describe('dashboard/checkin', () => {
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
+        code: '6F4ZGO6ZE625',
         guestId: 234,
         guestName: 'test name1',
         guestNameKana: 'テスト1',
@@ -23,6 +24,7 @@ describe('dashboard/checkin', () => {
       },
       {
         id: 234,
+        code: '6F4ZGO6ZE625',
         guestId: 345,
         guestName: 'test name2',
         guestNameKana: 'テスト2',
@@ -156,6 +158,7 @@ describe('dashboard/checkin', () => {
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
+        code: '6F4ZGO6ZE625',
         guestId: 234,
         guestName: 'test name1',
         guestNameKana: 'テスト1',
@@ -170,6 +173,7 @@ describe('dashboard/checkin', () => {
       },
       {
         id: 234,
+        code: '6F4ZGO6ZE625',
         guestId: 345,
         guestName: 'test name2',
         guestNameKana: 'テスト2',
@@ -261,6 +265,7 @@ describe('dashboard/checkin', () => {
   it('should checkin', async() => {
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      code: '6F4ZGO6ZE625',
       guestId: 234,
       guestName: 'test name',
       guestNameKana: 'テスト',
@@ -280,6 +285,7 @@ describe('dashboard/checkin', () => {
     }));
     const updateReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      code: '6F4ZGO6ZE625',
       guestId: 234,
       guestName: 'test name',
       guestNameKana: 'テスト',
@@ -323,6 +329,7 @@ describe('dashboard/checkin', () => {
     });
     expect(res.body).toEqual(expect.objectContaining({
       id: 123,
+      code: '6F4ZGO6ZE625',
       guestId: 234,
       guestName: 'test name',
       guestNameKana: 'テスト',
@@ -354,6 +361,7 @@ describe('dashboard/checkin', () => {
   it('should not checkin', async() => {
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      code: '6F4ZGO6ZE625',
       guestId: 234,
       guestName: 'test name',
       guestNameKana: 'テスト',

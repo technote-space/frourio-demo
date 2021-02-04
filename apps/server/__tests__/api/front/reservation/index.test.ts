@@ -58,6 +58,7 @@ describe('reservation', () => {
     });
     expect(createReservationMock).toBeCalledWith({
       data: {
+        code: expect.any(String),
         guestName: 'guest name',
         guestNameKana: 'テスト',
         guestZipCode: '100-0001',
@@ -165,6 +166,7 @@ describe('reservation', () => {
     });
     expect(createReservationMock).toBeCalledWith({
       data: {
+        code: expect.any(String),
         guest: {
           connect: {
             id: 321,
@@ -291,6 +293,7 @@ describe('reservation', () => {
     });
     expect(createReservationMock).toBeCalledWith({
       data: {
+        code: expect.any(String),
         guest: {
           connect: {
             id: 321,

@@ -2,10 +2,11 @@ import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import type { Prisma, Reservation } from '$/prisma/client';
 import { dropId } from '$/repositories/utils';
+import { generateCode } from '$/service/reservation';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
 export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
-export type CreateReservationData = Prisma.ReservationCreateInput;
+export type CreateReservationData = Omit<Prisma.ReservationCreateInput, 'code'>;
 export type CreateReservationArgs = Prisma.ReservationCreateArgs;
 export type UpdateReservationData = Prisma.ReservationUpdateInput;
 export type UpdateReservationArgs = Prisma.ReservationUpdateArgs;
@@ -42,7 +43,10 @@ export const createReservation = depend(
   { prisma: prisma as { reservation: { create: typeof prisma.reservation.create } } },
   async({ prisma }, data: CreateReservationData, args?: Partial<CreateReservationArgs>) => prisma.reservation.create({
     ...args,
-    data,
+    data: {
+      ...data,
+      code: generateCode(),
+    },
   }),
 );
 

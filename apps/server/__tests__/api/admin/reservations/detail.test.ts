@@ -9,6 +9,7 @@ describe('reservations/detail', () => {
   it('should get reservation', async() => {
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      code: '6F4ZGO6ZE625',
       guestId: 234,
       guestName: 'test name',
       guestNameKana: 'テスト',
