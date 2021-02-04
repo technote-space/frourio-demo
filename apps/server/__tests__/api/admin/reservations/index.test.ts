@@ -101,6 +101,11 @@ describe('reservations', () => {
         {
           OR: [
             {
+              code: {
+                contains: 'test',
+              },
+            },
+            {
               guestName: {
                 contains: 'test',
               },
@@ -129,6 +134,11 @@ describe('reservations', () => {
             },
             {
               payment: 2,
+            },
+            {
+              code: {
+                contains: '2',
+              },
             },
             {
               guestName: {
