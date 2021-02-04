@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Model, EditComponentPropsWithError } from '~/components/DataTable';
 import type { Column } from '@technote-space/material-table';
 import type { AuthHeader } from '@frourio-demo/types';
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback, useEffect } from 'react';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import useFetch from '~/hooks/useFetch';
 import useUnmountRef from '~/hooks/useUnmountRef';
@@ -36,6 +36,16 @@ const SelectGuest: FC<Props> = memo(({ authHeader, props }: Props) => {
     ...props,
     onChange: handleChange,
   }), [props]);
+  const isGuestReservation = !props.rowData.guestId && props.rowData.guestName;
+
+  useEffect(() => {
+    if (isGuestReservation && props.rowData.guestId === null) {
+      props.onChange(undefined);
+    }
+  }, []);
+  if (isGuestReservation) {
+    return props.rowData.guestName;
+  }
 
   return <SearchTable
     model='guests'
