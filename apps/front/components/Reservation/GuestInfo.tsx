@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { Box, Input, Heading, Checkbox, Center, Button } from '@chakra-ui/react';
 import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { startWithUppercase } from '@frourio-demo/utils/string';
@@ -9,6 +9,7 @@ import { useStoreContext } from '^/store';
 import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { client, processValidationError } from '^/utils/api';
+import { getAddress } from '^/utils/zipCode';
 import { ACCOUNT_FIELDS } from '^/utils/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
@@ -61,6 +62,14 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
       setValidationErrors(validationErrors);
     }
   };
+
+  useEffect(() => {
+    getAddress(reservation.guestZipCode).then(address => {
+      if (!unmountRef.current && address) {
+        props.onChangeAddress(`${address.prefecture_name}${address.city_name}${address.town_name}`);
+      }
+    });
+  }, [reservation.guestZipCode]);
 
   return <Box
     shadow="md"
