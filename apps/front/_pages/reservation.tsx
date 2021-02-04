@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { FocusableElement } from '@chakra-ui/utils';
-import { memo, useState, useCallback, useRef } from 'react';
+import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Center, Box, Divider, Button, Grid } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,8 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from '@chakra-ui/react';
+import { useHistory } from 'react-router';
+import { isAxiosError } from '@frourio-demo/utils/api';
 import useFetch from '^/hooks/useFetch';
 import { useStoreContext, useDispatchContext } from '^/store';
 import { client, handleAuthError } from '^/utils/api';
@@ -19,6 +21,7 @@ import { getFormattedDate } from '^/utils/date';
 
 const Reservation: FC = memo(() => {
   const { code } = useParams<{ code: string }>();
+  const history = useHistory();
   const { dispatch } = useDispatchContext();
   const { guest } = useStoreContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +34,12 @@ const Reservation: FC = memo(() => {
     await handleAuthError(dispatch, {}, client.reservations._code(code).cancel.patch);
     await reservation.revalidate();
   }, []);
+
+  useEffect(() => {
+    if (reservation.error && isAxiosError(reservation.error) && reservation.error.response?.data.message === 'No Reservation found') {
+      history.push(`${process.env.BASE_PATH}/`);
+    }
+  }, [reservation.error]);
 
   return reservation.data ? <Box m={4}>
     <Grid templateColumns="repeat(1, 1fr)" gap={4}>
