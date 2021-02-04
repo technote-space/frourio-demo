@@ -269,3 +269,7 @@ export const createAdminPasswordHash = <T extends Prisma.StringFieldUpdateOperat
 
   return createHash(password as string);
 };
+
+export const whereId = (id: number | undefined): { id?: number } => ({
+  ...(id ? { id } : undefined),
+});

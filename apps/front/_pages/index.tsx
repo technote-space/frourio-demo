@@ -28,7 +28,7 @@ const pages: Record<string, Page> = {
     page: Reservations,
   },
   reservation: {
-    path: '/reservation/:id',
+    path: '/reservation/:code',
     label: 'ご予約詳細',
     page: Reservation,
   },
