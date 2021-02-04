@@ -2,12 +2,13 @@ import type { FC } from 'react';
 import type { Room } from '$/prisma/client';
 import type { ReservationData } from '^/components/Reservation/index';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { format } from 'date-fns';
 import { Flex, Box, Center, Grid, GridItem, Divider, Button } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import useAuthToken from '^/hooks/useAuthToken';
+import useUnmountRef from '^/hooks/useUnmountRef';
 import { client } from '^/utils/api';
 import { setNotice, setError } from '^/utils/actions';
 import { useDispatchContext } from '^/store';
@@ -22,10 +23,13 @@ type Props = {
 }
 
 const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit }: Props) => {
+  const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const history = useHistory();
   const [auth] = useAuthToken();
+  const [isSending, setIsSending] = useState(false);
   const handleClick = useCallback(async() => {
+    setIsSending(true);
     try {
       const created = await client.reservation.post({
         body: reservation as CreateReservationBody,
@@ -41,6 +45,10 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
         error.response.data.forEach(({ constraints, property }) => {
           setError(dispatch, Object.values(constraints)[0] as string, property);
         });
+      }
+    } finally {
+      if (!unmountRef.current) {
+        setIsSending(false);
       }
     }
   }, []);
@@ -92,8 +100,8 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
       <Box fontWeight="bold" fontSize="2rem">¥{(room!.price * reservation.number! * nights).toLocaleString()}</Box>
     </Flex>
     <Center>
-      <Button width={120} m={1} colorScheme="teal" onClick={handleClick}>予約</Button>
-      <Button width={120} m={1} colorScheme="red" onClick={onCancel}>戻る</Button>
+      <Button width={120} m={1} colorScheme="teal" onClick={handleClick} disabled={isSending}>予約</Button>
+      <Button width={120} m={1} colorScheme="red" onClick={onCancel} disabled={isSending}>戻る</Button>
     </Center>
   </Box>;
 });
