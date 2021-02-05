@@ -54,6 +54,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
   }, [reservation]);
   const getGuestKey = (name: string): string => `guest${startWithUppercase(name)}`;
   const isValidGuest = !RESERVATION_GUEST_FIELDS.some(field => !reservation[getGuestKey(field)]);
+  const hasEmptyField = !guest || RESERVATION_GUEST_FIELDS.some(field => !guest[field]);
 
   const handleEditChange = (name: string) => event => {
     props[`onChange${startWithUppercase(name)}`](event.target.value);
@@ -70,6 +71,11 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
       }
     });
   }, [reservation.guestZipCode]);
+  useEffect(() => {
+    if (hasEmptyField && !reservation.updateInfo) {
+      props.onChangeUpdateInfo();
+    }
+  }, [hasEmptyField, reservation.updateInfo]);
 
   return <Box
     shadow="md"
@@ -98,7 +104,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
           <FormErrorMessage>{validationErrors[getGuestKey(field.name)]}</FormErrorMessage>
         </FormControl>;
       })}
-      {guest && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
+      {!hasEmptyField && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
         お客様の登録情報を更新する
       </Checkbox>}
     </Box>
