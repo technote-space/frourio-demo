@@ -42,6 +42,7 @@ CREATE TABLE "Room" (
 -- CreateTable
 CREATE TABLE "Reservation" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "code" TEXT NOT NULL,
     "guestId" INTEGER,
     "guestName" TEXT NOT NULL,
     "guestNameKana" TEXT NOT NULL,

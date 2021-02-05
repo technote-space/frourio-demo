@@ -9,6 +9,7 @@ describe('reservations/detail', () => {
   it('should get reservation', async() => {
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      code: '6F4ZGO6ZE625',
       guestId: 234,
       guestName: 'test name',
       guestNameKana: 'テスト',
@@ -246,6 +247,75 @@ describe('reservations/detail', () => {
       rejectOnNotFound: true,
       where: {
         id: 234,
+      },
+    });
+    expect(getRoomMock).toBeCalledWith({
+      rejectOnNotFound: true,
+      where: {
+        id: 345,
+      },
+    });
+  });
+
+  it('should update guest reservation', async() => {
+    const updateReservationMock = jest.fn();
+    const getRoomMock = jest.fn(() => getPromiseLikeItem({
+      id: 345,
+      name: 'test',
+      number: 1,
+      price: 10000,
+    }));
+    const injectedController = controller.inject({
+      update: update.inject({
+        updateReservation: updateReservation.inject({
+          prisma: {
+            reservation: {
+              update: updateReservationMock,
+            },
+          },
+        }),
+        getRoom: getRoom.inject({
+          prisma: {
+            room: {
+              findFirst: getRoomMock,
+            },
+          },
+        }),
+      }),
+    })(getFastify());
+
+    const res = await injectedController.patch({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      params: { reservationId: 123 },
+      body: {
+        id: 123,
+        roomId: 345,
+        number: 10,
+        checkin: '2020-03-15T06:00:00.000Z',
+        checkout: '2020-03-17T01:00:00.000Z',
+        status: 'cancelled',
+        payment: 10000,
+      },
+    });
+    expect(res.status).toBe(200);
+    expect(updateReservationMock).toBeCalledWith({
+      data: {
+        amount: 200000, // 10000 * 2泊 * 10人
+        checkin: new Date('2020-03-15T06:00:00.000Z'),
+        checkout: new Date('2020-03-17T01:00:00.000Z'),
+        number: 10,
+        payment: 10000,
+        room: {
+          connect: {
+            id: 345,
+          },
+        },
+        roomName: 'test',
+        status: 'cancelled',
+      },
+      where: {
+        id: 123,
       },
     });
     expect(getRoomMock).toBeCalledWith({

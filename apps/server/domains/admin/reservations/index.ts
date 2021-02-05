@@ -1,7 +1,7 @@
 import type { Guest } from '$/repositories/guest';
 import type { Room } from '$/repositories/room';
 import type { BodyResponse } from '$/types';
-import type { Reservation, CreateReservationData } from '$/repositories/reservation';
+import type { Reservation, CreateReservationData, UpdateReservationData } from '$/repositories/reservation';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import type { ReservationBody } from './validators';
 import { depend } from 'velona';
@@ -54,6 +54,7 @@ export const list = depend(
   ): Promise<BodyResponse<QueryResult<ListReservation>>> => {
     const pageSize = query.pageSize;
     const where = getWhere<ListReservation>(query.search, [
+      'code',
       'guestName',
       'guestNameKana',
       'guestPhone',
@@ -99,24 +100,13 @@ export const get = depend(
   }),
 );
 
-export const fillReservationData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<CreateReservationData> | never => {
-  const guest = await getGuest(data.guestId);
-  if (RESERVATION_GUEST_FIELDS.some(field => !guest[field])) {
-    throw new Error('必須項目が登録されていないゲストは指定できません。');
-  }
-
+const getUpdateReservationData = async(data: ReservationBody, getRoom: (id: number) => Promise<Room>): Promise<UpdateReservationData> => {
   const room = await getRoom(data.roomId);
   const checkin = new Date(data.checkin);
   const checkout = new Date(data.checkout);
   const nights = differenceInCalendarDays(checkout, checkin);
 
   return {
-    ...Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [`guest${startWithUppercase(field)}`]: guest[field] }))),
-    guest: {
-      connect: {
-        id: data.guestId,
-      },
-    },
     room: {
       connect: {
         id: data.roomId,
@@ -131,12 +121,41 @@ export const fillReservationData = async(data: ReservationBody, getGuest: (id: n
     payment: data.payment,
   };
 };
+const fillReservationDataWithGuest = async(data: ReservationBody, guestId: number, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<CreateReservationData> => {
+  const guest = await getGuest(guestId);
+  if (RESERVATION_GUEST_FIELDS.some(field => !guest[field])) {
+    throw new Error('必須項目が登録されていないゲストは指定できません。');
+  }
+
+  return Object.assign({
+    guest: {
+      connect: {
+        id: data.guestId,
+      },
+    },
+    ...await getUpdateReservationData(data, getRoom),
+  }, ...RESERVATION_GUEST_FIELDS.map(field => ({ [`guest${startWithUppercase(field)}`]: guest[field] })));
+};
+export const fillCreateReservationData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<CreateReservationData> | never => {
+  if (!data.guestId) {
+    throw new Error('ゲストが選択されていません。');
+  }
+
+  return fillReservationDataWithGuest(data, data.guestId, getGuest, getRoom);
+};
+export const fillUpdateReservationData = async(data: ReservationBody, getGuest: (id: number) => Promise<Guest>, getRoom: (id: number) => Promise<Room>): Promise<UpdateReservationData> | never => {
+  if (data.guestId) {
+    return fillReservationDataWithGuest(data, data.guestId, getGuest, getRoom);
+  }
+
+  return getUpdateReservationData(data, getRoom);
+};
 
 export const create = depend(
   { createReservation, getGuest, getRoom },
   async({ createReservation, getGuest, getRoom }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
     status: 201,
-    body: await createReservation(await fillReservationData(data, getGuest, getRoom)),
+    body: await createReservation(await fillCreateReservationData(data, getGuest, getRoom)),
   }),
 );
 
@@ -156,7 +175,7 @@ export const update = depend(
     data: ReservationBody,
   ): Promise<BodyResponse<Reservation>> => ({
     status: 200,
-    body: await updateReservation(id, await fillReservationData(data, getGuest, getRoom)),
+    body: await updateReservation(id, await fillUpdateReservationData(data, getGuest, getRoom)),
   }),
 );
 

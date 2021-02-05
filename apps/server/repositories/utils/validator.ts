@@ -130,7 +130,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
       this.reason = '部屋が選択されていません';
       return false;
     }
-    if (!notCheckGuest && (!('guestId' in data) || typeof data['guestId'] !== 'number')) {
+    if (!notCheckGuest && (!('guestId' in data) || typeof data['guestId'] !== 'number') && !('id' in data)) {
       this.reason = '宿泊客が選択されていません';
       return false;
     }
@@ -166,7 +166,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
             {
               roomId: Number(data['roomId']),
             },
-            ...(notCheckGuest ? [] : [{
+            ...(notCheckGuest || !data['guestId'] ? [] : [{
               guestId: Number(data['guestId']),
             }]),
           ],

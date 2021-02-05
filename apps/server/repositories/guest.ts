@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import type { Prisma, Guest } from '$/prisma/client';
-import { dropId } from '$/repositories/utils';
+import { dropId, whereId } from '$/repositories/utils';
 
 export type SearchGuestArgs = Prisma.GuestFindManyArgs;
 export type FindGuestArgs = Prisma.GuestFindFirstArgs;
@@ -33,7 +33,7 @@ export const getGuest = depend(
     rejectOnNotFound: true,
     ...args,
     where: {
-      id,
+      ...whereId(id),
       ...args?.where,
     },
   }) as Guest,
@@ -49,7 +49,7 @@ export const createGuest = depend(
 
 export const updateGuest = depend(
   { prisma: prisma as { guest: { update: typeof prisma.guest.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateGuestData, args?: Partial<UpdateGuestArgs>) => prisma.guest.update({
+  async({ prisma }, id: number, data: UpdateGuestData, args?: Partial<UpdateGuestArgs>) => prisma.guest.update({
     where: { id },
     ...args,
     data: dropId(data),
@@ -58,7 +58,7 @@ export const updateGuest = depend(
 
 export const deleteGuest = depend(
   { prisma: prisma as { guest: { delete: typeof prisma.guest.delete } } },
-  async({ prisma }, id: number | undefined, args?: Partial<DeleteGuestArgs>) => prisma.guest.delete({
+  async({ prisma }, id: number, args?: Partial<DeleteGuestArgs>) => prisma.guest.delete({
     where: { id },
     ...args,
   }),

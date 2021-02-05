@@ -22,3 +22,15 @@ export type Page = {
   label: string;
   page: FC;
 };
+
+export type Address = {
+  'prefecture_jis_code': string;
+  'city_jis_code': string;
+  'zip_code': string;
+  'prefecture_name_kana': string;
+  'city_name_kana': string;
+  'town_name_kana': string;
+  'prefecture_name': string;
+  'city_name': string;
+  'town_name': string;
+}

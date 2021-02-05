@@ -78,8 +78,8 @@ const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
       <FormErrorMessage>{validationErrors[field.name]}</FormErrorMessage>
     </FormControl>)}
     <Box colSpan={3} textAlign="center">
-      <Button width={120} m={2} colorScheme="teal" onClick={handleSave}>保存</Button>
-      <Button width={120} m={2} colorScheme="red" onClick={handleClose}>キャンセル</Button>
+      <Button m={2} onClick={handleSave}>保存</Button>
+      <Button m={2} colorScheme="red" onClick={handleClose}>キャンセル</Button>
     </Box>
   </Box> : null;
 });

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { Box, Input, Heading, Checkbox, Center, Button } from '@chakra-ui/react';
 import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { startWithUppercase } from '@frourio-demo/utils/string';
@@ -9,6 +9,7 @@ import { useStoreContext } from '^/store';
 import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { client, processValidationError } from '^/utils/api';
+import { getAddress } from '^/utils/zipCode';
 import { ACCOUNT_FIELDS } from '^/utils/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
@@ -53,6 +54,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
   }, [reservation]);
   const getGuestKey = (name: string): string => `guest${startWithUppercase(name)}`;
   const isValidGuest = !RESERVATION_GUEST_FIELDS.some(field => !reservation[getGuestKey(field)]);
+  const hasEmptyField = !guest || RESERVATION_GUEST_FIELDS.some(field => !guest[field]);
 
   const handleEditChange = (name: string) => event => {
     props[`onChange${startWithUppercase(name)}`](event.target.value);
@@ -61,6 +63,19 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
       setValidationErrors(validationErrors);
     }
   };
+
+  useEffect(() => {
+    getAddress(reservation.guestZipCode).then(address => {
+      if (!unmountRef.current && address) {
+        props.onChangeAddress(`${address.prefecture_name}${address.city_name}${address.town_name}`);
+      }
+    });
+  }, [reservation.guestZipCode]);
+  useEffect(() => {
+    if (hasEmptyField && !reservation.updateInfo) {
+      props.onChangeUpdateInfo();
+    }
+  }, [hasEmptyField, reservation.updateInfo]);
 
   return <Box
     shadow="md"
@@ -89,21 +104,15 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
           <FormErrorMessage>{validationErrors[getGuestKey(field.name)]}</FormErrorMessage>
         </FormControl>;
       })}
-      {guest && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
+      {!hasEmptyField && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
         お客様の登録情報を更新する
       </Checkbox>}
     </Box>
     <Center>
-      <Button
-        width={120}
-        m={1}
-        colorScheme="teal"
-        onClick={handleClickConfirm}
-        disabled={!isValidGuest || isConfirming}
-      >
+      <Button m={1} onClick={handleClickConfirm} disabled={!isValidGuest || isConfirming}>
         確認
       </Button>
-      <Button width={120} m={1} onClick={onDetail} disabled={isConfirming}>
+      <Button m={1} colorScheme="red" onClick={onDetail} disabled={isConfirming}>
         戻る
       </Button>
     </Center>

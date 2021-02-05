@@ -193,8 +193,9 @@ export const getDateConstraint = (date: Date) => ({
   lt: addDays(startOfDay(date), 1),
 });
 
-export const dropId = <T extends Record<string, any> & Partial<{ id: number }>>(data: T): Omit<T, 'id'> => {
+export const dropId = <T extends Record<string, any> & Partial<{ id: number; code: any; }>>(data: T): Omit<T, 'id'> => {
   delete data.id;
+  delete data.code;
   return data;
 };
 
@@ -268,3 +269,7 @@ export const createAdminPasswordHash = <T extends Prisma.StringFieldUpdateOperat
 
   return createHash(password as string);
 };
+
+export const whereId = (id: number | undefined): { id?: number } => ({
+  ...(id ? { id } : undefined),
+});

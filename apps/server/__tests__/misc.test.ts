@@ -12,7 +12,7 @@ import {
 import { saveFile } from '$/service/multipart';
 import { includeRoles } from '$/repositories/admin';
 import { processRoleConnections, getAdminFilterConstraints } from '$/domains/admin/admins/utils';
-import { fillReservationData } from '$/domains/admin/reservations';
+import { fillCreateReservationData, fillUpdateReservationData } from '$/domains/admin/reservations';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs') as {},
@@ -413,10 +413,61 @@ describe('getAdminFilterConstraints', () => {
   });
 });
 
-describe('fillReservationData', () => {
+describe('fillCreateReservationData', () => {
   it('should throw error', async() => {
     await expect(
-      fillReservationData(
+      fillCreateReservationData(
+        {
+          roomId: 1,
+          checkin: '2020-01-01',
+          checkout: '2020-01-10',
+          number: 1,
+        },
+        jest.fn(),
+        jest.fn(),
+      ),
+    ).rejects.toThrow('ゲストが選択されていません。');
+  });
+
+  it('should throw error', async() => {
+    await expect(
+      fillCreateReservationData(
+        {
+          guestId: 1,
+          roomId: 1,
+          checkin: '2020-01-01',
+          checkout: '2020-01-10',
+          number: 1,
+        },
+        jest.fn(() => Promise.resolve({
+          id: 1,
+          email: '',
+          name: null,
+          nameKana: null,
+          zipCode: null,
+          address: null,
+          phone: null,
+          auth0Sub: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })),
+        jest.fn(() => Promise.resolve({
+          id: 1,
+          name: '',
+          number: 1,
+          price: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })),
+      ),
+    ).rejects.toThrow('必須項目が登録されていないゲストは指定できません。');
+  });
+});
+
+describe('fillUpdateReservationData', () => {
+  it('should throw error', async() => {
+    await expect(
+      fillUpdateReservationData(
         {
           guestId: 1,
           roomId: 1,

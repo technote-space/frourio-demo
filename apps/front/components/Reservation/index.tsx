@@ -7,16 +7,17 @@ import useFetch from '^/hooks/useFetch';
 import { client } from '^/utils/api';
 import { getNights } from '@frourio-demo/utils/calc';
 import { startWithUppercase } from '@frourio-demo/utils/string';
+import Account from './Account';
+import Detail from './Detail';
 import GuestInfo from './GuestInfo';
 import Confirm from './Confirm';
-import Detail from './Detail';
 
 export type ReservationData = Partial<CreateReservationBody>;
 type Props = {
   roomId?: number;
 }
 
-type ReservationMode = 'detail' | 'guest' | 'confirm'
+type ReservationMode = 'account' | 'detail' | 'guest' | 'confirm'
 
 const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const initialReservation = {
@@ -26,7 +27,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   };
   const { dispatch } = useDispatchContext();
   const { guest } = useStoreContext();
-  const [mode, setMode] = useState<ReservationMode>('detail');
+  const [mode, setMode] = useState<ReservationMode>('account');
   const [reservation, setReservation] = useState<ReservationData>(initialReservation);
   const room = useFetch(dispatch, undefined, client.reservation.rooms._roomId(reservation.roomId!), { enabled: !!reservation.roomId });
   const nights = reservation.checkin && reservation.checkout ? getNights(reservation.checkin, reservation.checkout) : -1;
@@ -71,17 +72,17 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const onChangeUpdateInfo = () => {
     setReservation({ ...reservation, updateInfo: !reservation.updateInfo });
   };
+  const onDetail = useCallback(() => {
+    setMode('detail');
+  }, []);
   const onGuestInfo = useCallback(() => {
     setMode('guest');
   }, []);
   const onConfirm = useCallback(async() => {
     setMode('confirm');
   }, []);
-  const onDetail = useCallback(() => {
-    setMode('detail');
-  }, []);
   const handleSubmit = useCallback(() => {
-    setMode('detail');
+    setMode('account');
     setReservation(initialReservation);
   }, []);
 
@@ -97,8 +98,10 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     }
   }, [guest]);
 
-  if (!guest) {
-    return null;
+  if (mode === 'account') {
+    return <Account
+      onDetail={onDetail}
+    />;
   }
 
   if (mode === 'detail') {

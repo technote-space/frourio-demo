@@ -9,6 +9,7 @@ describe('reservations/calendar/checkout', () => {
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
+        code: '6F4ZGO6ZE625',
         guestId: 234,
         guestName: 'test name1',
         guestNameKana: 'テスト1',
@@ -28,6 +29,7 @@ describe('reservations/calendar/checkout', () => {
       },
       {
         id: 234,
+        code: '6F4ZGO6ZE625',
         guestId: 345,
         guestName: 'test name2',
         guestNameKana: 'テスト2',

@@ -1,11 +1,12 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import type { Prisma, Reservation } from '$/prisma/client';
-import { dropId } from '$/repositories/utils';
+import { dropId, whereId } from '$/repositories/utils';
+import { generateCode } from '$/service/reservation';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
 export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
-export type CreateReservationData = Prisma.ReservationCreateInput;
+export type CreateReservationData = Omit<Prisma.ReservationCreateInput, 'code'>;
 export type CreateReservationArgs = Prisma.ReservationCreateArgs;
 export type UpdateReservationData = Prisma.ReservationUpdateInput;
 export type UpdateReservationArgs = Prisma.ReservationUpdateArgs;
@@ -32,7 +33,7 @@ export const getReservation = depend(
     rejectOnNotFound: true,
     ...args,
     where: {
-      id,
+      ...whereId(id),
       ...args?.where,
     },
   }) as Reservation,
@@ -42,13 +43,16 @@ export const createReservation = depend(
   { prisma: prisma as { reservation: { create: typeof prisma.reservation.create } } },
   async({ prisma }, data: CreateReservationData, args?: Partial<CreateReservationArgs>) => prisma.reservation.create({
     ...args,
-    data,
+    data: {
+      ...data,
+      code: generateCode(),
+    },
   }),
 );
 
 export const updateReservation = depend(
   { prisma: prisma as { reservation: { update: typeof prisma.reservation.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateReservationData, args?: Partial<UpdateReservationArgs>) => prisma.reservation.update({
+  async({ prisma }, id: number, data: UpdateReservationData, args?: Partial<UpdateReservationArgs>) => prisma.reservation.update({
     where: { id },
     ...args,
     data: dropId(data),
@@ -57,7 +61,7 @@ export const updateReservation = depend(
 
 export const deleteReservation = depend(
   { prisma: prisma as { reservation: { delete: typeof prisma.reservation.delete } } },
-  async({ prisma }, id: number | undefined, args?: Partial<DeleteReservationArgs>) => prisma.reservation.delete({
+  async({ prisma }, id: number, args?: Partial<DeleteReservationArgs>) => prisma.reservation.delete({
     where: { id },
     ...args,
   }),

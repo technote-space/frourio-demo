@@ -1,7 +1,7 @@
-import controller from '$/api/front/account/reservations/_reservationId@number/controller';
+import controller from '$/api/front/reservations/_code@string/controller';
 import { getReservation } from '$/repositories/reservation';
-import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { getReservationDetail } from '$/domains/front/account';
+import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
+import { getReservationDetail } from '$/domains/front/reservations';
 
 describe('account/reservations/detail', () => {
   it('should get reservation detail', async() => {
@@ -19,9 +19,7 @@ describe('account/reservations/detail', () => {
     })(getFastify());
 
     const res = await injectedController.get({
-      headers: getAuthorizationHeader(1),
-      user: { id: 1 },
-      params: { reservationId: 123 },
+      params: { code: '6F4ZGO6ZE625' },
     });
     expect(res.body).toEqual({
       id: 123,
@@ -39,8 +37,7 @@ describe('account/reservations/detail', () => {
         },
       },
       where: {
-        id: 123,
-        guestId: 1,
+        code: '6F4ZGO6ZE625',
       },
     });
   });

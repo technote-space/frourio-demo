@@ -52,6 +52,7 @@ model Room {
 
 model Reservation {
   id            Int     @id @default(autoincrement())
+  code          String
   guest         Guest?  @relation(fields: [guestId], references: [id])
   guestId       Int?
   guestName     String

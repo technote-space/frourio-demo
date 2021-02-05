@@ -115,7 +115,7 @@ export const createAdmin = depend(
 
 export const updateAdmin = depend(
   { prisma: prisma as { admin: { update: typeof prisma.admin.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateAdminData, args?: Partial<UpdateAdminArgs>) => filterAdmin(await prisma.admin.update({
+  async({ prisma }, id: number, data: UpdateAdminData, args?: Partial<UpdateAdminArgs>) => filterAdmin(await prisma.admin.update({
     where: { id },
     ...args,
     data: dropId({
@@ -127,7 +127,7 @@ export const updateAdmin = depend(
 
 export const deleteAdmin = depend(
   { prisma: prisma as { admin: { delete: typeof prisma.admin.delete } } },
-  async({ prisma }, id: number | undefined, args?: Partial<DeleteAdminArgs>) => filterAdmin(await prisma.admin.delete({
+  async({ prisma }, id: number, args?: Partial<DeleteAdminArgs>) => filterAdmin(await prisma.admin.delete({
     where: { id },
     ...args,
   })),

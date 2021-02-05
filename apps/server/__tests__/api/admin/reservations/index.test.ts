@@ -10,6 +10,7 @@ describe('reservations', () => {
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
+        code: '6F4ZGO6ZE625',
         guestId: 234,
         guestName: 'test name1',
         guestNameKana: 'テスト1',
@@ -29,6 +30,7 @@ describe('reservations', () => {
       },
       {
         id: 234,
+        code: '6F4ZGO6ZE625',
         guestId: 345,
         guestName: 'test name2',
         guestNameKana: 'テスト2',
@@ -99,6 +101,11 @@ describe('reservations', () => {
         {
           OR: [
             {
+              code: {
+                contains: 'test',
+              },
+            },
+            {
               guestName: {
                 contains: 'test',
               },
@@ -127,6 +134,11 @@ describe('reservations', () => {
             },
             {
               payment: 2,
+            },
+            {
+              code: {
+                contains: '2',
+              },
             },
             {
               guestName: {
@@ -233,6 +245,7 @@ describe('reservations', () => {
     expect(res.status).toBe(201);
     expect(createReservationMock).toBeCalledWith({
       data: {
+        code: expect.any(String),
         amount: 200000, // 10000 * 2泊 * 10人
         checkin: new Date('2020-03-15T06:00:00.000Z'),
         checkout: new Date('2020-03-17T01:00:00.000Z'),

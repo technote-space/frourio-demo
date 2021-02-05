@@ -732,4 +732,71 @@ describe('Reservations', () => {
       'room': { 'number': 8, 'price': 6085 },
     });
   });
+
+  it('should update guest reservation', async() => {
+    const update = jest.fn();
+    const { findByText, container } = await loadPage(
+      'reservations',
+      scope => scope
+        .get(/reservations\?/).reply(200, {
+          'data': [{
+            'id': 1011,
+            'guestId': null,
+            'guestName': 'test-name',
+            'guestNameKana': 'テスト',
+            'guestZipCode': '100-0001',
+            'guestAddress': 'テスト県テスト市テスト町',
+            'guestPhone': '090-0000-0000',
+            'roomId': 1,
+            'roomName': '颯太83958',
+            'number': 3,
+            'amount': 18255,
+            'checkin': '2020-12-28T06:00:00.000Z',
+            'checkout': '2020-12-29T01:00:00.000Z',
+            'status': 'reserved',
+            'payment': null,
+            'createdAt': '2021-01-13T05:42:30.903Z',
+            'updatedAt': '2021-01-13T05:42:30.903Z',
+            'room': { 'number': 8, 'price': 6085 },
+          }],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get('/reservations/room?roomId=1').reply(200, { 'id': 1, 'name': '杏19119', 'number': 4, 'price': 37319 })
+        .patch('/reservations/1011', body => {
+          update(body);
+          return body;
+        }).reply(200),
+    );
+
+    await findByText('test-name');
+
+    // edit
+    user.click(container.querySelectorAll('[title="編集"]')[0]);
+    const input = container.querySelectorAll('[mode="update"] input');
+    expect(input).toHaveLength(3);
+    user.type(input[2], '12345');
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
+
+    // notice
+    await findByText('更新しました。');
+
+    expect(update).toBeCalledWith({
+      'id': 1011,
+      'guestName': 'test-name',
+      'guestNameKana': 'テスト',
+      'guestZipCode': '100-0001',
+      'guestAddress': 'テスト県テスト市テスト町',
+      'guestPhone': '090-0000-0000',
+      'roomId': 1,
+      'roomName': '颯太83958',
+      'number': 3,
+      'amount': 18255,
+      'checkin': '2020-12-28T06:00:00.000Z',
+      'checkout': '2020-12-29T01:00:00.000Z',
+      'status': 'reserved',
+      'payment': 12345,
+      'room': { 'number': 8, 'price': 6085 },
+    });
+  });
 });

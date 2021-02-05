@@ -15,7 +15,7 @@ const Calc: FC<Props> = memo(({ reservation, room, nights }: Props) => {
     <Grid templateColumns="repeat(1, 1fr)" gap={2} m={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
         <GridItem>料金</GridItem>
-        <GridItem>¥{room!.price.toLocaleString()}/泊人</GridItem>
+        <GridItem>¥{room!.price.toLocaleString()}/人泊</GridItem>
       </Grid>
       <Grid templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
         <GridItem>宿泊人数</GridItem>
