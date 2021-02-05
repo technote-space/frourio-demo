@@ -50,6 +50,15 @@ export const handleAuthError = async <B, API extends ApiType<B>, F extends Fallb
 
         return fallback as MaybeUndefined<F>;
       }
+
+      if (error.response && 500 === error.response.status && 'No Admin found' === error.response.data?.message) {
+        logout(dispatch);
+        if (!fallback) {
+          throw error;
+        }
+
+        return fallback as MaybeUndefined<F>;
+      }
     }
 
     if (!fallback) {
