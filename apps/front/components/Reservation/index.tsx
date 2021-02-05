@@ -101,7 +101,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   if (mode === 'account') {
     return <Account
       onDetail={onDetail}
-    />
+    />;
   }
 
   if (mode === 'detail') {
