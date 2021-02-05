@@ -1,7 +1,7 @@
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import type { Prisma, Room } from '$/prisma/client';
-import { dropId } from '$/repositories/utils';
+import { dropId, whereId } from '$/repositories/utils';
 
 export type SearchRoomArgs = Prisma.RoomFindManyArgs;
 export type FindRoomArgs = Prisma.RoomFindFirstArgs;
@@ -32,7 +32,7 @@ export const getRoom = depend(
     rejectOnNotFound: true,
     ...args,
     where: {
-      id,
+      ...whereId(id),
       ...args?.where,
     },
   }) as Room,
@@ -48,7 +48,7 @@ export const createRoom = depend(
 
 export const updateRoom = depend(
   { prisma: prisma as { room: { update: typeof prisma.room.update } } },
-  async({ prisma }, id: number | undefined, data: UpdateRoomData, args?: Partial<UpdateRoomArgs>) => prisma.room.update({
+  async({ prisma }, id: number, data: UpdateRoomData, args?: Partial<UpdateRoomArgs>) => prisma.room.update({
     where: { id },
     ...args,
     data: dropId(data),
@@ -57,7 +57,7 @@ export const updateRoom = depend(
 
 export const deleteRoom = depend(
   { prisma: prisma as { room: { delete: typeof prisma.room.delete } } },
-  async({ prisma }, id: number | undefined, args?: Partial<DeleteRoomArgs>) => prisma.room.delete({
+  async({ prisma }, id: number, args?: Partial<DeleteRoomArgs>) => prisma.room.delete({
     where: { id },
     ...args,
   }),

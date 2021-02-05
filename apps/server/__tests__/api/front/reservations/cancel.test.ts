@@ -1,7 +1,7 @@
-import controller from '$/api/front/account/reservations/_reservationId@number/cancel/controller';
+import controller from '$/api/front/reservations/_code@string/cancel/controller';
 import { getReservation, updateReservation } from '$/repositories/reservation';
-import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { cancel } from '$/domains/front/account';
+import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
+import { cancel } from '$/domains/front/reservations';
 
 describe('account/reservations/detail/cancel', () => {
   it('should cancel reservation', async() => {
@@ -25,9 +25,7 @@ describe('account/reservations/detail/cancel', () => {
     })(getFastify());
 
     const res = await injectedController.patch({
-      headers: getAuthorizationHeader(1),
-      user: { id: 1 },
-      params: { reservationId: 123 },
+      params: { code: '6F4ZGO6ZE625' },
     });
     expect(res.body).toEqual({
       id: 123,
@@ -35,8 +33,7 @@ describe('account/reservations/detail/cancel', () => {
     expect(getReservationMock).toBeCalledWith({
       rejectOnNotFound: true,
       where: {
-        id: 123,
-        guestId: 1,
+        code: '6F4ZGO6ZE625',
       },
     });
     expect(updateReservationMock).toBeCalledWith({

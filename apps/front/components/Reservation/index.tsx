@@ -97,10 +97,6 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     }
   }, [guest]);
 
-  if (!guest) {
-    return null;
-  }
-
   if (mode === 'detail') {
     return <Detail
       room={room.data}
