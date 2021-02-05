@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { memo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { startOfToday } from 'date-fns';
 import { Box, Grid, Divider, Image, Heading } from '@chakra-ui/react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -47,6 +48,8 @@ const Room: FC = memo(() => {
         initialView="dayGridMonth"
         height="auto"
         events={fetchEvents}
+        initialDate={startOfToday()}
+        validRange={{ start: startOfToday() }}
       />
     </Box>
     <Reservation roomId={Number(id)}/>
