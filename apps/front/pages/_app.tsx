@@ -30,6 +30,19 @@ const theme = extendTheme({
       },
     }),
   },
+  components: {
+    Button: {
+      defaultProps: {
+        colorScheme: 'teal',
+      },
+      sizes: {
+        xs: { minW: 120 },
+        sm: { minW: 120 },
+        md: { minW: 120 },
+        lg: { minW: 120 },
+      },
+    },
+  },
 });
 
 const onRedirectCallback = (appState: AppState) => {

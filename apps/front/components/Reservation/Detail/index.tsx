@@ -69,7 +69,7 @@ const Detail: FC<Props> = memo(({
       nights={nights}
     />}
     {isValidReservation && <Center>
-      <Button width={120} m={1} colorScheme="teal" onClick={onGuestInfo}>次へ</Button>
+      <Button m={1} onClick={onGuestInfo}>次へ</Button>
     </Center>}
   </Box>;
 });

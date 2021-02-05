@@ -80,14 +80,14 @@ const Reservation: FC = memo(() => {
       </Grid>
     </Grid>
     <Center mt={6}>
-      {guest && <Button width={120} m={2} colorScheme="teal" as={Link} to={`${process.env.BASE_PATH}/reservations`}>
+      {guest && <Button m={2} as={Link} to={`${process.env.BASE_PATH}/reservations`}>
         予約一覧
       </Button>}
-      {reservation.data.status === 'cancelled' && <Button width={120} m={2} colorScheme="red" disabled>キャンセル済み</Button>}
-      {reservation.data.status === 'checkout' && <Button width={120} m={2} colorScheme="teal" disabled>宿泊済み</Button>}
-      {reservation.data.status === 'checkin' && <Button width={120} m={2} colorScheme="teal" disabled>チェックイン済み</Button>}
+      {reservation.data.status === 'cancelled' && <Button m={2} colorScheme="red" disabled>キャンセル済み</Button>}
+      {reservation.data.status === 'checkout' && <Button m={2} disabled>宿泊済み</Button>}
+      {reservation.data.status === 'checkin' && <Button m={2} disabled>チェックイン済み</Button>}
       {reservation.data.status === 'reserved' &&
-      <Button width={120} m={2} colorScheme="red" onClick={onOpen}>キャンセル</Button>}
+      <Button m={2} colorScheme="red" onClick={onOpen}>キャンセル</Button>}
     </Center>
     <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
       <AlertDialogOverlay>
@@ -99,8 +99,8 @@ const Reservation: FC = memo(() => {
             キャンセルしてもよろしいですか？
           </AlertDialogBody>
           <AlertDialogFooter>
-            <Button width={120} mx={1} colorScheme="red" onClick={handleCancel}>はい</Button>
-            <Button width={120} mx={1} onClick={onClose}>いいえ</Button>
+            <Button mx={1} colorScheme="red" onClick={handleCancel}>はい</Button>
+            <Button mx={1} onClick={onClose}>いいえ</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>

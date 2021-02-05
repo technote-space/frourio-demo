@@ -52,7 +52,7 @@ const SelectRoom: FC<Props> = memo(({ room, onChangeRoomId }: Props) => {
         </Grid>
       </Grid>
       <Center>
-        <Button width={120} onClick={handleClick}>選択</Button>
+        <Button onClick={handleClick}>選択</Button>
       </Center>
     </Box>;
   };

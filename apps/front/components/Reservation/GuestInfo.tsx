@@ -103,16 +103,10 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
       </Checkbox>}
     </Box>
     <Center>
-      <Button
-        width={120}
-        m={1}
-        colorScheme="teal"
-        onClick={handleClickConfirm}
-        disabled={!isValidGuest || isConfirming}
-      >
+      <Button m={1} onClick={handleClickConfirm} disabled={!isValidGuest || isConfirming}>
         確認
       </Button>
-      <Button width={120} m={1} onClick={onDetail} disabled={isConfirming}>
+      <Button m={1} colorScheme="red" onClick={onDetail} disabled={isConfirming}>
         戻る
       </Button>
     </Center>

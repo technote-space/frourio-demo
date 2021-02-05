@@ -100,8 +100,8 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
       <Box fontWeight="bold" fontSize="2rem">¥{(room!.price * reservation.number! * nights).toLocaleString()}</Box>
     </Flex>
     <Center>
-      <Button width={120} m={1} colorScheme="teal" onClick={handleClick} disabled={isSending}>予約</Button>
-      <Button width={120} m={1} colorScheme="red" onClick={onCancel} disabled={isSending}>戻る</Button>
+      <Button m={1} onClick={handleClick} disabled={isSending}>予約</Button>
+      <Button m={1} colorScheme="red" onClick={onCancel} disabled={isSending}>戻る</Button>
     </Center>
   </Box>;
 });
