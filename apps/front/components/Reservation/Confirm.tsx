@@ -55,11 +55,12 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
 
   return <Box
     shadow="md"
-    p="4"
+    p={[1, 2, 4]}
     m="2"
     borderWidth={1}
-    display="inline-block"
-    minW={400}
+    display={['flex', 'flex', 'inline-block']}
+    flexDirection='column'
+    minW={['none', 'none', 400]}
   >
     <Grid templateColumns="repeat(1, 1fr)" gap={2} m={4}>
       {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {

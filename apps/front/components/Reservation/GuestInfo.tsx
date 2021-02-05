@@ -79,11 +79,12 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
 
   return <Box
     shadow="md"
-    p="4"
+    p={[1, 2, 4]}
     m="2"
     borderWidth={1}
-    display="inline-block"
-    minW={400}
+    display={['flex', 'flex', 'inline-block']}
+    flexDirection='column'
+    minW={['none', 'none', 400]}
   >
     <Heading as="h4" size="lg">ご予約</Heading>
     <Box m={1} p={2} height="100%">
