@@ -44,6 +44,12 @@ export const handleAuthError = async <B, API extends ApiType<B>, F extends Fallb
 
       if (error.response && 500 === error.response.status && 'No Guest found' === error.response.data?.message) {
         logout(dispatch);
+        onRefreshToken(dispatch);
+        if (!fallback) {
+          throw error;
+        }
+
+        return fallback as MaybeUndefined<F>;
       }
     }
 
