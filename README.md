@@ -14,9 +14,11 @@
 <!-- param::isCustomMode::true:: -->
 
 <p align="center">
-<a href="#screenshot">Screenshot</a>
+<a href="#%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88">スクリーンショット</a>
 <span>|</span>
-<a href="#getting-started">Getting Started</a>
+<a href="#%E7%AE%A1%E7%90%86%E7%94%BB%E9%9D%A2">管理画面</a>
+<span>|</span>
+<a href="#%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88">フロント</a>
 <span>|</span>
 <a href="#demo">Demo</a>
 <span>|</span>
