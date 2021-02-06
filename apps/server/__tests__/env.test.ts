@@ -40,8 +40,8 @@ describe('env', () => {
     expect(env.URL_PORT).toBe(':8080');
     expect(env.SERVER_ADDRESS).toBe('localhost');
     expect(env.BASE_PATH).toBe('');
-    expect(env.API_ORIGIN).toBe('');
-    expect(env.API_URL).toBe(':8080');
+    expect(env.API_ORIGIN).toBe('http://localhost');
+    expect(env.API_URL).toBe('http://localhost:8080');
   });
 
   it('should return empty URL_PORT', () => {
