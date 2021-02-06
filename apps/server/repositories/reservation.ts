@@ -1,6 +1,6 @@
+import type { Prisma, Reservation } from '$/prisma/client';
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
-import type { Prisma, Reservation } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
 import { generateCode } from '$/service/reservation';
 

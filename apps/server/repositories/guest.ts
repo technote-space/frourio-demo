@@ -1,6 +1,6 @@
+import type { Prisma, Guest } from '$/prisma/client';
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
-import type { Prisma, Guest } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
 
 export type SearchGuestArgs = Prisma.GuestFindManyArgs;

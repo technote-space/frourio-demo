@@ -1,9 +1,9 @@
+import type { Prisma, Admin as _Admin } from '$/prisma/client';
+import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
 import { API_URL } from '$/service/env';
 import { createAdminPasswordHash, validateHash } from '$/repositories/utils';
-import type { Prisma, Admin as _Admin } from '$/prisma/client';
-import type { Role } from '$/repositories/role';
 import { dropId } from '$/repositories/utils';
 
 export type SearchAdminArgs = Prisma.AdminFindManyArgs;

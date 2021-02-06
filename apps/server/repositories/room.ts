@@ -1,6 +1,6 @@
+import type { Prisma, Admin as _Admin } from '$/prisma/client';
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
-import type { Prisma, Room } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
 
 export type SearchRoomArgs = Prisma.RoomFindManyArgs;
