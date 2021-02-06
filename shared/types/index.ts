@@ -2,6 +2,7 @@
 import type { Dispatch as _Dispatch } from 'react';
 import type { AspidaResponse } from 'aspida';
 import type { responseInterface, ConfigInterface } from 'swr';
+import { RESERVATION_STATUS } from '@frourio-demo/constants';
 
 export type MaybeUndefined<T> = undefined extends T ? undefined : never;
 
@@ -9,13 +10,7 @@ export type AuthHeader = {
   authorization: string;
 };
 
-export const ReservationStatus = {
-  reserved: '予約済み',
-  cancelled: 'キャンセル',
-  checkin: 'チェックイン',
-  checkout: 'チェックアウト',
-} as const;
-export type ReservationStatus = keyof typeof ReservationStatus;
+export type ReservationStatus = keyof typeof RESERVATION_STATUS;
 
 export type RawLicenseType = {
   name: string;

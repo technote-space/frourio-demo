@@ -9,3 +9,9 @@ export const ACCOUNT_FIELDS = [
   { name: 'phone', label: '電話番号' },
 ] as const;
 export const RESERVATION_GUEST_FIELDS = ['name', 'nameKana', 'zipCode', 'address', 'phone'] as const;
+export const RESERVATION_STATUS = {
+  reserved: '予約済み',
+  cancelled: 'キャンセル',
+  checkin: 'チェックイン',
+  checkout: 'チェックアウト',
+} as const;

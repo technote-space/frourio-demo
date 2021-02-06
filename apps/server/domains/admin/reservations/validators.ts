@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsPositive, IsDateString, IsEnum, Min, IsInt, IsOptional } from 'class-validator';
 import { IsIdExists, IsWithinLimit, IsReservable } from '$/repositories/utils/validator';
-import { ReservationStatus } from '@frourio-demo/types';
-import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
+import { RESERVATION_GUEST_FIELDS, RESERVATION_STATUS } from '@frourio-demo/constants';
 
 export class ReservationBody {
   @IsInt({ message: '整数値を指定してください' })
@@ -39,7 +38,7 @@ export class ReservationBody {
   checkout: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(ReservationStatus), { message: '正しいステータスを指定してください' })
+  @IsEnum(Object.keys(RESERVATION_STATUS), { message: '正しいステータスを指定してください' })
   status?: string;
 
   @IsOptional()
