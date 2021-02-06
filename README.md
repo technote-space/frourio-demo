@@ -31,11 +31,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## スクリーンショット
-
-![screenshot](https://raw.githubusercontent.com/technote-space/frourio-demo/images/screenshot.gif)
-
 ## 管理画面
+
+![admin](https://raw.githubusercontent.com/technote-space/frourio-demo/images/admin.gif)
 
 1. セットアップ
    ```bash
@@ -55,6 +53,9 @@
 ブラウザで [http://localhost:3000](http://localhost:3000) にアクセス
 
 ## フロント
+
+![front](https://raw.githubusercontent.com/technote-space/frourio-demo/images/front.gif)
+
 1. セットアップ
    ```bash
    yarn setup
@@ -77,7 +78,8 @@
 Auth0 の認証にSSLでのアクセスが必要なため、ローカル用のSSL証明書の作成が必要です。  
 `yarn setup:front` コマンドは [mkcert](https://github.com/FiloSottile/mkcert) を使用して証明書を作成します。  
 macOSのみ動作確認済みです。  
-Linuxもインストール用スクリプトを用意していますが動作未確認です。
+Linuxもインストール用スクリプトを用意していますが動作未確認です。  
+Windowsは対応していません。
 
 ホスト名: `localhost.frourio-demo.com`  
 
@@ -117,9 +119,9 @@ https://technote-space.github.io/frourio-demo/
 * [Aspida](https://github.com/aspida/aspida)
     * 型付きのHTTPクライアント
 * [Material-UI](https://material-ui.com/)
-    * デザインフレームワーク
+    * デザインフレームワーク（管理画面）
 * [Chakra UI](https://chakra-ui.com/)
-    * コンポーネントライブラリ
+    * コンポーネントライブラリ（フロント）
 
 ### バックエンド
 
