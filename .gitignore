@@ -19,6 +19,7 @@ out/
 .DS_Store
 /bin/
 tmp.json
+.eslintcache
 
 # debug
 npm-debug.log*

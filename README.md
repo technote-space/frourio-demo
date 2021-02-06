@@ -14,9 +14,9 @@
 <!-- param::isCustomMode::true:: -->
 
 <p align="center">
-<a href="#screenshot">Screenshot</a>
+<a href="#%E7%AE%A1%E7%90%86%E7%94%BB%E9%9D%A2">管理画面</a>
 <span>|</span>
-<a href="#getting-started">Getting Started</a>
+<a href="#%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88">フロント</a>
 <span>|</span>
 <a href="#demo">Demo</a>
 <span>|</span>
@@ -29,36 +29,73 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Screenshot
+## 管理画面
 
-![screenshot](https://raw.githubusercontent.com/technote-space/frourio-demo/images/screenshot.gif)
-
-## Getting Started
+![admin](https://raw.githubusercontent.com/technote-space/frourio-demo/images/admin.gif)
 
 1. セットアップ
    ```bash
    yarn setup
    ```
 
-    1. パッケージのインストール
-    1. ビルド
-    1. マイグレーション
-    1. シーディング
-    
+2. ビルド
+   ```bash
+   yarn build
+   ```
 
-2. サーバ起動
+3. サーバ起動
    ```bash
    yarn start
    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで [http://localhost:3000](http://localhost:3000) にアクセス
+
+## フロント
+
+![front](https://raw.githubusercontent.com/technote-space/frourio-demo/images/front.gif)
+
+1. セットアップ
+   ```bash
+   yarn setup
+   yarn setup:front
+   ```
+
+2. ビルド
+   ```bash
+   yarn build
+   ```
+
+3. サーバ起動
+   ```bash
+   yarn start
+   ```
+
+ブラウザで [https://localhost.frourio-demo.com:3001/](https://localhost.frourio-demo.com:3001/) にアクセス
+
+### SSL証明書
+Auth0 の認証にSSLでのアクセスが必要なため、ローカル用のSSL証明書の作成が必要です。  
+`yarn setup:front` コマンドは [mkcert](https://github.com/FiloSottile/mkcert) を使用して証明書を作成します。  
+macOSのみ動作確認済みです。  
+Linuxもインストール用スクリプトを用意していますが動作未確認です。  
+Windowsは対応していません。
+
+ホスト名: `localhost.frourio-demo.com`  
+
+### macOS
+1. `/etc/hosts` に `localhost.frourio-demo.com` の設定がない場合は追記  
+1. mkcert, nss をインストール
+1. mkcert で証明書を作成
+
+### Linux
+1. `/etc/hosts` に `localhost.frourio-demo.com` の設定がない場合は追記
+1. mkcert, nss をインストール
+   1. Linuxbrew をインストール
+   1. Linuxbrew で mkcert, nss をインストール
+1. mkcert で証明書を作成
 
 ## Demo
 
 https://technote-space.github.io/frourio-demo/
-
-* id: admin@example.com
-* pass: test1234
 
 ## 要件
 
@@ -80,7 +117,9 @@ https://technote-space.github.io/frourio-demo/
 * [Aspida](https://github.com/aspida/aspida)
     * 型付きのHTTPクライアント
 * [Material-UI](https://material-ui.com/)
-    * デザインフレームワーク
+    * デザインフレームワーク（管理画面）
+* [Chakra UI](https://chakra-ui.com/)
+    * コンポーネントライブラリ（フロント）
 
 ### バックエンド
 

@@ -47,9 +47,10 @@ const Header: FC = memo(() => {
         aria-label={`Switch to ${colorModeText} mode`}
         variant="ghost"
         color="current"
-        ml={{ base: '0', md: '3' }}
+        mr={{ base: '0', md: '3' }}
         onClick={toggleMode}
         icon={<SwitchIcon/>}
+        minW={'auto'}
       />
       <Link as={RouterLink} to={`${process.env.BASE_PATH}/account`}>アカウント</Link>
     </Flex>

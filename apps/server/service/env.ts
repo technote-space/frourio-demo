@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET ?? '';
 const SERVER_PORT = +(process.env.PORT ?? process.env.SERVER_PORT ?? '8080'); // consider heroku
 const SERVER_ADDRESS = process.env.SERVER_ADDRESS ?? 'localhost'; // consider heroku
 const BASE_PATH = process.env.BASE_PATH ?? '';
-const API_ORIGIN = process.env.API_ORIGIN ?? '';
+const API_ORIGIN = process.env.API_ORIGIN ?? `http://${SERVER_ADDRESS}`;
 const URL_PORT = SERVER_PORT === 80 ? '' : `:${SERVER_PORT}`;
 const API_URL = `${(process.env.API_URL ?? `${API_ORIGIN}${URL_PORT}`).replace(/\/$/, '')}${BASE_PATH}`;
 
