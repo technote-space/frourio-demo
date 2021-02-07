@@ -10,7 +10,7 @@ import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { client, processValidationError } from '^/utils/api';
 import { getAddress } from '^/utils/zipCode';
-import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 type Props = {

@@ -12,7 +12,7 @@ import useUnmountRef from '^/hooks/useUnmountRef';
 import { client } from '^/utils/api';
 import { setNotice, setError } from '^/utils/actions';
 import { useDispatchContext } from '^/store';
-import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
   room?: Room;

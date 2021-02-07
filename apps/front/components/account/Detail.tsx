@@ -5,7 +5,7 @@ import { Grid, GridItem } from '@chakra-ui/react';
 import useFetch from '^/hooks/useFetch';
 import { useDispatchContext } from '^/store';
 import { client } from '^/utils/api';
-import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
   authHeader: AuthHeader;

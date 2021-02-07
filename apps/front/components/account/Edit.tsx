@@ -8,7 +8,7 @@ import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client, handleAuthError, processValidationError } from '^/utils/api';
 import { setNotice } from '^/utils/actions';
-import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 
 type EditGuest = {
   [key in keyof Guest]: key extends 'id' | 'createdAt' | 'updatedAt' ? never : Exclude<Guest[key], null>
