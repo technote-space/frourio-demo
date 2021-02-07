@@ -11,8 +11,8 @@ import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { client } from '^/utils/api';
 import { setNotice, setError } from '^/utils/actions';
-import { useDispatchContext } from '^/store';
-import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
+import { useDispatchContext, useStoreContext } from '^/store';
+import { ACCOUNT_FIELDS, RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
   room?: Room;
@@ -25,6 +25,7 @@ type Props = {
 const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit }: Props) => {
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
+  const { guest } = useStoreContext();
   const history = useHistory();
   const [auth] = useAuthToken();
   const [isSending, setIsSending] = useState(false);
@@ -52,6 +53,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
       }
     }
   }, []);
+  const hasEmptyField = !guest || RESERVATION_GUEST_FIELDS.some(field => !guest[field]);
 
   return <Box
     shadow="md"
@@ -70,7 +72,8 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
           <GridItem>{reservation[`guest${key}`]}</GridItem>
         </Grid>;
       })}
-      {reservation.updateInfo && <Grid templateColumns="repeat(1, 1fr)" gap={3} textAlign="right" fontSize="0.9rem">
+      {!hasEmptyField && reservation.updateInfo &&
+      <Grid templateColumns="repeat(1, 1fr)" gap={3} textAlign="right" fontSize="0.9rem">
         <GridItem>お客様の登録情報を更新する</GridItem>
       </Grid>}
       <Divider/>

@@ -95,11 +95,13 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
           id={`edit-${field.name}`}
           isInvalid={!!validationErrors[getGuestKey(field.name)]}
           isRequired
-          mb={2}
+          isDisabled={isConfirming}
+          mt={1}
+          mb={3}
         >
           <FormLabel htmlFor={`edit-${field.name}`}>{field.label}</FormLabel>
           <Input
-            value={reservation[getGuestKey(field.name)]}
+            value={reservation[getGuestKey(field.name)] ?? ''}
             onChange={handleEditChange(field.name)}
           />
           <FormErrorMessage>{validationErrors[getGuestKey(field.name)]}</FormErrorMessage>
