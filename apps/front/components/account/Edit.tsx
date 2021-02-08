@@ -8,7 +8,8 @@ import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client, handleAuthError, processValidationError } from '^/utils/api';
 import { setNotice } from '^/utils/actions';
-import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { getAddress } from '^/utils/zipCode';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 
 type EditGuest = {
   [key in keyof Guest]: key extends 'id' | 'createdAt' | 'updatedAt' ? never : Exclude<Guest[key], null>
@@ -32,6 +33,16 @@ const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
       setEditInfo(Object.assign({}, ...Object.entries(guestInfo.data).map(([key, value]) => ({ [key]: value ?? '' }))));
     }
   }, [guestInfo.data]);
+  useEffect(() => {
+    getAddress(editInfo?.zipCode).then(address => {
+      if (!unmountRef.current && address) {
+        setEditInfo({
+          ...editInfo!,
+          address: `${address.prefecture_name}${address.city_name}${address.town_name}`,
+        });
+      }
+    });
+  }, [editInfo?.zipCode]);
 
   const handleSave = useCallback(async() => {
     try {

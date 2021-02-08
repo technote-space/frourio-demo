@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsPositive, IsDateString, IsInt, IsOptional, Length } from 'class-validator';
+import { IsNotEmpty, IsPositive, IsDateString, IsInt, IsEmail, IsOptional, Length } from 'class-validator';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import {
@@ -20,6 +20,10 @@ export class CreateReservationBody {
     return !!body[key];
   })
   guestId?: number;
+
+  @IsOptional()
+  @IsEmail(undefined, { message: 'メールアドレスを入力してください' })
+  guestEmail?: string;
 
   @IsNotEmpty({ message: '値を入力してください' })
   @Length(1, 100, { message: '1~100文字で入力してください' })

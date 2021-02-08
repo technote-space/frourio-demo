@@ -10,11 +10,12 @@ import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { client, processValidationError } from '^/utils/api';
 import { getAddress } from '^/utils/zipCode';
-import { ACCOUNT_FIELDS } from '^/utils/constants';
+import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
   reservation: ReservationData;
+  onChangeEmail: (email: string) => void;
   onChangeName: (name: string) => void;
   onChangeNameKana: (name: string) => void;
   onChangeZipCode: (zipcode: string) => void;
@@ -89,17 +90,19 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
     <Heading as="h4" size="lg">ご予約</Heading>
     <Box m={1} p={2} height="100%">
       <Heading as="h4" size="md">お客様情報</Heading>
-      {ACCOUNT_FIELDS.filter(field => field.name !== 'email').map(field => {
+      {ACCOUNT_FIELDS.filter(field => !guest || field.name !== 'email').map(field => {
         return <FormControl
           key={field.name}
           id={`edit-${field.name}`}
           isInvalid={!!validationErrors[getGuestKey(field.name)]}
           isRequired
-          mb={2}
+          isDisabled={isConfirming}
+          mt={1}
+          mb={3}
         >
           <FormLabel htmlFor={`edit-${field.name}`}>{field.label}</FormLabel>
           <Input
-            value={reservation[getGuestKey(field.name)]}
+            value={reservation[getGuestKey(field.name)] ?? ''}
             onChange={handleEditChange(field.name)}
           />
           <FormErrorMessage>{validationErrors[getGuestKey(field.name)]}</FormErrorMessage>

@@ -1,6 +1,7 @@
 import type { Room } from '$/repositories/room';
 import type { BasicResponse, BodyResponse } from '$/types';
-import type { Reservation } from '$/repositories/reservation';
+import type { Reservation, CreateReservationData } from '$/repositories/reservation';
+import type { Guest } from '$/repositories/guest';
 import type { CreateReservationBody } from './validators';
 import type { GuestAuthorizationPayload } from '$/types';
 import { depend } from 'velona';
@@ -27,6 +28,14 @@ export type CheckoutSelectableEvent = {
   textColor: string;
   display: string,
 }
+
+export const getGuestInfo = depend(
+  { getGuest },
+  async({ getGuest }, user?: GuestAuthorizationPayload): Promise<BodyResponse<Guest | undefined>> => ({
+    status: 200,
+    body: user ? await getGuest(user.id) : undefined,
+  }),
+);
 
 export const getSelectRooms = depend(
   { getRooms },
@@ -162,6 +171,14 @@ export const validate = (): BasicResponse => ({
   status: 200,
 });
 
+const getReservationGuest = (body: CreateReservationBody, guest: { email?: string }) => ({
+  guestEmail: (body.guestEmail ?? guest.email)!,
+  guestName: body.guestName,
+  guestNameKana: body.guestNameKana,
+  guestZipCode: body.guestZipCode,
+  guestAddress: body.guestAddress,
+  guestPhone: body.guestPhone,
+});
 export const reserve = depend(
   { getRoom, createReservation, getGuest, updateGuest },
   async(
@@ -173,7 +190,10 @@ export const reserve = depend(
     const checkin = new Date(body.checkin);
     const checkout = new Date(body.checkout);
     const nights = differenceInCalendarDays(checkout, checkin);
-    const createData = {
+    const guest = user?.id ? await getGuest(user.id, {
+      select: Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [field]: true }))),
+    }) : {};
+    const createData: CreateReservationData = {
       ...(user ? {
         guest: {
           connect: {
@@ -181,11 +201,7 @@ export const reserve = depend(
           },
         },
       } : {}),
-      guestName: body.guestName,
-      guestNameKana: body.guestNameKana,
-      guestZipCode: body.guestZipCode,
-      guestAddress: body.guestAddress,
-      guestPhone: body.guestPhone,
+      ...getReservationGuest(body, guest),
       room: {
         connect: {
           id: body.roomId,
@@ -200,9 +216,6 @@ export const reserve = depend(
     };
 
     if (user?.id) {
-      const guest = await getGuest(user.id, {
-        select: Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [field]: true }))),
-      });
       RESERVATION_GUEST_FIELDS.forEach(field => {
         if (body.updateInfo || !guest[field]) {
           guest[field] = body[`guest${startWithUppercase(field)}`];

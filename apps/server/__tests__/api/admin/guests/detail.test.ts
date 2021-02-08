@@ -7,6 +7,7 @@ describe('guests/detail', () => {
   it('should get guest', async() => {
     const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      email: 'test@example.com',
       name: 'test',
       nameKana: 'テスト',
       zipCode: '100-0001',

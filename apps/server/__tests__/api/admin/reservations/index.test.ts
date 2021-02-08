@@ -192,6 +192,7 @@ describe('reservations', () => {
     const createReservationMock = jest.fn();
     const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
+      email: 'test@example.com',
       name: 'test',
       nameKana: 'テスト',
       zipCode: '100-0001',
@@ -254,6 +255,7 @@ describe('reservations', () => {
             id: 234,
           },
         },
+        guestEmail: 'test@example.com',
         guestAddress: 'テスト県テスト市',
         guestName: 'test',
         guestNameKana: 'テスト',

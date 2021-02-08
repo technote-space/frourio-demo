@@ -44,6 +44,7 @@ CREATE TABLE "Reservation" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "code" TEXT NOT NULL,
     "guestId" INTEGER,
+    "guestEmail" TEXT NOT NULL,
     "guestName" TEXT NOT NULL,
     "guestNameKana" TEXT NOT NULL,
     "guestZipCode" TEXT NOT NULL,

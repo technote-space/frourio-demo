@@ -89,9 +89,11 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      calendarRef.current?.getApi().updateSize();
-    }, 500);
+    [50, 100, 150, 200, 250, 500, 1000].forEach(ms => {
+      setTimeout(() => {
+        calendarRef.current?.getApi().updateSize();
+      }, ms);
+    });
   }, [open]);
 
   return <>

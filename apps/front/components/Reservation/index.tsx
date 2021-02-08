@@ -2,8 +2,9 @@ import type { FC } from 'react';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
-import { useDispatchContext, useStoreContext } from '^/store';
+import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
+import useAuthToken from '^/hooks/useAuthToken';
 import { client } from '^/utils/api';
 import { getNights } from '@frourio-demo/utils/calc';
 import { startWithUppercase } from '@frourio-demo/utils/string';
@@ -25,10 +26,13 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     number: 1,
     updateInfo: true,
   };
+  const [auth] = useAuthToken();
   const { dispatch } = useDispatchContext();
-  const { guest } = useStoreContext();
   const [mode, setMode] = useState<ReservationMode>('account');
   const [reservation, setReservation] = useState<ReservationData>(initialReservation);
+  const guestInfo = useFetch(dispatch, {}, client.reservation.guest, {
+    headers: auth?.authHeader,
+  });
   const room = useFetch(dispatch, undefined, client.reservation.rooms._roomId(reservation.roomId!), { enabled: !!reservation.roomId });
   const nights = reservation.checkin && reservation.checkout ? getNights(reservation.checkin, reservation.checkout) : -1;
 
@@ -53,6 +57,9 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   };
   const onChangeCheckout = (checkout: Date) => {
     setReservation({ ...reservation, checkout: checkout.toISOString() });
+  };
+  const onChangeEmail = (email: string) => {
+    setReservation({ ...reservation, guestEmail: email });
   };
   const onChangeName = (name: string) => {
     setReservation({ ...reservation, guestName: name });
@@ -84,19 +91,21 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const handleSubmit = useCallback(() => {
     setMode('account');
     setReservation(initialReservation);
+    guestInfo.revalidate().then();
   }, []);
 
   useEffect(() => {
-    if (guest) {
+    if (auth && guestInfo.data && mode === 'guest') {
+      const guest = guestInfo.data;
       setReservation(
         {
           guestId: guest.id,
-          ...Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [`guest${startWithUppercase(field)}`]: guest[field] ?? undefined }))),
           ...reservation,
+          ...Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [`guest${startWithUppercase(field)}`]: reservation[`guest${startWithUppercase(field)}`] || guest[field] || '' }))),
         },
       );
     }
-  }, [guest]);
+  }, [auth, guestInfo.data, mode]);
 
   if (mode === 'account') {
     return <Account
@@ -120,6 +129,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   if (mode === 'guest') {
     return <GuestInfo
       reservation={reservation}
+      onChangeEmail={onChangeEmail}
       onChangeName={onChangeName}
       onChangeNameKana={onChangeNameKana}
       onChangeZipCode={onChangeZipCode}

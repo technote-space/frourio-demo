@@ -89,6 +89,7 @@ describe('reservation', () => {
     }));
     const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
+      email: 'test@example.com',
     }));
     const updateGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
@@ -154,6 +155,7 @@ describe('reservation', () => {
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
       select: {
+        email: true,
         name: true,
         nameKana: true,
         zipCode: true,
@@ -172,6 +174,7 @@ describe('reservation', () => {
             id: 321,
           },
         },
+        guestEmail: 'test@example.com',
         guestName: 'guest name',
         guestNameKana: 'テスト',
         guestZipCode: '100-0001',
@@ -214,6 +217,7 @@ describe('reservation', () => {
     }));
     const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
+      email: 'test@example.com',
       name: 'guest name',
       nameKana: 'テスト',
       zipCode: '100-0001',
@@ -281,6 +285,7 @@ describe('reservation', () => {
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
       select: {
+        email: true,
         name: true,
         nameKana: true,
         zipCode: true,
@@ -299,6 +304,7 @@ describe('reservation', () => {
             id: 321,
           },
         },
+        guestEmail: 'test@example.com',
         guestName: 'guest name 2',
         guestNameKana: 'テスト 2',
         guestZipCode: '100-0002',
@@ -319,6 +325,7 @@ describe('reservation', () => {
     });
     expect(updateGuestMock).toBeCalledWith({
       data: {
+        email: 'test@example.com',
         name: 'guest name',
         nameKana: 'テスト',
         zipCode: '100-0001',

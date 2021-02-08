@@ -13,7 +13,7 @@ import InputNumber from '~/components/reservations/InputNumber';
 import RenderAmount from '~/components/reservations/RenderAmount';
 import SelectCheckinDate from '~/components/reservations/SelectCheckinDate';
 import SelectCheckoutDate from '~/components/reservations/SelectCheckoutDate';
-import { ReservationStatus } from '@frourio-demo/types';
+import { RESERVATION_STATUS } from '@frourio-demo/constants';
 import { getPriceCalc } from '@frourio-demo/utils/calc';
 
 const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProps) => {
@@ -111,7 +111,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
       render: data => format(new Date(data['checkout']), 'yyyy-MM-dd HH:mm'),
       validate: data => !!data['checkout'],
     },
-    { title: 'ステータス', field: 'status', lookup: ReservationStatus, editable: 'onUpdate' },
+    { title: 'ステータス', field: 'status', lookup: RESERVATION_STATUS, editable: 'onUpdate' },
     {
       title: '支払額',
       field: 'payment',
