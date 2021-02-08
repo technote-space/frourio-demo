@@ -2,7 +2,7 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import { promises, existsSync } from 'fs';
 import server from './server';
-import { SERVER_PORT, SERVER_ADDRESS } from './service/env';
+import { SERVER_PORT, SERVER_ADDRESS } from '$/service/env';
 
 (async() => {
   if (process.platform !== 'win32') {
