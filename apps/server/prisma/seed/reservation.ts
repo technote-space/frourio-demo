@@ -19,6 +19,7 @@ export class ReservationSeeder extends Seeder {
             id: guest.id,
           },
         },
+        guestEmail: guest.email ?? '',
         guestName: guest.name ?? '',
         guestNameKana: guest.nameKana ?? '',
         guestZipCode: guest.zipCode ?? '',
