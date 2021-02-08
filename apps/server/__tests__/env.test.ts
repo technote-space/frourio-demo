@@ -17,6 +17,7 @@ describe('env', () => {
     process.env.SMTP_SECURE = '';
     process.env.SMTP_USER = 'user';
     process.env.SMTP_PASS = 'pass';
+    process.env.SMTP_FROM = 'from';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../service/env');
@@ -32,6 +33,7 @@ describe('env', () => {
     expect(env.SMTP_SECURE).toBe(false);
     expect(env.SMTP_USER).toBe('user');
     expect(env.SMTP_PASS).toBe('pass');
+    expect(env.SMTP_FROM).toBe('from');
   });
 
   it('should use fallback value', () => {
@@ -47,6 +49,7 @@ describe('env', () => {
     delete process.env.SMTP_SECURE;
     delete process.env.SMTP_USER;
     delete process.env.SMTP_PASS;
+    delete process.env.SMTP_FROM;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../service/env');
@@ -62,6 +65,7 @@ describe('env', () => {
     expect(env.SMTP_SECURE).toBe(true);
     expect(env.SMTP_USER).toBe('');
     expect(env.SMTP_PASS).toBe('');
+    expect(env.SMTP_FROM).toBe('');
   });
 
   it('should return empty URL_PORT', () => {
@@ -71,5 +75,14 @@ describe('env', () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../service/env');
     expect(env.URL_PORT).toBe('');
+  });
+
+  it('should use smtp user', () => {
+    delete process.env.SMTP_FROM;
+    process.env.SMTP_USER = 'user';
+
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const env = require('../service/env');
+    expect(env.SMTP_FROM).toBe('user');
   });
 });

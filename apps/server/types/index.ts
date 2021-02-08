@@ -1,4 +1,6 @@
 import type { HttpStatusOk } from 'aspida';
+import type { Options } from 'nodemailer/lib/smtp-transport';
+import type { Address } from 'nodemailer/lib/mailer';
 import type { AuthHeader } from '@frourio-demo/types';
 
 export type AdminAuthorizationPayload = {
@@ -48,4 +50,15 @@ export type BodyResponse<T> = (BasicResponse & {
     message: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } & Record<string, any>;
+}
+
+export type MailOptions = Options;
+export type MailAddress = string | Address | Array<string | Address>;
+export type MailSettings = {
+  from: string | Address;
+  to: MailAddress;
+  bcc?: MailAddress;
+  subject: string;
+  text: string;
+  html: string;
 }
