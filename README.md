@@ -81,12 +81,13 @@ Windowsは対応していません。
 
 ホスト名: `localhost.frourio-demo.com`  
 
-### macOS
+### `yarn setup:front`
+#### macOS
 1. `/etc/hosts` に `localhost.frourio-demo.com` の設定がない場合は追記  
 1. mkcert, nss をインストール
 1. mkcert で証明書を作成
 
-### Linux
+#### Linux
 1. `/etc/hosts` に `localhost.frourio-demo.com` の設定がない場合は追記
 1. mkcert, nss をインストール
    1. Linuxbrew をインストール
