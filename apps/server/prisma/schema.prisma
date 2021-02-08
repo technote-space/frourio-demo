@@ -55,6 +55,7 @@ model Reservation {
   code          String
   guest         Guest?  @relation(fields: [guestId], references: [id])
   guestId       Int?
+  guestEmail    String
   guestName     String
   guestNameKana String
   guestZipCode  String

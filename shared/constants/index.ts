@@ -8,7 +8,7 @@ export const ACCOUNT_FIELDS = [
   { name: 'address', label: '住所' },
   { name: 'phone', label: '電話番号' },
 ] as const;
-export const RESERVATION_GUEST_FIELDS = ['name', 'nameKana', 'zipCode', 'address', 'phone'] as const;
+export const RESERVATION_GUEST_FIELDS = ['email', 'name', 'nameKana', 'zipCode', 'address', 'phone'] as const;
 export const RESERVATION_STATUS = {
   reserved: '予約済み',
   cancelled: 'キャンセル',
