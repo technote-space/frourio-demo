@@ -12,6 +12,11 @@ describe('env', () => {
     process.env.BASE_PATH = '/api/test';
     process.env.API_ORIGIN = 'http://example.com';
     process.env.API_URL = 'https://example.com/abc/';
+    process.env.SMTP_HOST = 'example.com';
+    process.env.SMTP_PORT = '25';
+    process.env.SMTP_SECURE = '';
+    process.env.SMTP_USER = 'user';
+    process.env.SMTP_PASS = 'pass';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../service/env');
@@ -22,6 +27,11 @@ describe('env', () => {
     expect(env.BASE_PATH).toBe('/api/test');
     expect(env.API_ORIGIN).toBe('http://example.com');
     expect(env.API_URL).toBe('https://example.com/abc/api/test');
+    expect(env.SMTP_HOST).toBe('example.com');
+    expect(env.SMTP_PORT).toBe(25);
+    expect(env.SMTP_SECURE).toBe(false);
+    expect(env.SMTP_USER).toBe('user');
+    expect(env.SMTP_PASS).toBe('pass');
   });
 
   it('should use fallback value', () => {
@@ -32,6 +42,11 @@ describe('env', () => {
     delete process.env.BASE_PATH;
     delete process.env.API_ORIGIN;
     delete process.env.API_URL;
+    delete process.env.SMTP_HOST;
+    delete process.env.SMTP_PORT;
+    delete process.env.SMTP_SECURE;
+    delete process.env.SMTP_USER;
+    delete process.env.SMTP_PASS;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../service/env');
@@ -42,6 +57,11 @@ describe('env', () => {
     expect(env.BASE_PATH).toBe('');
     expect(env.API_ORIGIN).toBe('http://localhost');
     expect(env.API_URL).toBe('http://localhost:8080');
+    expect(env.SMTP_HOST).toBe('');
+    expect(env.SMTP_PORT).toBe(587);
+    expect(env.SMTP_SECURE).toBe(true);
+    expect(env.SMTP_USER).toBe('');
+    expect(env.SMTP_PASS).toBe('');
   });
 
   it('should return empty URL_PORT', () => {
