@@ -46,15 +46,18 @@ const config: { projects: Config.InitialOptions[] } = {
       preset: 'ts-jest',
       testEnvironment: 'node',
       testMatch: ['<rootDir>/apps/server/__tests__/**/*.test.ts'],
-      moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-        prefix: '<rootDir>/',
-      }),
+      moduleNameMapper: {
+        'templates/(.*)\\.html$': '<rootDir>/apps/server/__tests__/__mocks__/$1.ts',
+        ...pathsToModuleNameMapper(compilerOptions.paths, {
+          prefix: '<rootDir>/',
+        }),
+      },
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
         '<rootDir>/apps/server/prisma/client/',
       ],
       globalSetup: './jest.global.setup.ts',
-      setupFilesAfterEnv: ['./jest.setup.ts'],
+      setupFilesAfterEnv: ['./jest.setup.ts', './apps/server/jest.setup.ts'],
       globals: { Blob: {} },
     },
   ],

@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { getSmtpOptions, getText, getMailSettings, send } from '$/service/mail';
+import { getSmtpOptions, getText, getMailSettings, send, sendHtmlMail } from '$/service/mail';
 import * as env from '$/service/env';
 
 jest.mock('nodemailer');
@@ -23,6 +23,9 @@ describe('getSmtpOptions', () => {
       auth: {
         user: 'user',
         pass: 'pass',
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
   });
@@ -61,7 +64,7 @@ describe('send', () => {
     const mockSendMail = jest.fn();
     const spyOn = jest.spyOn(nodemailer, 'createTransport').mockImplementation(() => ({
       sendMail: mockSendMail,
-    }) as any);
+    }) as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     expect(await send({}, getMailSettings({
       to: 'to@example.com',
@@ -80,7 +83,7 @@ describe('send', () => {
     });
     const spyOn = jest.spyOn(nodemailer, 'createTransport').mockImplementation(() => ({
       sendMail: mockSendMail,
-    }) as any);
+    }) as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     expect(await send({}, getMailSettings({
       to: 'to@example.com',
@@ -90,5 +93,32 @@ describe('send', () => {
     }))).toBe(false);
     expect(spyOn).toBeCalledTimes(1);
     expect(mockSendMail).toBeCalledTimes(1);
+  });
+});
+
+describe('sendHtmlMail', () => {
+  it('should call sendMail method', async() => {
+    Object.defineProperty(env, 'SMTP_FROM', { value: 'from@example.com' });
+    Object.defineProperty(env, 'FRONT_URL', { value: 'http://example.com' });
+    console.log = jest.fn();
+    const mockSendMail = jest.fn();
+    const spyOn = jest.spyOn(nodemailer, 'createTransport').mockImplementation(() => ({
+      sendMail: mockSendMail,
+    }) as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    expect(await sendHtmlMail(
+      'to@example.com',
+      'test subject',
+      '${logo_url}::${top_link}::${terms_link}::${privacy_link}::${contact_link}::${head}::${header}::${footer}',
+    )).toBe(true);
+    expect(spyOn).toBeCalledTimes(1);
+    expect(mockSendMail).toBeCalledWith({
+      from: 'from@example.com',
+      to: 'to@example.com',
+      bcc: [],
+      subject: 'test subject',
+      html: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
+      text: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
+    });
   });
 });
