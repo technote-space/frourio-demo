@@ -4,6 +4,8 @@ import type { AspidaResponse } from 'aspida';
 import type { responseInterface, ConfigInterface } from 'swr';
 import { RESERVATION_STATUS } from '@frourio-demo/constants';
 
+export type Primitive = string | number | undefined | null
+
 export type MaybeUndefined<T> = undefined extends T ? undefined : never;
 
 export type AuthHeader = {
