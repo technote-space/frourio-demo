@@ -510,11 +510,11 @@
     "version": "1.0.4",
     "licenseText": "# @chakra-ui/visually-hidden\n\nThe visually hidden component styles itself so that it’s content is not visible,\nbut it is available to assistive technologies like screen readers and other text\nto speech programs.\n\n## Installation\n\n```sh\nyarn add @chakra-ui/visually-hidden\n\n# or\n\nnpm i @chakra-ui/visually-hidden\n```\n\n## Import component\n\n```jsx\nimport { VisuallyHidden } from \"@chakra-ui/visually-hidden\"\n```\n\n## Basic usage\n\n```jsx\n// it renders a `span` by default\n<VisuallyHidden>This content will be hidden on screen</VisuallyHidden>\n\n// for visually hidden input fields\n<VisuallyHiddenInput type=\"checkbox\" defaultChecked/>\n```\n\n## References\n\n- https://snook.ca/archives/html_and_css/hiding-content-for-accessibility\n- https://a11yproject.com/posts/how-to-hide-content/"
   },
-  "@emotion/babel-plugin@11.1.2": {
+  "@emotion/babel-plugin@11.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/emotion-js/emotion/tree/master/packages/babel-plugin",
     "name": "@emotion/babel-plugin",
-    "version": "11.1.2",
+    "version": "11.2.0",
     "licenseText": "MIT License\n\nCopyright (c) Emotion team and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
   },
   "@emotion/cache@11.1.3": {
@@ -958,11 +958,11 @@
     "version": "2.2.0",
     "licenseText": "MIT License\n\nCopyright (c) 2019 Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com), Paul Miller (https://paulmillr.com)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
   },
-  "bl@4.0.4": {
+  "bl@4.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/bl",
     "name": "bl",
-    "version": "4.0.4",
+    "version": "4.1.0",
     "licenseText": "The MIT License (MIT)\n=====================\n\nCopyright (c) 2013-2019 bl contributors\n----------------------------------\n\n*bl contributors listed at <https://github.com/rvagg/bl#contributors>*\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
   },
   "bn.js@4.11.9": {
@@ -1532,11 +1532,11 @@
     "version": "2.4.4",
     "licenseText": "Copyright (c) Felix Böhm\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n\nRedistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\nTHIS IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS,\nEVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
   },
-  "electron-to-chromium@1.3.657": {
+  "electron-to-chromium@1.3.661": {
     "licenses": "ISC",
     "repository": "https://github.com/kilian/electron-to-chromium",
     "name": "electron-to-chromium",
-    "version": "1.3.657",
+    "version": "1.3.661",
     "licenseText": "Copyright 2018 Kilian Valkhof\n\nPermission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE."
   },
   "elliptic@6.5.4": {
@@ -1770,11 +1770,11 @@
     "version": "0.4.1",
     "licenseText": "# Glob To Regular Expression\n\n[![Build Status](https://travis-ci.org/fitzgen/glob-to-regexp.png?branch=master)](https://travis-ci.org/fitzgen/glob-to-regexp)\n\nTurn a \\*-wildcard style glob (`\"*.min.js\"`) into a regular expression\n(`/^.*\\.min\\.js$/`)!\n\nTo match bash-like globs, eg. `?` for any single-character match, `[a-z]` for\ncharacter ranges, and `{*.html, *.js}` for multiple alternatives, call with\n`{ extended: true }`.\n\nTo obey [globstars `**`](https://github.com/isaacs/node-glob#glob-primer) rules set option `{globstar: true}`.\nNOTE: This changes the behavior of `*` when `globstar` is `true` as shown below:\nWhen `{globstar: true}`: `/foo/**` will match any string that starts with `/foo/`\nlike `/foo/index.htm`, `/foo/bar/baz.txt`, etc.  Also, `/foo/**/*.txt` will match\nany string that starts with `/foo/` and ends with `.txt` like `/foo/bar.txt`,\n`/foo/bar/baz.txt`, etc.\nWhereas `/foo/*` (single `*`, not a globstar) will match strings that start with\n`/foo/` like `/foo/index.htm`, `/foo/baz.txt` but will not match strings that\ncontain a `/` to the right like `/foo/bar/baz.txt`, `/foo/bar/baz/qux.dat`, etc.\n\nSet flags on the resulting `RegExp` object by adding the `flags` property to the option object, eg `{ flags: \"i\" }` for ignoring case.\n\n## Install\n\n    npm install glob-to-regexp\n\n## Usage\n```js\nvar globToRegExp = require('glob-to-regexp');\nvar re = globToRegExp(\"p*uck\");\nre.test(\"pot luck\"); // true\nre.test(\"pluck\"); // true\nre.test(\"puck\"); // true\n\nre = globToRegExp(\"*.min.js\");\nre.test(\"http://example.com/jquery.min.js\"); // true\nre.test(\"http://example.com/jquery.min.js.map\"); // false\n\nre = globToRegExp(\"*/www/*.js\");\nre.test(\"http://example.com/www/app.js\"); // true\nre.test(\"http://example.com/www/lib/factory-proxy-model-observer.js\"); // true\n\n// Extended globs\nre = globToRegExp(\"*/www/{*.js,*.html}\", { extended: true });\nre.test(\"http://example.com/www/app.js\"); // true\nre.test(\"http://example.com/www/index.html\"); // true\n```\n\n## License\n\nCopyright (c) 2013, Nick Fitzgerald\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification,\nare permitted provided that the following conditions are met:\n\n* Redistributions of source code must retain the above copyright notice, this\n  list of conditions and the following disclaimer.\n\n* Redistributions in binary form must reproduce the above copyright notice, this\n  list of conditions and the following disclaimer in the documentation and/or\n  other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\nANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\nWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR\nANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON\nANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
   },
-  "graceful-fs@4.2.5": {
+  "graceful-fs@4.2.6": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-graceful-fs",
     "name": "graceful-fs",
-    "version": "4.2.5",
+    "version": "4.2.6",
     "licenseText": "The ISC License\n\nCopyright (c) Isaac Z. Schlueter, Ben Noordhuis, and Contributors\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE."
   },
   "has-flag@3.0.0": {
@@ -2624,11 +2624,11 @@
     "version": "1.2.8",
     "licenseText": "Apache License, Version 2.0\n\nCopyright (c) 2011 Dominic Tarr\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."
   },
-  "react-clientside-effect@1.2.3": {
+  "react-clientside-effect@1.2.4": {
     "licenses": "MIT",
     "repository": "https://github.com/thekashey/react-clientside-effect",
     "name": "react-clientside-effect",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "licenseText": "The MIT License (MIT)\n\nCopyright (c) 2015 Dan Abramov\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
   },
   "react-dom@17.0.1": {
@@ -3114,11 +3114,11 @@
     "version": "7.2.0",
     "licenseText": "MIT License\n\nCopyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
   },
-  "swr@0.4.1": {
+  "swr@0.4.2": {
     "licenses": "MIT",
     "repository": "https://github.com/vercel/swr",
     "name": "swr",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "licenseText": "MIT License\n\nCopyright (c) 2019 ZEIT\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
   },
   "tar-fs@2.1.1": {
