@@ -2,7 +2,9 @@ import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import { depend } from 'velona';
 import { differenceInCalendarDays } from 'date-fns';
-import { getReservation, updateReservation } from '$/repositories/reservation';
+import { getReservation, updateReservation, getReservationVariables } from '$/repositories/reservation';
+import CancelledTemplate from './templates/Cancelled.html';
+import { sendHtmlMail } from '$/service/mail';
 
 export type ReservationDetail = Reservation & {
   nights: number;
@@ -43,11 +45,14 @@ export const cancel = depend(
       where: { code },
     });
 
+    const cancelled = await updateReservation(reservation.id, {
+      status: 'cancelled',
+    });
+    await sendHtmlMail(cancelled.guestEmail, '予約キャンセル', CancelledTemplate, getReservationVariables(cancelled));
+
     return {
       status: 200,
-      body: await updateReservation(reservation.id, {
-        status: 'cancelled',
-      }),
+      body: cancelled,
     };
   },
 );

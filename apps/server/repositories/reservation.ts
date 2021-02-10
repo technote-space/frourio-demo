@@ -1,8 +1,10 @@
 import type { Prisma, Reservation } from '$/prisma/client';
 import { depend } from 'velona';
+import { format } from 'date-fns';
 import { PrismaClient } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
 import { generateCode } from '$/service/reservation';
+import { getReplaceVariables } from '@/utils/value';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
 export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
@@ -66,3 +68,19 @@ export const deleteReservation = depend(
     ...args,
   }),
 );
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const processReservationVariable = (key: string, value: any) => {
+  switch (key) {
+    case 'checkin':
+    case 'checkout':
+      return format(value as Date, 'yyyy/MM/dd HH:mm');
+    case 'number':
+      return `${value}人`;
+    case 'amount':
+      return `¥${value.toLocaleString()}`;
+    default:
+      return value;
+  }
+};
+export const getReservationVariables = (reservation: Reservation) => getReplaceVariables(Object.fromEntries(Object.entries(reservation).map(([key, value]) => [key, processReservationVariable(key, value)])), key => `reservation.${key}`);
