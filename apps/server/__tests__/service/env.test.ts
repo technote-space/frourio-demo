@@ -69,7 +69,7 @@ describe('env', () => {
     expect(env.FRONT_URL).toBe('');
     expect(env.SMTP_HOST).toBe('');
     expect(env.SMTP_PORT).toBe(587);
-    expect(env.SMTP_SECURE).toBe(true);
+    expect(env.SMTP_SECURE).toBe(false);
     expect(env.SMTP_USER).toBe('');
     expect(env.SMTP_PASS).toBe('');
     expect(env.SMTP_FROM).toBe('');
