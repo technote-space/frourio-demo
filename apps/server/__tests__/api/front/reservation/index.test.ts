@@ -4,15 +4,24 @@ import { createReservation } from '$/repositories/reservation';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { reserve } from '$/domains/front/reservation';
+import * as mail from '$/service/mail';
+
+jest.mock('$/service/mail');
 
 describe('reservation', () => {
   it('should create reservation', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const getRoomMock = jest.fn(() => getPromiseLikeItem({
       name: 'room name',
       price: 10000,
     }));
     const createReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      checkin: new Date('2020-01-01T06:00:00.000Z'),
+      checkout: new Date('2020-01-03T01:00:00.000Z'),
+      number: 3,
+      amount: 30000,
+      guestName: 'test',
     }));
     const injectedController = controller.inject({
       reserve: reserve.inject({
@@ -49,6 +58,11 @@ describe('reservation', () => {
     });
     expect(res.body).toEqual({
       id: 123,
+      checkin: new Date('2020-01-01T06:00:00.000Z'),
+      checkout: new Date('2020-01-03T01:00:00.000Z'),
+      number: 3,
+      amount: 30000,
+      guestName: 'test',
     });
     expect(getRoomMock).toBeCalledWith({
       rejectOnNotFound: true,
@@ -77,15 +91,26 @@ describe('reservation', () => {
         status: 'reserved',
       },
     });
+    expect(spyOn).toBeCalledWith(undefined, '予約完了', 'Reserved', {
+      'reservation.id': 123,
+      'reservation.checkin': '2020/01/01 15:00',
+      'reservation.checkout': '2020/01/03 10:00',
+      'reservation.number': '3人',
+      'reservation.amount': '¥30,000',
+      'reservation.guestName': 'test',
+    });
   });
 
   it('should create reservation with update info', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const getRoomMock = jest.fn(() => getPromiseLikeItem({
       name: 'room name',
       price: 10000,
     }));
     const createReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      checkin: new Date('2020-01-01T06:00:00.000Z'),
+      checkout: new Date('2020-01-03T01:00:00.000Z'),
     }));
     const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
@@ -145,6 +170,8 @@ describe('reservation', () => {
     });
     expect(res.body).toEqual({
       id: 123,
+      checkin: new Date('2020-01-01T06:00:00.000Z'),
+      checkout: new Date('2020-01-03T01:00:00.000Z'),
     });
     expect(getRoomMock).toBeCalledWith({
       rejectOnNotFound: true,
@@ -205,15 +232,23 @@ describe('reservation', () => {
         id: 321,
       },
     });
+    expect(spyOn).toBeCalledWith(undefined, '予約完了', 'Reserved', {
+      'reservation.id': 123,
+      'reservation.checkin': '2020/01/01 15:00',
+      'reservation.checkout': '2020/01/03 10:00',
+    });
   });
 
   it('should create reservation with update info', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const getRoomMock = jest.fn(() => getPromiseLikeItem({
       name: 'room name',
       price: 10000,
     }));
     const createReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
+      checkin: new Date('2020-01-01T06:00:00.000Z'),
+      checkout: new Date('2020-01-03T01:00:00.000Z'),
     }));
     const getGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
@@ -275,6 +310,8 @@ describe('reservation', () => {
     });
     expect(res.body).toEqual({
       id: 123,
+      checkin: new Date('2020-01-01T06:00:00.000Z'),
+      checkout: new Date('2020-01-03T01:00:00.000Z'),
     });
     expect(getRoomMock).toBeCalledWith({
       rejectOnNotFound: true,
@@ -335,6 +372,11 @@ describe('reservation', () => {
       where: {
         id: 321,
       },
+    });
+    expect(spyOn).toBeCalledWith(undefined, '予約完了', 'Reserved', {
+      'reservation.id': 123,
+      'reservation.checkin': '2020/01/01 15:00',
+      'reservation.checkout': '2020/01/03 10:00',
     });
   });
 });

@@ -17,6 +17,7 @@ import { format, set, startOfToday } from 'date-fns';
 import { getEventDates } from '@frourio-demo/utils/calendar';
 import { useDispatchContext } from '^/store';
 import { client, handleAuthError } from '^/utils/api';
+import useAuthToken from '^/hooks/useAuthToken';
 import TimePicker from '../TimePicker';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -35,6 +36,7 @@ const getDateTime = (date: Date | string, time: string): Date => set(new Date(da
 
 const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
   const { dispatch } = useDispatchContext();
+  const [auth] = useAuthToken();
   const calendarRef = useRef<FullCalendar>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -52,6 +54,9 @@ const Checkin: FC<Props> = memo(({ reservation, onChange }: Props) => {
         start: info.start,
         end: info.end,
       },
+      ...(auth ? {
+        headers: auth.authHeader,
+      } : {}),
     }).then(data => {
       if (reservation.checkin) {
         data.push({

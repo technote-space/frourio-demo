@@ -2,9 +2,13 @@ import controller from '$/api/front/reservations/_code@string/cancel/controller'
 import { getReservation, updateReservation } from '$/repositories/reservation';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { cancel } from '$/domains/front/reservations';
+import * as mail from '$/service/mail';
+
+jest.mock('$/service/mail');
 
 describe('account/reservations/detail/cancel', () => {
   it('should cancel reservation', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
       checkin: new Date('2020-01-01'),
@@ -43,6 +47,9 @@ describe('account/reservations/detail/cancel', () => {
       where: {
         id: 123,
       },
+    });
+    expect(spyOn).toBeCalledWith(undefined, '予約キャンセル', 'Cancelled', {
+      'reservation.id': 123,
     });
   });
 });

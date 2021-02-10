@@ -8,9 +8,11 @@ import { depend } from 'velona';
 import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
-import { getReservations, createReservation } from '$/repositories/reservation';
+import { getReservations, createReservation, getReservationVariables } from '$/repositories/reservation';
 import { getRoom, getRooms } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
+import { sendHtmlMail } from '$/service/mail';
+import ReservedTemplate from './templates/Reserved.html';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -55,14 +57,13 @@ export const getRoomInfo = depend(
 
 export const getCheckinNotSelectable = depend(
   { getReservations },
-  async({ getReservations }, roomId: number, start: Date, end: Date): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
+  async({ getReservations }, roomId: number, start: Date, end: Date, user?: GuestAuthorizationPayload): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
     const reservations = await getReservations({
       select: {
         checkin: true,
         checkout: true,
       },
       where: {
-        roomId,
         checkin: {
           lt: end,
         },
@@ -72,6 +73,16 @@ export const getCheckinNotSelectable = depend(
         status: {
           not: 'cancelled',
         },
+        OR: user ? [
+          { roomId },
+          {
+            id: {
+              not: user.id,
+            },
+          },
+        ] : [
+          { roomId },
+        ],
       },
     });
     const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
@@ -108,14 +119,13 @@ export const getCheckinNotSelectable = depend(
 
 export const getCheckoutSelectable = depend(
   { getReservations },
-  async({ getReservations }, roomId: number, end: Date, checkin: Date): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
+  async({ getReservations }, roomId: number, end: Date, checkin: Date, user?: GuestAuthorizationPayload): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
     const reservations = await getReservations({
       select: {
         checkin: true,
         checkout: true,
       },
       where: {
-        roomId,
         checkin: {
           lt: end,
         },
@@ -125,6 +135,16 @@ export const getCheckoutSelectable = depend(
         status: {
           not: 'cancelled',
         },
+        OR: user ? [
+          { roomId },
+          {
+            id: {
+              not: user.id,
+            },
+          },
+        ] : [
+          { roomId },
+        ],
       },
     });
     const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
@@ -224,9 +244,12 @@ export const reserve = depend(
       await updateGuest(user.id, guest);
     }
 
+    const reservation = await createReservation(createData);
+    await sendHtmlMail(reservation.guestEmail, '予約完了', ReservedTemplate, getReservationVariables(reservation));
+
     return {
       status: 201,
-      body: await createReservation(createData),
+      body: reservation,
     };
   },
 );

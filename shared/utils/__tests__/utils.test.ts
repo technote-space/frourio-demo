@@ -4,7 +4,8 @@ import { getPriceCalc } from '@/utils/calc';
 import { getEventDates } from '@/utils/calendar';
 import { addDisplayName } from '@/utils/component';
 import { ensureString, processLicenses } from '@/utils/license';
-import { startWithUppercase } from '@/utils/string';
+import { startWithUppercase, replaceVariables } from '@/utils/string';
+import { getReplaceVariables } from '@/utils/value';
 
 beforeAll(() => {
   console.log = jest.fn();
@@ -142,5 +143,44 @@ describe('startWithUppercase', () => {
     expect(startWithUppercase('test')).toBe('Test');
     expect(startWithUppercase('test-abc')).toBe('Test-abc');
     expect(startWithUppercase('test abc')).toBe('Test abc');
+  });
+});
+
+describe('replaceVariables', () => {
+  it('should replace variables', () => {
+    expect(replaceVariables('', {})).toBe('');
+    expect(replaceVariables('', { test: 1 })).toBe('');
+    expect(replaceVariables('${test}abc${test}${test}xyz', { test: 1 })).toBe('1abc11xyz');
+    expect(replaceVariables('${test1}abc${test}${test2}', { test1: 1, test2: undefined })).toBe('1abc${test}');
+  });
+});
+
+describe('getReplaceVariables', () => {
+  it('should return replace variables', () => {
+    expect(getReplaceVariables({})).toEqual({});
+    expect(getReplaceVariables({
+      test1: 1,
+      test2: 'test2',
+      test3: undefined,
+      test4: null,
+      test5: jest.fn(),
+    })).toEqual({
+      test1: 1,
+      test2: 'test2',
+      test3: undefined,
+      test4: null,
+    });
+    expect(getReplaceVariables({
+      test1: 1,
+      test2: 'test2',
+      test3: undefined,
+      test4: null,
+      test5: jest.fn(),
+    }, key => `test.${key}`)).toEqual({
+      'test.test1': 1,
+      'test.test2': 'test2',
+      'test.test3': undefined,
+      'test.test4': null,
+    });
   });
 });
