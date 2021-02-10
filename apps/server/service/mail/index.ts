@@ -1,10 +1,10 @@
 import type { MailOptions, MailSettings, MailAddress } from '$/types';
 import type { Primitive } from '@frourio-demo/types';
-import { createTransport } from 'nodemailer';
+import { fork } from 'child_process';
+
 import { htmlToText } from 'html-to-text';
 import { FRONT_URL, SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, SMTP_BCC } from '$/service/env';
 import { replaceVariables } from '@frourio-demo/utils/string';
-import { logger } from '$/service/logging';
 import HeadTemplate from './templates/Head.html';
 import HeaderTemplate from './templates/Header.html';
 import FooterTemplate from './templates/Footer.html';
@@ -36,16 +36,13 @@ export const getMailSettings = ({ to, bcc, subject, html, text }: {
   text: getText(text, html),
 });
 
-export const send = async(options: MailOptions, settings: MailSettings): Promise<boolean> => {
-  try {
-    const transport = createTransport(options);
-    const result = await transport.sendMail(settings);
-    logger.debug(result);
-    return true;
-  } catch (error) {
-    logger.error(error);
-    return false;
-  }
+export const send = async(options: MailOptions, settings: MailSettings) => {
+  const child = fork(
+    'tasks/mail.js',
+    [],
+    { execArgv: ['-r', 'ts-node/register'] },
+  );
+  child.send({ options: JSON.stringify(options), settings: JSON.stringify(settings) });
 };
 
 export const getTemplateVariables = () => ({
@@ -60,18 +57,12 @@ export const getCommonVariables = () => ({
   'privacy_link': `${FRONT_URL}/privacy`,
   'contact_link': `${FRONT_URL}/contact`,
 });
-export const sendHtmlMail = async(to: MailAddress, subject: string, template: string, variables?: Record<string, Primitive>) => {
-  logger.debug({
+export const sendHtmlMail = async(to: MailAddress, subject: string, template: string, variables?: Record<string, Primitive>) => send(getSmtpOptions(), getMailSettings({
+  to,
+  bcc: SMTP_BCC,
+  subject,
+  html: replaceVariables(replaceVariables(template, getTemplateVariables()), {
     ...getCommonVariables(),
     ...variables,
-  });
-  return send(getSmtpOptions(), getMailSettings({
-    to,
-    bcc: SMTP_BCC,
-    subject,
-    html: replaceVariables(replaceVariables(template, getTemplateVariables()), {
-      ...getCommonVariables(),
-      ...variables,
-    }),
-  }));
-};
+  }),
+}));
