@@ -42,7 +42,7 @@ export const send = async(options: MailOptions, settings: MailSettings) => {
     [],
     { execArgv: ['-r', 'ts-node/register'] },
   );
-  child.send({ options: JSON.stringify(options), settings: JSON.stringify(settings) });
+  child.send({ options, settings });
 };
 
 export const getTemplateVariables = () => ({
