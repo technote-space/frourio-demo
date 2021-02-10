@@ -20,7 +20,10 @@ module.exports = {
     path: __dirname,
   },
   module: {
-    rules: [{ test: /\.ts$/, loader: 'ts-loader' }],
+    rules: [
+      { test: /\.ts$/, loader: 'ts-loader' },
+      { test: /\.html$/, loader: 'raw-loader' },
+    ],
   },
   plugins: [new NodemonPlugin()],
   resolve: {

@@ -6,3 +6,4 @@ database.json
 public/icons/*
 !public/icons/dummy.svg
 *.pid
+/logs/

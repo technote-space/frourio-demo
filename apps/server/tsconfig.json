@@ -8,5 +8,8 @@
       "module": "commonjs",
       "isolatedModules": false
     }
-  }
+  },
+  "exclude": [
+    "__tests__"
+  ]
 }

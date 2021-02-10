@@ -8,9 +8,11 @@ import { depend } from 'velona';
 import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
-import { getReservations, createReservation } from '$/repositories/reservation';
+import { getReservations, createReservation, getReservationVariables } from '$/repositories/reservation';
 import { getRoom, getRooms } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
+import { sendHtmlMail } from '$/service/mail';
+import ReservedTemplate from './templates/Reserved.html';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -242,9 +244,12 @@ export const reserve = depend(
       await updateGuest(user.id, guest);
     }
 
+    const reservation = await createReservation(createData);
+    await sendHtmlMail(reservation.guestEmail, '予約完了', ReservedTemplate, getReservationVariables(reservation));
+
     return {
       status: 201,
-      body: await createReservation(createData),
+      body: reservation,
     };
   },
 );
