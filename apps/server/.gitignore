@@ -1,6 +1,7 @@
 **/$*.ts
 **/*.db
 index.js*
+/tasks/
 database.json
 .upload
 public/icons/*

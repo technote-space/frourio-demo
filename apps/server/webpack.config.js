@@ -4,7 +4,10 @@ const NodemonPlugin       = require('nodemon-webpack-plugin');
 const path                = require('path');
 
 module.exports = {
-  entry: './index.ts',
+  entry: {
+    index: path.resolve(__dirname, 'index.ts'),
+    'tasks/mail': path.resolve(__dirname, 'service/mail/task.ts'),
+  },
   target: 'node',
   node: {
     /*
@@ -16,7 +19,7 @@ module.exports = {
     __dirname: 'mock',
   },
   output: {
-    filename: 'index.js',
+    filename: '[name].js',
     path: __dirname,
   },
   module: {
