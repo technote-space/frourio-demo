@@ -55,14 +55,13 @@ export const getRoomInfo = depend(
 
 export const getCheckinNotSelectable = depend(
   { getReservations },
-  async({ getReservations }, roomId: number, start: Date, end: Date): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
+  async({ getReservations }, roomId: number, start: Date, end: Date, user?: GuestAuthorizationPayload): Promise<BodyResponse<Array<CheckinNotSelectableEvent>>> => {
     const reservations = await getReservations({
       select: {
         checkin: true,
         checkout: true,
       },
       where: {
-        roomId,
         checkin: {
           lt: end,
         },
@@ -72,6 +71,16 @@ export const getCheckinNotSelectable = depend(
         status: {
           not: 'cancelled',
         },
+        OR: user ? [
+          { roomId },
+          {
+            id: {
+              not: user.id,
+            },
+          },
+        ] : [
+          { roomId },
+        ],
       },
     });
     const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
@@ -108,14 +117,13 @@ export const getCheckinNotSelectable = depend(
 
 export const getCheckoutSelectable = depend(
   { getReservations },
-  async({ getReservations }, roomId: number, end: Date, checkin: Date): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
+  async({ getReservations }, roomId: number, end: Date, checkin: Date, user?: GuestAuthorizationPayload): Promise<BodyResponse<Array<CheckoutSelectableEvent>>> => {
     const reservations = await getReservations({
       select: {
         checkin: true,
         checkout: true,
       },
       where: {
-        roomId,
         checkin: {
           lt: end,
         },
@@ -125,6 +133,16 @@ export const getCheckoutSelectable = depend(
         status: {
           not: 'cancelled',
         },
+        OR: user ? [
+          { roomId },
+          {
+            id: {
+              not: user.id,
+            },
+          },
+        ] : [
+          { roomId },
+        ],
       },
     });
     const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({

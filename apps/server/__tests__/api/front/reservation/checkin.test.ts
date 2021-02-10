@@ -23,6 +23,7 @@ describe('reservation/calendar/checkin', () => {
     })(getFastify());
 
     const res = await injectedController.get({
+      headers: undefined,
       query: {
         roomId: 1,
         start: new Date('2020-01-01'),
@@ -59,10 +60,12 @@ describe('reservation/calendar/checkin', () => {
         checkout: {
           gt: new Date('2020-01-01'),
         },
-        roomId: 1,
         status: {
           not: 'cancelled',
         },
+        OR: [
+          { roomId: 1 },
+        ],
       },
     });
   });
@@ -82,11 +85,13 @@ describe('reservation/calendar/checkin', () => {
     })(getFastify());
 
     const res = await injectedController.get({
+      headers: undefined,
       query: {
         roomId: 1,
         start: new Date('2020-01-01'),
         end: new Date('2020-01-31'),
       },
+      user: { id: 321 },
     });
     expect(res.body).toEqual([]);
     expect(getReservationsMock).toBeCalledWith({
@@ -101,10 +106,17 @@ describe('reservation/calendar/checkin', () => {
         checkout: {
           gt: new Date('2020-01-01'),
         },
-        roomId: 1,
         status: {
           not: 'cancelled',
         },
+        OR: [
+          { roomId: 1 },
+          {
+            id: {
+              not: 321,
+            },
+          },
+        ],
       },
     });
   });
