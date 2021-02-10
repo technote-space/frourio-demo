@@ -11,6 +11,9 @@ import { startWithUppercase } from '@frourio-demo/utils/string';
 import { getReservations, createReservation } from '$/repositories/reservation';
 import { getRoom, getRooms } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
+import { sendHtmlMail } from '$/service/mail';
+import { getReplaceVariables } from '@/utils/value';
+import ReservedTemplate from './templates/Reserved.html';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -179,6 +182,20 @@ const getReservationGuest = (body: CreateReservationBody, guest: { email?: strin
   guestAddress: body.guestAddress,
   guestPhone: body.guestPhone,
 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const processReservationVariable = (key: string, value: any) => {
+  switch (key) {
+    case 'checkin':
+    case 'checkout':
+      return format(value as Date, 'yyyy/MM/dd HH:mm');
+    case 'number':
+      return `${value}人`;
+    case 'amount':
+      return `¥${value.toLocaleString()}`;
+    default:
+      return value;
+  }
+};
 export const reserve = depend(
   { getRoom, createReservation, getGuest, updateGuest },
   async(
@@ -224,9 +241,13 @@ export const reserve = depend(
       await updateGuest(user.id, guest);
     }
 
+    const reservation = await createReservation(createData);
+    const variables = getReplaceVariables(Object.fromEntries(Object.entries(reservation).map(([key, value]) => [key, processReservationVariable(key, value)])), key => `reservation.${key}`);
+    await sendHtmlMail(reservation.guestEmail, '予約完了', ReservedTemplate, variables);
+
     return {
       status: 201,
-      body: await createReservation(createData),
+      body: reservation,
     };
   },
 );
