@@ -12,7 +12,7 @@ describe('sendRoomKey', () => {
     ]));
     const sendHtmlMailMock = jest.fn();
     const encryptQrInfoMock = jest.fn(() => 'test');
-    const toDataURL = jest.fn(() => getPromiseLikeItem('url'));
+    const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
     const sleepMock = jest.fn();
 
     const injected = sendRoomKey.inject({
@@ -25,7 +25,7 @@ describe('sendRoomKey', () => {
       }),
       sendHtmlMail: sendHtmlMailMock,
       encryptQrInfo: encryptQrInfoMock,
-      toDataURL: toDataURL,
+      toDataURL: toDataURLMock,
       sleep: sleepMock,
     });
 
@@ -76,6 +76,12 @@ describe('sendRoomKey', () => {
       [{ code: '1', key: '1111', roomId: 1 }],
       [{ code: '2', key: '2222', roomId: 2 }],
       [{ code: '3', key: '3333', roomId: 3 }],
+    ]);
+    expect(toDataURLMock).toBeCalledTimes(3);
+    expect(toDataURLMock.mock.calls).toEqual([
+      ['test'],
+      ['test'],
+      ['test'],
     ]);
     expect(sleepMock).toBeCalledTimes(3);
   });

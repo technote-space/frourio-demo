@@ -23,8 +23,8 @@ import { getRoom, getRooms } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { sendHtmlMail } from '$/service/mail';
 import { encryptQrInfo } from '$/service/reservation';
-import ReservedTemplate from './templates/Reserved.html';
-import RoomKeyTemplate from './templates/RoomKey.html';
+import ReservedTemplate from '$/templates/Reserved.html';
+import RoomKeyTemplate from '$/templates/RoomKey.html';
 
 export type CheckinNotSelectableEvent = {
   start: string;

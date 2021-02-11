@@ -3,7 +3,7 @@ import type { Reservation } from '$/repositories/reservation';
 import { depend } from 'velona';
 import { differenceInCalendarDays } from 'date-fns';
 import { getReservation, updateReservation, getReservationVariables } from '$/repositories/reservation';
-import CancelledTemplate from './templates/Cancelled.html';
+import CancelledTemplate from '$/templates/Cancelled.html';
 import { sendHtmlMail } from '$/service/mail';
 
 export type ReservationDetail = Reservation & {
