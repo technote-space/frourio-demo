@@ -185,6 +185,54 @@ describe('Dashboard', () => {
     expect(checkin).toBeCalledWith({ id: 831 });
   });
 
+  it('should resend room key', async() => {
+    const checkin = jest.fn();
+
+    const { findAllByText, findByText, getByRole, getAllByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [{
+            'id': 831,
+            'guestName': '山本 美咲',
+            'guestNameKana': 'テスト',
+            'guestPhone': '060-844-7544',
+            'roomName': '杏19119',
+            'checkin': '2021-01-10T06:00:00.000Z',
+            'checkout': '2021-01-17T01:00:00.000Z',
+            'status': 'reserved',
+            'isValid': true,
+          }],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .get(/\/dashboard\/sales/).reply(200, [])
+        .post('/dashboard/checkin', body => {
+          checkin(body);
+          return body;
+        }).reply(200, () => ({ id: 123 })),
+    );
+
+    await findByText('山本 美咲');
+    expect(getAllByText('入室番号再送信')).toHaveLength(1);
+
+    // test resend room key
+    user.click(getAllByText('入室番号再送信')[0]);
+    await findByText('送信しました。');
+
+    // close alert
+    user.click(findElement(getByRole('alert'), 'button'));
+    await waitFor(() => expect(() => getByRole('alert')).toThrow());
+
+    expect(checkin).toBeCalledWith({ id: 831 });
+  });
+
   it('should checkout', async() => {
     const checkout = jest.fn();
 
