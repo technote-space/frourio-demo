@@ -4,6 +4,7 @@ import type { Room } from '$/repositories/room';
 import type { DailySales, MonthlySales } from '$/domains/admin/dashboard/types';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import { depend } from 'velona';
+import { toDataURL } from 'qrcode';
 import {
   startOfMonth,
   startOfYear,
@@ -19,10 +20,14 @@ import {
   getReservation,
   getReservationCount,
   updateReservation,
+  getReservationVariables,
 } from '$/repositories/reservation';
 import { getRooms } from '$/repositories/room';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/service/pages';
+import { sendHtmlMail } from '$/service/mail';
+import { encryptQrInfo } from '$/service/reservation';
+import RoomKeyTemplate from '$/templates/RoomKey.html';
 
 export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
 export type CheckoutReservation =
@@ -283,6 +288,41 @@ export const getDailySales = depend(
         day: parse(day, 'yyyy-MM-dd', new Date()),
         sales,
       })),
+    };
+  },
+);
+
+type ReservationWithKey = Reservation & {
+  room: {
+    key: string;
+  }
+}
+export const sendRoomKey = depend(
+  { getReservation, sendHtmlMail, encryptQrInfo, toDataURL },
+  async({ getReservation, sendHtmlMail, encryptQrInfo, toDataURL }, id: number): Promise<BodyResponse<Reservation>> => {
+    const reservation = await getReservation(id, {
+      include: {
+        room: {
+          select: {
+            key: true,
+          },
+        },
+      },
+    }) as ReservationWithKey;
+
+    await sendHtmlMail(reservation.guestEmail, '入室情報のお知らせ', RoomKeyTemplate, getReservationVariables({
+      ...reservation,
+      key: reservation.room.key,
+      qr: await toDataURL(encryptQrInfo({
+        roomId: reservation.roomId!,
+        key: reservation.room.key,
+        code: reservation.code,
+      })),
+    }));
+
+    return {
+      status: 202,
+      body: reservation,
     };
   },
 );

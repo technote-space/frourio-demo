@@ -1,7 +1,7 @@
 import controller from '$/api/admin/dashboard/checkin/controller';
 import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { checkin, getCheckin } from '$/domains/admin/dashboard';
+import { checkin, getCheckin, sendRoomKey } from '$/domains/admin/dashboard';
 import { startOfTomorrow, addDays } from 'date-fns';
 
 describe('dashboard/checkin', () => {
@@ -414,5 +414,61 @@ describe('dashboard/checkin', () => {
       },
     });
     expect(updateReservationMock).not.toBeCalled();
+  });
+
+  it('should send room key', async() => {
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
+      guestEmail: 'test@example.com',
+      roomId: 1,
+      code: '1',
+      room: { key: '1111' },
+    }));
+    const sendHtmlMailMock = jest.fn();
+    const encryptQrInfoMock = jest.fn(() => 'test');
+    const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
+
+    const injectedController = controller.inject({
+      sendRoomKey: sendRoomKey.inject({
+        getReservation: getReservation.inject({
+          prisma: {
+            reservation: {
+              findFirst: getReservationMock,
+            },
+          },
+        }),
+        sendHtmlMail: sendHtmlMailMock,
+        encryptQrInfo: encryptQrInfoMock,
+        toDataURL: toDataURLMock,
+      }),
+    })(getFastify());
+
+    const res = await injectedController.post({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      body: { id: 123 },
+    });
+    expect(res.body).toEqual({ guestEmail: 'test@example.com', roomId: 1, code: '1', room: { key: '1111' } });
+    expect(getReservationMock).toBeCalledWith({
+      include: {
+        room: {
+          select: {
+            key: true,
+          },
+        },
+      },
+      rejectOnNotFound: true,
+      where: {
+        id: 123,
+      },
+    });
+    expect(sendHtmlMailMock).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
+      'reservation.code': '1',
+      'reservation.guestEmail': 'test@example.com',
+      'reservation.key': '1111',
+      'reservation.roomId': 1,
+      'reservation.qr': 'url',
+    });
+    expect(encryptQrInfoMock).toBeCalledWith({ code: '1', key: '1111', roomId: 1 });
+    expect(toDataURLMock).toBeCalledWith('test');
   });
 });
