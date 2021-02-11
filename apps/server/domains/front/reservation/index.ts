@@ -19,10 +19,10 @@ import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import { sleep } from '@frourio-demo/utils/misc';
 import { getReservations, createReservation, getReservationVariables } from '$/repositories/reservation';
-import { getRoom, getRooms } from '$/repositories/room';
+import { getRoom, getRooms, updateRoom } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { sendHtmlMail } from '$/service/mail';
-import { encryptQrInfo } from '$/service/reservation';
+import { encryptQrInfo, generateRoomKey } from '$/service/reservation';
 import ReservedTemplate from '$/templates/Reserved.html';
 import RoomKeyTemplate from '$/templates/RoomKey.html';
 
@@ -272,8 +272,8 @@ type ReservationWithKey = Reservation & {
   }
 }
 export const sendRoomKey = depend(
-  { getReservations, sendHtmlMail, encryptQrInfo, toDataURL, sleep },
-  async({ getReservations, sendHtmlMail, encryptQrInfo, toDataURL, sleep }) => {
+  { getReservations, updateRoom, sendHtmlMail, encryptQrInfo, generateRoomKey, toDataURL, sleep },
+  async({ getReservations, updateRoom, sendHtmlMail, encryptQrInfo, generateRoomKey, toDataURL, sleep }) => {
     // 翌日チェックインの予約一覧
     const reservations = await getReservations({
       include: {
@@ -294,13 +294,19 @@ export const sendRoomKey = depend(
 
     await reservations.reduce(async(prev, reservation) => {
       await prev;
+      if (!reservation.roomId) {
+        return;
+      }
+
       await sleep(1000);
+      const key = generateRoomKey();
+      await updateRoom(reservation.roomId, { key });
       await sendHtmlMail(reservation.guestEmail, '入室情報のお知らせ', RoomKeyTemplate, getReservationVariables({
         ...reservation,
-        key: reservation.room.key,
+        key,
         qr: await toDataURL(encryptQrInfo({
           roomId: reservation.roomId!,
-          key: reservation.room.key,
+          key,
           code: reservation.code,
         })),
       }));
