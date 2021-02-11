@@ -20,11 +20,12 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
       render: data => `¥${data.price}`,
       validate: data => data['price'] >= 0,
     },
+    { title: '入室鍵', field: 'key', validate: data => !!data['key'] && /^\d{4}$/.test(data['key']) },
     {
       title: '利用状況',
       editable: 'never',
       // eslint-disable-next-line react/display-name
-      render: (data) => <RoomStatusCalendar roomId={data.id} authHeader={authHeader}/>,
+      render: (data) => <RoomStatusCalendar roomId={data.id} authHeader={authHeader} />,
     },
   ] as DataTableColumn<Model>[], []);
 

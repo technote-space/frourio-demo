@@ -1,11 +1,12 @@
 import type { Prisma, Room } from '$/prisma/client';
 import { depend } from 'velona';
 import { PrismaClient } from '$/prisma/client';
+import { generateRoomKey } from '$/service/reservation';
 import { dropId, whereId } from '$/repositories/utils';
 
 export type SearchRoomArgs = Prisma.RoomFindManyArgs;
 export type FindRoomArgs = Prisma.RoomFindFirstArgs;
-export type CreateRoomData = Prisma.RoomCreateInput;
+export type CreateRoomData = Omit<Prisma.RoomCreateInput, 'key'> & { key?: string; };
 export type CreateRoomArgs = Prisma.RoomCreateArgs;
 export type UpdateRoomData = Prisma.RoomUpdateInput;
 export type UpdateRoomArgs = Prisma.RoomUpdateArgs;
@@ -42,7 +43,10 @@ export const createRoom = depend(
   { prisma: prisma as { room: { create: typeof prisma.room.create } } },
   async({ prisma }, data: CreateRoomData, args?: Partial<CreateRoomArgs>) => prisma.room.create({
     ...args,
-    data,
+    data: {
+      key: generateRoomKey(),
+      ...data,
+    },
   }),
 );
 
