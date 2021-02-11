@@ -122,6 +122,8 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     const result = await request;
     if ('id' in result) {
       onSuccess();
+    } else {
+      refreshTables();
     }
   };
   const handleCancel = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.cancel.patch, {
