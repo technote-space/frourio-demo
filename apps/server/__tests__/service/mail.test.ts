@@ -107,7 +107,7 @@ describe('sendHtmlMail', () => {
         from: 'from@example.com',
         to: 'to@example.com',
         bcc: [],
-        subject: 'test subject',
+        subject: '【Frourioの宿】test subject',
         html: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
         text: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
       },

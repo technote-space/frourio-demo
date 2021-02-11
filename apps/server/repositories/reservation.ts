@@ -83,4 +83,5 @@ const processReservationVariable = (key: string, value: any) => {
       return value;
   }
 };
-export const getReservationVariables = (reservation: Reservation) => getReplaceVariables(Object.fromEntries(Object.entries(reservation).map(([key, value]) => [key, processReservationVariable(key, value)])), key => `reservation.${key}`);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getReservationVariables = (reservation: Reservation & Record<string, any>) => getReplaceVariables(Object.fromEntries(Object.entries(reservation).map(([key, value]) => [key, processReservationVariable(key, value)])), key => `reservation.${key}`);

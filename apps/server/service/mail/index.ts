@@ -1,7 +1,6 @@
 import type { MailOptions, MailSettings, MailAddress } from '$/types';
 import type { Primitive } from '@frourio-demo/types';
 import { fork } from 'child_process';
-
 import { htmlToText } from 'html-to-text';
 import { FRONT_URL, SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, SMTP_BCC } from '$/service/env';
 import { replaceVariables } from '@frourio-demo/utils/string';
@@ -60,7 +59,7 @@ export const getCommonVariables = () => ({
 export const sendHtmlMail = async(to: MailAddress, subject: string, template: string, variables?: Record<string, Primitive>) => send(getSmtpOptions(), getMailSettings({
   to,
   bcc: SMTP_BCC,
-  subject,
+  subject: `【Frourioの宿】${subject}`,
   html: replaceVariables(replaceVariables(template, getTemplateVariables()), {
     ...getCommonVariables(),
     ...variables,
