@@ -2,9 +2,11 @@ import controller from '$/api/admin/controller';
 import { getAdmin } from '$/repositories/admin';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
 import { get } from '$/domains/admin';
+import * as env from '$/service/env';
 
 describe('admin', () => {
   it('should get admin', async() => {
+    Object.defineProperty(env, 'API_URL', { value: 'http://example.com' });
     const injectedController = controller.inject({
       get: get.inject({
         getAdmin: getAdmin.inject({
@@ -30,7 +32,7 @@ describe('admin', () => {
       id: 1,
       name: 'test name',
       email: 'test@example.com',
-      icon: 'http://localhost:8080/api/icons/dummy.svg',
+      icon: 'http://example.com/icons/dummy.svg',
     }));
     expect(res.body).not.toEqual(expect.objectContaining({
       password: 'test password',
