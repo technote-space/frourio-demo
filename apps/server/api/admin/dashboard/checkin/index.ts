@@ -21,5 +21,6 @@ export type Methods = {
   post: {
     reqHeaders: AuthHeader;
     reqBody: SendRoomKeyBody;
+    resBody: Reservation | undefined;
   };
 }

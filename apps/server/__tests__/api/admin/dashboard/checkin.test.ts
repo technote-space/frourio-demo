@@ -1,8 +1,8 @@
 import controller from '$/api/admin/dashboard/checkin/controller';
 import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { checkin, getCheckin, sendRoomKey } from '$/domains/admin/dashboard';
-import { startOfTomorrow, addDays } from 'date-fns';
+import { checkin, getCheckin, isValidCheckinDateRange, sendRoomKey } from '$/domains/admin/dashboard';
+import { startOfTomorrow, addDays, set, format } from 'date-fns';
 
 describe('dashboard/checkin', () => {
   it('should get today\'s checkin reservations', async() => {
@@ -417,11 +417,13 @@ describe('dashboard/checkin', () => {
   });
 
   it('should send room key', async() => {
+    const checkin = set(new Date(), { hours: 15, minutes: 0, seconds: 0, milliseconds: 0 });
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       guestEmail: 'test@example.com',
       roomId: 1,
       code: '1',
       room: { key: '1111' },
+      checkin,
     }));
     const sendHtmlMailMock = jest.fn();
     const encryptQrInfoMock = jest.fn(() => 'test');
@@ -439,6 +441,10 @@ describe('dashboard/checkin', () => {
         sendHtmlMail: sendHtmlMailMock,
         encryptQrInfo: encryptQrInfoMock,
         toDataURL: toDataURLMock,
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => true,
+        }),
       }),
     })(getFastify());
 
@@ -447,7 +453,7 @@ describe('dashboard/checkin', () => {
       user: { id: 1, roles: [] },
       body: { id: 123 },
     });
-    expect(res.body).toEqual({ guestEmail: 'test@example.com', roomId: 1, code: '1', room: { key: '1111' } });
+    expect(res.body).toEqual({ guestEmail: 'test@example.com', roomId: 1, code: '1', room: { key: '1111' }, checkin });
     expect(getReservationMock).toBeCalledWith({
       include: {
         room: {
@@ -467,8 +473,57 @@ describe('dashboard/checkin', () => {
       'reservation.key': '1111',
       'reservation.roomId': 1,
       'reservation.qr': 'url',
+      'reservation.checkin': format(checkin, 'yyyy/MM/dd HH:mm'),
     });
     expect(encryptQrInfoMock).toBeCalledWith({ code: '1', key: '1111', roomId: 1 });
     expect(toDataURLMock).toBeCalledWith('test');
+  });
+
+  it('should not send room key', async() => {
+    const checkin = set(new Date(), { hours: 15, minutes: 0, seconds: 0, milliseconds: 0 });
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
+      guestEmail: 'test@example.com',
+      roomId: 1,
+      code: '1',
+      room: { key: '1111' },
+      checkin,
+    }));
+
+    const injectedController = controller.inject({
+      sendRoomKey: sendRoomKey.inject({
+        getReservation: getReservation.inject({
+          prisma: {
+            reservation: {
+              findFirst: getReservationMock,
+            },
+          },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => false,
+        }),
+      }),
+    })(getFastify());
+
+    const res = await injectedController.post({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      body: { id: 123 },
+    });
+    expect(res.body).toEqual({ message: 'Invalid datetime' });
+    expect(res.status).toBe(400);
+    expect(getReservationMock).toBeCalledWith({
+      include: {
+        room: {
+          select: {
+            key: true,
+          },
+        },
+      },
+      rejectOnNotFound: true,
+      where: {
+        id: 123,
+      },
+    });
   });
 });

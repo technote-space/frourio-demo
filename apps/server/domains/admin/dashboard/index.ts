@@ -14,6 +14,10 @@ import {
   eachDayOfInterval,
   format,
   parse,
+  isAfter,
+  isBefore,
+  addDays,
+  set,
 } from 'date-fns';
 import {
   getReservations,
@@ -297,9 +301,22 @@ type ReservationWithKey = Reservation & {
     key: string;
   }
 }
+export const isValidCheckinDateRange = depend(
+  { isAfter, isBefore },
+  ({ isAfter, isBefore }, checkin: Date, now: Date): boolean => {
+    const values = { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 };
+    return isAfter(now, set(checkin, values)) && isBefore(now, set(addDays(checkin, 1), values));
+  },
+);
 export const sendRoomKey = depend(
-  { getReservation, sendHtmlMail, encryptQrInfo, toDataURL },
-  async({ getReservation, sendHtmlMail, encryptQrInfo, toDataURL }, id: number): Promise<BodyResponse<Reservation>> => {
+  { getReservation, sendHtmlMail, encryptQrInfo, toDataURL, isValidCheckinDateRange },
+  async({
+    getReservation,
+    sendHtmlMail,
+    encryptQrInfo,
+    toDataURL,
+    isValidCheckinDateRange,
+  }, id: number): Promise<BodyResponse<Reservation | undefined>> => {
     const reservation = await getReservation(id, {
       include: {
         room: {
@@ -309,6 +326,15 @@ export const sendRoomKey = depend(
         },
       },
     }) as ReservationWithKey;
+
+    if (!isValidCheckinDateRange(reservation.checkin, new Date())) {
+      return {
+        status: 400,
+        body: {
+          message: 'Invalid datetime',
+        },
+      };
+    }
 
     await sendHtmlMail(reservation.guestEmail, '入室情報のお知らせ', RoomKeyTemplate, getReservationVariables({
       ...reservation,
