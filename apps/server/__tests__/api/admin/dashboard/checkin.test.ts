@@ -55,6 +55,10 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => true,
+        }),
       }),
     })(getFastify());
 
@@ -203,6 +207,10 @@ describe('dashboard/checkin', () => {
               count: getReservationCountMock,
             },
           },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => false,
+          isBefore: () => true,
         }),
       }),
     })(getFastify());

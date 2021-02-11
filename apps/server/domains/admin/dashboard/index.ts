@@ -16,7 +16,6 @@ import {
   parse,
   isAfter,
   isBefore,
-  addDays,
   set,
 } from 'date-fns';
 import {
@@ -33,7 +32,12 @@ import { sendHtmlMail } from '$/service/mail';
 import { encryptQrInfo } from '$/service/reservation';
 import RoomKeyTemplate from '$/templates/RoomKey.html';
 
-export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
+export type CheckinReservation =
+  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
+  & {
+  isValid: boolean;
+};
+
 export type CheckoutReservation =
   Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount' | 'payment'>
   & {
@@ -44,10 +48,17 @@ export type CheckoutReservation =
 };
 export type SelectableRoom = Pick<Room, 'id' | 'name'>;
 
+export const isValidCheckinDateRange = depend(
+  { isAfter, isBefore },
+  ({ isAfter, isBefore }, checkin: Date, checkout: Date, now: Date): boolean => {
+    const values = { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 };
+    return isAfter(now, set(checkin, values)) && isBefore(now, set(checkout, values));
+  },
+);
 export const getCheckin = depend(
-  { getReservations, getReservationCount },
+  { getReservations, getReservationCount, isValidCheckinDateRange },
   async(
-    { getReservations, getReservationCount },
+    { getReservations, getReservationCount, isValidCheckinDateRange },
     query: Query<CheckinReservation>,
     date?: Date,
   ): Promise<BodyResponse<QueryResult<CheckinReservation>>> => {
@@ -64,7 +75,7 @@ export const getCheckin = depend(
     const orderBy = getOrderBy<CheckinReservation>(query.orderBy, query.orderDirection);
     const totalCount = await getReservationCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);
-    const data = await getReservations({
+    const reservations = await getReservations({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,
@@ -84,7 +95,10 @@ export const getCheckin = depend(
     return {
       status: 200,
       body: {
-        data,
+        data: reservations.map(reservation => ({
+          ...reservation,
+          isValid: isValidCheckinDateRange(reservation.checkin, reservation.checkout, new Date()),
+        })),
         page,
         totalCount,
       },
@@ -301,13 +315,6 @@ type ReservationWithKey = Reservation & {
     key: string;
   }
 }
-export const isValidCheckinDateRange = depend(
-  { isAfter, isBefore },
-  ({ isAfter, isBefore }, checkin: Date, now: Date): boolean => {
-    const values = { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 };
-    return isAfter(now, set(checkin, values)) && isBefore(now, set(addDays(checkin, 1), values));
-  },
-);
 export const sendRoomKey = depend(
   { getReservation, sendHtmlMail, encryptQrInfo, toDataURL, isValidCheckinDateRange },
   async({
@@ -327,7 +334,7 @@ export const sendRoomKey = depend(
       },
     }) as ReservationWithKey;
 
-    if (!isValidCheckinDateRange(reservation.checkin, new Date())) {
+    if (!isValidCheckinDateRange(reservation.checkin, reservation.checkout, new Date())) {
       return {
         status: 400,
         body: {
