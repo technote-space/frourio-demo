@@ -20,6 +20,9 @@ describe('env', () => {
     process.env.SMTP_PASS = 'pass';
     process.env.SMTP_FROM = 'from';
     process.env.SMTP_BCC = 'bcc1,bcc2';
+    process.env.CRYPTO_PASS = 'pass';
+    process.env.CRYPTO_SALT = 'salt';
+    process.env.CRYPTO_ALGO = 'algo';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../../service/env');
@@ -38,6 +41,9 @@ describe('env', () => {
     expect(env.SMTP_PASS).toBe('pass');
     expect(env.SMTP_FROM).toBe('from');
     expect(env.SMTP_BCC).toEqual(['bcc1', 'bcc2']);
+    expect(env.CRYPTO_PASS).toBe('pass');
+    expect(env.CRYPTO_SALT).toBe('salt');
+    expect(env.CRYPTO_ALGO).toBe('algo');
   });
 
   it('should use fallback value', () => {
@@ -56,6 +62,9 @@ describe('env', () => {
     delete process.env.SMTP_PASS;
     delete process.env.SMTP_FROM;
     delete process.env.SMTP_BCC;
+    delete process.env.CRYPTO_PASS;
+    delete process.env.CRYPTO_SALT;
+    delete process.env.CRYPTO_ALGO;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../../service/env');
@@ -74,6 +83,9 @@ describe('env', () => {
     expect(env.SMTP_PASS).toBe('');
     expect(env.SMTP_FROM).toBe('');
     expect(env.SMTP_BCC).toEqual([]);
+    expect(env.CRYPTO_PASS).toBe('');
+    expect(env.CRYPTO_SALT).toBe('');
+    expect(env.CRYPTO_ALGO).toBe('');
   });
 
   it('should return empty URL_PORT', () => {

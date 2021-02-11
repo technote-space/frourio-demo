@@ -45,7 +45,8 @@
     "html-to-text": "^6.0.0",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.1",
-    "nodemailer": "^6.4.17"
+    "nodemailer": "^6.4.17",
+    "qrcode": "^1.4.4"
   },
   "devDependencies": {
     "@prisma/cli": "^2.16.1",
@@ -58,6 +59,7 @@
     "@types/node-cron": "^2.0.3",
     "@types/node-fetch": "^2.5.8",
     "@types/nodemailer": "^6.4.0",
+    "@types/qrcode": "^1.4.0",
     "aspida": "^1.4.1",
     "cross-blob": "^2.0.0",
     "cross-env": "^7.0.3",
