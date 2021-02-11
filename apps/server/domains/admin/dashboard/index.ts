@@ -316,7 +316,7 @@ export const sendRoomKey = depend(
     encryptQrInfo,
     toDataURL,
     isValidCheckinDateRange,
-  }, id: number): Promise<BodyResponse<Reservation | undefined>> => {
+  }, id: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id, {
       include: {
         room: {
