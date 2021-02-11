@@ -1,10 +1,10 @@
 import type { Prisma, Reservation } from '$/prisma/client';
 import { depend } from 'velona';
 import { format } from 'date-fns';
-import { PrismaClient } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
 import { generateCode } from '$/service/reservation';
 import { getReplaceVariables } from '@/utils/value';
+import { prisma } from '$/repositories';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
 export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
@@ -16,8 +16,6 @@ export type DeleteReservationArgs = Prisma.ReservationDeleteArgs;
 export type ReservationOrderByInput = Prisma.ReservationOrderByInput;
 export type ReservationWhereInput = Prisma.ReservationWhereInput;
 export type { Reservation };
-
-const prisma = new PrismaClient();
 
 export const getReservations = depend(
   { prisma: prisma as { reservation: { findMany: typeof prisma.reservation.findMany } } },

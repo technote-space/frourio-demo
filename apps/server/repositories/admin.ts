@@ -1,10 +1,10 @@
 import type { Prisma, Admin as _Admin } from '$/prisma/client';
 import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
-import { PrismaClient } from '$/prisma/client';
 import { API_URL } from '$/service/env';
 import { createAdminPasswordHash, validateHash } from '$/repositories/utils';
 import { dropId } from '$/repositories/utils';
+import { prisma } from '$/repositories';
 
 export type SearchAdminArgs = Prisma.AdminFindManyArgs;
 export type FindAdminArgs = Prisma.AdminFindFirstArgs;
@@ -18,8 +18,6 @@ export type Admin = {
 } & {
   roles: Role[]
 };
-
-export const prisma = new PrismaClient();
 
 const createIconUrl = (name: string) => `${API_URL}/icons/${name}`;
 const convertToIconUrl = <T extends { icon: string | null }>(admin: T) => {

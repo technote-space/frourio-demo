@@ -1,7 +1,7 @@
 import type { Prisma, Guest } from '$/prisma/client';
 import { depend } from 'velona';
-import { PrismaClient } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
+import { prisma } from '$/repositories';
 
 export type SearchGuestArgs = Prisma.GuestFindManyArgs;
 export type FindGuestArgs = Prisma.GuestFindFirstArgs;
@@ -14,8 +14,6 @@ export type DeleteManyGuestArgs = Prisma.GuestDeleteManyArgs;
 export type GuestOrderByInput = Prisma.GuestOrderByInput;
 export type GuestWhereInput = Prisma.GuestWhereInput;
 export type { Guest };
-
-const prisma = new PrismaClient();
 
 export const getGuests = depend(
   { prisma: prisma as { guest: { findMany: typeof prisma.guest.findMany } } },

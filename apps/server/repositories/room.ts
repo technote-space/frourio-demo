@@ -1,8 +1,8 @@
 import type { Prisma, Room } from '$/prisma/client';
 import { depend } from 'velona';
-import { PrismaClient } from '$/prisma/client';
 import { generateRoomKey } from '$/service/reservation';
 import { dropId, whereId } from '$/repositories/utils';
+import { prisma } from '$/repositories';
 
 export type SearchRoomArgs = Prisma.RoomFindManyArgs;
 export type FindRoomArgs = Prisma.RoomFindFirstArgs;
@@ -14,8 +14,6 @@ export type DeleteRoomArgs = Prisma.RoomDeleteArgs;
 export type RoomOrderByInput = Prisma.RoomOrderByInput;
 export type RoomWhereInput = Prisma.RoomWhereInput;
 export type { Room };
-
-const prisma = new PrismaClient();
 
 export const getRooms = depend(
   { prisma: prisma as { room: { findMany: typeof prisma.room.findMany } } },
