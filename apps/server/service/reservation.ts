@@ -16,8 +16,8 @@ export const decryptQrInfo = (encrypted: string): QrInfo | undefined => {
   try {
     const { data, iv } = JSON.parse(encrypted);
     const key = scryptSync(CRYPTO_PASS, CRYPTO_SALT, 32);
-    const decipher = createDecipheriv(CRYPTO_ALGO, key, new Buffer(iv.data));
-    return JSON.parse(Buffer.concat([decipher.update(new Buffer(data.data)), decipher.final()]).toString()) as QrInfo;
+    const decipher = createDecipheriv(CRYPTO_ALGO, key, Buffer.from(iv.data));
+    return JSON.parse(Buffer.concat([decipher.update(Buffer.from(data.data)), decipher.final()]).toString()) as QrInfo;
   } catch (error) {
     logger.error(error);
     return undefined;
