@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { AppProps } from 'next/app';
 import type { AppState } from '@auth0/auth0-react';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -10,13 +10,6 @@ import { StoreContextProvider } from '^/store';
 import history from '^/utils/history';
 import config from '^/auth0.json';
 
-const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
-  return (
-    <div suppressHydrationWarning>
-      {typeof window === 'undefined' ? null : children}
-    </div>
-  );
-};
 const getRedirectUri = () => typeof window === 'undefined' ? '' : `${window.location.origin}${process.env.BASE_PATH}`;
 const theme = extendTheme({
   styles: {
@@ -51,7 +44,7 @@ const onRedirectCallback = (appState: AppState) => {
   }
 };
 
-const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHydrate>
+const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => typeof window === 'undefined' ? null :
   <ChakraProvider theme={theme}>
     <StoreContextProvider>
       <Auth0Provider
@@ -60,12 +53,11 @@ const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHy
         onRedirectCallback={onRedirectCallback}
       >
         <Router history={history}>
-          <Head/>
+          <Head />
           <Component {...pageProps} />
         </Router>
       </Auth0Provider>
     </StoreContextProvider>
-  </ChakraProvider>
-</SafeHydrate>;
+  </ChakraProvider>;
 
 export default MyApp;
