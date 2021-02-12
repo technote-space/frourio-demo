@@ -15,10 +15,6 @@ const reducerActions = {
     ...store,
     guest: 'name' in action.guest || 'email' in action.guest ? action.guest : undefined,
   }),
-  OPEN_SIDEBAR: (store) => ({ ...store, isSidebarOpen: true }),
-  CLOSE_SIDEBAR: (store) => ({ ...store, isSidebarOpen: false }),
-  OPEN_LICENSE: (store) => ({ ...store, isLicenseOpen: true }),
-  CLOSE_LICENSE: (store) => ({ ...store, isLicenseOpen: false }),
   TITLE: (store, action) => ({ ...store, title: action.title }),
   LOGOUT: (store) => ({
     ...store,

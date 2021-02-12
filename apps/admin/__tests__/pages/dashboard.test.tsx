@@ -188,7 +188,7 @@ describe('Dashboard', () => {
   it('should resend room key', async() => {
     const checkin = jest.fn();
 
-    const { findAllByText, findByText, getByRole, getAllByText } = await loadPage(
+    const { findByText, getByRole, getAllByText } = await loadPage(
       'dashboard',
       scope => scope
         .get('/dashboard/rooms').reply(200, [])
