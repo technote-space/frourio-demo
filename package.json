@@ -1,6 +1,6 @@
 {
   "name": "frourio-demo",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "private": true,
   "description": "Demo application of Frourio.",
   "keywords": [
@@ -76,8 +76,8 @@
     "setup:admin": "yarn workspace @frourio-demo/admin setup",
     "setup:config": "yarn workspace @frourio-demo/server setup:config",
     "setup:front": "yarn workspace @frourio-demo/front setup",
-    "setup:lock": "yarn workspace @frourio-demo/lock setup",
     "setup:install": "yarn install --ignore-platform --prefer-offline --network-timeout 1000000",
+    "setup:lock": "yarn workspace @frourio-demo/lock setup",
     "setup:server": "yarn workspace @frourio-demo/server setup && yarn migrate:seed",
     "start": "run-p start:*",
     "start:admin": "yarn workspace @frourio-demo/admin start",
