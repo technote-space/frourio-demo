@@ -16,6 +16,7 @@ const isTestAddress = (to: MailAddress): boolean => {
 process.once('message', (message: { options: MailOptions; settings: MailSettings; }) => {
   if (isTestAddress(message.settings.to)) {
     logger.debug(`test address: ${JSON.stringify(message.settings.to)}`);
+    logger.debug(message.settings.text);
     return;
   }
 

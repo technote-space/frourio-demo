@@ -16,5 +16,5 @@ export const RESERVATION_STATUS = {
   checkout: 'チェックアウト',
 } as const;
 
-export const ROOM_KEY_DIGITS = 4;
+export const ROOM_KEY_DIGITS = 6;
 export const MAX_TRIALS = 3;
