@@ -43,6 +43,7 @@ export const createRoom = depend(
     ...args,
     data: {
       key: generateRoomKey(),
+      trials: 0,
       ...data,
     },
   }),

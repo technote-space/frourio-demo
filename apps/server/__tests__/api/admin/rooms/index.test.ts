@@ -133,6 +133,7 @@ describe('rooms', () => {
         number: 3,
         price: 30000,
         key: expect.any(String),
+        trials: 0,
       },
     });
   });

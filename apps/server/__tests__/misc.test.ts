@@ -284,6 +284,8 @@ describe('fillCreateReservationData', () => {
         jest.fn(() => Promise.resolve({
           id: 1,
           name: '',
+          key: '1111',
+          trials: 0,
           number: 1,
           price: 1,
           createdAt: new Date(),
@@ -320,6 +322,8 @@ describe('fillUpdateReservationData', () => {
         jest.fn(() => Promise.resolve({
           id: 1,
           name: '',
+          key: '1111',
+          trials: 0,
           number: 1,
           price: 1,
           createdAt: new Date(),
