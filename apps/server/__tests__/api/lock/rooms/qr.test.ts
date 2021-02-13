@@ -1,9 +1,9 @@
 import controller from '$/api/lock/rooms/_roomId@number/qr/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { validateQr } from '$/domains/lock/rooms';
-import { getRoom, updateRoom } from '$/repositories/room';
+import { getRoom } from '$/repositories/room';
 import { getReservation, updateReservation } from '$/repositories/reservation';
-import { getValidReservation, isValidCheckinDateRange } from '$/service/reservation';
+import { isValidCheckinDateRange } from '$/service/reservation';
 
 describe('rooms/qr', () => {
   it('should validate qr', async() => {
