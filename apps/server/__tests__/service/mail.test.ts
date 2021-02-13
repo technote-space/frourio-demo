@@ -1,5 +1,5 @@
-import { getSmtpOptions, getText, getMailSettings, send, sendHtmlMail } from '$/service/mail';
-import * as env from '$/service/env';
+import { getSmtpOptions, getText, getMailSettings, send, sendHtmlMail } from '$/service/mail/utils';
+import * as env from '$/utils/env';
 import childProcess from 'child_process';
 
 jest.mock('child_process');
@@ -107,7 +107,7 @@ describe('sendHtmlMail', () => {
         from: 'from@example.com',
         to: 'to@example.com',
         bcc: [],
-        subject: 'test subject',
+        subject: '【Frourioの宿】test subject',
         html: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
         text: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
       },

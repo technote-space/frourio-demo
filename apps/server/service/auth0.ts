@@ -1,6 +1,6 @@
 import { depend } from 'velona';
 import fetch from 'node-fetch';
-import { AUTH0_DOMAIN } from '$/service/env';
+import { AUTH0_DOMAIN } from '$/utils/env';
 
 type Info = {
   email: string;

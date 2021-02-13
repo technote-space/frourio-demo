@@ -11,6 +11,9 @@ class ReservationStatusBody {
 export class CheckinBody extends ReservationStatusBody {
 }
 
+export class SendRoomKeyBody extends ReservationStatusBody {
+}
+
 export class CheckoutBody extends ReservationStatusBody {
   @IsInt({ message: '整数値を指定してください' })
   @Min(0, { message: '0以上を指定してください' })

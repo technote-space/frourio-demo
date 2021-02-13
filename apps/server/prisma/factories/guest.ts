@@ -1,7 +1,7 @@
 import { define } from '../tools/define';
 
 define('guest', (faker => ({
-  email: faker.random.number() + faker.internet.email(),
+  email: `${faker.random.number()}${faker.random.number()}@example.com`,
   name: `${faker.name.lastName()} ${faker.name.firstName()}`,
   nameKana: 'テスト テスト',
   zipCode: faker.address.zipCode(),

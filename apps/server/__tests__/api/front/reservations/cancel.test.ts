@@ -2,9 +2,9 @@ import controller from '$/api/front/reservations/_code@string/cancel/controller'
 import { getReservation, updateReservation } from '$/repositories/reservation';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { cancel } from '$/domains/front/reservations';
-import * as mail from '$/service/mail';
+import * as mail from '$/service/mail/utils';
 
-jest.mock('$/service/mail');
+jest.mock('$/service/mail/utils');
 
 describe('account/reservations/detail/cancel', () => {
   it('should cancel reservation', async() => {

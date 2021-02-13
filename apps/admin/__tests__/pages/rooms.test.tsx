@@ -15,6 +15,7 @@ describe('Rooms', () => {
             'name': '杏19119',
             'number': 4,
             'price': 37319,
+            'key': '0000',
             'createdAt': '2021-01-04T09:36:28.487Z',
             'updatedAt': '2021-01-04T09:36:28.487Z',
           }, {
@@ -22,6 +23,7 @@ describe('Rooms', () => {
             'name': '結菜8081',
             'number': 8,
             'price': 51738,
+            'key': '1111',
             'createdAt': '2021-01-04T09:36:28.485Z',
             'updatedAt': '2021-01-04T09:36:28.485Z',
           }, {
@@ -29,6 +31,7 @@ describe('Rooms', () => {
             'name': '翼36423',
             'number': 1,
             'price': 21615,
+            'key': '3333',
             'createdAt': '2021-01-04T09:36:28.482Z',
             'updatedAt': '2021-01-04T09:36:28.482Z',
           }, {
@@ -36,6 +39,7 @@ describe('Rooms', () => {
             'name': '大翔75634',
             'number': 5,
             'price': 80888,
+            'key': '4444',
             'createdAt': '2021-01-04T09:36:28.479Z',
             'updatedAt': '2021-01-07T18:31:11.661Z',
           }, {
@@ -43,6 +47,7 @@ describe('Rooms', () => {
             'name': '颯太83958',
             'number': 8,
             'price': 6085,
+            'key': '5555',
             'createdAt': '2021-01-04T09:36:28.477Z',
             'updatedAt': '2021-01-04T09:36:28.477Z',
           },
@@ -55,6 +60,7 @@ describe('Rooms', () => {
     await findByText('杏19119');
     expect(getByText('颯太83958')).toBeVisible();
     expect(getByText('¥21615')).toBeVisible();
+    expect(getByText('5555')).toBeVisible();
   });
 
   it('should show status', async() => {
@@ -68,6 +74,7 @@ describe('Rooms', () => {
               'name': '杏19119',
               'number': 4,
               'price': 37319,
+              'key': '5555',
               'createdAt': '2021-01-04T09:36:28.487Z',
               'updatedAt': '2021-01-04T09:36:28.487Z',
             },
@@ -158,10 +165,11 @@ describe('Rooms', () => {
 
     // input
     const input = container.querySelectorAll('[mode="add"] input');
-    expect(input).toHaveLength(3);
+    expect(input).toHaveLength(4);
     user.type(input[0], 'test-name');
     user.type(input[1], '3');
     user.type(input[2], '10000');
+    user.type(input[3], '1111');
 
     user.click(container.querySelectorAll('[title="保存"]')[0]);
     await findByText('name must be longer than or equal to 1 characters');
@@ -199,10 +207,11 @@ describe('Rooms', () => {
 
     // input
     const input = container.querySelectorAll('[mode="add"] input');
-    expect(input).toHaveLength(3);
+    expect(input).toHaveLength(4);
     user.type(input[0], 'test-name');
     user.type(input[1], '3');
     user.type(input[2], '10000');
+    user.type(input[3], '1111');
 
     // save
     user.click(container.querySelectorAll('[title="保存"]')[0]);
@@ -214,6 +223,7 @@ describe('Rooms', () => {
       name: 'test-name',
       number: 3,
       price: 10000,
+      key: '1111',
     });
   });
 
@@ -228,6 +238,7 @@ describe('Rooms', () => {
             'name': 'test-name',
             'number': 3,
             'price': 10000,
+            'key': '1111',
             'createdAt': '2021-01-13T05:55:52.624Z',
             'updatedAt': '2021-01-13T05:55:52.624Z',
           }],
@@ -273,6 +284,7 @@ describe('Rooms', () => {
             'name': 'test-name',
             'number': 3,
             'price': 10000,
+            'key': '1111',
             'createdAt': '2021-01-13T05:55:52.624Z',
             'updatedAt': '2021-01-13T05:55:52.624Z',
           }],
@@ -298,7 +310,7 @@ describe('Rooms', () => {
     // edit
     user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
-    expect(input).toHaveLength(3);
+    expect(input).toHaveLength(4);
     user.clear(input[0]);
     user.type(input[0], 'update-name');
     user.click(container.querySelectorAll('[title="保存"]')[0]);
@@ -311,6 +323,7 @@ describe('Rooms', () => {
       name: 'update-name',
       number: 3,
       price: 10000,
+      key: '1111',
     });
   });
 });

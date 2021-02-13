@@ -5,7 +5,7 @@ import { list, create } from '$/domains/admin/rooms';
 
 describe('rooms', () => {
   it('should get rooms', async() => {
-    const getRoomsMock       = jest.fn(() => getPromiseLikeItem([
+    const getRoomsMock = jest.fn(() => getPromiseLikeItem([
       {
         id: 123,
         name: 'test12',
@@ -23,7 +23,7 @@ describe('rooms', () => {
         updatedAt: new Date(),
       },
     ]));
-    const getRoomsCountMock  = jest.fn(() => getPromiseLikeItem(3));
+    const getRoomsCountMock = jest.fn(() => getPromiseLikeItem(3));
     const injectedController = controller.inject({
       list: list.inject({
         getRooms: getRooms.inject({
@@ -104,7 +104,7 @@ describe('rooms', () => {
   });
 
   it('should create room', async() => {
-    const createRoomMock     = jest.fn();
+    const createRoomMock = jest.fn();
     const injectedController = controller.inject({
       create: create.inject({
         createRoom: createRoom.inject({
@@ -132,6 +132,8 @@ describe('rooms', () => {
         name: 'test name',
         number: 3,
         price: 30000,
+        key: expect.any(String),
+        trials: 0,
       },
     });
   });

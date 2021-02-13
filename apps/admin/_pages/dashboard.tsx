@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     letterSpacing: 0,
     backgroundColor: theme.palette.primary.main,
   },
+  resend: {
+    marginTop: theme.spacing(1),
+  },
   dialogButton: {
     margin: theme.spacing(0, 1),
     minWidth: '6rem',
@@ -119,6 +122,8 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     const result = await request;
     if ('id' in result) {
       onSuccess();
+    } else {
+      refreshTables();
     }
   };
   const handleCancel = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.cancel.patch, {
@@ -207,25 +212,43 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       sorting: false,
       // eslint-disable-next-line react/display-name
       render: data => {
+        const resendButton = data.isValid ? <Button
+          className={clsx(classes.button, classes.resend)}
+          onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.post, {
+            headers: authHeader,
+            body: { id: data.id },
+          }), () => {
+            refreshTables();
+            setNotice(dispatch, '送信しました。');
+          })}
+        >
+          入室番号再送信
+        </Button> : null;
         if (data.status === 'reserved') {
-          return <Button
-            className={classes.button}
-            startIcon={<HomeIcon/>}
-            onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
-              headers: authHeader,
-              body: { id: data.id },
-            }), () => {
-              refreshTables();
-              setNotice(dispatch, '更新しました。');
-            })}
-          >
-            チェックイン
-          </Button>;
+          return <>
+            <Button
+              className={classes.button}
+              startIcon={<HomeIcon />}
+              onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
+                headers: authHeader,
+                body: { id: data.id },
+              }), () => {
+                refreshTables();
+                setNotice(dispatch, '更新しました。');
+              })}
+            >
+              チェックイン
+            </Button>
+            {resendButton}
+          </>;
         }
         if (data.status === 'checkin') {
-          return <Button className={classes.button} disabled>
-            チェックイン済み
-          </Button>;
+          return <>
+            <Button className={classes.button} disabled>
+              チェックイン済み
+            </Button>
+            {resendButton}
+          </>;
         }
         if (data.status === 'checkout') {
           return <Button className={classes.button} disabled>
@@ -250,7 +273,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
 
         return <Button
           className={clsx(classes.button, classes.cancel)}
-          startIcon={<CancelIcon/>}
+          startIcon={<CancelIcon />}
           onClick={() => setCancelId(data.id)}
         >
           キャンセル
@@ -324,7 +347,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
         if (data.status === 'checkin') {
           return <Button
             className={classes.button}
-            startIcon={<HomeIcon/>}
+            startIcon={<HomeIcon />}
             onClick={() => {
               setCheckoutId(data.id);
               setAmount(data.amount);
@@ -456,7 +479,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <DialogTitle>チェックアウト</DialogTitle>
     <DialogContent dividers>
       <div className={classes.buttonGroup}>
-        <TextField type="number" value={amount ?? ''} onChange={handleChangeAmount} data-testid="checkout-payment"/>
+        <TextField type="number" value={amount ?? ''} onChange={handleChangeAmount} data-testid="checkout-payment" />
         <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCheckout}>
           確定
         </Button>

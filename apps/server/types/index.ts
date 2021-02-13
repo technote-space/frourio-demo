@@ -62,3 +62,9 @@ export type MailSettings = {
   text: string;
   html: string;
 }
+
+export type QrInfo = {
+  reservationId: number;
+  roomId: number;
+  key: string;
+}

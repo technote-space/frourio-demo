@@ -46,6 +46,8 @@ model Room {
   number       Int
   price        Int
   reservations Reservation[]
+  key          String
+  trials       Int           @default(0)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }

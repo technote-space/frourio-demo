@@ -1,12 +1,12 @@
+import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import controller from '$/api/front/reservation/controller';
 import { getRoom } from '$/repositories/room';
 import { createReservation } from '$/repositories/reservation';
 import { getGuest, updateGuest } from '$/repositories/guest';
-import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { reserve } from '$/domains/front/reservation';
-import * as mail from '$/service/mail';
+import * as mail from '$/service/mail/utils';
 
-jest.mock('$/service/mail');
+jest.mock('$/service/mail/utils');
 
 describe('reservation', () => {
   it('should create reservation', async() => {

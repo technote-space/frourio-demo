@@ -6,6 +6,7 @@ import { addDisplayName } from '@/utils/component';
 import { ensureString, processLicenses } from '@/utils/license';
 import { startWithUppercase, replaceVariables } from '@/utils/string';
 import { getReplaceVariables } from '@/utils/value';
+import { sleep } from '@/utils/misc';
 
 beforeAll(() => {
   console.log = jest.fn();
@@ -182,5 +183,11 @@ describe('getReplaceVariables', () => {
       'test.test3': undefined,
       'test.test4': null,
     });
+  });
+});
+
+describe('sleep', () => {
+  it('should return promise', () => {
+    expect(sleep(0)).toBeInstanceOf(Promise);
   });
 });

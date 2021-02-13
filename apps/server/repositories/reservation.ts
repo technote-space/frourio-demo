@@ -1,10 +1,10 @@
 import type { Prisma, Reservation } from '$/prisma/client';
 import { depend } from 'velona';
 import { format } from 'date-fns';
-import { PrismaClient } from '$/prisma/client';
 import { dropId, whereId } from '$/repositories/utils';
-import { generateCode } from '$/service/reservation';
-import { getReplaceVariables } from '@/utils/value';
+import { generateCode } from '$/utils/reservation';
+import { getReplaceVariables } from '@frourio-demo/utils/value';
+import { prisma } from '$/repositories';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
 export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
@@ -16,8 +16,6 @@ export type DeleteReservationArgs = Prisma.ReservationDeleteArgs;
 export type ReservationOrderByInput = Prisma.ReservationOrderByInput;
 export type ReservationWhereInput = Prisma.ReservationWhereInput;
 export type { Reservation };
-
-const prisma = new PrismaClient();
 
 export const getReservations = depend(
   { prisma: prisma as { reservation: { findMany: typeof prisma.reservation.findMany } } },
@@ -83,4 +81,5 @@ const processReservationVariable = (key: string, value: any) => {
       return value;
   }
 };
-export const getReservationVariables = (reservation: Reservation) => getReplaceVariables(Object.fromEntries(Object.entries(reservation).map(([key, value]) => [key, processReservationVariable(key, value)])), key => `reservation.${key}`);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getReservationVariables = (reservation: Reservation & Record<string, any>) => getReplaceVariables(Object.fromEntries(Object.entries(reservation).map(([key, value]) => [key, processReservationVariable(key, value)])), key => `reservation.${key}`);

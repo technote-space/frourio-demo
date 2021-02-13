@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 import type { AppProps } from 'next/app';
 import type { AppState } from '@auth0/auth0-react';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -44,7 +44,15 @@ const onRedirectCallback = (appState: AppState) => {
   }
 };
 
-const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => typeof window === 'undefined' ? null :
+const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
+  return (
+    <div suppressHydrationWarning>
+      {typeof window === 'undefined' ? null : children}
+    </div>
+  );
+};
+
+const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHydrate>
   <ChakraProvider theme={theme}>
     <StoreContextProvider>
       <Auth0Provider
@@ -58,6 +66,7 @@ const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => typeof 
         </Router>
       </Auth0Provider>
     </StoreContextProvider>
-  </ChakraProvider>;
+  </ChakraProvider>
+</SafeHydrate>;
 
 export default MyApp;

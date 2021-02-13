@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 import { promises, existsSync } from 'fs';
 import server from './server';
 import { setup } from './cron';
-import { SERVER_PORT, SERVER_ADDRESS } from '$/service/env';
+import { SERVER_PORT, SERVER_ADDRESS } from '$/utils/env';
 
 (async() => {
   if (process.platform !== 'win32') {

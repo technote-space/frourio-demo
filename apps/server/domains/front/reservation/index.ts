@@ -5,14 +5,24 @@ import type { Guest } from '$/repositories/guest';
 import type { CreateReservationBody } from './validators';
 import type { GuestAuthorizationPayload } from '$/types';
 import { depend } from 'velona';
-import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
+import {
+  differenceInCalendarDays,
+  eachDayOfInterval,
+  format,
+  startOfDay,
+  addDays,
+  subDays,
+  startOfTomorrow,
+} from 'date-fns';
+import { toDataURL } from 'qrcode';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
-import { getReservations, createReservation, getReservationVariables } from '$/repositories/reservation';
-import { getRoom, getRooms } from '$/repositories/room';
+import { sleep } from '@frourio-demo/utils/misc';
+import { getReservations, createReservation } from '$/repositories/reservation';
+import { getRoom, getRooms, updateRoom } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
-import { sendHtmlMail } from '$/service/mail';
-import ReservedTemplate from './templates/Reserved.html';
+import { sendReservedMail, sendRoomKeyMail } from '$/service/mail';
+import { generateRoomKey, encryptQrInfo } from '$/utils/reservation';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -245,11 +255,54 @@ export const reserve = depend(
     }
 
     const reservation = await createReservation(createData);
-    await sendHtmlMail(reservation.guestEmail, '予約完了', ReservedTemplate, getReservationVariables(reservation));
-
+    await sendReservedMail(reservation);
     return {
       status: 201,
       body: reservation,
     };
+  },
+);
+
+type ReservationWithKey = Reservation & {
+  room: {
+    key: string;
+  }
+}
+export const sendRoomKey = depend(
+  { getReservations, updateRoom, sleep, encryptQrInfo, toDataURL },
+  async({ getReservations, updateRoom, sleep, encryptQrInfo, toDataURL }) => {
+    // 翌日チェックインの予約一覧
+    const reservations = await getReservations({
+      include: {
+        room: {
+          select: {
+            key: true,
+          },
+        },
+      },
+      where: {
+        checkin: {
+          gte: startOfTomorrow(),
+          lt: addDays(startOfTomorrow(), 1),
+        },
+        status: 'reserved',
+      },
+    }) as ReservationWithKey[];
+
+    await reservations.reduce(async(prev, reservation) => {
+      await prev;
+      if (!reservation.roomId) {
+        return;
+      }
+
+      await sleep(1000);
+      const key = generateRoomKey();
+      await updateRoom(reservation.roomId, { key, trials: 0 });
+      await sendRoomKeyMail(reservation, key, await toDataURL(encryptQrInfo({
+        reservationId: reservation.id,
+        roomId: reservation.roomId!,
+        key,
+      })));
+    }, Promise.resolve());
   },
 );

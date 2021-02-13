@@ -1,8 +1,12 @@
+import { startOfTomorrow, addDays, set, format } from 'date-fns';
 import controller from '$/api/admin/dashboard/checkin/controller';
-import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { checkin, getCheckin } from '$/domains/admin/dashboard';
-import { startOfTomorrow, addDays } from 'date-fns';
+import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
+import { checkin, getCheckin, sendRoomKey } from '$/domains/admin/dashboard';
+import { isValidCheckinDateRange } from '$/service/reservation';
+import * as mail from '$/service/mail/utils';
+
+jest.mock('$/service/mail/utils');
 
 describe('dashboard/checkin', () => {
   it('should get today\'s checkin reservations', async() => {
@@ -54,6 +58,10 @@ describe('dashboard/checkin', () => {
               count: getReservationCountMock,
             },
           },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => true,
         }),
       }),
     })(getFastify());
@@ -203,6 +211,10 @@ describe('dashboard/checkin', () => {
               count: getReservationCountMock,
             },
           },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => false,
+          isBefore: () => true,
         }),
       }),
     })(getFastify());
@@ -414,5 +426,115 @@ describe('dashboard/checkin', () => {
       },
     });
     expect(updateReservationMock).not.toBeCalled();
+  });
+
+  it('should send room key', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
+    const checkin = set(new Date(), { hours: 15, minutes: 0, seconds: 0, milliseconds: 0 });
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 123,
+      guestEmail: 'test@example.com',
+      roomId: 321,
+      room: { key: '1111' },
+      checkin,
+    }));
+    const encryptQrInfoMock = jest.fn(() => 'test');
+    const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
+
+    const injectedController = controller.inject({
+      sendRoomKey: sendRoomKey.inject({
+        getReservation: getReservation.inject({
+          prisma: {
+            reservation: {
+              findFirst: getReservationMock,
+            },
+          },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => true,
+        }),
+        encryptQrInfo: encryptQrInfoMock,
+        toDataURL: toDataURLMock,
+      }),
+    })(getFastify());
+
+    const res = await injectedController.post({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      body: { id: 123 },
+    });
+    expect(res.body).toEqual({ guestEmail: 'test@example.com', id: 123, roomId: 321, room: { key: '1111' }, checkin });
+    expect(getReservationMock).toBeCalledWith({
+      include: {
+        room: {
+          select: {
+            key: true,
+          },
+        },
+      },
+      rejectOnNotFound: true,
+      where: {
+        id: 123,
+      },
+    });
+    expect(spyOn).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
+      'reservation.guestEmail': 'test@example.com',
+      'reservation.key': '1111',
+      'reservation.id': 123,
+      'reservation.roomId': 321,
+      'reservation.qr': 'url',
+      'reservation.checkin': format(checkin, 'yyyy/MM/dd HH:mm'),
+    });
+    expect(encryptQrInfoMock).toBeCalledWith({ reservationId: 123, key: '1111', roomId: 321 });
+    expect(toDataURLMock).toBeCalledWith('test');
+  });
+
+  it('should not send room key', async() => {
+    const checkin = set(new Date(), { hours: 15, minutes: 0, seconds: 0, milliseconds: 0 });
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
+      guestEmail: 'test@example.com',
+      roomId: 1,
+      code: '1',
+      room: { key: '1111' },
+      checkin,
+    }));
+
+    const injectedController = controller.inject({
+      sendRoomKey: sendRoomKey.inject({
+        getReservation: getReservation.inject({
+          prisma: {
+            reservation: {
+              findFirst: getReservationMock,
+            },
+          },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => false,
+        }),
+      }),
+    })(getFastify());
+
+    const res = await injectedController.post({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      body: { id: 123 },
+    });
+    expect(res.body).toEqual({ message: 'Invalid datetime' });
+    expect(res.status).toBe(400);
+    expect(getReservationMock).toBeCalledWith({
+      include: {
+        room: {
+          select: {
+            key: true,
+          },
+        },
+      },
+      rejectOnNotFound: true,
+      where: {
+        id: 123,
+      },
+    });
   });
 });
