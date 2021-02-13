@@ -2,10 +2,11 @@ import type { QrInfo } from '$/types';
 import { randomBytes, randomInt, scryptSync, createCipheriv, createDecipheriv } from 'crypto';
 import { CRYPTO_PASS, CRYPTO_SALT, CRYPTO_ALGO } from '$/service/env';
 import { logger } from '$/service/logging';
+import { ROOM_KEY_DIGITS } from '@frourio-demo/constants';
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.split('');
 export const generateCode = (): string => randomBytes(16).reduce((acc, value) => acc + chars[(value % 32)], '');
-export const generateRoomKey = (): string => `000${randomInt(0, 10000)}`.slice(-4);
+export const generateRoomKey = (): string => `${'0'.repeat(ROOM_KEY_DIGITS)}${randomInt(0, 10000)}`.slice(-ROOM_KEY_DIGITS);
 export const encryptQrInfo = (info: QrInfo): string => {
   const key = scryptSync(CRYPTO_PASS, CRYPTO_SALT, 32);
   const iv = randomBytes(16);

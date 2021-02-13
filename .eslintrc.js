@@ -92,6 +92,7 @@ module.exports = {
         'exceptions': [
           '$',
           'e',
+          '_',
         ],
       },
     ],

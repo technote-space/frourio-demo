@@ -3,7 +3,7 @@ import { depend } from 'velona';
 import { format } from 'date-fns';
 import { dropId, whereId } from '$/repositories/utils';
 import { generateCode } from '$/service/reservation';
-import { getReplaceVariables } from '@/utils/value';
+import { getReplaceVariables } from '@frourio-demo/utils/value';
 import { prisma } from '$/repositories';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
