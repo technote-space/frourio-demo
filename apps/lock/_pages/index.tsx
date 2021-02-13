@@ -1,8 +1,7 @@
 import type { Page } from '#/types';
 import Top from './top';
 import Rooms from './rooms';
-import Keypad from './keypad';
-import Qr from './qr';
+import Room from './room';
 
 const pages: Record<string, Page> = {
   top: {
@@ -15,14 +14,10 @@ const pages: Record<string, Page> = {
     label: 'お部屋',
     page: Rooms,
   },
-  keypad: {
-    path: '/keypad/:id',
-    label: 'キーパッド',
-    page: Keypad,
-  },
-  qr: {
-    label: 'QR',
-    page: Qr,
+  room: {
+    path: '/room/:id',
+    label: 'お部屋',
+    page: Room,
   },
 };
 

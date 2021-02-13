@@ -27,9 +27,6 @@ const Top: FC = memo(() => {
         <Box>
           <Link as={RouterLink} to={`${process.env.BASE_PATH}/rooms`} marginRight="auto">Rooms</Link>
         </Box>
-        <Box>
-          <Link as={RouterLink} to={`${process.env.BASE_PATH}/qr`} marginRight="auto">QR</Link>
-        </Box>
       </Box>
     </Flex>
   </Flex>;

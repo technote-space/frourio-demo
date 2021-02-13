@@ -25,7 +25,7 @@ const Rooms: FC = memo(() => {
       </Heading>
     </Flex>
     <Center mt={3}>
-      <Button as={Link} to={`${process.env.BASE_PATH}/keypad/${room.id}`}>選択</Button>
+      <Button as={Link} to={`${process.env.BASE_PATH}/room/${room.id}`}>選択</Button>
     </Center>
   </Box>;
 
