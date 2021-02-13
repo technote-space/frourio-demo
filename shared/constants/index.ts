@@ -15,3 +15,6 @@ export const RESERVATION_STATUS = {
   checkin: 'チェックイン',
   checkout: 'チェックアウト',
 } as const;
+
+export const ROOM_KEY_DIGITS = 4;
+export const MAX_TRIALS = 3;

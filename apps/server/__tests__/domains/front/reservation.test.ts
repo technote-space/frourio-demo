@@ -1,17 +1,20 @@
 import { addDays, startOfTomorrow } from 'date-fns';
+import { getPromiseLikeItem } from '$/__tests__/utils';
 import { sendRoomKey } from '$/domains/front/reservation';
 import { getReservations } from '$/repositories/reservation';
 import { updateRoom } from '$/repositories/room';
-import { getPromiseLikeItem } from '$/__tests__/utils';
+import * as mail from '$/service/mail/utils';
+
+jest.mock('$/service/mail/utils');
 
 describe('sendRoomKey', () => {
   it('should send mail', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([
-      { guestEmail: 'test1@example.com', roomId: 1, code: '1', room: { key: '1111' } },
-      { guestEmail: 'test2@example.com', roomId: null, code: '2', room: { key: '2222' } },
-      { guestEmail: 'test3@example.com', roomId: 3, code: '3', room: { key: '3333' } },
+      { guestEmail: 'test1@example.com', id: 1, roomId: 11, room: { key: '1111' } },
+      { guestEmail: 'test2@example.com', id: 2, roomId: null, room: { key: '2222' } },
+      { guestEmail: 'test3@example.com', id: 3, roomId: 33, room: { key: '3333' } },
     ]));
-    const sendHtmlMailMock = jest.fn();
     const encryptQrInfoMock = jest.fn(() => 'test');
     const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
     const sleepMock = jest.fn();
@@ -25,10 +28,6 @@ describe('sendRoomKey', () => {
           },
         },
       }),
-      sendHtmlMail: sendHtmlMailMock,
-      encryptQrInfo: encryptQrInfoMock,
-      toDataURL: toDataURLMock,
-      sleep: sleepMock,
       updateRoom: updateRoom.inject({
         prisma: {
           room: {
@@ -36,6 +35,9 @@ describe('sendRoomKey', () => {
           },
         },
       }),
+      sleep: sleepMock,
+      encryptQrInfo: encryptQrInfoMock,
+      toDataURL: toDataURLMock,
     });
 
     await injected();
@@ -56,27 +58,27 @@ describe('sendRoomKey', () => {
         status: 'reserved',
       },
     });
-    expect(sendHtmlMailMock).toBeCalledTimes(2);
-    expect(sendHtmlMailMock.mock.calls).toEqual([
+    expect(spyOn).toBeCalledTimes(2);
+    expect(spyOn.mock.calls).toEqual([
       ['test1@example.com', '入室情報のお知らせ', 'RoomKey', {
-        'reservation.code': '1',
+        'reservation.id': 1,
         'reservation.guestEmail': 'test1@example.com',
         'reservation.key': expect.any(String),
-        'reservation.roomId': 1,
+        'reservation.roomId': 11,
         'reservation.qr': 'url',
       }],
       ['test3@example.com', '入室情報のお知らせ', 'RoomKey', {
-        'reservation.code': '3',
+        'reservation.id': 3,
         'reservation.guestEmail': 'test3@example.com',
         'reservation.key': expect.any(String),
-        'reservation.roomId': 3,
+        'reservation.roomId': 33,
         'reservation.qr': 'url',
       }],
     ]);
     expect(encryptQrInfoMock).toBeCalledTimes(2);
     expect(encryptQrInfoMock.mock.calls).toEqual([
-      [{ code: '1', key: expect.any(String), roomId: 1 }],
-      [{ code: '3', key: expect.any(String), roomId: 3 }],
+      [{ reservationId: 1, key: expect.any(String), roomId: 11 }],
+      [{ reservationId: 3, key: expect.any(String), roomId: 33 }],
     ]);
     expect(toDataURLMock).toBeCalledTimes(2);
     expect(toDataURLMock.mock.calls).toEqual([
@@ -85,8 +87,8 @@ describe('sendRoomKey', () => {
     ]);
     expect(updateRoomMock).toBeCalledTimes(2);
     expect(updateRoomMock.mock.calls).toEqual([
-      [{ data: { key: expect.any(String) }, where: { id: 1 } }],
-      [{ data: { key: expect.any(String) }, where: { id: 3 } }],
+      [{ data: { key: expect.any(String), trials: 0 }, where: { id: 11 } }],
+      [{ data: { key: expect.any(String), trials: 0 }, where: { id: 33 } }],
     ]);
     expect(sleepMock).toBeCalledTimes(2);
   });

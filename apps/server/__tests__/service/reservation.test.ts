@@ -7,9 +7,9 @@ describe('encryptQrInfo, decryptQrInfo', () => {
     Object.defineProperty(env, 'CRYPTO_SALT', { value: 'salt' });
     Object.defineProperty(env, 'CRYPTO_ALGO', { value: 'aes-256-cbc' });
     const info = {
-      roomId: 123,
+      reservationId: 123,
+      roomId: 321,
       key: 'KEY',
-      code: 'CODE',
     };
 
     const encrypted = encryptQrInfo(info);

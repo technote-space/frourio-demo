@@ -18,13 +18,11 @@ import { toDataURL } from 'qrcode';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import { sleep } from '@frourio-demo/utils/misc';
-import { getReservations, createReservation, getReservationVariables } from '$/repositories/reservation';
+import { getReservations, createReservation } from '$/repositories/reservation';
 import { getRoom, getRooms, updateRoom } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
-import { sendHtmlMail } from '$/service/mail';
-import { encryptQrInfo, generateRoomKey } from '$/service/reservation';
-import ReservedTemplate from '$/templates/Reserved.html';
-import RoomKeyTemplate from '$/templates/RoomKey.html';
+import { sendReservedMail, sendRoomKeyMail } from '$/service/mail';
+import { generateRoomKey, encryptQrInfo } from '$/service/reservation';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -257,8 +255,7 @@ export const reserve = depend(
     }
 
     const reservation = await createReservation(createData);
-    await sendHtmlMail(reservation.guestEmail, '予約完了', ReservedTemplate, getReservationVariables(reservation));
-
+    await sendReservedMail(reservation);
     return {
       status: 201,
       body: reservation,
@@ -272,8 +269,8 @@ type ReservationWithKey = Reservation & {
   }
 }
 export const sendRoomKey = depend(
-  { getReservations, updateRoom, sendHtmlMail, encryptQrInfo, generateRoomKey, toDataURL, sleep },
-  async({ getReservations, updateRoom, sendHtmlMail, encryptQrInfo, generateRoomKey, toDataURL, sleep }) => {
+  { getReservations, updateRoom, sleep, encryptQrInfo, toDataURL },
+  async({ getReservations, updateRoom, sleep, encryptQrInfo, toDataURL }) => {
     // 翌日チェックインの予約一覧
     const reservations = await getReservations({
       include: {
@@ -300,16 +297,12 @@ export const sendRoomKey = depend(
 
       await sleep(1000);
       const key = generateRoomKey();
-      await updateRoom(reservation.roomId, { key });
-      await sendHtmlMail(reservation.guestEmail, '入室情報のお知らせ', RoomKeyTemplate, getReservationVariables({
-        ...reservation,
+      await updateRoom(reservation.roomId, { key, trials: 0 });
+      await sendRoomKeyMail(reservation, key, await toDataURL(encryptQrInfo({
+        reservationId: reservation.id,
+        roomId: reservation.roomId!,
         key,
-        qr: await toDataURL(encryptQrInfo({
-          roomId: reservation.roomId!,
-          key,
-          code: reservation.code,
-        })),
-      }));
+      })));
     }, Promise.resolve());
   },
 );

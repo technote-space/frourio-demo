@@ -1,4 +1,4 @@
-import { getSmtpOptions, getText, getMailSettings, send, sendHtmlMail } from '$/service/mail';
+import { getSmtpOptions, getText, getMailSettings, send, sendHtmlMail } from '$/service/mail/utils';
 import * as env from '$/service/env';
 import childProcess from 'child_process';
 

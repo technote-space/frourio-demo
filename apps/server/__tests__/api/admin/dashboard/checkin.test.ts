@@ -1,8 +1,11 @@
-import controller from '$/api/admin/dashboard/checkin/controller';
-import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
-import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { checkin, getCheckin, isValidCheckinDateRange, sendRoomKey } from '$/domains/admin/dashboard';
 import { startOfTomorrow, addDays, set, format } from 'date-fns';
+import controller from '$/api/admin/dashboard/checkin/controller';
+import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
+import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
+import { checkin, getCheckin, isValidCheckinDateRange, sendRoomKey } from '$/domains/admin/dashboard';
+import * as mail from '$/service/mail/utils';
+
+jest.mock('$/service/mail/utils');
 
 describe('dashboard/checkin', () => {
   it('should get today\'s checkin reservations', async() => {
@@ -425,15 +428,15 @@ describe('dashboard/checkin', () => {
   });
 
   it('should send room key', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const checkin = set(new Date(), { hours: 15, minutes: 0, seconds: 0, milliseconds: 0 });
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 123,
       guestEmail: 'test@example.com',
-      roomId: 1,
-      code: '1',
+      roomId: 321,
       room: { key: '1111' },
       checkin,
     }));
-    const sendHtmlMailMock = jest.fn();
     const encryptQrInfoMock = jest.fn(() => 'test');
     const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
 
@@ -446,13 +449,12 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
-        sendHtmlMail: sendHtmlMailMock,
-        encryptQrInfo: encryptQrInfoMock,
-        toDataURL: toDataURLMock,
         isValidCheckinDateRange: isValidCheckinDateRange.inject({
           isAfter: () => true,
           isBefore: () => true,
         }),
+        encryptQrInfo: encryptQrInfoMock,
+        toDataURL: toDataURLMock,
       }),
     })(getFastify());
 
@@ -461,7 +463,7 @@ describe('dashboard/checkin', () => {
       user: { id: 1, roles: [] },
       body: { id: 123 },
     });
-    expect(res.body).toEqual({ guestEmail: 'test@example.com', roomId: 1, code: '1', room: { key: '1111' }, checkin });
+    expect(res.body).toEqual({ guestEmail: 'test@example.com', id: 123, roomId: 321, room: { key: '1111' }, checkin });
     expect(getReservationMock).toBeCalledWith({
       include: {
         room: {
@@ -475,15 +477,15 @@ describe('dashboard/checkin', () => {
         id: 123,
       },
     });
-    expect(sendHtmlMailMock).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
-      'reservation.code': '1',
+    expect(spyOn).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
       'reservation.guestEmail': 'test@example.com',
       'reservation.key': '1111',
-      'reservation.roomId': 1,
+      'reservation.id': 123,
+      'reservation.roomId': 321,
       'reservation.qr': 'url',
       'reservation.checkin': format(checkin, 'yyyy/MM/dd HH:mm'),
     });
-    expect(encryptQrInfoMock).toBeCalledWith({ code: '1', key: '1111', roomId: 1 });
+    expect(encryptQrInfoMock).toBeCalledWith({ reservationId: 123, key: '1111', roomId: 321 });
     expect(toDataURLMock).toBeCalledWith('test');
   });
 

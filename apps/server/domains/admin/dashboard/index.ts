@@ -4,7 +4,6 @@ import type { Room } from '$/repositories/room';
 import type { DailySales, MonthlySales } from '$/domains/admin/dashboard/types';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import { depend } from 'velona';
-import { toDataURL } from 'qrcode';
 import {
   startOfMonth,
   startOfYear,
@@ -18,19 +17,13 @@ import {
   isBefore,
   set,
 } from 'date-fns';
-import {
-  getReservations,
-  getReservation,
-  getReservationCount,
-  updateReservation,
-  getReservationVariables,
-} from '$/repositories/reservation';
+import { toDataURL } from 'qrcode';
+import { getReservations, getReservation, getReservationCount, updateReservation } from '$/repositories/reservation';
 import { getRooms } from '$/repositories/room';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/service/pages';
-import { sendHtmlMail } from '$/service/mail';
+import { sendRoomKeyMail } from '$/service/mail';
 import { encryptQrInfo } from '$/service/reservation';
-import RoomKeyTemplate from '$/templates/RoomKey.html';
 
 export type CheckinReservation =
   Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
@@ -316,13 +309,12 @@ type ReservationWithKey = Reservation & {
   }
 }
 export const sendRoomKey = depend(
-  { getReservation, sendHtmlMail, encryptQrInfo, toDataURL, isValidCheckinDateRange },
+  { getReservation, isValidCheckinDateRange, encryptQrInfo, toDataURL },
   async({
     getReservation,
-    sendHtmlMail,
+    isValidCheckinDateRange,
     encryptQrInfo,
     toDataURL,
-    isValidCheckinDateRange,
   }, id: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id, {
       include: {
@@ -343,16 +335,11 @@ export const sendRoomKey = depend(
       };
     }
 
-    await sendHtmlMail(reservation.guestEmail, '入室情報のお知らせ', RoomKeyTemplate, getReservationVariables({
-      ...reservation,
+    await sendRoomKeyMail(reservation, reservation.room.key, await toDataURL(encryptQrInfo({
+      reservationId: reservation.id,
+      roomId: reservation.roomId!,
       key: reservation.room.key,
-      qr: await toDataURL(encryptQrInfo({
-        roomId: reservation.roomId!,
-        key: reservation.room.key,
-        code: reservation.code,
-      })),
-    }));
-
+    })));
     return {
       status: 202,
       body: reservation,
