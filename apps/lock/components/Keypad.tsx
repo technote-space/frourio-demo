@@ -10,9 +10,10 @@ type Props = {
   roomId: number;
   isSending: boolean;
   setIsSending: (flag: boolean) => void;
+  revalidate: () => Promise<boolean>;
 }
 
-const Keypad: FC<Props> = memo(({ roomId, isSending, setIsSending }: Props) => {
+const Keypad: FC<Props> = memo(({ roomId, isSending, setIsSending, revalidate }: Props) => {
   const { dispatch } = useDispatchContext();
   const handleChange = useCallback((value: string) => {
     setIsSending(true);
@@ -25,7 +26,9 @@ const Keypad: FC<Props> = memo(({ roomId, isSending, setIsSending }: Props) => {
     }).catch(error => {
       setError(dispatch, error.message);
     }).finally(() => {
-      setIsSending(false);
+      revalidate().finally(() => {
+        setIsSending(false);
+      });
     });
   }, []);
 

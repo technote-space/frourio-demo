@@ -18,9 +18,10 @@ type Props = {
   roomId: number;
   isSending: boolean;
   setIsSending: (flag: boolean) => void;
+  revalidate: () => Promise<boolean>;
 }
 
-const Checkout: FC<Props> = memo(({ roomId, isSending, setIsSending }: Props) => {
+const Checkout: FC<Props> = memo(({ roomId, isSending, setIsSending, revalidate }: Props) => {
   const { dispatch } = useDispatchContext();
   const [open, setOpen] = useState(false);
   const handleOpen = useCallback(() => {
@@ -42,7 +43,9 @@ const Checkout: FC<Props> = memo(({ roomId, isSending, setIsSending }: Props) =>
       }).catch(error => {
         setError(dispatch, error.message);
       }).finally(() => {
-        setIsSending(false);
+        revalidate().finally(() => {
+          setIsSending(false);
+        });
       });
     }
   }, []);
