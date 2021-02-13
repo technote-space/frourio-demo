@@ -45,7 +45,7 @@ describe('rooms/detail', () => {
         },
         roomId: 1,
         status: {
-          in: ['reserved', 'checkin'],
+          in: ['checkin'],
         },
       },
     });
@@ -93,7 +93,7 @@ describe('rooms/detail', () => {
         },
         roomId: 1,
         status: {
-          in: ['reserved', 'checkin'],
+          in: ['checkin'],
         },
       },
     });
