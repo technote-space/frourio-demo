@@ -15,7 +15,7 @@ export const getValidReservation = depend(
   async({
     getReservations,
     isValidCheckinDateRange,
-  }, roomId: number, now: Date, status = ['reserved', 'checkin']): Promise<Reservation | undefined> => (await getReservations({
+  }, roomId: number, now: Date): Promise<Reservation | undefined> => (await getReservations({
     where: {
       roomId,
       checkin: {
@@ -25,7 +25,7 @@ export const getValidReservation = depend(
         gt: startOfDay(now),
       },
       status: {
-        in: status,
+        in: ['reserved', 'checkin'],
       },
     },
   })).find(reservation => isValidCheckinDateRange(reservation.checkin, reservation.checkout, now)),

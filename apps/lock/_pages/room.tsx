@@ -3,10 +3,11 @@ import { memo, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useHistory } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { Flex, Heading } from '@chakra-ui/react';
+import { Flex, Box, Heading, Text } from '@chakra-ui/react';
 import { useDispatchContext } from '#/store';
 import useFetch from '#/hooks/useFetch';
 import { client } from '#/utils/api';
+import Reservation from '#/components/Reservation';
 import Keypad from '#/components/Keypad';
 import Checkout from '#/components/Checkout';
 
@@ -29,9 +30,21 @@ const Room: FC = memo(() => {
 
   return room.data ? <Flex justifyContent="center" alignItems="center" direction="column" width="100%">
     <Heading mb={3}>{room.data.name}</Heading>
-    <Keypad roomId={room.data.id} isSending={isSending} setIsSending={setIsSending} />
-    <Qr roomId={room.data.id} isSending={isSending} setIsSending={setIsSending} />
-    <Checkout room={room.data} isSending={isSending} setIsSending={setIsSending} revalidate={room.revalidate} />
+    {room.data.reservation && <Box background="teal" textAlign="center">
+      <Reservation room={{
+        ...room.data,
+        reservation: room.data.reservation,
+      }} />
+      <Keypad roomId={room.data.id} isSending={isSending} setIsSending={setIsSending} revalidate={room.revalidate} />
+      <Qr roomId={room.data.id} isSending={isSending} setIsSending={setIsSending} revalidate={room.revalidate} />
+      <Checkout room={{
+        ...room.data,
+        reservation: room.data.reservation,
+      }} isSending={isSending} setIsSending={setIsSending} revalidate={room.revalidate} />
+    </Box>}
+    {!room.data.reservation && <Text>
+      予約はありません
+    </Text>}
   </Flex> : null;
 });
 

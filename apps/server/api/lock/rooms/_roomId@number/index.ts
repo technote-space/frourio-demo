@@ -1,9 +1,9 @@
-import type { Room } from '$/repositories/room';
+import type { RoomWithValidReservation } from '$/domains/lock/rooms';
 import type { Reservation } from '$/repositories/reservation';
 
 export type Methods = {
   get: {
-    resBody: Room;
+    resBody: RoomWithValidReservation;
   };
   delete: {
     resBody: Reservation;

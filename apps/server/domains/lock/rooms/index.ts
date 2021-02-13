@@ -29,7 +29,7 @@ export const get = depend(
     status: 200,
     body: {
       ...await getRoom(id),
-      reservation: await getValidReservation(id, new Date(), ['checkin']),
+      reservation: await getValidReservation(id, new Date()),
     },
   }),
 );
