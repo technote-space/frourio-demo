@@ -3,6 +3,7 @@ import type { Dispatch as _Dispatch } from 'react';
 import type { AspidaResponse } from 'aspida';
 import type { responseInterface, ConfigInterface } from 'swr';
 import { RESERVATION_STATUS } from '@frourio-demo/constants';
+import { Reservation } from '$/prisma/client';
 
 export type Primitive = string | number | undefined | null;
 
@@ -39,6 +40,22 @@ export type DataTableApi = {
     delete: (option?: any) => Promise<AspidaResponse<any, any, any>>;
   };
 };
+
+export type ValidateRoomQrResult = {
+  result: false;
+  message: string;
+} | {
+  result: true,
+  reservation: Reservation;
+}
+
+export type ValidateRoomKeyResult = {
+  result: false;
+  message: string;
+} | {
+  result: true,
+  reservation: Reservation;
+}
 
 type Options<T extends (option: any) => Promise<any>> = Parameters<Parameters<T> extends [Parameters<T>[0]] ? (option: Parameters<T>[0] & ConfigInterface<ReturnType<T> extends Promise<infer S> ? S : never> & {
   enabled?: boolean;
