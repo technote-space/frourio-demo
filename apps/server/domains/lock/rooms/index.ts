@@ -80,6 +80,7 @@ export const validateKey = depend(
       await updateReservation(reservation.id, {
         status: 'checkin',
       });
+      await updateRoom(roomId, { trials: 0 });
       return {
         status: 200,
         body: {

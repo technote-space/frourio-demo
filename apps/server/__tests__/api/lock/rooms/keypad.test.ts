@@ -22,6 +22,7 @@ describe('rooms/keypad', () => {
       key: '1234',
     }));
     const updateReservationMock = jest.fn();
+    const updateRoomMock = jest.fn();
     const injectedController = controller.inject({
       validateKey: validateKey.inject({
         getValidReservation: getValidReservation.inject({
@@ -48,6 +49,13 @@ describe('rooms/keypad', () => {
           prisma: {
             reservation: {
               update: updateReservationMock,
+            },
+          },
+        }),
+        updateRoom: updateRoom.inject({
+          prisma: {
+            room: {
+              update: updateRoomMock,
             },
           },
         }),
@@ -85,6 +93,14 @@ describe('rooms/keypad', () => {
       },
       where: {
         id: 2,
+      },
+    });
+    expect(updateRoomMock).toBeCalledWith({
+      data: {
+        trials: 0,
+      },
+      where: {
+        id: 1,
       },
     });
   });
