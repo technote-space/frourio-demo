@@ -16,8 +16,7 @@ const Keypad: FC<Props> = memo(({ roomId, isSending, setIsSending }: Props) => {
   const { dispatch } = useDispatchContext();
   const handleChange = useCallback((value: string) => {
     setIsSending(true);
-    client.rooms._roomId(roomId).keypad.post({ body: { roomId, key: value } }).then((data) => {
-      console.log(data.body);
+    client.rooms._roomId(roomId).keypad.post({ body: { roomId, key: value } }).then(data => {
       if (data.body.result) {
         setNotice(dispatch, 'Unlocked!!');
       } else {
