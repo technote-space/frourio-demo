@@ -1,6 +1,6 @@
 import type { Prisma, Room } from '$/prisma/client';
 import { depend } from 'velona';
-import { generateRoomKey } from '$/service/reservation';
+import { generateRoomKey } from '$/utils/reservation';
 import { dropId, whereId } from '$/repositories/utils';
 import { prisma } from '$/repositories';
 

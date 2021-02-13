@@ -2,7 +2,7 @@ import type { Prisma, Reservation } from '$/prisma/client';
 import { depend } from 'velona';
 import { format } from 'date-fns';
 import { dropId, whereId } from '$/repositories/utils';
-import { generateCode } from '$/service/reservation';
+import { generateCode } from '$/utils/reservation';
 import { getReplaceVariables } from '@frourio-demo/utils/value';
 import { prisma } from '$/repositories';
 

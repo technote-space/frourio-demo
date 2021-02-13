@@ -1,29 +1,32 @@
-import type { QrInfo } from '$/types';
-import { randomBytes, randomInt, scryptSync, createCipheriv, createDecipheriv } from 'crypto';
-import { CRYPTO_PASS, CRYPTO_SALT, CRYPTO_ALGO } from '$/service/env';
-import { logger } from '$/service/logging';
-import { ROOM_KEY_DIGITS } from '@frourio-demo/constants';
+import type { Reservation } from '$/repositories/reservation';
+import { depend } from 'velona';
+import { isAfter, isBefore, set, startOfDay, endOfDay } from 'date-fns';
+import { getReservations } from '$/repositories/reservation';
 
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.split('');
-export const generateCode = (): string => randomBytes(16).reduce((acc, value) => acc + chars[(value % 32)], '');
-export const generateRoomKey = (): string => `${'0'.repeat(ROOM_KEY_DIGITS)}${randomInt(0, 10000)}`.slice(-ROOM_KEY_DIGITS);
-export const encryptQrInfo = (info: QrInfo): string => {
-  const key = scryptSync(CRYPTO_PASS, CRYPTO_SALT, 32);
-  const iv = randomBytes(16);
-  const cipher = createCipheriv(CRYPTO_ALGO, key, iv);
-  return Buffer.from(JSON.stringify({
-    data: Buffer.concat([cipher.update(JSON.stringify(info)), cipher.final()]),
-    iv,
-  })).toString('base64');
-};
-export const decryptQrInfo = (encrypted: string): QrInfo | undefined => {
-  try {
-    const { data, iv } = JSON.parse(Buffer.from(encrypted, 'base64').toString());
-    const key = scryptSync(CRYPTO_PASS, CRYPTO_SALT, 32);
-    const decipher = createDecipheriv(CRYPTO_ALGO, key, Buffer.from(iv.data));
-    return JSON.parse(Buffer.concat([decipher.update(Buffer.from(data.data)), decipher.final()]).toString()) as QrInfo;
-  } catch (error) {
-    logger.error(error);
-    return undefined;
-  }
-};
+export const isValidCheckinDateRange = depend(
+  { isAfter, isBefore },
+  ({ isAfter, isBefore }, checkin: Date, checkout: Date, now: Date): boolean => {
+    const values = { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 };
+    return isAfter(now, set(checkin, values)) && isBefore(now, set(checkout, values));
+  },
+);
+export const getValidReservation = depend(
+  { getReservations, isValidCheckinDateRange },
+  async({
+    getReservations,
+    isValidCheckinDateRange,
+  }, roomId: number, now: Date, status = ['reserved', 'checkin']): Promise<Reservation | undefined> => (await getReservations({
+    where: {
+      roomId,
+      checkin: {
+        lt: endOfDay(now),
+      },
+      checkout: {
+        gt: startOfDay(now),
+      },
+      status: {
+        in: status,
+      },
+    },
+  })).find(reservation => isValidCheckinDateRange(reservation.checkin, reservation.checkout, now)),
+);

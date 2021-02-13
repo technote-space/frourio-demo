@@ -1,5 +1,5 @@
 import { getSmtpOptions, getText, getMailSettings, send, sendHtmlMail } from '$/service/mail/utils';
-import * as env from '$/service/env';
+import * as env from '$/utils/env';
 import childProcess from 'child_process';
 
 jest.mock('child_process');

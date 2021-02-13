@@ -1,5 +1,5 @@
 import { define } from '../tools/define';
-import { generateRoomKey } from '$/service/reservation';
+import { generateRoomKey } from '$/utils/reservation';
 
 define('room', (faker => ({
   name: faker.name.firstName() + faker.random.number(),

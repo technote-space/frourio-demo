@@ -25,7 +25,7 @@ describe('env', () => {
     process.env.CRYPTO_ALGO = 'algo';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const env = require('../../service/env');
+    const env = require('../../utils/env');
     expect(env.JWT_SECRET).toBe('test-secret');
     expect(env.SERVER_PORT).toBe(123);
     expect(env.URL_PORT).toBe(':123');
@@ -67,7 +67,7 @@ describe('env', () => {
     delete process.env.CRYPTO_ALGO;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const env = require('../../service/env');
+    const env = require('../../utils/env');
     expect(env.JWT_SECRET).toBe('');
     expect(env.SERVER_PORT).toBe(8080);
     expect(env.URL_PORT).toBe(':8080');
@@ -93,7 +93,7 @@ describe('env', () => {
     process.env.SERVER_PORT = '80';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const env = require('../../service/env');
+    const env = require('../../utils/env');
     expect(env.URL_PORT).toBe('');
   });
 
@@ -102,7 +102,7 @@ describe('env', () => {
     process.env.SMTP_USER = 'user';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const env = require('../../service/env');
+    const env = require('../../utils/env');
     expect(env.SMTP_FROM).toBe('user');
   });
 });

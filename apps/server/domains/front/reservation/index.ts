@@ -22,7 +22,7 @@ import { getReservations, createReservation } from '$/repositories/reservation';
 import { getRoom, getRooms, updateRoom } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { sendReservedMail, sendRoomKeyMail } from '$/service/mail';
-import { generateRoomKey, encryptQrInfo } from '$/service/reservation';
+import { generateRoomKey, encryptQrInfo } from '$/utils/reservation';
 
 export type CheckinNotSelectableEvent = {
   start: string;

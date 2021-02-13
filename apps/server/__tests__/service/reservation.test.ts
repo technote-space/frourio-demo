@@ -1,5 +1,5 @@
-import { encryptQrInfo, decryptQrInfo } from '$/service/reservation';
-import * as env from '$/service/env';
+import { encryptQrInfo, decryptQrInfo } from '$/utils/reservation';
+import * as env from '$/utils/env';
 
 describe('encryptQrInfo, decryptQrInfo', () => {
   it('should encrypt and decrypt', () => {

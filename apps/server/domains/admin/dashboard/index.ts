@@ -13,9 +13,6 @@ import {
   eachDayOfInterval,
   format,
   parse,
-  isAfter,
-  isBefore,
-  set,
 } from 'date-fns';
 import { toDataURL } from 'qrcode';
 import { getReservations, getReservation, getReservationCount, updateReservation } from '$/repositories/reservation';
@@ -23,7 +20,8 @@ import { getRooms } from '$/repositories/room';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/service/pages';
 import { sendRoomKeyMail } from '$/service/mail';
-import { encryptQrInfo } from '$/service/reservation';
+import { encryptQrInfo } from '$/utils/reservation';
+import { isValidCheckinDateRange } from '$/service/reservation';
 
 export type CheckinReservation =
   Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
@@ -41,13 +39,6 @@ export type CheckoutReservation =
 };
 export type SelectableRoom = Pick<Room, 'id' | 'name'>;
 
-export const isValidCheckinDateRange = depend(
-  { isAfter, isBefore },
-  ({ isAfter, isBefore }, checkin: Date, checkout: Date, now: Date): boolean => {
-    const values = { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 };
-    return isAfter(now, set(checkin, values)) && isBefore(now, set(checkout, values));
-  },
-);
 export const getCheckin = depend(
   { getReservations, getReservationCount, isValidCheckinDateRange },
   async(

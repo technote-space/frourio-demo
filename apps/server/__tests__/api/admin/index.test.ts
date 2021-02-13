@@ -2,7 +2,7 @@ import controller from '$/api/admin/controller';
 import { getAdmin } from '$/repositories/admin';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
 import { get } from '$/domains/admin';
-import * as env from '$/service/env';
+import * as env from '$/utils/env';
 
 describe('admin', () => {
   it('should get admin', async() => {

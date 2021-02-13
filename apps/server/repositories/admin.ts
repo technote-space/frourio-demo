@@ -1,7 +1,7 @@
 import type { Prisma, Admin as _Admin } from '$/prisma/client';
 import type { Role } from '$/repositories/role';
 import { depend } from 'velona';
-import { API_URL } from '$/service/env';
+import { API_URL } from '$/utils/env';
 import { createAdminPasswordHash, validateHash } from '$/repositories/utils';
 import { dropId } from '$/repositories/utils';
 import { prisma } from '$/repositories';

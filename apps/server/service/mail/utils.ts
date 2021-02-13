@@ -2,7 +2,7 @@ import type { MailOptions, MailSettings, MailAddress } from '$/types';
 import type { Primitive } from '@frourio-demo/types';
 import { htmlToText } from 'html-to-text';
 import { fork } from 'child_process';
-import { FRONT_URL, SMTP_BCC, SMTP_FROM, SMTP_HOST, SMTP_PASS, SMTP_PORT, SMTP_SECURE, SMTP_USER } from '$/service/env';
+import { FRONT_URL, SMTP_BCC, SMTP_FROM, SMTP_HOST, SMTP_PASS, SMTP_PORT, SMTP_SECURE, SMTP_USER } from '$/utils/env';
 import { replaceVariables } from '@frourio-demo/utils/string';
 import HeadTemplate from './templates/Head.html';
 import HeaderTemplate from './templates/Header.html';

@@ -2,7 +2,8 @@ import { startOfTomorrow, addDays, set, format } from 'date-fns';
 import controller from '$/api/admin/dashboard/checkin/controller';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
 import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
-import { checkin, getCheckin, isValidCheckinDateRange, sendRoomKey } from '$/domains/admin/dashboard';
+import { checkin, getCheckin, sendRoomKey } from '$/domains/admin/dashboard';
+import { isValidCheckinDateRange } from '$/service/reservation';
 import * as mail from '$/service/mail/utils';
 
 jest.mock('$/service/mail/utils');
