@@ -46,8 +46,6 @@ model Room {
   number       Int
   price        Int
   reservations Reservation[]
-  key          String
-  trials       Int           @default(0)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -72,6 +70,19 @@ model Reservation {
   checkout      DateTime
   status        String   @default("reserved")
   payment       Int?
+  roomKey       RoomKey?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model RoomKey {
+  id            Int          @id @default(autoincrement())
+  reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  reservationId Int?
+  key           String
+  trials        Int          @default(0)
+  startAt       DateTime
+  endAt         DateTime
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }

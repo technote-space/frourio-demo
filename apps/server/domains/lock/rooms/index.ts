@@ -4,9 +4,10 @@ import type { Reservation } from '$/repositories/reservation';
 import type { ValidateRoomKeyResult, ValidateRoomQrResult } from '@frourio-demo/types';
 import { depend } from 'velona';
 import { toDataURL } from 'qrcode';
-import { getRooms, getRoom, updateRoom } from '$/repositories/room';
+import { getRooms, getRoom } from '$/repositories/room';
+import { getRoomKey, createRoomKey, updateRoomKey } from '$/repositories/roomKey';
 import { getReservation, updateReservation } from '$/repositories/reservation';
-import { decryptQrInfo, encryptQrInfo, generateRoomKey } from '$/utils/reservation';
+import { decryptQrInfo, encryptQrInfo } from '$/utils/reservation';
 import { getValidReservation, isValidCheckinDateRange } from '$/service/reservation';
 import { sendRoomKeyMail } from '$/service/mail';
 import { MAX_TRIALS } from '@frourio-demo/constants';
@@ -54,13 +55,13 @@ export const checkout = depend(
 );
 
 export const validateKey = depend(
-  { getRoom, getValidReservation, updateRoom, updateReservation, generateRoomKey, encryptQrInfo, toDataURL },
+  { getRoomKey, getValidReservation, createRoomKey, updateRoomKey, updateReservation, encryptQrInfo, toDataURL },
   async({
-    getRoom,
+    getRoomKey,
     getValidReservation,
-    updateRoom,
+    createRoomKey,
+    updateRoomKey,
     updateReservation,
-    generateRoomKey,
     encryptQrInfo,
     toDataURL,
   }, roomId: number, key: string): Promise<BodyResponse<ValidateRoomKeyResult>> => {
@@ -75,28 +76,13 @@ export const validateKey = depend(
       };
     }
 
-    const room = await getRoom(roomId);
-    if (room.key === key) {
-      await updateReservation(reservation.id, {
-        status: 'checkin',
-      });
-      await updateRoom(roomId, { trials: 0 });
-      return {
-        status: 200,
-        body: {
-          result: true,
-          reservation,
-        },
-      };
-    }
-
-    if (room.trials + 1 >= MAX_TRIALS) {
-      const key = generateRoomKey();
-      await updateRoom(roomId, { key, trials: 0 });
-      await sendRoomKeyMail(reservation, key, await toDataURL(encryptQrInfo({
+    const roomKey = await getRoomKey(reservation.id);
+    if (!roomKey || roomKey.trials + 1 >= MAX_TRIALS) {
+      const newRoomKey = await createRoomKey(reservation);
+      await sendRoomKeyMail(reservation, newRoomKey.key, await toDataURL(encryptQrInfo({
         reservationId: reservation.id,
         roomId: reservation.roomId!,
-        key,
+        key: newRoomKey.key,
       })));
       return {
         status: 200,
@@ -107,7 +93,21 @@ export const validateKey = depend(
       };
     }
 
-    await updateRoom(roomId, {
+    if (roomKey.key === key) {
+      await updateReservation(reservation.id, {
+        status: 'checkin',
+      });
+      await updateRoomKey(roomKey.id, { trials: 0 });
+      return {
+        status: 200,
+        body: {
+          result: true,
+          reservation,
+        },
+      };
+    }
+
+    await updateRoomKey(roomKey.id, {
       trials: {
         increment: 1,
       },
@@ -123,10 +123,10 @@ export const validateKey = depend(
 );
 
 export const validateQr = depend(
-  { getReservation, getRoom, updateReservation, decryptQrInfo, isValidCheckinDateRange },
+  { getReservation, getRoomKey, updateReservation, decryptQrInfo, isValidCheckinDateRange },
   async({
     getReservation,
-    getRoom,
+    getRoomKey,
     updateReservation,
     decryptQrInfo,
     isValidCheckinDateRange,
@@ -149,8 +149,8 @@ export const validateQr = depend(
       };
     }
 
-    const room = await getRoom(roomId);
-    if (room.key === info.key) {
+    const roomKey = await getRoomKey(reservation.id);
+    if (roomKey?.key === info.key) {
       await updateReservation(reservation.id, {
         status: 'checkin',
       });

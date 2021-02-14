@@ -17,6 +17,7 @@ import {
 import { toDataURL } from 'qrcode';
 import { getReservations, getReservation, getReservationCount, updateReservation } from '$/repositories/reservation';
 import { getRooms } from '$/repositories/room';
+import { createRoomKey } from '$/repositories/roomKey';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/service/pages';
 import { sendRoomKeyMail } from '$/service/mail';
@@ -294,42 +295,21 @@ export const getDailySales = depend(
   },
 );
 
-type ReservationWithKey = Reservation & {
-  room: {
-    key: string;
-  }
-}
 export const sendRoomKey = depend(
-  { getReservation, isValidCheckinDateRange, encryptQrInfo, toDataURL },
+  { getReservation, createRoomKey, encryptQrInfo, toDataURL },
   async({
     getReservation,
-    isValidCheckinDateRange,
+    createRoomKey,
     encryptQrInfo,
     toDataURL,
   }, id: number): Promise<BodyResponse<Reservation>> => {
-    const reservation = await getReservation(id, {
-      include: {
-        room: {
-          select: {
-            key: true,
-          },
-        },
-      },
-    }) as ReservationWithKey;
+    const reservation = await getReservation(id);
+    const roomKey = await createRoomKey(reservation);
 
-    if (!isValidCheckinDateRange(reservation.checkin, reservation.checkout, new Date())) {
-      return {
-        status: 400,
-        body: {
-          message: 'Invalid datetime',
-        },
-      };
-    }
-
-    await sendRoomKeyMail(reservation, reservation.room.key, await toDataURL(encryptQrInfo({
+    await sendRoomKeyMail(reservation, roomKey.key, await toDataURL(encryptQrInfo({
       reservationId: reservation.id,
-      roomId: reservation.roomId!,
-      key: reservation.room.key,
+      roomId: reservation.roomId,
+      key: roomKey.key,
     })));
     return {
       status: 202,

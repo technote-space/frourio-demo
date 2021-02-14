@@ -11,8 +11,6 @@ export type UpdateGuestData = Prisma.GuestUpdateInput;
 export type UpdateGuestArgs = Prisma.GuestUpdateArgs;
 export type DeleteGuestArgs = Prisma.GuestDeleteArgs;
 export type DeleteManyGuestArgs = Prisma.GuestDeleteManyArgs;
-export type GuestOrderByInput = Prisma.GuestOrderByInput;
-export type GuestWhereInput = Prisma.GuestWhereInput;
 export type { Guest };
 
 export const getGuests = depend(

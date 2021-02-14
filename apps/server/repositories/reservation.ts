@@ -13,8 +13,6 @@ export type CreateReservationArgs = Prisma.ReservationCreateArgs;
 export type UpdateReservationData = Prisma.ReservationUpdateInput;
 export type UpdateReservationArgs = Prisma.ReservationUpdateArgs;
 export type DeleteReservationArgs = Prisma.ReservationDeleteArgs;
-export type ReservationOrderByInput = Prisma.ReservationOrderByInput;
-export type ReservationWhereInput = Prisma.ReservationWhereInput;
 export type { Reservation };
 
 export const getReservations = depend(

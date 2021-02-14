@@ -2,7 +2,7 @@ import controller from '$/api/lock/rooms/_roomId@number/keypad/controller';
 import { startOfDay, endOfDay } from 'date-fns';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { validateKey } from '$/domains/lock/rooms';
-import { getRoom, updateRoom } from '$/repositories/room';
+import { getRoomKey, createRoomKey, updateRoomKey } from '$/repositories/roomKey';
 import { getReservations, updateReservation } from '$/repositories/reservation';
 import { getValidReservation, isValidCheckinDateRange } from '$/service/reservation';
 import { MAX_TRIALS } from '@frourio-demo/constants';
@@ -18,11 +18,12 @@ describe('rooms/keypad', () => {
         roomId: 1,
       },
     ]));
-    const getRoomMock = jest.fn(() => getPromiseLikeItem({
+    const getRoomKeyMock = jest.fn(() => getPromiseLikeItem({
+      id: 3,
       key: '1234',
     }));
     const updateReservationMock = jest.fn();
-    const updateRoomMock = jest.fn();
+    const updateRoomKeyMock = jest.fn();
     const injectedController = controller.inject({
       validateKey: validateKey.inject({
         getValidReservation: getValidReservation.inject({
@@ -38,10 +39,10 @@ describe('rooms/keypad', () => {
             isBefore: () => true,
           }),
         }),
-        getRoom: getRoom.inject({
+        getRoomKey: getRoomKey.inject({
           prisma: {
-            room: {
-              findFirst: getRoomMock,
+            roomKey: {
+              findFirst: getRoomKeyMock,
             },
           },
         }),
@@ -52,10 +53,10 @@ describe('rooms/keypad', () => {
             },
           },
         }),
-        updateRoom: updateRoom.inject({
+        updateRoomKey: updateRoomKey.inject({
           prisma: {
-            room: {
-              update: updateRoomMock,
+            roomKey: {
+              update: updateRoomKeyMock,
             },
           },
         }),
@@ -81,10 +82,15 @@ describe('rooms/keypad', () => {
         },
       },
     });
-    expect(getRoomMock).toBeCalledWith({
-      rejectOnNotFound: true,
+    expect(getRoomKeyMock).toBeCalledWith({
       where: {
-        id: 1,
+        startAt: {
+          lte: expect.any(Date),
+        },
+        endAt: {
+          gte: expect.any(Date),
+        },
+        reservationId: 2,
       },
     });
     expect(updateReservationMock).toBeCalledWith({
@@ -95,12 +101,12 @@ describe('rooms/keypad', () => {
         id: 2,
       },
     });
-    expect(updateRoomMock).toBeCalledWith({
+    expect(updateRoomKeyMock).toBeCalledWith({
       data: {
         trials: 0,
       },
       where: {
-        id: 1,
+        id: 3,
       },
     });
   });
@@ -112,13 +118,15 @@ describe('rooms/keypad', () => {
       roomId: 1,
       guestEmail: 'test@example.com',
     }]));
-    const getRoomMock = jest.fn(() => getPromiseLikeItem({
+    const getRoomKeyMock = jest.fn(() => getPromiseLikeItem({
+      id: 3,
       key: '1234',
       trials: MAX_TRIALS,
     }));
-    const updateRoomMock = jest.fn(() => getPromiseLikeItem({}));
+    const createRoomKeyMock = jest.fn(() => getPromiseLikeItem({
+      key: 'new key',
+    }));
     const encryptQrInfoMock = jest.fn(() => 'qr');
-    const generateRoomKeyMock = jest.fn(() => 'generated');
     const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
     const injectedController = controller.inject({
       validateKey: validateKey.inject({
@@ -135,22 +143,21 @@ describe('rooms/keypad', () => {
             isBefore: () => true,
           }),
         }),
-        getRoom: getRoom.inject({
+        getRoomKey: getRoomKey.inject({
           prisma: {
-            room: {
-              findFirst: getRoomMock,
+            roomKey: {
+              findFirst: getRoomKeyMock,
             },
           },
         }),
-        updateRoom: updateRoom.inject({
+        createRoomKey: createRoomKey.inject({
           prisma: {
-            room: {
-              update: updateRoomMock,
+            roomKey: {
+              create: createRoomKeyMock,
             },
           },
         }),
         encryptQrInfo: encryptQrInfoMock,
-        generateRoomKey: generateRoomKeyMock,
         toDataURL: toDataURLMock,
       }),
     })(getFastify());
@@ -174,47 +181,58 @@ describe('rooms/keypad', () => {
         },
       },
     });
-    expect(getRoomMock).toBeCalledWith({
-      rejectOnNotFound: true,
+    expect(getRoomKeyMock).toBeCalledWith({
       where: {
-        id: 1,
+        startAt: {
+          lte: expect.any(Date),
+        },
+        endAt: {
+          gte: expect.any(Date),
+        },
+        reservationId: 2,
       },
     });
-    expect(updateRoomMock).toBeCalledWith({
+    expect(createRoomKeyMock).toBeCalledWith({
       data: {
-        key: 'generated',
+        key: expect.any(String),
         trials: 0,
-      },
-      where: {
-        id: 1,
+        startAt: expect.any(Date),
+        endAt: expect.any(Date),
+        reservation: {
+          connect: {
+            id: 2,
+          },
+        },
       },
     });
     expect(encryptQrInfoMock).toBeCalledWith({
-      key: 'generated',
+      key: 'new key',
       reservationId: 2,
       roomId: 1,
     });
-    expect(generateRoomKeyMock).toBeCalledWith();
     expect(toDataURLMock).toBeCalledWith('qr');
     expect(spyOn).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
       'reservation.guestEmail': 'test@example.com',
       'reservation.id': 2,
-      'reservation.key': 'generated',
+      'reservation.key': 'new key',
       'reservation.qr': 'url',
       'reservation.roomId': 1,
     });
   });
 
-  it('should not update room key', async() => {
+  it('should update room key (not found room key)', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([{
       id: 2,
       roomId: 1,
+      guestEmail: 'test@example.com',
     }]));
-    const getRoomMock = jest.fn(() => getPromiseLikeItem({
-      key: '1234',
-      trials: 0,
+    const getRoomKeyMock = jest.fn(() => getPromiseLikeItem(null));
+    const createRoomKeyMock = jest.fn(() => getPromiseLikeItem({
+      key: 'new key',
     }));
-    const updateRoomMock = jest.fn(() => getPromiseLikeItem({}));
+    const encryptQrInfoMock = jest.fn(() => 'qr');
+    const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
     const injectedController = controller.inject({
       validateKey: validateKey.inject({
         getValidReservation: getValidReservation.inject({
@@ -230,17 +248,107 @@ describe('rooms/keypad', () => {
             isBefore: () => true,
           }),
         }),
-        getRoom: getRoom.inject({
+        getRoomKey: getRoomKey.inject({
           prisma: {
-            room: {
-              findFirst: getRoomMock,
+            roomKey: {
+              findFirst: getRoomKeyMock,
             },
           },
         }),
-        updateRoom: updateRoom.inject({
+        createRoomKey: createRoomKey.inject({
           prisma: {
-            room: {
-              update: updateRoomMock,
+            roomKey: {
+              create: createRoomKeyMock,
+            },
+          },
+        }),
+        encryptQrInfo: encryptQrInfoMock,
+        toDataURL: toDataURLMock,
+      }),
+    })(getFastify());
+
+    const res = await injectedController.post({ params: { roomId: 1 }, body: { roomId: 1, key: 'encrypted' } });
+    expect(res.body).toEqual({ result: false, message: '入室情報が再送されました。メールに記載された番号を入力してください。' });
+    expect(getReservationsMock).toBeCalledWith({
+      where: {
+        roomId: 1,
+        checkin: {
+          lt: endOfDay(new Date()),
+        },
+        checkout: {
+          gt: startOfDay(new Date()),
+        },
+        status: {
+          in: [
+            'reserved',
+            'checkin',
+          ],
+        },
+      },
+    });
+    expect(getRoomKeyMock).toBeCalledWith({
+      where: {
+        startAt: {
+          lte: expect.any(Date),
+        },
+        endAt: {
+          gte: expect.any(Date),
+        },
+        reservationId: 2,
+      },
+    });
+    expect(encryptQrInfoMock).toBeCalledWith({
+      key: 'new key',
+      reservationId: 2,
+      roomId: 1,
+    });
+    expect(toDataURLMock).toBeCalledWith('qr');
+    expect(spyOn).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
+      'reservation.guestEmail': 'test@example.com',
+      'reservation.id': 2,
+      'reservation.key': 'new key',
+      'reservation.qr': 'url',
+      'reservation.roomId': 1,
+    });
+  });
+
+  it('should not update room key', async() => {
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([{
+      id: 2,
+      roomId: 1,
+    }]));
+    const getRoomKeyMock = jest.fn(() => getPromiseLikeItem({
+      id: 3,
+      key: '1234',
+      trials: 0,
+    }));
+    const updateRoomKeyMock = jest.fn();
+    const injectedController = controller.inject({
+      validateKey: validateKey.inject({
+        getValidReservation: getValidReservation.inject({
+          getReservations: getReservations.inject({
+            prisma: {
+              reservation: {
+                findMany: getReservationsMock,
+              },
+            },
+          }),
+          isValidCheckinDateRange: isValidCheckinDateRange.inject({
+            isAfter: () => true,
+            isBefore: () => true,
+          }),
+        }),
+        getRoomKey: getRoomKey.inject({
+          prisma: {
+            roomKey: {
+              findFirst: getRoomKeyMock,
+            },
+          },
+        }),
+        updateRoomKey: updateRoomKey.inject({
+          prisma: {
+            roomKey: {
+              update: updateRoomKeyMock,
             },
           },
         }),
@@ -266,25 +374,30 @@ describe('rooms/keypad', () => {
         },
       },
     });
-    expect(getRoomMock).toBeCalledWith({
-      rejectOnNotFound: true,
+    expect(getRoomKeyMock).toBeCalledWith({
       where: {
-        id: 1,
+        startAt: {
+          lte: expect.any(Date),
+        },
+        endAt: {
+          gte: expect.any(Date),
+        },
+        reservationId: 2,
       },
     });
-    expect(updateRoomMock).toBeCalledWith({
+    expect(updateRoomKeyMock).toBeCalledWith({
       data: {
         trials: {
           increment: 1,
         },
       },
       where: {
-        id: 1,
+        id: 3,
       },
     });
   });
 
-  it('should failed to validate key', async() => {
+  it('should failed to validate key (not found reservation)', async() => {
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([{
       id: 2,
       roomId: 1,

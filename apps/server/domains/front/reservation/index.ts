@@ -5,25 +5,18 @@ import type { Guest } from '$/repositories/guest';
 import type { CreateReservationBody } from './validators';
 import type { GuestAuthorizationPayload } from '$/types';
 import { depend } from 'velona';
-import {
-  differenceInCalendarDays,
-  eachDayOfInterval,
-  format,
-  startOfDay,
-  addDays,
-  subDays,
-  startOfToday,
-  set,
-} from 'date-fns';
+import { differenceInCalendarDays, eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
 import { toDataURL } from 'qrcode';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import { sleep } from '@frourio-demo/utils/misc';
 import { getReservations, createReservation } from '$/repositories/reservation';
-import { getRoom, getRooms, updateRoom } from '$/repositories/room';
+import { getRoom, getRooms } from '$/repositories/room';
 import { getGuest, updateGuest } from '$/repositories/guest';
+import { createRoomKey } from '$/repositories/roomKey';
+import { encryptQrInfo } from '$/utils/reservation';
 import { sendReservedMail, sendRoomKeyMail } from '$/service/mail';
-import { generateRoomKey, encryptQrInfo } from '$/utils/reservation';
+import { getValidReservation } from '$/service/reservation';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -264,45 +257,22 @@ export const reserve = depend(
   },
 );
 
-type ReservationWithKey = Reservation & {
-  room: {
-    key: string;
-  }
-}
 export const sendRoomKey = depend(
-  { getReservations, updateRoom, sleep, encryptQrInfo, toDataURL },
-  async({ getReservations, updateRoom, sleep, encryptQrInfo, toDataURL }) => {
-    // チェックインの予約一覧
-    const reservations = await getReservations({
-      include: {
-        room: {
-          select: {
-            key: true,
-          },
-        },
-      },
-      where: {
-        checkin: {
-          gte: set(startOfToday(), { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 }),
-          lt: set(addDays(startOfToday(), 1), { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 }),
-        },
-        status: 'reserved',
-      },
-    }) as ReservationWithKey[];
-
-    await reservations.reduce(async(prev, reservation) => {
+  { getRooms, createRoomKey, getValidReservation, sleep, encryptQrInfo, toDataURL },
+  async({ getRooms, createRoomKey, getValidReservation, sleep, encryptQrInfo, toDataURL }) => {
+    await (await getRooms()).reduce(async(prev, room) => {
       await prev;
-      if (!reservation.roomId) {
+      const reservation = await getValidReservation(room.id, new Date());
+      if (!reservation) {
         return;
       }
 
       await sleep(1000);
-      const key = generateRoomKey();
-      await updateRoom(reservation.roomId, { key, trials: 0 });
-      await sendRoomKeyMail(reservation, key, await toDataURL(encryptQrInfo({
+      const roomKey = await createRoomKey(reservation);
+      await sendRoomKeyMail(reservation, roomKey.key, await toDataURL(encryptQrInfo({
         reservationId: reservation.id,
-        roomId: reservation.roomId!,
-        key,
+        roomId: reservation.roomId,
+        key: roomKey.key,
       })));
     }, Promise.resolve());
   },

@@ -1,7 +1,7 @@
 import controller from '$/api/lock/rooms/_roomId@number/qr/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { validateQr } from '$/domains/lock/rooms';
-import { getRoom } from '$/repositories/room';
+import { getRoomKey } from '$/repositories/roomKey';
 import { getReservation, updateReservation } from '$/repositories/reservation';
 import { isValidCheckinDateRange } from '$/service/reservation';
 
@@ -12,7 +12,7 @@ describe('rooms/qr', () => {
       id: 2,
       roomId: 1,
     }));
-    const getRoomMock = jest.fn(() => getPromiseLikeItem({
+    const getRoomKeyMock = jest.fn(() => getPromiseLikeItem({
       key: '1234',
     }));
     const updateReservationMock = jest.fn();
@@ -25,10 +25,10 @@ describe('rooms/qr', () => {
             },
           },
         }),
-        getRoom: getRoom.inject({
+        getRoomKey: getRoomKey.inject({
           prisma: {
-            room: {
-              findFirst: getRoomMock,
+            roomKey: {
+              findFirst: getRoomKeyMock,
             },
           },
         }),
@@ -56,10 +56,15 @@ describe('rooms/qr', () => {
         id: 2,
       },
     });
-    expect(getRoomMock).toBeCalledWith({
-      rejectOnNotFound: true,
+    expect(getRoomKeyMock).toBeCalledWith({
       where: {
-        id: 1,
+        reservationId: 2,
+        startAt: {
+          lte: expect.any(Date),
+        },
+        endAt: {
+          gte: expect.any(Date),
+        },
       },
     });
     expect(updateReservationMock).toBeCalledWith({
@@ -78,7 +83,7 @@ describe('rooms/qr', () => {
       id: 2,
       roomId: 1,
     }));
-    const getRoomMock = jest.fn(() => getPromiseLikeItem({
+    const getRoomKeyMock = jest.fn(() => getPromiseLikeItem({
       key: '1234',
     }));
     const injectedController = controller.inject({
@@ -90,10 +95,10 @@ describe('rooms/qr', () => {
             },
           },
         }),
-        getRoom: getRoom.inject({
+        getRoomKey: getRoomKey.inject({
           prisma: {
-            room: {
-              findFirst: getRoomMock,
+            roomKey: {
+              findFirst: getRoomKeyMock,
             },
           },
         }),
@@ -114,10 +119,15 @@ describe('rooms/qr', () => {
         id: 2,
       },
     });
-    expect(getRoomMock).toBeCalledWith({
-      rejectOnNotFound: true,
+    expect(getRoomKeyMock).toBeCalledWith({
       where: {
-        id: 1,
+        reservationId: 2,
+        startAt: {
+          lte: expect.any(Date),
+        },
+        endAt: {
+          gte: expect.any(Date),
+        },
       },
     });
   });

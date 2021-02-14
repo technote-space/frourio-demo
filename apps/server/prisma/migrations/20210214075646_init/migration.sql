@@ -35,8 +35,6 @@ CREATE TABLE "Room" (
     "name" TEXT NOT NULL,
     "number" INTEGER NOT NULL,
     "price" INTEGER NOT NULL,
-    "key" TEXT NOT NULL,
-    "trials" INTEGER NOT NULL DEFAULT 0,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -67,6 +65,19 @@ CREATE TABLE "Reservation" (
 );
 
 -- CreateTable
+CREATE TABLE "RoomKey" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "reservationId" INTEGER,
+    "key" TEXT NOT NULL,
+    "trials" INTEGER NOT NULL DEFAULT 0,
+    "startAt" DATETIME NOT NULL,
+    "endAt" DATETIME NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    FOREIGN KEY ("reservationId") REFERENCES "Reservation" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "_AdminToRole" (
     "A" INTEGER NOT NULL,
     "B" TEXT NOT NULL,
@@ -79,6 +90,9 @@ CREATE UNIQUE INDEX "Admin.email_unique" ON "Admin"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Guest.email_unique" ON "Guest"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "RoomKey_reservationId_unique" ON "RoomKey"("reservationId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_AdminToRole_AB_unique" ON "_AdminToRole"("A", "B");

@@ -20,7 +20,6 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
       render: data => `¥${data.price}`,
       validate: data => data['price'] >= 0,
     },
-    { title: '入室鍵', field: 'key', validate: data => !!data['key'] && /^\d{4}$/.test(data['key']) },
     {
       title: '利用状況',
       editable: 'never',

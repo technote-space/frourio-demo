@@ -1,8 +1,9 @@
-import { addDays, startOfTomorrow } from 'date-fns';
 import { getPromiseLikeItem } from '$/__tests__/utils';
 import { sendRoomKey } from '$/domains/front/reservation';
 import { getReservations } from '$/repositories/reservation';
-import { updateRoom } from '$/repositories/room';
+import { getRooms } from '$/repositories/room';
+import { createRoomKey } from '$/repositories/roomKey';
+import { getValidReservation, isValidCheckinDateRange } from '$/service/reservation';
 import * as mail from '$/service/mail/utils';
 
 jest.mock('$/service/mail/utils');
@@ -10,28 +11,43 @@ jest.mock('$/service/mail/utils');
 describe('sendRoomKey', () => {
   it('should send mail', async() => {
     const spyOn = jest.spyOn(mail, 'sendHtmlMail');
-    const getReservationsMock = jest.fn(() => getPromiseLikeItem([
-      { guestEmail: 'test1@example.com', id: 1, roomId: 11, room: { key: '1111' } },
-      { guestEmail: 'test2@example.com', id: 2, roomId: null, room: { key: '2222' } },
-      { guestEmail: 'test3@example.com', id: 3, roomId: 33, room: { key: '3333' } },
+    const getRoomsMock = jest.fn(() => getPromiseLikeItem([
+      { id: 1 },
+      { id: 2 },
     ]));
+    const getReservationsMock = jest.fn((args) => getPromiseLikeItem(args.where.roomId === 1 ? [
+      { guestEmail: 'test1@example.com', id: 11, roomId: 1, room: { key: '1111' } },
+    ] : []));
+    const createRoomKeyMock = jest.fn(() => getPromiseLikeItem({ key: 'new key' }));
     const encryptQrInfoMock = jest.fn(() => 'test');
     const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
     const sleepMock = jest.fn();
-    const updateRoomMock = jest.fn();
 
     const injected = sendRoomKey.inject({
-      getReservations: getReservations.inject({
+      getRooms: getRooms.inject({
         prisma: {
-          reservation: {
-            findMany: getReservationsMock,
+          room: {
+            findMany: getRoomsMock,
           },
         },
       }),
-      updateRoom: updateRoom.inject({
+      getValidReservation: getValidReservation.inject({
+        getReservations: getReservations.inject({
+          prisma: {
+            reservation: {
+              findMany: getReservationsMock,
+            },
+          },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isBefore: () => true,
+          isAfter: () => true,
+        }),
+      }),
+      createRoomKey: createRoomKey.inject({
         prisma: {
-          room: {
-            update: updateRoomMock,
+          roomKey: {
+            create: createRoomKeyMock,
           },
         },
       }),
@@ -42,54 +58,29 @@ describe('sendRoomKey', () => {
 
     await injected();
 
-    expect(getReservationsMock).toBeCalledWith({
-      include: {
-        room: {
-          select: {
-            key: true,
+    expect(getRoomsMock).toBeCalledWith(undefined);
+    expect(createRoomKeyMock).toBeCalledWith({
+      data: {
+        key: expect.any(String),
+        trials: 0,
+        startAt: expect.any(Date),
+        endAt: expect.any(Date),
+        reservation: {
+          connect: {
+            id: 11,
           },
         },
       },
-      where: {
-        checkin: {
-          gte: startOfTomorrow(),
-          lt: addDays(startOfTomorrow(), 1),
-        },
-        status: 'reserved',
-      },
     });
-    expect(spyOn).toBeCalledTimes(2);
-    expect(spyOn.mock.calls).toEqual([
-      ['test1@example.com', '入室情報のお知らせ', 'RoomKey', {
-        'reservation.id': 1,
-        'reservation.guestEmail': 'test1@example.com',
-        'reservation.key': expect.any(String),
-        'reservation.roomId': 11,
-        'reservation.qr': 'url',
-      }],
-      ['test3@example.com', '入室情報のお知らせ', 'RoomKey', {
-        'reservation.id': 3,
-        'reservation.guestEmail': 'test3@example.com',
-        'reservation.key': expect.any(String),
-        'reservation.roomId': 33,
-        'reservation.qr': 'url',
-      }],
-    ]);
-    expect(encryptQrInfoMock).toBeCalledTimes(2);
-    expect(encryptQrInfoMock.mock.calls).toEqual([
-      [{ reservationId: 1, key: expect.any(String), roomId: 11 }],
-      [{ reservationId: 3, key: expect.any(String), roomId: 33 }],
-    ]);
-    expect(toDataURLMock).toBeCalledTimes(2);
-    expect(toDataURLMock.mock.calls).toEqual([
-      ['test'],
-      ['test'],
-    ]);
-    expect(updateRoomMock).toBeCalledTimes(2);
-    expect(updateRoomMock.mock.calls).toEqual([
-      [{ data: { key: expect.any(String), trials: 0 }, where: { id: 11 } }],
-      [{ data: { key: expect.any(String), trials: 0 }, where: { id: 33 } }],
-    ]);
-    expect(sleepMock).toBeCalledTimes(2);
+    expect(spyOn).toBeCalledWith('test1@example.com', '入室情報のお知らせ', 'RoomKey', {
+      'reservation.id': 11,
+      'reservation.guestEmail': 'test1@example.com',
+      'reservation.key': expect.any(String),
+      'reservation.roomId': 1,
+      'reservation.qr': 'url',
+    });
+    expect(encryptQrInfoMock).toBeCalledWith({ reservationId: 11, key: expect.any(String), roomId: 1 });
+    expect(toDataURLMock).toBeCalledWith('test');
+    expect(sleepMock).toBeCalledTimes(1);
   });
 });
