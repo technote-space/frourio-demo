@@ -1,4 +1,4 @@
-import controller from '$/api/front/reservation/stripe/methods/_methodId@string/controller';
+import controller from '$/api/stripe/methods/_methodId@string/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { attachPaymentMethod, detachPaymentMethod } from '$/domains/front/reservation/stripe';
 import { getGuest, updateGuest } from '$/repositories/guest';
