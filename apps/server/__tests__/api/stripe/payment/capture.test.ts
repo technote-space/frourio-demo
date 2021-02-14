@@ -7,7 +7,7 @@ describe('reservation/stripe/payment/capture', () => {
   it('should capture payment intents', async() => {
     const paymentIntentsCaptureMock = jest.fn(() => getPromiseLikeItem({
       amount: 10000,
-      amount_received: 10000,
+      'amount_received': 10000,
     }));
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
@@ -42,7 +42,7 @@ describe('reservation/stripe/payment/capture', () => {
     const res = await injectedController.post({ body: { reservationId: 123, isCancel: '' } });
     expect(res.body).toEqual({
       amount: 10000,
-      amount_received: 10000,
+      'amount_received': 10000,
     });
     expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', {});
     expect(getReservationMock).toBeCalledWith({
@@ -64,7 +64,7 @@ describe('reservation/stripe/payment/capture', () => {
   it('should capture payment intents (cancel)', async() => {
     const paymentIntentsCaptureMock = jest.fn(() => getPromiseLikeItem({
       amount: 10000,
-      amount_received: 8000,
+      'amount_received': 8000,
     }));
     const getReservationMock = jest.fn(() => getPromiseLikeItem({
       id: 123,
@@ -99,9 +99,9 @@ describe('reservation/stripe/payment/capture', () => {
     const res = await injectedController.post({ body: { reservationId: 123, isCancel: '1' } });
     expect(res.body).toEqual({
       amount: 10000,
-      amount_received: 8000,
+      'amount_received': 8000,
     });
-    expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', { amount_to_capture: 8000 });
+    expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', { 'amount_to_capture': 8000 });
     expect(getReservationMock).toBeCalledWith({
       rejectOnNotFound: true,
       where: {
