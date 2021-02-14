@@ -12,7 +12,8 @@ import {
   startOfDay,
   addDays,
   subDays,
-  startOfTomorrow,
+  startOfToday,
+  set,
 } from 'date-fns';
 import { toDataURL } from 'qrcode';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
@@ -271,7 +272,7 @@ type ReservationWithKey = Reservation & {
 export const sendRoomKey = depend(
   { getReservations, updateRoom, sleep, encryptQrInfo, toDataURL },
   async({ getReservations, updateRoom, sleep, encryptQrInfo, toDataURL }) => {
-    // 翌日チェックインの予約一覧
+    // チェックインの予約一覧
     const reservations = await getReservations({
       include: {
         room: {
@@ -282,8 +283,8 @@ export const sendRoomKey = depend(
       },
       where: {
         checkin: {
-          gte: startOfTomorrow(),
-          lt: addDays(startOfTomorrow(), 1),
+          gte: set(startOfToday(), { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 }),
+          lt: set(addDays(startOfToday(), 1), { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 }),
         },
         status: 'reserved',
       },
