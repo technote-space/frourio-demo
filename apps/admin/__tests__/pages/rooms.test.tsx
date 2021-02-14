@@ -298,7 +298,7 @@ describe('Rooms', () => {
     // edit
     user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
-    expect(input).toHaveLength(4);
+    expect(input).toHaveLength(3);
     user.clear(input[0]);
     user.type(input[0], 'update-name');
     user.click(container.querySelectorAll('[title="保存"]')[0]);
