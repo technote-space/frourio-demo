@@ -36,6 +36,7 @@ model Guest {
   phone        String?
   reservations Reservation[]
   auth0Sub     String?
+  stripe       String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -51,28 +52,29 @@ model Room {
 }
 
 model Reservation {
-  id            Int     @id @default(autoincrement())
-  code          String
-  guest         Guest?  @relation(fields: [guestId], references: [id])
-  guestId       Int?
-  guestEmail    String
-  guestName     String
-  guestNameKana String
-  guestZipCode  String
-  guestAddress  String
-  guestPhone    String
-  room          Room?   @relation(fields: [roomId], references: [id])
-  roomId        Int?
-  roomName      String
-  number        Int
-  amount        Int
-  checkin       DateTime
-  checkout      DateTime
-  status        String   @default("reserved")
-  payment       Int?
-  roomKey       RoomKey?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             Int     @id @default(autoincrement())
+  code           String
+  guest          Guest?  @relation(fields: [guestId], references: [id])
+  guestId        Int?
+  guestEmail     String
+  guestName      String
+  guestNameKana  String
+  guestZipCode   String
+  guestAddress   String
+  guestPhone     String
+  room           Room?   @relation(fields: [roomId], references: [id])
+  roomId         Int?
+  roomName       String
+  number         Int
+  amount         Int
+  checkin        DateTime
+  checkout       DateTime
+  status         String   @default("reserved")
+  payment        Int?
+  roomKey        RoomKey?
+  paymentIntents String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model RoomKey {
