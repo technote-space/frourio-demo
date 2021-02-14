@@ -1,9 +1,10 @@
 import controller from '$/api/lock/rooms/_roomId@number/qr/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
-import { validateQr } from '$/domains/lock/rooms';
+import { validateQr, checkinProcess } from '$/domains/lock/rooms';
 import { getRoomKey } from '$/repositories/roomKey';
 import { getReservation, updateReservation } from '$/repositories/reservation';
 import { isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents } from '$/domains/stripe';
 
 describe('rooms/qr', () => {
   it('should validate qr', async() => {
@@ -32,12 +33,15 @@ describe('rooms/qr', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
+        checkinProcess: checkinProcess.inject({
+          updateReservation: updateReservation.inject({
+            prisma: {
+              reservation: {
+                update: updateReservationMock,
+              },
             },
-          },
+          }),
+          capturePaymentIntents: capturePaymentIntents.inject({})
         }),
         decryptQrInfo: decryptQrInfoMock,
         isValidCheckinDateRange: isValidCheckinDateRange.inject({

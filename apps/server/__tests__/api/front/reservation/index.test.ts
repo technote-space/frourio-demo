@@ -4,6 +4,7 @@ import { getRoom } from '$/repositories/room';
 import { createReservation } from '$/repositories/reservation';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { reserve } from '$/domains/front/reservation';
+import { createPaymentIntents } from '$/domains/stripe';
 import * as mail from '$/service/mail/utils';
 
 jest.mock('$/service/mail/utils');
@@ -23,6 +24,7 @@ describe('reservation', () => {
       amount: 30000,
       guestName: 'test',
     }));
+    const paymentIntentsCreateMock = jest.fn(() => getPromiseLikeItem({ id: 'pi_test' }));
     const injectedController = controller.inject({
       reserve: reserve.inject({
         getRoom: getRoom.inject({
@@ -36,6 +38,13 @@ describe('reservation', () => {
           prisma: {
             reservation: {
               create: createReservationMock,
+            },
+          },
+        }),
+        createPaymentIntents: createPaymentIntents.inject({
+          stripe: {
+            paymentIntents: {
+              create: paymentIntentsCreateMock,
             },
           },
         }),
@@ -53,6 +62,7 @@ describe('reservation', () => {
         number: 2,
         checkin: '2020-01-01',
         checkout: '2020-01-03',
+        paymentMethodsId: 'pm_test',
       },
       headers: undefined,
     });
@@ -89,6 +99,7 @@ describe('reservation', () => {
         roomName: 'room name',
         amount: 40000,
         status: 'reserved',
+        paymentIntents: 'pi_test',
       },
     });
     expect(spyOn).toBeCalledWith(undefined, '予約完了', 'Reserved', {
@@ -119,6 +130,7 @@ describe('reservation', () => {
     const updateGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
     }));
+    const paymentIntentsCreateMock = jest.fn(() => getPromiseLikeItem({ id: 'pi_test' }));
     const injectedController = controller.inject({
       reserve: reserve.inject({
         getRoom: getRoom.inject({
@@ -149,6 +161,13 @@ describe('reservation', () => {
             },
           },
         }),
+        createPaymentIntents: createPaymentIntents.inject({
+          stripe: {
+            paymentIntents: {
+              create: paymentIntentsCreateMock,
+            },
+          },
+        }),
       }),
     })(getFastify());
 
@@ -163,6 +182,7 @@ describe('reservation', () => {
         number: 2,
         checkin: '2020-01-01',
         checkout: '2020-01-03',
+        paymentMethodsId: 'pm_test',
         updateInfo: 1,
       },
       user: { id: 321 },
@@ -188,6 +208,7 @@ describe('reservation', () => {
         zipCode: true,
         address: true,
         phone: true,
+        stripe: true,
       },
       where: {
         id: 321,
@@ -218,6 +239,7 @@ describe('reservation', () => {
         roomName: 'room name',
         amount: 40000,
         status: 'reserved',
+        paymentIntents: 'pi_test',
       },
     });
     expect(updateGuestMock).toBeCalledWith({
@@ -260,6 +282,7 @@ describe('reservation', () => {
     const updateGuestMock = jest.fn(() => getPromiseLikeItem({
       id: 234,
     }));
+    const paymentIntentsCreateMock = jest.fn(() => getPromiseLikeItem({ id: 'pi_test' }));
     const injectedController = controller.inject({
       reserve: reserve.inject({
         getRoom: getRoom.inject({
@@ -290,6 +313,13 @@ describe('reservation', () => {
             },
           },
         }),
+        createPaymentIntents: createPaymentIntents.inject({
+          stripe: {
+            paymentIntents: {
+              create: paymentIntentsCreateMock,
+            },
+          },
+        }),
       }),
     })(getFastify());
 
@@ -304,6 +334,7 @@ describe('reservation', () => {
         number: 2,
         checkin: '2020-01-01',
         checkout: '2020-01-03',
+        paymentMethodsId: 'pm_test',
       },
       user: { id: 321 },
       headers: undefined,
@@ -328,6 +359,7 @@ describe('reservation', () => {
         zipCode: true,
         address: true,
         phone: true,
+        stripe: true,
       },
       where: {
         id: 321,
@@ -358,6 +390,7 @@ describe('reservation', () => {
         roomName: 'room name',
         amount: 40000,
         status: 'reserved',
+        paymentIntents: 'pi_test',
       },
     });
     expect(updateGuestMock).toBeCalledWith({

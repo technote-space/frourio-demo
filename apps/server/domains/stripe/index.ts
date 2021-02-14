@@ -3,7 +3,7 @@ import type { Reservation } from '$/repositories/reservation';
 import { depend } from 'velona';
 import Stripe from 'stripe';
 import { getGuest, updateGuest } from '$/repositories/guest';
-import { getReservation, updateReservation } from '$/repositories/reservation';
+import { updateReservation } from '$/repositories/reservation';
 import { logger } from '$/service/logging';
 import { STRIPE_SECRET } from '$/utils/env';
 import { CANCEL_PAYMENT_RATE } from '@frourio-demo/constants';
@@ -86,62 +86,32 @@ export const detachPaymentMethod = depend(
 );
 
 export const createPaymentIntents = depend(
-  {
-    stripe: stripe as { paymentIntents: { create: typeof stripe.paymentIntents.create } },
-    getReservation,
-  },
-  async({
-    stripe,
-    getReservation,
-  }, reservationId: number, paymentMethodsId: string): Promise<BodyResponse<Stripe.PaymentIntent>> => {
-    logger.info('createPaymentIntents, reservation=%d, id=%s', reservationId, paymentMethodsId);
-    const reservation = await getReservation(reservationId, {
-      include: {
-        guest: {
-          select: {
-            stripe: true,
-          },
-        },
-      },
-    }) as Reservation & {
-      guest?: {
-        stripe: string | null
-      }
-    };
-    return {
-      status: 202,
-      body: await stripe.paymentIntents.create({
-        amount: reservation.amount,
-        currency: 'jpy',
-        'payment_method_types': ['card'],
-        customer: reservation.guest?.stripe ?? undefined,
-        'payment_method': paymentMethodsId,
-        'capture_method': 'manual',
-      }),
-    };
+  { stripe: stripe as { paymentIntents: { create: typeof stripe.paymentIntents.create } } },
+  async({ stripe }, amount: number, guest: { id?: number; stripe?: string | null }, paymentMethodsId: string): Promise<Stripe.PaymentIntent> => {
+    logger.info('createPaymentIntents, id=%s, guest=%d, amount=%d', paymentMethodsId, guest.id, amount);
+    return stripe.paymentIntents.create({
+      amount,
+      currency: 'jpy',
+      'payment_method_types': ['card'],
+      customer: guest.stripe ?? undefined,
+      'payment_method': paymentMethodsId,
+      'capture_method': 'manual',
+    });
   },
 );
 
 export const capturePaymentIntents = depend(
   {
     stripe: stripe as { paymentIntents: { capture: typeof stripe.paymentIntents.capture } },
-    getReservation,
     updateReservation,
   },
   async({
     stripe,
-    getReservation,
     updateReservation,
-  }, reservationId: number, isCancel: boolean): Promise<BodyResponse<Stripe.PaymentIntent>> => {
-    const reservation = await getReservation(reservationId);
+  }, reservation: Pick<Reservation, 'id' | 'amount' | 'payment' | 'paymentIntents'>, isCancel?: boolean): Promise<Stripe.PaymentIntent | null> => {
     logger.info('capturePaymentIntents, reservation=%d, payment=%d, id=%s, isCancel=%d', reservation.id, reservation.payment, reservation.paymentIntents, isCancel);
     if (reservation.payment || !reservation.paymentIntents) {
-      return {
-        status: 400,
-        body: {
-          message: 'すでにキャプチャ済み、もしくは有効な支払いが存在しません。',
-        },
-      };
+      return null;
     }
 
     const result = await stripe.paymentIntents.capture(reservation.paymentIntents, {
@@ -154,9 +124,6 @@ export const capturePaymentIntents = depend(
       payment: result.amount_received,
     });
 
-    return {
-      status: 200,
-      body: result,
-    };
+    return result;
   },
 );
