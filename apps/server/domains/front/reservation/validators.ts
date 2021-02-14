@@ -71,3 +71,23 @@ export class CreateReservationBody {
   @IsOptional()
   updateInfo?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
+
+export class CreatePaymentIntentsBody {
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
+  @IsIdExists('reservation')
+  reservationId: number;
+
+  @IsNotEmpty({ message: '値を入力してください' })
+  paymentMethodsId: string;
+}
+
+export class CapturePaymentIntentsBody {
+  @IsInt({ message: '整数値を指定してください' })
+  @IsPositive({ message: '1以上を指定してください' })
+  @IsIdExists('reservation')
+  reservationId: number;
+
+  @IsOptional()
+  isCancel?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+}

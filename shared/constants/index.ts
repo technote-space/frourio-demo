@@ -18,3 +18,4 @@ export const RESERVATION_STATUS = {
 
 export const ROOM_KEY_DIGITS = 6;
 export const MAX_TRIALS = 3;
+export const CANCEL_PAYMENT_RATE = 0.8;
