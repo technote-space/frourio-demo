@@ -1,6 +1,6 @@
 import controller from '$/api/stripe/methods/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
-import { getPaymentMethods } from '$/domains/front/reservation/stripe';
+import { getPaymentMethods } from '$/domains/stripe';
 import { getGuest } from '$/repositories/guest';
 
 describe('reservation/stripe/methods', () => {

@@ -1,5 +1,5 @@
 import { defineController } from './$relay';
-import { attachPaymentMethod, detachPaymentMethod } from '$/domains/front/reservation/stripe';
+import { attachPaymentMethod, detachPaymentMethod } from '$/domains/stripe';
 
 export default defineController(({ attachPaymentMethod, detachPaymentMethod }), ({
   attachPaymentMethod,

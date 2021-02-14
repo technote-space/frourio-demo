@@ -1,6 +1,6 @@
 import controller from '$/api/stripe/methods/_methodId@string/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
-import { attachPaymentMethod, detachPaymentMethod } from '$/domains/front/reservation/stripe';
+import { attachPaymentMethod, detachPaymentMethod } from '$/domains/stripe';
 import { getGuest, updateGuest } from '$/repositories/guest';
 
 describe('reservation/stripe/methods/attach', () => {
