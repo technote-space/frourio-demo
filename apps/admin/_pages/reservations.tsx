@@ -96,7 +96,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
         authHeader={authHeader}
         props={props}
       />,
-      render: data => format(new Date(data['checkin']), 'yyyy-MM-dd'),
+      render: data => format(new Date(data['checkin']), 'yyyy-MM-dd HH:mm'),
       validate: data => !!data['checkin'],
     },
     {
@@ -121,6 +121,7 @@ const Reservations: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedP
       // eslint-disable-next-line react/display-name
       render: data => data['payment'] ? `¥${data['payment']}` : '',
     },
+    { title: 'Payment Intents', field: 'paymentIntents', editable: 'never', filtering: false },
   ] as DataTableColumn<Model>[], []);
   const options = useMemo(() => ({
     filtering: true,
