@@ -3,6 +3,7 @@ import { getReservation, updateReservation } from '$/repositories/reservation';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { cancel } from '$/domains/front/reservations';
 import { cancelPaymentIntents } from '$/domains/stripe';
+import { cancelStripePaymentIntents } from '$/repositories/stripe';
 import * as mail from '$/service/mail/utils';
 
 jest.mock('$/service/mail/utils');
@@ -27,11 +28,13 @@ describe('account/reservations/detail/cancel', () => {
           prisma: { reservation: { findFirst: getReservationMock } },
         }),
         cancelPaymentIntents: cancelPaymentIntents.inject({
-          stripe: {
-            paymentIntents: {
-              cancel: paymentIntentsCancelMock,
+          cancelStripePaymentIntents: cancelStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                cancel: paymentIntentsCancelMock,
+              },
             },
-          },
+          }),
           updateReservation: updateReservation.inject({
             prisma: { reservation: { update: updateReservationMock } },
           }),
@@ -88,11 +91,13 @@ describe('account/reservations/detail/cancel', () => {
           prisma: { reservation: { findFirst: getReservationMock } },
         }),
         cancelPaymentIntents: cancelPaymentIntents.inject({
-          stripe: {
-            paymentIntents: {
-              cancel: paymentIntentsCancelMock,
+          cancelStripePaymentIntents: cancelStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                cancel: paymentIntentsCancelMock,
+              },
             },
-          },
+          }),
           updateReservation: updateReservation.inject({
             prisma: { reservation: { update: updateReservationMock } },
           }),

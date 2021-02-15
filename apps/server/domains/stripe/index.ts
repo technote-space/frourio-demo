@@ -4,10 +4,19 @@ import { depend } from 'velona';
 import Stripe from 'stripe';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { getReservations, updateReservation } from '$/repositories/reservation';
+import {
+  getStripeDefaultPaymentMethod,
+  listStripeDefaultPaymentMethods,
+  attachPaymentMethodToCustomer,
+  detachPaymentMethodFromCustomer,
+  createStripePaymentIntents,
+  cancelStripePaymentIntents,
+  updateStripePaymentIntents,
+  captureStripePaymentIntents,
+} from '$/repositories/stripe';
 import { logger } from '$/service/logging';
 import { sleep } from '@frourio-demo/utils/misc';
 import { STRIPE_SECRET } from '$/utils/env';
-import { CANCEL_PAYMENT_RATE } from '@frourio-demo/constants';
 
 const stripe = new Stripe(STRIPE_SECRET, {
   apiVersion: '2020-08-27',
@@ -15,94 +24,32 @@ const stripe = new Stripe(STRIPE_SECRET, {
 });
 
 export const getDefaultPaymentMethod = depend(
-  {
-    stripe: stripe as { customers: { retrieve: typeof stripe.customers.retrieve } },
-    getGuest,
-  },
-  async({ stripe, getGuest }, guestId: number): Promise<BodyResponse<string | undefined>> => {
-    const guest = await getGuest(guestId);
-    if (!guest.stripe) {
-      return {
-        status: 200,
-        body: undefined,
-      };
-    }
-
-    const customer = await stripe.customers.retrieve(guest.stripe);
-    if (customer.deleted) {
-      return {
-        status: 200,
-        body: undefined,
-      };
-    }
-
-    if (!customer.invoice_settings.default_payment_method) {
-      return {
-        status: 200,
-        body: undefined,
-      };
-    }
-
-    return {
-      status: 200,
-      body: typeof customer.invoice_settings.default_payment_method === 'string' ? customer.invoice_settings.default_payment_method : customer.invoice_settings.default_payment_method.id,
-    };
-  },
+  { getStripeDefaultPaymentMethod, getGuest },
+  async({ getStripeDefaultPaymentMethod, getGuest }, guestId: number): Promise<BodyResponse<string | undefined>> => ({
+    status: 200,
+    body: await getStripeDefaultPaymentMethod(await getGuest(guestId)),
+  }),
 );
 
 export const getPaymentMethods = depend(
-  {
-    stripe: stripe as { paymentMethods: { list: typeof stripe.paymentMethods.list } },
+  { listStripeDefaultPaymentMethods, getGuest },
+  async({
+    listStripeDefaultPaymentMethods,
     getGuest,
-  },
-  async({ stripe, getGuest }, guestId: number): Promise<BodyResponse<Stripe.PaymentMethod[]>> => {
-    const guest = await getGuest(guestId);
-    return {
-      status: 200,
-      body: guest.stripe ? (await stripe.paymentMethods.list({
-        customer: guest.stripe,
-        type: 'card',
-      })).data : [],
-    };
-  },
+  }, guestId: number): Promise<BodyResponse<Stripe.PaymentMethod[]>> => ({
+    status: 200,
+    body: await listStripeDefaultPaymentMethods(await getGuest(guestId)),
+  }),
 );
 
 export const attachPaymentMethod = depend(
-  {
-    stripe: stripe as {
-      paymentMethods: {
-        retrieve: typeof stripe.paymentMethods.retrieve
-        attach: typeof stripe.paymentMethods.attach
-      }
-      customers: { create: typeof stripe.customers.create }
-    },
-    getGuest,
-    updateGuest,
-  },
-  async({ stripe, getGuest, updateGuest }, methodId: string, guestId: number): Promise<BasicResponse> => {
+  { attachPaymentMethodToCustomer, getGuest, updateGuest },
+  async({ attachPaymentMethodToCustomer, getGuest, updateGuest }, methodId: string, guestId: number): Promise<BasicResponse> => {
     logger.info('attachPaymentMethod, id=%s, guest=%d', methodId, guestId);
-    const method = await stripe.paymentMethods.retrieve(methodId);
     const guest = await getGuest(guestId);
-    const getStripeCustomer = async() => {
-      if (!guest.stripe) {
-        const customer = await stripe.customers.create({
-          email: guest.email,
-          ...(guest.name ? { name: guest.name } : {}),
-          ...(guest.phone ? { phone: guest.phone } : {}),
-        });
-        await updateGuest(guest.id, { stripe: customer.id });
-        return customer.id;
-      }
-
-      return guest.stripe;
-    };
-
-    const customer = await getStripeCustomer();
-    logger.info('attachPaymentMethod, customer=%s, method.customer=%s', customer, method.customer);
-    if (customer !== method.customer) {
-      await stripe.paymentMethods.attach(method.id, {
-        customer,
-      });
+    const customer = await attachPaymentMethodToCustomer(methodId, guest);
+    if (customer) {
+      await updateGuest(guest.id, { stripe: customer });
     }
 
     return {
@@ -112,10 +59,10 @@ export const attachPaymentMethod = depend(
 );
 
 export const detachPaymentMethod = depend(
-  { stripe: stripe as { paymentMethods: { detach: typeof stripe.paymentMethods.detach } } },
-  async({ stripe }, id: string): Promise<BasicResponse> => {
+  { detachPaymentMethodFromCustomer },
+  async({ detachPaymentMethodFromCustomer }, id: string): Promise<BasicResponse> => {
     logger.info('detachPaymentMethod, id=%s', id);
-    await stripe.paymentMethods.detach(id);
+    await detachPaymentMethodFromCustomer(id);
     return {
       status: 200,
     };
@@ -123,61 +70,48 @@ export const detachPaymentMethod = depend(
 );
 
 export const createPaymentIntents = depend(
-  { stripe: stripe as { paymentIntents: { create: typeof stripe.paymentIntents.create } } },
-  async({ stripe }, amount: number, guest: { id?: number; stripe?: string | null }, paymentMethodsId: string): Promise<Stripe.PaymentIntent> => {
+  { createStripePaymentIntents },
+  async({ createStripePaymentIntents }, amount: number, guest: { id?: number; stripe?: string | null }, paymentMethodsId: string): Promise<Stripe.PaymentIntent> => {
     logger.info('createPaymentIntents, id=%s, guest=%d, amount=%d', paymentMethodsId, guest.id, amount);
-    return stripe.paymentIntents.create({
-      amount,
-      currency: 'jpy',
-      'payment_method_types': ['card'],
-      customer: guest.stripe ?? undefined,
-      'payment_method': paymentMethodsId,
-      'capture_method': 'manual',
-    });
+    return createStripePaymentIntents(amount, guest, paymentMethodsId);
   },
 );
 
 export const cancelPaymentIntents = depend(
-  {
-    stripe: stripe as { paymentIntents: { cancel: typeof stripe.paymentIntents.cancel } },
-    updateReservation,
-  },
+  { cancelStripePaymentIntents, updateReservation },
   async({
-    stripe,
+    cancelStripePaymentIntents,
     updateReservation,
   }, reservation: { id: number, paymentIntents: string | null }): Promise<Reservation> => {
-    if (reservation.paymentIntents) {
-      await stripe.paymentIntents.cancel(reservation.paymentIntents);
-    }
-
+    logger.info('cancelPaymentIntents, reservationId=%d, paymentIntents=%s', reservation.id, reservation.paymentIntents);
+    await cancelStripePaymentIntents(reservation);
     return updateReservation(reservation.id, { status: 'cancelled' });
   },
 );
 
-export const capturePaymentIntents = depend(
-  {
-    stripe: stripe as { paymentIntents: { capture: typeof stripe.paymentIntents.capture } },
-    updateReservation,
+export const updatePaymentIntents = depend(
+  { updateStripePaymentIntents },
+  async({ updateStripePaymentIntents }, paymentIntentsid: string, data: { amount?: number; paymentMethodsId?: string; }) => {
+    logger.info('cancelPaymentIntents, id=%s, amount=%d, paymentMethodsId=%s', paymentIntentsid, data.amount, data.paymentMethodsId);
+    return updateStripePaymentIntents(paymentIntentsid, data);
   },
+);
+
+export const capturePaymentIntents = depend(
+  { captureStripePaymentIntents, updateReservation },
   async({
-    stripe,
+    captureStripePaymentIntents,
     updateReservation,
   }, reservation: Pick<Reservation, 'id' | 'amount' | 'payment' | 'paymentIntents'>, isCancel?: boolean): Promise<Stripe.PaymentIntent | null> => {
     logger.info('capturePaymentIntents, reservation=%d, payment=%d, id=%s, isCancel=%d', reservation.id, reservation.payment, reservation.paymentIntents, isCancel);
-    if (reservation.payment || !reservation.paymentIntents) {
-      return null;
+    const result = await captureStripePaymentIntents(reservation, isCancel);
+    if (result) {
+      logger.info('capturePaymentIntents, amount=%d, amount_received=%d', result.amount, result.amount_received);
+      await updateReservation(reservation.id, {
+        payment: result.amount_received,
+        ...(isCancel ? { status: 'cancelled' } : {}),
+      });
     }
-
-    const result = await stripe.paymentIntents.capture(reservation.paymentIntents, {
-      ...(isCancel ? {
-        'amount_to_capture': Math.ceil(reservation.amount * CANCEL_PAYMENT_RATE),
-      } : {}),
-    });
-    logger.info('capturePaymentIntents, amount=%d, amount_received=%d', result.amount, result.amount_received);
-    await updateReservation(reservation.id, {
-      payment: result.amount_received,
-      ...(isCancel ? { status: 'cancelled' } : {}),
-    });
 
     return result;
   },

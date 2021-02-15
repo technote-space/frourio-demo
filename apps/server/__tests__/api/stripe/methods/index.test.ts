@@ -2,6 +2,7 @@ import controller from '$/api/stripe/methods/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { getPaymentMethods } from '$/domains/stripe';
 import { getGuest } from '$/repositories/guest';
+import { listStripeDefaultPaymentMethods } from '$/repositories/stripe';
 
 describe('reservation/stripe/methods', () => {
   it('should return payment methods', async() => {
@@ -14,11 +15,13 @@ describe('reservation/stripe/methods', () => {
     const getGuestMock = jest.fn(() => getPromiseLikeItem({ stripe: 'stripe' }));
     const injectedController = controller.inject({
       getPaymentMethods: getPaymentMethods.inject({
-        stripe: {
-          paymentMethods: {
-            list: paymentMethodsListMock,
+        listStripeDefaultPaymentMethods: listStripeDefaultPaymentMethods.inject({
+          stripe: {
+            paymentMethods: {
+              list: paymentMethodsListMock,
+            },
           },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {

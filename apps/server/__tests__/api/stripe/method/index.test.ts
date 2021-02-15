@@ -2,6 +2,7 @@ import controller from '$/api/stripe/method/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { getDefaultPaymentMethod } from '$/domains/stripe';
 import { getGuest } from '$/repositories/guest';
+import { getStripeDefaultPaymentMethod } from '$/repositories/stripe';
 
 describe('reservation/stripe/method', () => {
   it('should return payment method (object)', async() => {
@@ -16,11 +17,13 @@ describe('reservation/stripe/method', () => {
     const getGuestMock = jest.fn(() => getPromiseLikeItem({ stripe: 'stripe' }));
     const injectedController = controller.inject({
       getDefaultPaymentMethod: getDefaultPaymentMethod.inject({
-        stripe: {
-          customers: {
-            retrieve: customerRetrieveMock,
+        getStripeDefaultPaymentMethod: getStripeDefaultPaymentMethod.inject({
+          stripe: {
+            customers: {
+              retrieve: customerRetrieveMock,
+            },
           },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {
@@ -52,11 +55,13 @@ describe('reservation/stripe/method', () => {
     const getGuestMock = jest.fn(() => getPromiseLikeItem({ stripe: 'stripe' }));
     const injectedController = controller.inject({
       getDefaultPaymentMethod: getDefaultPaymentMethod.inject({
-        stripe: {
-          customers: {
-            retrieve: customerRetrieveMock,
+        getStripeDefaultPaymentMethod: getStripeDefaultPaymentMethod.inject({
+          stripe: {
+            customers: {
+              retrieve: customerRetrieveMock,
+            },
           },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {
@@ -109,11 +114,13 @@ describe('reservation/stripe/method', () => {
     const getGuestMock = jest.fn(() => getPromiseLikeItem({ stripe: 'stripe' }));
     const injectedController = controller.inject({
       getDefaultPaymentMethod: getDefaultPaymentMethod.inject({
-        stripe: {
-          customers: {
-            retrieve: customerRetrieveMock,
+        getStripeDefaultPaymentMethod: getStripeDefaultPaymentMethod.inject({
+          stripe: {
+            customers: {
+              retrieve: customerRetrieveMock,
+            },
           },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {
@@ -145,11 +152,13 @@ describe('reservation/stripe/method', () => {
     const getGuestMock = jest.fn(() => getPromiseLikeItem({ stripe: 'stripe' }));
     const injectedController = controller.inject({
       getDefaultPaymentMethod: getDefaultPaymentMethod.inject({
-        stripe: {
-          customers: {
-            retrieve: customerRetrieveMock,
+        getStripeDefaultPaymentMethod: getStripeDefaultPaymentMethod.inject({
+          stripe: {
+            customers: {
+              retrieve: customerRetrieveMock,
+            },
           },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {

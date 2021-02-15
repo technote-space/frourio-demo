@@ -2,6 +2,7 @@ import controller from '$/api/stripe/methods/_methodId@string/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
 import { attachPaymentMethod, detachPaymentMethod } from '$/domains/stripe';
 import { getGuest, updateGuest } from '$/repositories/guest';
+import { attachPaymentMethodToCustomer, detachPaymentMethodFromCustomer } from '$/repositories/stripe';
 
 describe('reservation/stripe/methods/attach', () => {
   it('should attach payment method (create new stripe customer)', async() => {
@@ -21,15 +22,17 @@ describe('reservation/stripe/methods/attach', () => {
     const updateGuestMock = jest.fn();
     const injectedController = controller.inject({
       attachPaymentMethod: attachPaymentMethod.inject({
-        stripe: {
-          paymentMethods: {
-            retrieve: paymentMethodsRetrieveMock,
-            attach: paymentMethodsAttachMock,
+        attachPaymentMethodToCustomer: attachPaymentMethodToCustomer.inject({
+          stripe: {
+            paymentMethods: {
+              retrieve: paymentMethodsRetrieveMock,
+              attach: paymentMethodsAttachMock,
+            },
+            customers: {
+              create: customersCreateMock,
+            },
           },
-          customers: {
-            create: customersCreateMock,
-          },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {
@@ -92,15 +95,17 @@ describe('reservation/stripe/methods/attach', () => {
     const updateGuestMock = jest.fn();
     const injectedController = controller.inject({
       attachPaymentMethod: attachPaymentMethod.inject({
-        stripe: {
-          paymentMethods: {
-            retrieve: paymentMethodsRetrieveMock,
-            attach: paymentMethodsAttachMock,
+        attachPaymentMethodToCustomer: attachPaymentMethodToCustomer.inject({
+          stripe: {
+            paymentMethods: {
+              retrieve: paymentMethodsRetrieveMock,
+              attach: paymentMethodsAttachMock,
+            },
+            customers: {
+              create: customersCreateMock,
+            },
           },
-          customers: {
-            create: customersCreateMock,
-          },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {
@@ -151,15 +156,17 @@ describe('reservation/stripe/methods/attach', () => {
     const updateGuestMock = jest.fn();
     const injectedController = controller.inject({
       attachPaymentMethod: attachPaymentMethod.inject({
-        stripe: {
-          paymentMethods: {
-            retrieve: paymentMethodsRetrieveMock,
-            attach: paymentMethodsAttachMock,
+        attachPaymentMethodToCustomer: attachPaymentMethodToCustomer.inject({
+          stripe: {
+            paymentMethods: {
+              retrieve: paymentMethodsRetrieveMock,
+              attach: paymentMethodsAttachMock,
+            },
+            customers: {
+              create: customersCreateMock,
+            },
           },
-          customers: {
-            create: customersCreateMock,
-          },
-        },
+        }),
         getGuest: getGuest.inject({
           prisma: {
             guest: {
@@ -210,11 +217,13 @@ describe('reservation/stripe/methods/detach', () => {
     const paymentMethodsAttachMock = jest.fn();
     const injectedController = controller.inject({
       detachPaymentMethod: detachPaymentMethod.inject({
-        stripe: {
-          paymentMethods: {
-            detach: paymentMethodsAttachMock,
+        detachPaymentMethodFromCustomer: detachPaymentMethodFromCustomer.inject({
+          stripe: {
+            paymentMethods: {
+              detach: paymentMethodsAttachMock,
+            },
           },
-        },
+        }),
       }),
     })(getFastify());
 

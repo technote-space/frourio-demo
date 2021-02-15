@@ -1,16 +1,19 @@
 import { getPromiseLikeItem } from '$/__tests__/utils';
 import { createPaymentIntents, capturePaymentIntents, checkoutReservations } from '$/domains/stripe';
 import { getReservations, updateReservation } from '$/repositories/reservation';
+import { createStripePaymentIntents, captureStripePaymentIntents } from '$/repositories/stripe';
 
 describe('createPaymentIntents', () => {
   it('should create payment intents', async() => {
     const paymentIntentsCreateMock = jest.fn(() => getPromiseLikeItem({ id: 'test' }));
     const injected = createPaymentIntents.inject({
-      stripe: {
-        paymentIntents: {
-          create: paymentIntentsCreateMock,
+      createStripePaymentIntents: createStripePaymentIntents.inject({
+        stripe: {
+          paymentIntents: {
+            create: paymentIntentsCreateMock,
+          },
         },
-      },
+      }),
     });
 
     expect(await injected(10000, {
@@ -30,11 +33,13 @@ describe('createPaymentIntents', () => {
   it('should create payment intents (no related guest)', async() => {
     const paymentIntentsCreateMock = jest.fn(() => getPromiseLikeItem({ id: 'test' }));
     const injected = createPaymentIntents.inject({
-      stripe: {
-        paymentIntents: {
-          create: paymentIntentsCreateMock,
+      createStripePaymentIntents: createStripePaymentIntents.inject({
+        stripe: {
+          paymentIntents: {
+            create: paymentIntentsCreateMock,
+          },
         },
-      },
+      }),
     });
 
     expect(await injected(10000, { id: 123 }, 'pm_test')).toEqual({ id: 'test' });
@@ -56,11 +61,13 @@ describe('capturePaymentIntents', () => {
     }));
     const updateReservationMock = jest.fn();
     const injected = capturePaymentIntents.inject({
-      stripe: {
-        paymentIntents: {
-          capture: paymentIntentsCaptureMock,
+      captureStripePaymentIntents: captureStripePaymentIntents.inject({
+        stripe: {
+          paymentIntents: {
+            capture: paymentIntentsCaptureMock,
+          },
         },
-      },
+      }),
       updateReservation: updateReservation.inject({
         prisma: {
           reservation: {
@@ -97,11 +104,13 @@ describe('capturePaymentIntents', () => {
     }));
     const updateReservationMock = jest.fn();
     const injected = capturePaymentIntents.inject({
-      stripe: {
-        paymentIntents: {
-          capture: paymentIntentsCaptureMock,
+      captureStripePaymentIntents: captureStripePaymentIntents.inject({
+        stripe: {
+          paymentIntents: {
+            capture: paymentIntentsCaptureMock,
+          },
         },
-      },
+      }),
       updateReservation: updateReservation.inject({
         prisma: {
           reservation: {
@@ -161,11 +170,13 @@ describe('checkoutReservations', () => {
     const sleepMock = jest.fn();
     const injected = checkoutReservations.inject({
       capturePaymentIntents: capturePaymentIntents.inject({
-        stripe: {
-          paymentIntents: {
-            capture: paymentIntentsCaptureMock,
+        captureStripePaymentIntents: captureStripePaymentIntents.inject({
+          stripe: {
+            paymentIntents: {
+              capture: paymentIntentsCaptureMock,
+            },
           },
-        },
+        }),
         updateReservation: updateReservation.inject({
           prisma: {
             reservation: {
