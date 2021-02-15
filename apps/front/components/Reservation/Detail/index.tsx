@@ -64,8 +64,8 @@ const Detail: FC<Props> = memo(({
       </Flex>
     </Box>
     {isValidReservation && <Calc
-      reservation={reservation}
-      room={room}
+      number={reservation.number!}
+      room={room!}
       nights={nights}
     />}
     {isValidReservation && <Center>
