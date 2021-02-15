@@ -36,6 +36,8 @@
     "@fullcalendar/daygrid": "^5.5.0",
     "@fullcalendar/interaction": "^5.5.0",
     "@fullcalendar/react": "^5.5.0",
+    "@stripe/react-stripe-js": "^1.2.2",
+    "@stripe/stripe-js": "^1.12.1",
     "aspida": "^1.5.0",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",

@@ -10,6 +10,7 @@ import Checkout from './Checkout';
 import Calc from './Calc';
 
 type Props = {
+  hidden: boolean;
   room?: Room;
   reservation: ReservationData;
   onChangeRoomId: (id: number) => void;
@@ -21,6 +22,7 @@ type Props = {
 }
 
 const Detail: FC<Props> = memo(({
+  hidden,
   room,
   reservation,
   onChangeRoomId,
@@ -37,7 +39,7 @@ const Detail: FC<Props> = memo(({
     p={[1, 2, 4]}
     m="2"
     borderWidth={1}
-    display={['flex', 'flex', 'inline-block']}
+    display={hidden ? 'none' : ['flex', 'flex', 'inline-block']}
     flexDirection='column'
     minW={['none', 'none', 400]}
   >

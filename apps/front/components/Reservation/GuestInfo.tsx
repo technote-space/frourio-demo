@@ -14,6 +14,7 @@ import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
+  hidden: boolean;
   reservation: ReservationData;
   onChangeEmail: (email: string) => void;
   onChangeName: (name: string) => void;
@@ -22,12 +23,12 @@ type Props = {
   onChangeAddress: (address: string) => void;
   onChangePhone: (phone: string) => void;
   onChangeUpdateInfo: () => void;
-  onConfirm: () => void;
+  onPayment: () => void;
   onDetail: () => void;
 }
 
 const GuestInfo: FC<Props> = memo((props: Props) => {
-  const { reservation, onConfirm, onDetail } = props;
+  const { reservation, onPayment, onDetail } = props;
   const unmountRef = useUnmountRef();
   const { guest } = useStoreContext();
   const [auth] = useAuthToken();
@@ -42,7 +43,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
           headers: auth.authHeader,
         } : {}),
       });
-      onConfirm();
+      onPayment();
     } catch (error) {
       if (!unmountRef.current) {
         setValidationErrors(processValidationError(error));
@@ -83,7 +84,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
     p={[1, 2, 4]}
     m="2"
     borderWidth={1}
-    display={['flex', 'flex', 'inline-block']}
+    display={props.hidden ? 'none' : ['flex', 'flex', 'inline-block']}
     flexDirection='column'
     minW={['none', 'none', 400]}
   >
@@ -114,7 +115,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
     </Box>
     <Center>
       <Button m={1} onClick={handleClickConfirm} disabled={!isValidGuest || isConfirming}>
-        確認
+        次へ
       </Button>
       <Button m={1} colorScheme="red" onClick={onDetail} disabled={isConfirming}>
         戻る

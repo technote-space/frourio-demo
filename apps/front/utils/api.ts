@@ -10,6 +10,7 @@ const apiClient = api(aspida());
 export const client = {
   ...apiClient.front,
   login: apiClient.login.front,
+  stripe: apiClient.stripe,
 };
 
 export const handleAuthError = async <B, API extends ApiType<B>, F extends FallbackType<API>>(

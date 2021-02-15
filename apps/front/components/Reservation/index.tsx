@@ -2,6 +2,8 @@ import type { FC } from 'react';
 import type { CreateReservationBody } from '$/domains/front/reservation/validators';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import useAuthToken from '^/hooks/useAuthToken';
@@ -12,13 +14,14 @@ import Account from './Account';
 import Detail from './Detail';
 import GuestInfo from './GuestInfo';
 import Confirm from './Confirm';
+import Payment from './Payment';
 
 export type ReservationData = Partial<CreateReservationBody>;
 type Props = {
   roomId?: number;
 }
-
-type ReservationMode = 'account' | 'detail' | 'guest' | 'confirm'
+type ReservationMode = 'account' | 'detail' | 'guest' | 'payment' | 'confirm';
+const stripePromise = loadStripe(process.env.STRIPE_KEY!);
 
 const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const initialReservation = {
@@ -76,6 +79,9 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const onChangePhone = (phone: string) => {
     setReservation({ ...reservation, guestPhone: phone });
   };
+  const onChangePaymentMethodsId = (paymentMethodsId: string) => {
+    setReservation({ ...reservation, paymentMethodsId });
+  };
   const onChangeUpdateInfo = () => {
     setReservation({ ...reservation, updateInfo: !reservation.updateInfo });
   };
@@ -85,6 +91,9 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const onGuestInfo = useCallback(() => {
     setMode('guest');
   }, []);
+  const onPayment = useCallback(() => {
+    setMode('payment');
+  }, []);
   const onConfirm = useCallback(async() => {
     setMode('confirm');
   }, []);
@@ -93,6 +102,53 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     setReservation(initialReservation);
     guestInfo.revalidate().then();
   }, []);
+  const getComponent = () => {
+    return <>
+      <Account
+        hidden={mode !== 'account'}
+        onDetail={onDetail}
+      />
+      <Detail
+        hidden={mode !== 'detail'}
+        room={room.data}
+        reservation={reservation}
+        onChangeRoomId={onChangeRoomId}
+        onChangeNumber={onChangeNumber}
+        onChangeCheckin={onChangeCheckin}
+        onChangeCheckout={onChangeCheckout}
+        nights={nights}
+        onGuestInfo={onGuestInfo}
+      />
+      <GuestInfo
+        hidden={mode !== 'guest'}
+        reservation={reservation}
+        onChangeEmail={onChangeEmail}
+        onChangeName={onChangeName}
+        onChangeNameKana={onChangeNameKana}
+        onChangeZipCode={onChangeZipCode}
+        onChangeAddress={onChangeAddress}
+        onChangePhone={onChangePhone}
+        onChangeUpdateInfo={onChangeUpdateInfo}
+        onPayment={onPayment}
+        onDetail={onDetail}
+      />
+      <Payment
+        hidden={mode !== 'payment'}
+        reservation={reservation}
+        onChangePaymentMethodsId={onChangePaymentMethodsId}
+        onConfirm={onConfirm}
+        onGuestInfo={onGuestInfo}
+      />
+      <Confirm
+        hidden={mode !== 'confirm'}
+        room={room.data}
+        reservation={reservation}
+        nights={nights}
+        onCancel={onPayment}
+        onSubmit={handleSubmit}
+      />
+    </>;
+  };
 
   useEffect(() => {
     if (auth && guestInfo.data && mode === 'guest') {
@@ -107,47 +163,9 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     }
   }, [auth, guestInfo.data, mode]);
 
-  if (mode === 'account') {
-    return <Account
-      onDetail={onDetail}
-    />;
-  }
-
-  if (mode === 'detail') {
-    return <Detail
-      room={room.data}
-      reservation={reservation}
-      onChangeRoomId={onChangeRoomId}
-      onChangeNumber={onChangeNumber}
-      onChangeCheckin={onChangeCheckin}
-      onChangeCheckout={onChangeCheckout}
-      nights={nights}
-      onGuestInfo={onGuestInfo}
-    />;
-  }
-
-  if (mode === 'guest') {
-    return <GuestInfo
-      reservation={reservation}
-      onChangeEmail={onChangeEmail}
-      onChangeName={onChangeName}
-      onChangeNameKana={onChangeNameKana}
-      onChangeZipCode={onChangeZipCode}
-      onChangeAddress={onChangeAddress}
-      onChangePhone={onChangePhone}
-      onChangeUpdateInfo={onChangeUpdateInfo}
-      onConfirm={onConfirm}
-      onDetail={onDetail}
-    />;
-  }
-
-  return <Confirm
-    room={room.data}
-    reservation={reservation}
-    nights={nights}
-    onCancel={onGuestInfo}
-    onSubmit={handleSubmit}
-  />;
+  return <Elements stripe={stripePromise}>
+    {getComponent()}
+  </Elements>;
 });
 
 export default Reservation;
