@@ -137,6 +137,23 @@ export const createPaymentIntents = depend(
   },
 );
 
+export const cancelPaymentIntents = depend(
+  {
+    stripe: stripe as { paymentIntents: { cancel: typeof stripe.paymentIntents.cancel } },
+    updateReservation,
+  },
+  async({
+    stripe,
+    updateReservation,
+  }, reservation: { id: number, paymentIntents: string | null }): Promise<Reservation> => {
+    if (reservation.paymentIntents) {
+      await stripe.paymentIntents.cancel(reservation.paymentIntents);
+    }
+
+    return updateReservation(reservation.id, { status: 'cancelled' });
+  },
+);
+
 export const capturePaymentIntents = depend(
   {
     stripe: stripe as { paymentIntents: { capture: typeof stripe.paymentIntents.capture } },
