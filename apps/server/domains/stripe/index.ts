@@ -3,8 +3,9 @@ import type { Reservation } from '$/repositories/reservation';
 import { depend } from 'velona';
 import Stripe from 'stripe';
 import { getGuest, updateGuest } from '$/repositories/guest';
-import { updateReservation } from '$/repositories/reservation';
+import { getReservations, updateReservation } from '$/repositories/reservation';
 import { logger } from '$/service/logging';
+import { sleep } from '@frourio-demo/utils/misc';
 import { STRIPE_SECRET } from '$/utils/env';
 import { CANCEL_PAYMENT_RATE } from '@frourio-demo/constants';
 
@@ -122,8 +123,35 @@ export const capturePaymentIntents = depend(
     logger.info('capturePaymentIntents, amount=%d, amount_received=%d', result.amount, result.amount_received);
     await updateReservation(reservation.id, {
       payment: result.amount_received,
+      ...(isCancel ? { status: 'cancelled' } : {}),
     });
 
     return result;
+  },
+);
+
+export const checkoutReservations = depend(
+  { capturePaymentIntents, getReservations, updateReservation, sleep },
+  async({ capturePaymentIntents, getReservations, updateReservation, sleep }) => {
+    await (await getReservations({
+      where: {
+        status: {
+          in: ['reserved', 'checkin'],
+        },
+        checkout: {
+          lte: new Date(),
+        },
+      },
+    })).reduce(async(prev, reservation) => {
+      await prev;
+      if (reservation.status === 'reserved') {
+        await capturePaymentIntents(reservation, true);
+        await sleep(500);
+      } else {
+        await updateReservation(reservation.id, {
+          status: 'checkout',
+        });
+      }
+    }, Promise.resolve());
   },
 );

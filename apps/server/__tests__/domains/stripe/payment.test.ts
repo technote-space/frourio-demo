@@ -1,6 +1,6 @@
 import { getPromiseLikeItem } from '$/__tests__/utils';
-import { createPaymentIntents, capturePaymentIntents } from '$/domains/stripe';
-import { updateReservation } from '$/repositories/reservation';
+import { createPaymentIntents, capturePaymentIntents, checkoutReservations } from '$/domains/stripe';
+import { getReservations, updateReservation } from '$/repositories/reservation';
 
 describe('createPaymentIntents', () => {
   it('should create payment intents', async() => {
@@ -124,6 +124,7 @@ describe('capturePaymentIntents', () => {
     expect(updateReservationMock).toBeCalledWith({
       data: {
         payment: 8000,
+        status: 'cancelled',
       },
       where: {
         id: 123,
@@ -140,5 +141,129 @@ describe('capturePaymentIntents', () => {
       payment: null,
       paymentIntents: null,
     })).toBe(null);
+  });
+});
+
+describe('checkoutReservations', () => {
+  it('should capture payment intents', async() => {
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([{
+      id: 123,
+      status: 'reserved',
+      payment: null,
+      paymentIntents: 'pi_test',
+      amount: 10000,
+    }]));
+    const paymentIntentsCaptureMock = jest.fn(() => getPromiseLikeItem({
+      amount: 10000,
+      'amount_received': 8000,
+    }));
+    const updateReservationMock = jest.fn();
+    const sleepMock = jest.fn();
+    const injected = checkoutReservations.inject({
+      capturePaymentIntents: capturePaymentIntents.inject({
+        stripe: {
+          paymentIntents: {
+            capture: paymentIntentsCaptureMock,
+          },
+        },
+        updateReservation: updateReservation.inject({
+          prisma: {
+            reservation: {
+              update: updateReservationMock,
+            },
+          },
+        }),
+      }),
+      getReservations: getReservations.inject({
+        prisma: {
+          reservation: {
+            findMany: getReservationsMock,
+          },
+        },
+      }),
+      updateReservation: updateReservation.inject({
+        prisma: {
+          reservation: {
+            update: updateReservationMock,
+          },
+        },
+      }),
+      sleep: sleepMock,
+    });
+
+    await injected();
+    expect(getReservationsMock).toBeCalledWith({
+      where: {
+        status: {
+          in: ['reserved', 'checkin'],
+        },
+        checkout: {
+          lte: expect.any(Date),
+        },
+      },
+    });
+    expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', {
+      'amount_to_capture': 8000,
+    });
+    expect(updateReservationMock).toBeCalledWith({
+      data: {
+        payment: 8000,
+        status: 'cancelled',
+      },
+      where: {
+        id: 123,
+      },
+    });
+    expect(sleepMock).toBeCalledTimes(1);
+  });
+
+  it('should update status', async() => {
+    const getReservationsMock = jest.fn(() => getPromiseLikeItem([{
+      id: 123,
+      status: 'checkin',
+      payment: null,
+      paymentIntents: 'pi_test',
+      amount: 10000,
+    }]));
+    const updateReservationMock = jest.fn();
+    const sleepMock = jest.fn();
+    const injected = checkoutReservations.inject({
+      getReservations: getReservations.inject({
+        prisma: {
+          reservation: {
+            findMany: getReservationsMock,
+          },
+        },
+      }),
+      updateReservation: updateReservation.inject({
+        prisma: {
+          reservation: {
+            update: updateReservationMock,
+          },
+        },
+      }),
+      sleep: sleepMock,
+    });
+
+    await injected();
+    expect(getReservationsMock).toBeCalledWith({
+      where: {
+        status: {
+          in: ['reserved', 'checkin'],
+        },
+        checkout: {
+          lte: expect.any(Date),
+        },
+      },
+    });
+    expect(updateReservationMock).toBeCalledWith({
+      data: {
+        status: 'checkout',
+      },
+      where: {
+        id: 123,
+      },
+    });
+    expect(sleepMock).not.toBeCalled();
   });
 });
