@@ -85,7 +85,7 @@
     "start:lock": "yarn workspace @frourio-demo/lock start",
     "start:server": "yarn workspace @frourio-demo/server start",
     "test": "yarn lint && yarn typecheck && yarn cover",
-    "typecheck": "yarn build:types && tsc --noEmit -p apps/admin && tsc --noEmit -p apps/front && tsc --noEmit -p apps/lock && tsc --noEmit -p apps/server",
+    "typecheck": "yarn build:types && tsc --noEmit -p apps/admin && tsc --noEmit -p apps/front && tsc --noEmit -p apps/lock && tsc --noEmit -p apps/server && tsc --noEmit -p shared/constants && tsc --noEmit -p shared/types && tsc --noEmit -p shared/utils",
     "update": "yarn update:core && yarn workspaces run update && yarn install && yarn upgrade && yarn audit",
     "update:core": "npx npm-check-updates -u --timeout 100000"
   },
@@ -93,7 +93,7 @@
   "devDependencies": {
     "@jest/types": "^26.6.2",
     "@types/jest": "^26.0.20",
-    "@types/node": "^14.14.27",
+    "@types/node": "^14.14.28",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "aspida": "^1.5.0",
