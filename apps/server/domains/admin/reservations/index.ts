@@ -20,6 +20,8 @@ import { getGuest, getGuests, getGuestCount } from '$/repositories/guest';
 import { getRoom, getRooms, getRoomCount } from '$/repositories/room';
 import { getCurrentPage, getSkip } from '$/service/pages';
 import { getWhere, getOrderBy, getFilterConstraints } from '$/repositories/utils';
+import { getStripeDefaultPaymentMethod } from '$/repositories/stripe';
+import { createPaymentIntents } from '$/domains/stripe';
 
 export type ListReservation = Reservation & {
   room?: {
@@ -150,12 +152,36 @@ export const fillUpdateReservationData = async(data: ReservationBody, getGuest: 
 
   return getUpdateReservationData(data, getRoom);
 };
+export const processCreateStripe = depend(
+  { getStripeDefaultPaymentMethod, createPaymentIntents },
+  async({
+    getStripeDefaultPaymentMethod,
+    createPaymentIntents,
+  }, data: ReservationBody, createData: CreateReservationData, getGuest: (id: number) => Promise<Guest>): Promise<CreateReservationData> | never => {
+    const guest = await getGuest(data.guestId!);
+    const paymentMethod = await getStripeDefaultPaymentMethod(guest);
+    if (!paymentMethod) {
+      throw new Error('支払い方法が設定されていないゲストは指定できません。');
+    }
+
+    const paymentIntents = await createPaymentIntents(createData.amount, guest, paymentMethod);
+    return {
+      ...createData,
+      paymentIntents: paymentIntents.id,
+    };
+  },
+);
 
 export const create = depend(
-  { createReservation, getGuest, getRoom },
-  async({ createReservation, getGuest, getRoom }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
+  { createReservation, getGuest, getRoom, processCreateStripe },
+  async({
+    createReservation,
+    getGuest,
+    getRoom,
+    processCreateStripe,
+  }, data: ReservationBody): Promise<BodyResponse<Reservation>> => ({
     status: 201,
-    body: await createReservation(await fillCreateReservationData(data, getGuest, getRoom)),
+    body: await createReservation(await processCreateStripe(data, await fillCreateReservationData(data, getGuest, getRoom), getGuest)),
   }),
 );
 
@@ -167,6 +193,7 @@ export const remove = depend(
   }),
 );
 
+// 更新時に Stripe 側の情報を更新するのは面倒 かつ 対応が個別に異なる可能性があるためシステムでは更新しない
 export const update = depend(
   { updateReservation, getGuest, getRoom },
   async(

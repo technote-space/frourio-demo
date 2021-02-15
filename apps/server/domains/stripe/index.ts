@@ -16,12 +16,6 @@ import {
 } from '$/repositories/stripe';
 import { logger } from '$/service/logging';
 import { sleep } from '@frourio-demo/utils/misc';
-import { STRIPE_SECRET } from '$/utils/env';
-
-const stripe = new Stripe(STRIPE_SECRET, {
-  apiVersion: '2020-08-27',
-  maxNetworkRetries: 5,
-});
 
 export const getDefaultPaymentMethod = depend(
   { getStripeDefaultPaymentMethod, getGuest },
@@ -48,7 +42,7 @@ export const attachPaymentMethod = depend(
     logger.info('attachPaymentMethod, id=%s, guest=%d', methodId, guestId);
     const guest = await getGuest(guestId);
     const customer = await attachPaymentMethodToCustomer(methodId, guest);
-    if (customer) {
+    if (!guest.stripe) {
       await updateGuest(guest.id, { stripe: customer });
     }
 

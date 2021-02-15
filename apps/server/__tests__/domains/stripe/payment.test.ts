@@ -27,6 +27,7 @@ describe('createPaymentIntents', () => {
       customer: 'stripe',
       'payment_method': 'pm_test',
       'capture_method': 'manual',
+      confirm: true,
     });
   });
 
@@ -49,6 +50,7 @@ describe('createPaymentIntents', () => {
       'payment_method_types': ['card'],
       'payment_method': 'pm_test',
       'capture_method': 'manual',
+      confirm: true,
     });
   });
 });

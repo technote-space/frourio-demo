@@ -3,7 +3,9 @@ import { getReservationCount, getReservations, createReservation } from '$/repos
 import { getGuest } from '$/repositories/guest';
 import { getRoom } from '$/repositories/room';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { list, create } from '$/domains/admin/reservations';
+import { list, create, processCreateStripe } from '$/domains/admin/reservations';
+import { getStripeDefaultPaymentMethod, createStripePaymentIntents } from '$/repositories/stripe';
+import { createPaymentIntents } from '$/domains/stripe';
 
 describe('reservations', () => {
   it('should get reservations', async() => {
@@ -198,6 +200,7 @@ describe('reservations', () => {
       zipCode: '100-0001',
       address: 'テスト県テスト市',
       phone: '090-1234-5678',
+      stripe: 'stripe',
     }));
     const getRoomMock = jest.fn(() => getPromiseLikeItem({
       id: 345,
@@ -205,6 +208,12 @@ describe('reservations', () => {
       number: 1,
       price: 10000,
     }));
+    const customersRetrieveMock = jest.fn(() => getPromiseLikeItem({
+      'invoice_settings': {
+        'default_payment_method': 'pm_test',
+      },
+    }));
+    const createStripePaymentIntentsMock = jest.fn(() => getPromiseLikeItem({ id: 'pi_test' }));
     const injectedController = controller.inject({
       create: create.inject({
         createReservation: createReservation.inject({
@@ -227,6 +236,24 @@ describe('reservations', () => {
               findFirst: getRoomMock,
             },
           },
+        }),
+        processCreateStripe: processCreateStripe.inject({
+          getStripeDefaultPaymentMethod: getStripeDefaultPaymentMethod.inject({
+            stripe: {
+              customers: {
+                retrieve: customersRetrieveMock,
+              },
+            },
+          }),
+          createPaymentIntents: createPaymentIntents.inject({
+            createStripePaymentIntents: createStripePaymentIntents.inject({
+              stripe: {
+                paymentIntents: {
+                  create: createStripePaymentIntentsMock,
+                },
+              },
+            }),
+          }),
         }),
       }),
     })(getFastify());
@@ -270,8 +297,89 @@ describe('reservations', () => {
         },
         roomName: 'test',
         status: 'reserved',
+        paymentIntents: 'pi_test',
       },
     });
+    expect(getGuestMock).toBeCalledWith({
+      rejectOnNotFound: true,
+      where: {
+        id: 234,
+      },
+    });
+    expect(getRoomMock).toBeCalledWith({
+      rejectOnNotFound: true,
+      where: {
+        id: 345,
+      },
+    });
+    expect(customersRetrieveMock).toBeCalledWith('stripe');
+    expect(createStripePaymentIntentsMock).toBeCalledWith({
+      amount: 200000,
+      currency: 'jpy',
+      'payment_method_types': ['card'],
+      customer: 'stripe',
+      'payment_method': 'pm_test',
+      'capture_method': 'manual',
+      confirm: true,
+    });
+  });
+
+  it('should failed to create reservation', async() => {
+    const createReservationMock = jest.fn();
+    const getGuestMock = jest.fn(() => getPromiseLikeItem({
+      id: 234,
+      email: 'test@example.com',
+      name: 'test',
+      nameKana: 'テスト',
+      zipCode: '100-0001',
+      address: 'テスト県テスト市',
+      phone: '090-1234-5678',
+    }));
+    const getRoomMock = jest.fn(() => getPromiseLikeItem({
+      id: 345,
+      name: 'test',
+      number: 1,
+      price: 10000,
+    }));
+    const injectedController = controller.inject({
+      create: create.inject({
+        createReservation: createReservation.inject({
+          prisma: {
+            reservation: {
+              create: createReservationMock,
+            },
+          },
+        }),
+        getGuest: getGuest.inject({
+          prisma: {
+            guest: {
+              findFirst: getGuestMock,
+            },
+          },
+        }),
+        getRoom: getRoom.inject({
+          prisma: {
+            room: {
+              findFirst: getRoomMock,
+            },
+          },
+        }),
+      }),
+    })(getFastify());
+
+    await expect(injectedController.post({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      body: {
+        guestId: 234,
+        roomId: 345,
+        number: 10,
+        checkin: '2020-03-15T06:00:00.000Z',
+        checkout: '2020-03-17T01:00:00.000Z',
+        status: 'reserved',
+      },
+    })).rejects.toThrow('支払い方法が設定されていないゲストは指定できません。');
+    expect(createReservationMock).not.toBeCalled();
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
       where: {

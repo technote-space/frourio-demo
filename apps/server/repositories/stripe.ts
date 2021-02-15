@@ -44,7 +44,7 @@ export const attachPaymentMethodToCustomer = depend(
       customers: { create: typeof stripe.customers.create }
     },
   },
-  async({ stripe }, methodId: string, guest: Guest): Promise<string | undefined> => {
+  async({ stripe }, methodId: string, guest: Guest): Promise<string> => {
     const method = await stripe.paymentMethods.retrieve(methodId);
     const getStripeCustomer = async() => {
       if (!guest.stripe) {
@@ -63,10 +63,9 @@ export const attachPaymentMethodToCustomer = depend(
       await stripe.paymentMethods.attach(method.id, {
         customer,
       });
-      return customer;
     }
 
-    return undefined;
+    return customer;
   },
 );
 

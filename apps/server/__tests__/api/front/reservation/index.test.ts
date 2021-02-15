@@ -5,6 +5,7 @@ import { createReservation } from '$/repositories/reservation';
 import { getGuest, updateGuest } from '$/repositories/guest';
 import { reserve } from '$/domains/front/reservation';
 import { createPaymentIntents } from '$/domains/stripe';
+import { createStripePaymentIntents } from '$/repositories/stripe';
 import * as mail from '$/service/mail/utils';
 
 jest.mock('$/service/mail/utils');
@@ -42,11 +43,13 @@ describe('reservation', () => {
           },
         }),
         createPaymentIntents: createPaymentIntents.inject({
-          stripe: {
-            paymentIntents: {
-              create: paymentIntentsCreateMock,
+          createStripePaymentIntents: createStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                create: paymentIntentsCreateMock,
+              },
             },
-          },
+          }),
         }),
       }),
     })(getFastify());
@@ -162,11 +165,13 @@ describe('reservation', () => {
           },
         }),
         createPaymentIntents: createPaymentIntents.inject({
-          stripe: {
-            paymentIntents: {
-              create: paymentIntentsCreateMock,
+          createStripePaymentIntents: createStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                create: paymentIntentsCreateMock,
+              },
             },
-          },
+          }),
         }),
       }),
     })(getFastify());
@@ -314,11 +319,13 @@ describe('reservation', () => {
           },
         }),
         createPaymentIntents: createPaymentIntents.inject({
-          stripe: {
-            paymentIntents: {
-              create: paymentIntentsCreateMock,
+          createStripePaymentIntents: createStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                create: paymentIntentsCreateMock,
+              },
             },
-          },
+          }),
         }),
       }),
     })(getFastify());
