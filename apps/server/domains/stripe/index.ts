@@ -14,6 +14,42 @@ const stripe = new Stripe(STRIPE_SECRET, {
   maxNetworkRetries: 5,
 });
 
+export const getDefaultPaymentMethod = depend(
+  {
+    stripe: stripe as { customers: { retrieve: typeof stripe.customers.retrieve } },
+    getGuest,
+  },
+  async({ stripe, getGuest }, guestId: number): Promise<BodyResponse<string | undefined>> => {
+    const guest = await getGuest(guestId);
+    if (!guest.stripe) {
+      return {
+        status: 200,
+        body: undefined,
+      };
+    }
+
+    const customer = await stripe.customers.retrieve(guest.stripe);
+    if (customer.deleted) {
+      return {
+        status: 200,
+        body: undefined,
+      };
+    }
+
+    if (!customer.invoice_settings.default_payment_method) {
+      return {
+        status: 200,
+        body: undefined,
+      };
+    }
+
+    return {
+      status: 200,
+      body: typeof customer.invoice_settings.default_payment_method === 'string' ? customer.invoice_settings.default_payment_method : customer.invoice_settings.default_payment_method.id,
+    };
+  },
+);
+
 export const getPaymentMethods = depend(
   {
     stripe: stripe as { paymentMethods: { list: typeof stripe.paymentMethods.list } },
