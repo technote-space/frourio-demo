@@ -199,6 +199,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   </div>;
   const checkinTableColumns = useMemo(() => [
     { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: '予約番号', field: 'code' },
     { title: '名前', field: 'guestName' },
     { title: 'かな名', field: 'guestNameKana' },
     { title: '電話番号', field: 'guestPhone' },
@@ -310,6 +311,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   </div>;
   const checkoutTableColumns = useMemo(() => [
     { title: 'ID', field: 'id', hidden: true, defaultSort: 'desc' },
+    { title: '予約番号', field: 'code' },
     { title: '名前', field: 'guestName' },
     { title: 'かな名', field: 'guestNameKana' },
     { title: '部屋名', field: 'roomName' },

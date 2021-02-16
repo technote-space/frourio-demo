@@ -26,13 +26,13 @@ import { isValidCheckinDateRange } from '$/service/reservation';
 import { capturePaymentIntents, cancelPaymentIntents } from '$/domains/stripe';
 
 export type CheckinReservation =
-  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
+  Pick<Reservation, 'id' | 'code' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
   & {
   isValid: boolean;
 };
 
 export type CheckoutReservation =
-  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount' | 'payment'>
+  Pick<Reservation, 'id' | 'code' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount' | 'payment'>
   & {
   room?: {
     number: number;
@@ -68,6 +68,7 @@ export const getCheckin = depend(
       orderBy,
       select: {
         id: true,
+        code: true,
         guestName: true,
         guestNameKana: true,
         guestPhone: true,
@@ -122,6 +123,7 @@ export const getCheckout = depend(
       orderBy,
       select: {
         id: true,
+        code: true,
         guestName: true,
         guestNameKana: true,
         roomName: true,
