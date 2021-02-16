@@ -33,6 +33,14 @@ const Confirm: FC<Props> = memo(({ hidden, reservation, room, nights, onCancel, 
   const handleClick = useCallback(async() => {
     setIsSending(true);
     try {
+      if (auth) {
+        await client.stripe.methods.put({
+          headers: auth.authHeader,
+          body: {
+            methodId: reservation.paymentMethodsId!,
+          },
+        });
+      }
       const created = await client.reservation.post({
         body: reservation as CreateReservationBody,
         ...(auth ? {
