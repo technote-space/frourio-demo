@@ -19,9 +19,11 @@ import { sleep } from '@frourio-demo/utils/misc';
 
 export const getDefaultPaymentMethod = depend(
   { getStripeDefaultPaymentMethod, getGuest },
-  async({ getStripeDefaultPaymentMethod, getGuest }, guestId: number): Promise<BodyResponse<string | undefined>> => ({
+  async({ getStripeDefaultPaymentMethod, getGuest }, guestId: number): Promise<BodyResponse<{ id?: string }>> => ({
     status: 200,
-    body: await getStripeDefaultPaymentMethod(await getGuest(guestId)),
+    body: {
+      id: await getStripeDefaultPaymentMethod(await getGuest(guestId)),
+    },
   }),
 );
 

@@ -35,7 +35,7 @@ describe('reservation/stripe/method', () => {
     })(getFastify());
 
     const res = await injectedController.get({ headers: { authorization: '' }, user: { id: 123 } });
-    expect(res.body).toEqual('pm_test');
+    expect(res.body).toEqual({ id: 'pm_test' });
     expect(customerRetrieveMock).toBeCalledWith('stripe');
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
@@ -73,7 +73,7 @@ describe('reservation/stripe/method', () => {
     })(getFastify());
 
     const res = await injectedController.get({ headers: { authorization: '' }, user: { id: 123 } });
-    expect(res.body).toEqual('pm_test');
+    expect(res.body).toEqual({ id: 'pm_test' });
     expect(customerRetrieveMock).toBeCalledWith('stripe');
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
@@ -98,7 +98,7 @@ describe('reservation/stripe/method', () => {
     })(getFastify());
 
     const res = await injectedController.get({ headers: { authorization: '' }, user: { id: 123 } });
-    expect(res.body).toEqual(undefined);
+    expect(res.body).toEqual({ id: undefined });
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
       where: {
@@ -132,7 +132,7 @@ describe('reservation/stripe/method', () => {
     })(getFastify());
 
     const res = await injectedController.get({ headers: { authorization: '' }, user: { id: 123 } });
-    expect(res.body).toEqual(undefined);
+    expect(res.body).toEqual({ id: undefined });
     expect(customerRetrieveMock).toBeCalledWith('stripe');
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
@@ -170,7 +170,7 @@ describe('reservation/stripe/method', () => {
     })(getFastify());
 
     const res = await injectedController.get({ headers: { authorization: '' }, user: { id: 123 } });
-    expect(res.body).toEqual(undefined);
+    expect(res.body).toEqual({ id: undefined });
     expect(customerRetrieveMock).toBeCalledWith('stripe');
     expect(getGuestMock).toBeCalledWith({
       rejectOnNotFound: true,
