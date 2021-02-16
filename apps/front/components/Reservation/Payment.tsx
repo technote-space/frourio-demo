@@ -70,7 +70,7 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
 
   const getPaymentMethodId = async() => {
     if (createNewCard || !reservation.paymentMethodsId) {
-      const card = elements?.getElement('cardNumber');
+      const card = elements?.getElement(CardNumberElement);
       if (!card) {
         throw new Error('Stripeは使用できません。時間をおいてから再度お試しください。');
       }
@@ -102,15 +102,13 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
     } finally {
       setIsSending(false);
     }
-  }, []);
+  }, [createNewCard, reservation, elements]);
   const handleClickSwitchButton = useCallback(() => {
     setCreateNewCard(!createNewCard);
   }, [createNewCard]);
 
   const getCardText = method => `${method.card.brand} ****-****-****-${method.card.last4} ${method.card.exp_month}/${String(method.card.exp_year).substring(2, 4)}`;
   const changeCardInfo = (id: string) => (event: StripeElementChangeEvent) => {
-    console.log(id);
-    console.log(event);
     const setters = {
       'cardNumber': setCardNumberError,
       'cardExpiry': setCardExpiryError,
@@ -134,7 +132,7 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
     p={[1, 2, 4]}
     m="2"
     borderWidth={1}
-    display={hidden ? 'none' : ['flex', 'flex', 'inline-block']}
+    display={hidden || !elements ? 'none' : ['flex', 'flex', 'inline-block']}
     flexDirection='column'
     minW={['none', 'none', 400]}
   >
