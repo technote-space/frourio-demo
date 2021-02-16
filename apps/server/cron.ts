@@ -12,7 +12,7 @@ export const setup = () => {
   }, {
     timezone: 'Asia/Tokyo',
   });
-  schedule('0 12 * * *', () => {
+  schedule('30 12 * * *', () => {
     logger.info('start checkout check');
     checkoutReservations().finally(() => {
       logger.info('finish checkout check');
