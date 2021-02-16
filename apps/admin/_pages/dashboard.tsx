@@ -271,13 +271,17 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
           </Button>;
         }
 
-        return <Button
-          className={clsx(classes.button, classes.cancel)}
-          startIcon={<CancelIcon />}
-          onClick={() => setCancelId(data.id)}
-        >
-          キャンセル
-        </Button>;
+        if (data.status === 'reserved') {
+          return <Button
+            className={clsx(classes.button, classes.cancel)}
+            startIcon={<CancelIcon />}
+            onClick={() => setCancelId(data.id)}
+          >
+            キャンセル
+          </Button>;
+        }
+
+        return '';
       },
     },
   ] as Column<Model>[], [classes]);

@@ -539,22 +539,22 @@ describe('Dashboard', () => {
 
     await findByText('山本 美咲');
     await findByText('山本 蓮');
-    expect(await findAllByText('キャンセル')).toHaveLength(5); // table header, button * 4
+    expect(await findAllByText('キャンセル')).toHaveLength(3); // table header, button * 2
     expect(getAllByText('キャンセル済み')).toHaveLength(1);
     expect(getAllByText('チェックアウト済み')).toHaveLength(2);
     expect(getAllByText('未チェックイン')).toHaveLength(1);
 
     // test cancel
-    user.click(getAllByText('キャンセル')[4]);
+    user.click(getAllByText('キャンセル')[2]);
     await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
     user.click(await findByText('閉じる'));
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
-    user.click(getAllByText('キャンセル')[4]);
+    user.click(getAllByText('キャンセル')[2]);
     user.click(await findByText('はい'));
     await findByText('キャンセルしました。');
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
-    expect(cancel).toBeCalledWith({ id: 227 });
+    expect(cancel).toBeCalledWith({ id: 127 });
   });
 
   it('should change date', async() => {
