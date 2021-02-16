@@ -11,7 +11,6 @@ import {
   detachPaymentMethodFromCustomer,
   createStripePaymentIntents,
   cancelStripePaymentIntents,
-  updateStripePaymentIntents,
   captureStripePaymentIntents,
 } from '$/repositories/stripe';
 import { logger } from '$/service/logging';
@@ -80,14 +79,6 @@ export const cancelPaymentIntents = depend(
     logger.info('cancelPaymentIntents, reservationId=%d, paymentIntents=%s', reservation.id, reservation.paymentIntents);
     await cancelStripePaymentIntents(reservation);
     return updateReservation(reservation.id, { status: 'cancelled' });
-  },
-);
-
-export const updatePaymentIntents = depend(
-  { updateStripePaymentIntents },
-  async({ updateStripePaymentIntents }, paymentIntentsid: string, data: { amount?: number; paymentMethodsId?: string; }) => {
-    logger.info('cancelPaymentIntents, id=%s, amount=%d, paymentMethodsId=%s', paymentIntentsid, data.amount, data.paymentMethodsId);
-    return updateStripePaymentIntents(paymentIntentsid, data);
   },
 );
 
