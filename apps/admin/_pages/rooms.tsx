@@ -24,7 +24,7 @@ const Rooms: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPageProp
       title: '利用状況',
       editable: 'never',
       // eslint-disable-next-line react/display-name
-      render: (data) => <RoomStatusCalendar roomId={data.id} authHeader={authHeader}/>,
+      render: (data) => <RoomStatusCalendar roomId={data.id} authHeader={authHeader} />,
     },
   ] as DataTableColumn<Model>[], []);
 

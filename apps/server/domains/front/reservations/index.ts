@@ -2,9 +2,9 @@ import type { BodyResponse } from '$/types';
 import type { Reservation } from '$/repositories/reservation';
 import { depend } from 'velona';
 import { differenceInCalendarDays } from 'date-fns';
-import { getReservation, updateReservation, getReservationVariables } from '$/repositories/reservation';
-import CancelledTemplate from './templates/Cancelled.html';
-import { sendHtmlMail } from '$/service/mail';
+import { getReservation } from '$/repositories/reservation';
+import { sendCancelledMail } from '$/service/mail';
+import { cancelPaymentIntents } from '$/domains/stripe';
 
 export type ReservationDetail = Reservation & {
   nights: number;
@@ -39,17 +39,26 @@ export const getReservationDetail = depend(
 );
 
 export const cancel = depend(
-  { getReservation, updateReservation },
-  async({ getReservation, updateReservation }, code: string): Promise<BodyResponse<Reservation>> => {
+  { getReservation, cancelPaymentIntents },
+  async({ getReservation, cancelPaymentIntents }, code: string): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(undefined, {
-      where: { code },
+      where: {
+        code,
+        status: {
+          not: 'cancelled',
+        },
+      },
+      rejectOnNotFound: false,
     });
 
-    const cancelled = await updateReservation(reservation.id, {
-      status: 'cancelled',
-    });
-    await sendHtmlMail(cancelled.guestEmail, '予約キャンセル', CancelledTemplate, getReservationVariables(cancelled));
+    if (!reservation) {
+      return {
+        status: 400,
+      };
+    }
 
+    const cancelled = await cancelPaymentIntents(reservation);
+    await sendCancelledMail(cancelled);
     return {
       status: 200,
       body: cancelled,

@@ -14,8 +14,8 @@ const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
 
 const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHydrate>
   <StoreContextProvider>
-    <Head/>
-    <CssBaseline/>
+    <Head />
+    <CssBaseline />
     <Component {...pageProps} />
   </StoreContextProvider>
 </SafeHydrate>;

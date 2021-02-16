@@ -14,19 +14,25 @@ import {
   format,
   parse,
 } from 'date-fns';
-import {
-  getReservations,
-  getReservation,
-  getReservationCount,
-  updateReservation,
-} from '$/repositories/reservation';
+import { toDataURL } from 'qrcode';
+import { getReservations, getReservation, getReservationCount, updateReservation } from '$/repositories/reservation';
 import { getRooms } from '$/repositories/room';
+import { createRoomKey } from '$/repositories/roomKey';
 import { getWhere, getOrderBy } from '$/repositories/utils';
 import { getCurrentPage, getSkip } from '$/service/pages';
+import { sendRoomKeyMail } from '$/service/mail';
+import { encryptQrInfo } from '$/utils/reservation';
+import { isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents, cancelPaymentIntents } from '$/domains/stripe';
 
-export type CheckinReservation = Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>;
+export type CheckinReservation =
+  Pick<Reservation, 'id' | 'code' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
+  & {
+  isValid: boolean;
+};
+
 export type CheckoutReservation =
-  Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount' | 'payment'>
+  Pick<Reservation, 'id' | 'code' | 'guestName' | 'guestNameKana' | 'roomName' | 'checkin' | 'checkout' | 'number' | 'status' | 'amount' | 'payment'>
   & {
   room?: {
     number: number;
@@ -36,9 +42,9 @@ export type CheckoutReservation =
 export type SelectableRoom = Pick<Room, 'id' | 'name'>;
 
 export const getCheckin = depend(
-  { getReservations, getReservationCount },
+  { getReservations, getReservationCount, isValidCheckinDateRange },
   async(
-    { getReservations, getReservationCount },
+    { getReservations, getReservationCount, isValidCheckinDateRange },
     query: Query<CheckinReservation>,
     date?: Date,
   ): Promise<BodyResponse<QueryResult<CheckinReservation>>> => {
@@ -55,13 +61,14 @@ export const getCheckin = depend(
     const orderBy = getOrderBy<CheckinReservation>(query.orderBy, query.orderDirection);
     const totalCount = await getReservationCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);
-    const data = await getReservations({
+    const reservations = await getReservations({
       skip: getSkip(pageSize, page),
       take: pageSize,
       where,
       orderBy,
       select: {
         id: true,
+        code: true,
         guestName: true,
         guestNameKana: true,
         guestPhone: true,
@@ -75,7 +82,10 @@ export const getCheckin = depend(
     return {
       status: 200,
       body: {
-        data,
+        data: reservations.map(reservation => ({
+          ...reservation,
+          isValid: isValidCheckinDateRange(reservation.checkin, reservation.checkout, new Date()),
+        })),
         page,
         totalCount,
       },
@@ -113,6 +123,7 @@ export const getCheckout = depend(
       orderBy,
       select: {
         id: true,
+        code: true,
         guestName: true,
         guestNameKana: true,
         roomName: true,
@@ -143,15 +154,16 @@ export const getCheckout = depend(
 );
 
 export const checkin = depend(
-  { getReservation, updateReservation },
-  async({ getReservation, updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
+  { getReservation, capturePaymentIntents },
+  async({
+    getReservation,
+    capturePaymentIntents,
+  }, id: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id);
-    if (reservation && reservation.status === 'reserved') {
+    if (reservation.status === 'reserved') {
       return {
         status: 200,
-        body: await updateReservation(id, {
-          status: 'checkin',
-        }),
+        body: await capturePaymentIntents(reservation),
       };
     }
 
@@ -166,14 +178,13 @@ export const checkin = depend(
 
 export const checkout = depend(
   { getReservation, updateReservation },
-  async({ getReservation, updateReservation }, id: number, payment?: number): Promise<BodyResponse<Reservation>> => {
+  async({ getReservation, updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id);
-    if (reservation && reservation.status === 'checkin') {
+    if (reservation.status === 'checkin') {
       return {
         status: 200,
         body: await updateReservation(id, {
           status: 'checkout',
-          payment: payment ?? reservation.amount,
         }),
       };
     }
@@ -187,13 +198,32 @@ export const checkout = depend(
   },
 );
 export const cancel = depend(
-  { updateReservation },
-  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => ({
-    status: 200,
-    body: await updateReservation(id, {
-      status: 'cancelled',
-    }),
-  }),
+  { getReservation, cancelPaymentIntents },
+  async({
+    getReservation,
+    cancelPaymentIntents,
+  }, id: number): Promise<BodyResponse<Reservation>> => {
+    const reservation = await getReservation(id, {
+      where: {
+        status: {
+          not: 'cancelled',
+        },
+      },
+      rejectOnNotFound: false,
+    });
+
+    if (!reservation) {
+      return {
+        status: 400,
+      };
+    }
+
+    const cancelled = await cancelPaymentIntents(reservation);
+    return {
+      status: 200,
+      body: cancelled,
+    };
+  },
 );
 
 export const getSelectableRooms = depend(
@@ -215,11 +245,13 @@ export const getMonthlySales = depend(
     const reservations = await getReservations({
       select: {
         payment: true,
-        checkout: true,
+        checkin: true,
       },
       where: {
-        status: 'checkout',
-        checkout: {
+        payment: {
+          not: null
+        },
+        checkin: {
           gte: startOfYear(date),
           lt: endOfYear(date),
         },
@@ -234,7 +266,7 @@ export const getMonthlySales = depend(
 
     const sales: Record<string, number> = Object.assign({}, ...months.map(month => ({ [month]: 0 })));
     reservations.forEach(reservation => {
-      const key = format(reservation.checkout, 'yyyy-MM');
+      const key = format(reservation.checkin, 'yyyy-MM');
       sales[key] += reservation.payment ?? 0;
     });
 
@@ -254,11 +286,13 @@ export const getDailySales = depend(
     const reservations = await getReservations({
       select: {
         payment: true,
-        checkout: true,
+        checkin: true,
       },
       where: {
-        status: 'checkout',
-        checkout: {
+        payment: {
+          not: null
+        },
+        checkin: {
           gte: startOfMonth(date),
           lt: endOfMonth(date),
         },
@@ -273,7 +307,7 @@ export const getDailySales = depend(
 
     const sales: Record<string, number> = Object.assign({}, ...days.map(day => ({ [day]: 0 })));
     reservations.forEach(reservation => {
-      const key = format(reservation.checkout, 'yyyy-MM-dd');
+      const key = format(reservation.checkin, 'yyyy-MM-dd');
       sales[key] += reservation.payment ?? 0;
     });
 
@@ -283,6 +317,29 @@ export const getDailySales = depend(
         day: parse(day, 'yyyy-MM-dd', new Date()),
         sales,
       })),
+    };
+  },
+);
+
+export const sendRoomKey = depend(
+  { getReservation, createRoomKey, encryptQrInfo, toDataURL },
+  async({
+    getReservation,
+    createRoomKey,
+    encryptQrInfo,
+    toDataURL,
+  }, id: number): Promise<BodyResponse<Reservation>> => {
+    const reservation = await getReservation(id);
+    const roomKey = await createRoomKey(reservation);
+
+    await sendRoomKeyMail(reservation, roomKey.key, await toDataURL(encryptQrInfo({
+      reservationId: reservation.id,
+      roomId: reservation.roomId,
+      key: roomKey.key,
+    })));
+    return {
+      status: 202,
+      body: reservation,
     };
   },
 );

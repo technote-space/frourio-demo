@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
+import { sleep } from '@frourio-demo/utils/misc';
 import useAuthToken from '~/hooks/useAuthToken';
 import useUnmountRef from '~/hooks/useUnmountRef';
 import { useDispatchContext, useStoreContext } from '~/store';
@@ -33,7 +34,7 @@ const Auth: FC = () => {
           if ('name' in admin) {
             setAdmin(dispatch, admin);
           } else {
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await sleep(5000);
           }
           offRefreshToken(dispatch);
           setIsLoading(false);

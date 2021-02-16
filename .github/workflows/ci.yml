@@ -140,7 +140,7 @@ jobs:
     name: Coverage
     needs: [eslint, typecheck, license]
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       matrix:
         node: ['15']
@@ -243,14 +243,18 @@ jobs:
         run: |
           yarn build:admin
           yarn build:front
+          yarn build:lock
           mkdir out
           mv ./apps/admin/out out/admin
           mv ./apps/front/out out/front
+          mv ./apps/lock/out out/lock
           mv ./gh-pages/* out/
           cp out/front/index.html out/404.html
           cp ./apps/front/license.json out/front/
+          cp ./apps/lock/license.json out/lock/
         env:
           FRONT_URL: ${{ env.ADMIN_PAGES_FRONT_URL }}
+          LOCK_URL: ${{ env.ADMIN_PAGES_LOCK_URL }}
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

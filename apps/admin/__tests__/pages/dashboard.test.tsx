@@ -173,10 +173,67 @@ describe('Dashboard', () => {
     await findByText('山本 蓮');
     expect(await findAllByText('チェックイン')).toHaveLength(4); // table title, table header, button * 2
     expect(getAllByText('チェックイン済み')).toHaveLength(1);
+    expect(getAllByText('キャンセル')).toHaveLength(3);
 
     // test checkin
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('チェックイン')[2]);
+    await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
+    user.click(getAllByText('キャンセル')[3]);
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
+    user.click(getAllByText('チェックイン')[2]);
+    await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
+    user.click(await findByText('はい'));
     await findByText('更新しました。');
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
+
+    // close alert
+    user.click(findElement(getByRole('alert'), 'button'));
+    await waitFor(() => expect(() => getByRole('alert')).toThrow());
+
+    expect(checkin).toBeCalledWith({ id: 831 });
+  });
+
+  it('should resend room key', async() => {
+    const checkin = jest.fn();
+
+    const { findByText, getByRole, getAllByText } = await loadPage(
+      'dashboard',
+      scope => scope
+        .get('/dashboard/rooms').reply(200, [])
+        .get(/\/dashboard\/checkin/).reply(200, {
+          'data': [{
+            'id': 831,
+            'guestName': '山本 美咲',
+            'guestNameKana': 'テスト',
+            'guestPhone': '060-844-7544',
+            'roomName': '杏19119',
+            'checkin': '2021-01-10T06:00:00.000Z',
+            'checkout': '2021-01-17T01:00:00.000Z',
+            'status': 'reserved',
+            'isValid': true,
+          }],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get(/\/dashboard\/checkout/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .get(/\/dashboard\/sales/).reply(200, [])
+        .post('/dashboard/checkin', body => {
+          checkin(body);
+          return body;
+        }).reply(200, () => ({ id: 123 })),
+    );
+
+    await findByText('山本 美咲');
+    expect(getAllByText('入室番号再送信')).toHaveLength(1);
+
+    // test resend room key
+    user.click(getAllByText('入室番号再送信')[0]);
+    await findByText('送信しました。');
 
     // close alert
     user.click(findElement(getByRole('alert'), 'button'));
@@ -188,7 +245,7 @@ describe('Dashboard', () => {
   it('should checkout', async() => {
     const checkout = jest.fn();
 
-    const { getByTestId, findAllByText, findByText, getByRole, getAllByText } = await loadPage(
+    const { findAllByText, findByText, getByRole, getAllByText } = await loadPage(
       'dashboard',
       scope => scope
         .get('/dashboard/rooms').reply(200, [])
@@ -329,23 +386,22 @@ describe('Dashboard', () => {
     await findByText('山本 美咲');
     await findByText('山本 蓮');
     expect(await findAllByText('チェックアウト')).toHaveLength(3); // table title, table header, button
-    expect(getAllByText('チェックアウト済み')).toHaveLength(2);
+    expect(getAllByText('チェックアウト済み')).toHaveLength(3);
+    expect(getAllByText('キャンセル')).toHaveLength(3);
 
     // test checkout
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('チェックアウト')[2]);
     await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
-    user.click(await findByText('閉じる'));
+    user.click(getAllByText('キャンセル')[3]);
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('チェックアウト')[2]);
     await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
-    user.clear(findElement(getByTestId('checkout-payment'), '.MuiInputBase-input'));
-    user.type(findElement(getByTestId('checkout-payment'), '.MuiInputBase-input'), '1');
-    user.click(await findByText('確定'));
+    user.click(await findByText('はい'));
     await findByText('更新しました。');
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
-    expect(checkout).toBeCalledWith({ id: 315, payment: 1 });
+    expect(checkout).toBeCalledWith({ id: 315 });
   });
 
   it('should cancel', async() => {
@@ -491,22 +547,22 @@ describe('Dashboard', () => {
 
     await findByText('山本 美咲');
     await findByText('山本 蓮');
-    expect(await findAllByText('キャンセル')).toHaveLength(5); // table header, button * 4
+    expect(await findAllByText('キャンセル')).toHaveLength(3); // table header, button * 2
     expect(getAllByText('キャンセル済み')).toHaveLength(1);
-    expect(getAllByText('チェックアウト済み')).toHaveLength(2);
+    expect(getAllByText('チェックアウト済み')).toHaveLength(3);
     expect(getAllByText('未チェックイン')).toHaveLength(1);
 
     // test cancel
-    user.click(getAllByText('キャンセル')[4]);
+    user.click(getAllByText('キャンセル')[2]);
     await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
     user.click(await findByText('閉じる'));
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
-    user.click(getAllByText('キャンセル')[4]);
+    user.click(getAllByText('キャンセル')[2]);
     user.click(await findByText('はい'));
     await findByText('キャンセルしました。');
     await waitFor(() => expect(() => getByRole('presentation')).toThrow());
 
-    expect(cancel).toBeCalledWith({ id: 227 });
+    expect(cancel).toBeCalledWith({ id: 127 });
   });
 
   it('should change date', async() => {
@@ -663,7 +719,7 @@ describe('Dashboard', () => {
   it('should fail to checkin', async() => {
     const checkin = jest.fn();
 
-    const { findByText, getAllByText } = await loadPage(
+    const { findByText, getAllByText, getByRole } = await loadPage(
       'dashboard',
       scope => scope
         .get('/dashboard/rooms').reply(200, [])
@@ -696,7 +752,10 @@ describe('Dashboard', () => {
     await findByText('山本 美咲');
 
     // test checkin
+    await waitFor(() => expect(() => getByRole('presentation')).toThrow());
     user.click(getAllByText('チェックイン')[2]);
+    await waitFor(() => expect(() => getByRole('presentation')).not.toThrow());
+    user.click(await findByText('はい'));
     await findByText('その操作をする権限がありません。');
   });
 

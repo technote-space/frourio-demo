@@ -1,12 +1,10 @@
 import type { Prisma, Role } from '$/prisma/client';
 import { depend } from 'velona';
-import { PrismaClient } from '$/prisma/client';
+import { prisma } from '$/repositories';
 
 export type SearchRoleArgs = Prisma.RoleFindManyArgs;
 export type FindRoleArgs = Prisma.RoleFindFirstArgs;
 export type { Role };
-
-const prisma = new PrismaClient();
 
 export const getRoles = depend(
   { prisma: prisma as { role: { findMany: typeof prisma.role.findMany } } },

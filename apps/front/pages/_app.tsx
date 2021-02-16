@@ -10,13 +10,6 @@ import { StoreContextProvider } from '^/store';
 import history from '^/utils/history';
 import config from '^/auth0.json';
 
-const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
-  return (
-    <div suppressHydrationWarning>
-      {typeof window === 'undefined' ? null : children}
-    </div>
-  );
-};
 const getRedirectUri = () => typeof window === 'undefined' ? '' : `${window.location.origin}${process.env.BASE_PATH}`;
 const theme = extendTheme({
   styles: {
@@ -51,6 +44,14 @@ const onRedirectCallback = (appState: AppState) => {
   }
 };
 
+const SafeHydrate: FC = ({ children }: PropsWithChildren<{}>) => {
+  return (
+    <div suppressHydrationWarning>
+      {typeof window === 'undefined' ? null : children}
+    </div>
+  );
+};
+
 const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHydrate>
   <ChakraProvider theme={theme}>
     <StoreContextProvider>
@@ -60,7 +61,7 @@ const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHy
         onRedirectCallback={onRedirectCallback}
       >
         <Router history={history}>
-          <Head/>
+          <Head />
           <Component {...pageProps} />
         </Router>
       </Auth0Provider>

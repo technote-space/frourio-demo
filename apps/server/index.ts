@@ -2,7 +2,8 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import { promises, existsSync } from 'fs';
 import server from './server';
-import { SERVER_PORT, SERVER_ADDRESS } from '$/service/env';
+import { setup } from './cron';
+import { SERVER_PORT, SERVER_ADDRESS } from '$/utils/env';
 
 (async() => {
   if (process.platform !== 'win32') {
@@ -36,6 +37,8 @@ import { SERVER_PORT, SERVER_ADDRESS } from '$/service/env';
     console.log(address);
     if (err) {
       console.log(err);
+    } else {
+      setup();
     }
   });
 });

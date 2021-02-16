@@ -58,6 +58,17 @@ const Header: FC = memo(() => {
           フロントページ
         </Typography>
       </Link>}
+      {process.env.LOCK_URL && /* istanbul ignore next */ <Link
+        className={classes.title}
+        target="_blank"
+        rel="noopener noreferrer"
+        underline="none"
+        href={process.env.LOCK_URL}
+      >
+        <Typography variant="h6">
+          部屋鍵
+        </Typography>
+      </Link>}
       <div className={classes.grow}/>
       <IconButton onClick={toggleDarkMode}>
         {themeColor === 'dark' ? <Brightness5/> : <Brightness4/>}

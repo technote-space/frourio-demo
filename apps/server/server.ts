@@ -4,7 +4,7 @@ import helmet from 'fastify-helmet';
 import cors from 'fastify-cors';
 import fastifyStatic from 'fastify-static';
 import fastifyJwt from 'fastify-jwt';
-import { JWT_SECRET, BASE_PATH } from '$/service/env';
+import { JWT_SECRET, BASE_PATH } from '$/utils/env';
 import server from './$server';
 
 const fastify = Fastify();

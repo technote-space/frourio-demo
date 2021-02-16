@@ -1,8 +1,15 @@
+import { startOfTomorrow, addDays, set, format } from 'date-fns';
 import controller from '$/api/admin/dashboard/checkin/controller';
-import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
 import { getFastify, getAuthorizationHeader, getPromiseLikeItem } from '$/__tests__/utils';
-import { checkin, getCheckin } from '$/domains/admin/dashboard';
-import { startOfTomorrow, addDays } from 'date-fns';
+import { getReservation, getReservationCount, getReservations, updateReservation } from '$/repositories/reservation';
+import { createRoomKey } from '$/repositories/roomKey';
+import { checkin, getCheckin, sendRoomKey } from '$/domains/admin/dashboard';
+import { isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents } from '$/domains/stripe';
+import { captureStripePaymentIntents } from '$/repositories/stripe';
+import * as mail from '$/service/mail/utils';
+
+jest.mock('$/service/mail/utils');
 
 describe('dashboard/checkin', () => {
   it('should get today\'s checkin reservations', async() => {
@@ -54,6 +61,10 @@ describe('dashboard/checkin', () => {
               count: getReservationCountMock,
             },
           },
+        }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => true,
+          isBefore: () => true,
         }),
       }),
     })(getFastify());
@@ -142,6 +153,7 @@ describe('dashboard/checkin', () => {
         guestNameKana: true,
         guestPhone: true,
         id: true,
+        code: true,
         roomName: true,
         status: true,
       },
@@ -204,6 +216,10 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
+        isValidCheckinDateRange: isValidCheckinDateRange.inject({
+          isAfter: () => false,
+          isBefore: () => true,
+        }),
       }),
     })(getFastify());
 
@@ -250,6 +266,7 @@ describe('dashboard/checkin', () => {
         guestNameKana: true,
         guestPhone: true,
         id: true,
+        code: true,
         roomName: true,
         status: true,
       },
@@ -280,6 +297,7 @@ describe('dashboard/checkin', () => {
       checkout: new Date(),
       status: 'reserved',
       payment: null,
+      paymentIntents: 'pi_test',
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
@@ -303,6 +321,10 @@ describe('dashboard/checkin', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
+    const paymentIntentsCaptureMock = jest.fn(() => getPromiseLikeItem({
+      amount: 10000,
+      'amount_received': 10000,
+    }));
     const injectedController = controller.inject({
       checkin: checkin.inject({
         getReservation: getReservation.inject({
@@ -312,12 +334,21 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
+        capturePaymentIntents: capturePaymentIntents.inject({
+          captureStripePaymentIntents: captureStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                capture: paymentIntentsCaptureMock,
+              },
             },
-          },
+          }),
+          updateReservation: updateReservation.inject({
+            prisma: {
+              reservation: {
+                update: updateReservationMock,
+              },
+            },
+          }),
         }),
       }),
     })(getFastify());
@@ -350,12 +381,14 @@ describe('dashboard/checkin', () => {
     });
     expect(updateReservationMock).toBeCalledWith({
       data: {
+        payment: 10000,
         status: 'checkin',
       },
       where: {
         id: 123,
       },
     });
+    expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', {});
   });
 
   it('should not checkin', async() => {
@@ -389,12 +422,14 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
+        capturePaymentIntents: capturePaymentIntents.inject({
+          updateReservation: updateReservation.inject({
+            prisma: {
+              reservation: {
+                update: updateReservationMock,
+              },
             },
-          },
+          }),
         }),
       }),
     })(getFastify());
@@ -414,5 +449,87 @@ describe('dashboard/checkin', () => {
       },
     });
     expect(updateReservationMock).not.toBeCalled();
+  });
+
+  it('should send room key', async() => {
+    const spyOn = jest.spyOn(mail, 'sendHtmlMail');
+    const checkin = set(new Date(), { hours: 15, minutes: 0, seconds: 0, milliseconds: 0 });
+    const checkout = set(addDays(new Date(), 1), { hours: 10, minutes: 0, seconds: 0, milliseconds: 0 });
+    const getReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 123,
+      guestEmail: 'test@example.com',
+      roomId: 321,
+      room: { key: '1111' },
+      checkin,
+      checkout,
+    }));
+    const createRoomKeyMock = jest.fn(() => getPromiseLikeItem({ key: 'new key' }));
+    const encryptQrInfoMock = jest.fn(() => 'test');
+    const toDataURLMock = jest.fn(() => getPromiseLikeItem('url'));
+
+    const injectedController = controller.inject({
+      sendRoomKey: sendRoomKey.inject({
+        getReservation: getReservation.inject({
+          prisma: {
+            reservation: {
+              findFirst: getReservationMock,
+            },
+          },
+        }),
+        createRoomKey: createRoomKey.inject({
+          prisma: {
+            roomKey: {
+              create: createRoomKeyMock,
+            },
+          },
+        }),
+        encryptQrInfo: encryptQrInfoMock,
+        toDataURL: toDataURLMock,
+      }),
+    })(getFastify());
+
+    const res = await injectedController.post({
+      headers: getAuthorizationHeader(1),
+      user: { id: 1, roles: [] },
+      body: { id: 123 },
+    });
+    expect(res.body).toEqual({
+      guestEmail: 'test@example.com',
+      id: 123,
+      roomId: 321,
+      room: { key: '1111' },
+      checkin,
+      checkout,
+    });
+    expect(getReservationMock).toBeCalledWith({
+      rejectOnNotFound: true,
+      where: {
+        id: 123,
+      },
+    });
+    expect(createRoomKeyMock).toBeCalledWith({
+      data: {
+        key: expect.any(String),
+        trials: 0,
+        startAt: set(checkin, { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 }),
+        endAt: set(checkout, { hours: 12, minutes: 0, seconds: 0, milliseconds: 0 }),
+        reservation: {
+          connect: {
+            id: 123,
+          },
+        },
+      },
+    });
+    expect(spyOn).toBeCalledWith('test@example.com', '入室情報のお知らせ', 'RoomKey', {
+      'reservation.guestEmail': 'test@example.com',
+      'reservation.key': 'new key',
+      'reservation.id': 123,
+      'reservation.roomId': 321,
+      'reservation.qr': 'url',
+      'reservation.checkin': format(checkin, 'yyyy/MM/dd HH:mm'),
+      'reservation.checkout': format(checkout, 'yyyy/MM/dd HH:mm'),
+    });
+    expect(encryptQrInfoMock).toBeCalledWith({ reservationId: 123, key: 'new key', roomId: 321 });
+    expect(toDataURLMock).toBeCalledWith('test');
   });
 });

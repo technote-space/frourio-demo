@@ -6,9 +6,9 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
-import { PrismaClient } from '$/prisma/client';
 import { startOfDay, isAfter, isBefore, startOfToday } from 'date-fns';
 import { Models } from '.';
+import { prisma } from '$/repositories';
 
 @ValidatorConstraint({ async: true })
 class IsIdExistsConstraint implements ValidatorConstraintInterface {
@@ -20,7 +20,6 @@ class IsIdExistsConstraint implements ValidatorConstraintInterface {
     }
 
     const table = args.constraints[0] as Models;
-    const prisma = new PrismaClient();
     const findFirst = prisma[table].findFirst as ((args?: { where: { id: number } }) => Promise<object | null>);
     const item = await findFirst({ where: { id: Number(value) } });
     if (item === null) {
@@ -59,7 +58,6 @@ class IsUniqueValueConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     const data = args.object as any;
     const table = args.constraints[0] as Models;
-    const prisma = new PrismaClient();
     const findFirst = prisma[table].findFirst as ((args?: { where: { [key: string]: any } }) => Promise<object | null>);
     const where = { [args.property]: value };
     if ('id' in data) {
@@ -147,7 +145,6 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
       return false;
     }
 
-    const prisma = new PrismaClient();
     const where = {
       AND: [
         {
@@ -223,7 +220,6 @@ class IsWithinLimitConstraint implements ValidatorConstraintInterface {
     }
 
     const field = args.constraints[1];
-    const prisma = new PrismaClient();
     const findFirst = prisma[table].findFirst as ((args?: { where: { id: number } }) => Promise<object | null>);
     const item = await findFirst({ where: { id: Number(data[id]) } });
     if (!item) {

@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { startOfToday } from 'date-fns';
 import { Box, Grid, Divider, Image, Heading } from '@chakra-ui/react';
@@ -14,6 +15,7 @@ import '@fullcalendar/daygrid/main.css';
 
 const Room: FC = memo(() => {
   const { id } = useParams<{ id: string }>();
+  const history = useHistory();
   const { dispatch } = useDispatchContext();
   const fetchEvents = useCallback((info, successCallback) => {
     handleAuthError(dispatch, [], client.rooms._roomId(Number(id)).calendar.get, {
@@ -27,9 +29,15 @@ const Room: FC = memo(() => {
   }, []);
   const room = useFetch(dispatch, undefined, client.rooms._roomId(Number(id)));
 
+  useEffect(() => {
+    if (room.error) {
+      history.push(`${process.env.BASE_PATH}/rooms`);
+    }
+  }, [room.error]);
+
   return room.data ? <Box m={4}>
     <Heading m={2}>{room.data.name}</Heading>
-    <Image width="100%" height={[200, 300, 400]} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover2.jpg`}/>
+    <Image width="100%" height={[200, 300, 400]} p={1} objectFit="cover" src={`${process.env.BASE_PATH}/cover2.jpg`} />
     <Grid templateColumns="repeat(1, 1fr)" gap={4} m={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={5}>
         <Box>ご利用可能最大人数</Box>
@@ -40,7 +48,7 @@ const Room: FC = memo(() => {
         <Box>¥{room.data.price.toLocaleString()}</Box>
       </Grid>
     </Grid>
-    <Divider/>
+    <Divider />
     <Box m={6}>
       <Heading as="h4" size="md">空き状況</Heading>
       <FullCalendar
@@ -52,7 +60,7 @@ const Room: FC = memo(() => {
         validRange={{ start: startOfToday() }}
       />
     </Box>
-    <Reservation roomId={Number(id)}/>
+    <Reservation roomId={Number(id)} />
   </Box> : null;
 });
 

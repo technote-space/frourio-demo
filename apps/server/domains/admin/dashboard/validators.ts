@@ -1,4 +1,4 @@
-import { IsPositive, IsInt, Min, IsOptional } from 'class-validator';
+import { IsPositive, IsInt } from 'class-validator';
 import { IsIdExists } from '$/repositories/utils/validator';
 
 class ReservationStatusBody {
@@ -11,11 +11,10 @@ class ReservationStatusBody {
 export class CheckinBody extends ReservationStatusBody {
 }
 
+export class SendRoomKeyBody extends ReservationStatusBody {
+}
+
 export class CheckoutBody extends ReservationStatusBody {
-  @IsInt({ message: '整数値を指定してください' })
-  @Min(0, { message: '0以上を指定してください' })
-  @IsOptional()
-  payment?: number;
 }
 
 export class CancelBody extends ReservationStatusBody {

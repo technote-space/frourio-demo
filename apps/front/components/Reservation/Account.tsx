@@ -5,10 +5,11 @@ import { Box, Heading, Center, Button } from '@chakra-ui/react';
 import { useStoreContext } from '^/store';
 
 type Props = {
+  hidden: boolean;
   onDetail: () => void;
 }
 
-const Account: FC<Props> = memo(({ onDetail }: Props) => {
+const Account: FC<Props> = memo(({ hidden, onDetail }: Props) => {
   const { guest } = useStoreContext();
   const { loginWithRedirect, isLoading, isAuthenticated } = useAuth0();
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -33,7 +34,7 @@ const Account: FC<Props> = memo(({ onDetail }: Props) => {
     p={[1, 2, 4]}
     m="2"
     borderWidth={1}
-    display={['flex', 'flex', 'inline-block']}
+    display={hidden ? 'none' : ['flex', 'flex', 'inline-block']}
     flexDirection='column'
     minW={['none', 'none', 400]}
   >

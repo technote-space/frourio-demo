@@ -1,6 +1,6 @@
 import type { AuthHeader } from '@frourio-demo/types';
 import type { Guest } from '$/repositories/guest';
-import type { AccountBody } from '$/domains/front/account/validators';
+import type { AccountBody } from '$/validators';
 
 export type Methods = {
   get: {
