@@ -1,3 +1,4 @@
+import type { Reservation } from '$/repositories/reservation';
 import { getPromiseLikeItem } from '$/__tests__/utils';
 import { createPaymentIntents, capturePaymentIntents, checkoutReservations } from '$/domains/stripe';
 import { getReservations, updateReservation } from '$/repositories/reservation';
@@ -87,7 +88,7 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       payment: null,
       paymentIntents: 'pi_test',
-    } as any)).toEqual({
+    } as Reservation)).toEqual({
       id: 123,
       status: 'checkin',
     });
@@ -134,7 +135,7 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       payment: null,
       paymentIntents: 'pi_test',
-    } as any, true)).toEqual({
+    } as Reservation, true)).toEqual({
       id: 123,
       status: 'cancelled',
     });
@@ -158,7 +159,7 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       payment: null,
       paymentIntents: null,
-    } as any)).toEqual({
+    } as Reservation)).toEqual({
       amount: 10000,
       id: 123,
       payment: null,

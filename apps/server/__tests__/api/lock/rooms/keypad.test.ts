@@ -98,7 +98,7 @@ describe('rooms/keypad', () => {
         reservationId: 2,
       },
     });
-    expect(updateReservationMock).not.toBeCalled()
+    expect(updateReservationMock).not.toBeCalled();
     expect(updateRoomKeyMock).toBeCalledWith({
       data: {
         trials: 0,
