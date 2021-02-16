@@ -117,7 +117,7 @@ QRコード または テンキーの入力でチェックインが完了しま�
    yarn start
    ```
 
-ブラウザで [http://localhost:3000](http://localhost:3002) にアクセス
+ブラウザで [http://localhost:3002](http://localhost:3002) にアクセス
 
 ## Demo
 
