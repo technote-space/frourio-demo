@@ -80,16 +80,13 @@ export const getCheckinNotSelectable = depend(
         },
         OR: user ? [
           { roomId },
-          {
-            id: {
-              not: user.id,
-            },
-          },
+          { id: user.id },
         ] : [
           { roomId },
         ],
       },
     });
+    console.log(reservations);
     const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
       start: startOfDay(reservation.checkin),
       end: startOfDay(subDays(reservation.checkout, 1)),
@@ -142,11 +139,7 @@ export const getCheckoutSelectable = depend(
         },
         OR: user ? [
           { roomId },
-          {
-            id: {
-              not: user.id,
-            },
-          },
+          { id: user.id },
         ] : [
           { roomId },
         ],
