@@ -99,15 +99,18 @@ export const capturePaymentIntents = depend(
   }, reservation: Reservation, isCancel?: boolean): Promise<Reservation> => {
     logger.info('capturePaymentIntents, reservation=%d, payment=%d, id=%s, isCancel=%d', reservation.id, reservation.payment, reservation.paymentIntents, isCancel);
     const result = await captureStripePaymentIntents(reservation, isCancel);
+    const status = isCancel ? 'cancelled' : 'checkin';
     if (result) {
       logger.info('capturePaymentIntents, amount=%d, amount_received=%d', result.amount, result.amount_received);
       return await updateReservation(reservation.id, {
         payment: result.amount_received,
-        ...(isCancel ? { status: 'cancelled' } : { status: 'checkin' }),
+        status,
       });
     }
 
-    return reservation;
+    return updateReservation(reservation.id, {
+      status,
+    });
   },
 );
 

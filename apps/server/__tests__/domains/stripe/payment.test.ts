@@ -152,7 +152,19 @@ describe('capturePaymentIntents', () => {
   });
 
   it('should not capture payment intents (no payment intents)', async() => {
-    const injected = capturePaymentIntents.inject({});
+    const updateReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 123,
+      status: 'checkin',
+    }));
+    const injected = capturePaymentIntents.inject({
+      updateReservation: updateReservation.inject({
+        prisma: {
+          reservation: {
+            update: updateReservationMock,
+          },
+        },
+      }),
+    });
 
     expect(await injected({
       id: 123,
@@ -160,10 +172,8 @@ describe('capturePaymentIntents', () => {
       payment: null,
       paymentIntents: null,
     } as Reservation)).toEqual({
-      amount: 10000,
       id: 123,
-      payment: null,
-      paymentIntents: null,
+      status: 'checkin',
     });
   });
 });

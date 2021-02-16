@@ -23,7 +23,10 @@ describe('rooms/keypad', () => {
       id: 3,
       key: '1234',
     }));
-    const updateReservationMock = jest.fn();
+    const updateReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 2,
+      status: 'checkin',
+    }));
     const updateRoomKeyMock = jest.fn();
     const injectedController = controller.inject({
       validateKey: validateKey.inject({
@@ -69,7 +72,7 @@ describe('rooms/keypad', () => {
     })(getFastify());
 
     const res = await injectedController.post({ params: { roomId: 1 }, body: { roomId: 1, key: '1234' } });
-    expect(res.body).toEqual({ result: true, reservation: { id: 2, roomId: 1 } });
+    expect(res.body).toEqual({ result: true, reservation: { id: 2, status: 'checkin' } });
     expect(getReservationsMock).toBeCalledWith({
       where: {
         roomId: 1,
@@ -98,7 +101,14 @@ describe('rooms/keypad', () => {
         reservationId: 2,
       },
     });
-    expect(updateReservationMock).not.toBeCalled();
+    expect(updateReservationMock).toBeCalledWith({
+      data: {
+        status: 'checkin',
+      },
+      where: {
+        id: 2,
+      },
+    });
     expect(updateRoomKeyMock).toBeCalledWith({
       data: {
         trials: 0,
