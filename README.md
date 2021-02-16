@@ -94,19 +94,45 @@ Windowsは対応していません。
    1. Linuxbrew で mkcert, nss をインストール
 1. mkcert で証明書を作成
 
+## 部屋鍵
+予約当日の１２時に入室用の情報がメール送信されます。  
+QRコード または テンキーの入力でチェックインが完了します。
+
+![lock](https://raw.githubusercontent.com/technote-space/frourio-demo/images/lock.gif)
+
+1. セットアップ
+   ```bash
+   yarn setup
+   ```
+
+2. ビルド
+   ```bash
+   yarn build
+   ```
+
+3. サーバ起動
+   ```bash
+   yarn start
+   ```
+
+ブラウザで [http://localhost:3000](http://localhost:3002) にアクセス
+
 ## Demo
 
 https://technote-space.github.io/frourio-demo/
 
 ## 要件
 
-* 部屋の管理
-* 各部屋の現在の予約状況の確認
-* 予約登録
-* 利用者の管理
-    * 名前/住所/電話番号
-* 月毎の売り上げ金額の確認
-* 当日の清掃対象(チェックアウト)の一覧の確認
+* 管理画面
+  * マスタの管理（部屋、顧客、予約）
+  * 各部屋の現在の予約状況の確認
+  * 月毎の売り上げ金額の確認
+  * 当日の清掃対象(チェックアウト)の一覧の確認
+* フロント
+  * 予約登録
+  * オンライン決済
+* 部屋
+  * 入室の自動化（QRコード、テンキー）
 
 ## 構成
 
@@ -114,13 +140,14 @@ https://technote-space.github.io/frourio-demo/
 
 * [GitHub Pages](https://docs.github.com/ja/github/working-with-github-pages/about-github-pages)
 * [Next.js](https://nextjs.org/)
-    * React Context による SPA
+    * React Context による SPA（管理画面）
+    * React Router DOM による SPA（フロント、部屋鍵）
 * [Aspida](https://github.com/aspida/aspida)
     * 型付きのHTTPクライアント
 * [Material-UI](https://material-ui.com/)
     * デザインフレームワーク（管理画面）
 * [Chakra UI](https://chakra-ui.com/)
-    * コンポーネントライブラリ（フロント）
+    * コンポーネントライブラリ（フロント、部屋鍵）
 
 ### バックエンド
 
