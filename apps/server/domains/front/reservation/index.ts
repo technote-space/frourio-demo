@@ -86,7 +86,6 @@ export const getCheckinNotSelectable = depend(
         ],
       },
     });
-    console.log(reservations);
     const dates: Array<number> = [...new Set(reservations.flatMap(reservation => eachDayOfInterval({
       start: startOfDay(reservation.checkin),
       end: startOfDay(subDays(reservation.checkout, 1)),

@@ -108,6 +108,11 @@ describe('reservations', () => {
               },
             },
             {
+              guestEmail: {
+                contains: 'test',
+              },
+            },
+            {
               guestName: {
                 contains: 'test',
               },
@@ -139,6 +144,11 @@ describe('reservations', () => {
             },
             {
               code: {
+                contains: '2',
+              },
+            },
+            {
+              guestEmail: {
                 contains: '2',
               },
             },
