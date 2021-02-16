@@ -66,7 +66,7 @@ const Header: FC = memo(() => {
         href={process.env.LOCK_URL}
       >
         <Typography variant="h6">
-          鍵ページ
+          部屋鍵
         </Typography>
       </Link>}
       <div className={classes.grow}/>
