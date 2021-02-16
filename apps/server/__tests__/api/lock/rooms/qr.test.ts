@@ -34,14 +34,15 @@ describe('rooms/qr', () => {
           },
         }),
         checkinProcess: checkinProcess.inject({
-          updateReservation: updateReservation.inject({
-            prisma: {
-              reservation: {
-                update: updateReservationMock,
+          capturePaymentIntents: capturePaymentIntents.inject({
+            updateReservation: updateReservation.inject({
+              prisma: {
+                reservation: {
+                  update: updateReservationMock,
+                },
               },
-            },
-          }),
-          capturePaymentIntents: capturePaymentIntents.inject({})
+            }),
+          })
         }),
         decryptQrInfo: decryptQrInfoMock,
         isValidCheckinDateRange: isValidCheckinDateRange.inject({
@@ -71,14 +72,7 @@ describe('rooms/qr', () => {
         },
       },
     });
-    expect(updateReservationMock).toBeCalledWith({
-      data: {
-        status: 'checkin',
-      },
-      where: {
-        id: 2,
-      },
-    });
+    expect(updateReservationMock).not.toBeCalled();
   });
 
   it('should failed to validate qr (invalid key)', async() => {

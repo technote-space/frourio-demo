@@ -48,14 +48,15 @@ describe('rooms/keypad', () => {
           },
         }),
         checkinProcess: checkinProcess.inject({
-          updateReservation: updateReservation.inject({
-            prisma: {
-              reservation: {
-                update: updateReservationMock,
+          capturePaymentIntents: capturePaymentIntents.inject({
+            updateReservation: updateReservation.inject({
+              prisma: {
+                reservation: {
+                  update: updateReservationMock,
+                },
               },
-            },
+            }),
           }),
-          capturePaymentIntents: capturePaymentIntents.inject({}),
         }),
         updateRoomKey: updateRoomKey.inject({
           prisma: {
@@ -97,14 +98,7 @@ describe('rooms/keypad', () => {
         reservationId: 2,
       },
     });
-    expect(updateReservationMock).toBeCalledWith({
-      data: {
-        status: 'checkin',
-      },
-      where: {
-        id: 2,
-      },
-    });
+    expect(updateReservationMock).not.toBeCalled()
     expect(updateRoomKeyMock).toBeCalledWith({
       data: {
         trials: 0,

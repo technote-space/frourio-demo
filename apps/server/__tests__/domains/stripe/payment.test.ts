@@ -61,7 +61,10 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       'amount_received': 10000,
     }));
-    const updateReservationMock = jest.fn();
+    const updateReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 123,
+      status: 'checkin',
+    }));
     const injected = capturePaymentIntents.inject({
       captureStripePaymentIntents: captureStripePaymentIntents.inject({
         stripe: {
@@ -84,14 +87,15 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       payment: null,
       paymentIntents: 'pi_test',
-    })).toEqual({
-      amount: 10000,
-      'amount_received': 10000,
+    } as any)).toEqual({
+      id: 123,
+      status: 'checkin',
     });
     expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', {});
     expect(updateReservationMock).toBeCalledWith({
       data: {
         payment: 10000,
+        status: 'checkin',
       },
       where: {
         id: 123,
@@ -104,7 +108,10 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       'amount_received': 8000,
     }));
-    const updateReservationMock = jest.fn();
+    const updateReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 123,
+      status: 'cancelled',
+    }));
     const injected = capturePaymentIntents.inject({
       captureStripePaymentIntents: captureStripePaymentIntents.inject({
         stripe: {
@@ -127,9 +134,9 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       payment: null,
       paymentIntents: 'pi_test',
-    }, true)).toEqual({
-      amount: 10000,
-      'amount_received': 8000,
+    } as any, true)).toEqual({
+      id: 123,
+      status: 'cancelled',
     });
     expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', { 'amount_to_capture': 8000 });
     expect(updateReservationMock).toBeCalledWith({
@@ -151,7 +158,12 @@ describe('capturePaymentIntents', () => {
       amount: 10000,
       payment: null,
       paymentIntents: null,
-    })).toBe(null);
+    } as any)).toEqual({
+      amount: 10000,
+      id: 123,
+      payment: null,
+      paymentIntents: null,
+    });
   });
 });
 

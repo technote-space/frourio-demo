@@ -5,6 +5,8 @@ import { getReservation, getReservationCount, getReservations, updateReservation
 import { createRoomKey } from '$/repositories/roomKey';
 import { checkin, getCheckin, sendRoomKey } from '$/domains/admin/dashboard';
 import { isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents } from '$/domains/stripe';
+import { captureStripePaymentIntents } from '$/repositories/stripe';
 import * as mail from '$/service/mail/utils';
 
 jest.mock('$/service/mail/utils');
@@ -293,6 +295,7 @@ describe('dashboard/checkin', () => {
       checkout: new Date(),
       status: 'reserved',
       payment: null,
+      paymentIntents: 'pi_test',
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
@@ -316,6 +319,10 @@ describe('dashboard/checkin', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
+    const paymentIntentsCaptureMock = jest.fn(() => getPromiseLikeItem({
+      amount: 10000,
+      'amount_received': 10000,
+    }));
     const injectedController = controller.inject({
       checkin: checkin.inject({
         getReservation: getReservation.inject({
@@ -325,12 +332,21 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
+        capturePaymentIntents: capturePaymentIntents.inject({
+          captureStripePaymentIntents: captureStripePaymentIntents.inject({
+            stripe: {
+              paymentIntents: {
+                capture: paymentIntentsCaptureMock,
+              },
             },
-          },
+          }),
+          updateReservation: updateReservation.inject({
+            prisma: {
+              reservation: {
+                update: updateReservationMock,
+              },
+            },
+          }),
         }),
       }),
     })(getFastify());
@@ -363,12 +379,14 @@ describe('dashboard/checkin', () => {
     });
     expect(updateReservationMock).toBeCalledWith({
       data: {
+        payment: 10000,
         status: 'checkin',
       },
       where: {
         id: 123,
       },
     });
+    expect(paymentIntentsCaptureMock).toBeCalledWith('pi_test', {});
   });
 
   it('should not checkin', async() => {
@@ -402,12 +420,14 @@ describe('dashboard/checkin', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
+        capturePaymentIntents: capturePaymentIntents.inject({
+          updateReservation: updateReservation.inject({
+            prisma: {
+              reservation: {
+                update: updateReservationMock,
+              },
             },
-          },
+          }),
         }),
       }),
     })(getFastify());

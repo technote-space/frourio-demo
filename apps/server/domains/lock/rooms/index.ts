@@ -56,20 +56,16 @@ export const checkout = depend(
 );
 
 export const checkinProcess = depend(
-  { updateReservation, capturePaymentIntents },
-  async({ updateReservation, capturePaymentIntents }, reservation: Reservation): Promise<BodyResponse<{
+  { capturePaymentIntents },
+  async({ capturePaymentIntents }, reservation: Reservation): Promise<BodyResponse<{
     result: true,
     reservation: Reservation;
   }>> => {
-    await updateReservation(reservation.id, {
-      status: 'checkin',
-    });
-    await capturePaymentIntents(reservation);
     return {
       status: 200,
       body: {
         result: true,
-        reservation,
+        reservation: await capturePaymentIntents(reservation),
       },
     };
   },
