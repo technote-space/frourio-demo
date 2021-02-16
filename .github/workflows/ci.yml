@@ -241,8 +241,6 @@ jobs:
           BASE_PATH: ${{ env.ADMIN_PAGES_BASE_PATH }}
       - name: Build
         run: |
-          yarn license:generate:front
-          yarn license:generate:lock
           yarn build:admin
           yarn build:front
           yarn build:lock
