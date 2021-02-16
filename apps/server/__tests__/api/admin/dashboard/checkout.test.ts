@@ -295,7 +295,7 @@ describe('dashboard/checkout', () => {
       checkin: new Date(),
       checkout: new Date(),
       status: 'checkin',
-      payment: null,
+      payment: 10000,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
@@ -315,7 +315,7 @@ describe('dashboard/checkout', () => {
       checkin: new Date(),
       checkout: new Date(),
       status: 'checkout',
-      payment: null,
+      payment: 10000,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
@@ -365,7 +365,6 @@ describe('dashboard/checkout', () => {
     });
     expect(updateReservationMock).toBeCalledWith({
       data: {
-        payment: 10000,
         status: 'checkout',
       },
       where: {
@@ -391,7 +390,7 @@ describe('dashboard/checkout', () => {
       checkin: new Date(),
       checkout: new Date(),
       status: 'checkout',
-      payment: null,
+      payment: 10000,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));

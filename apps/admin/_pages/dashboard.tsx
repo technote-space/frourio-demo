@@ -20,7 +20,6 @@ import useFetch from '~/hooks/useFetch';
 import useUnmountRef from '~/hooks/useUnmountRef';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
-import { getPriceCalc } from '@frourio-demo/utils/calc';
 import { setNotice } from '~/utils/actions';
 import useTableIcons from '~/hooks/useTableIcons';
 import useTableLocalization from '~/hooks/useTableLocalization';
@@ -82,8 +81,8 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
   const [salesDate, setSalesDate] = useState<Date>(new Date());
   const [roomId, setRoomId] = useState<number>(0);
   const [cancelId, setCancelId] = useState<number | undefined>();
+  const [checkinId, setCheckinId] = useState<number | undefined>();
   const [checkoutId, setCheckoutId] = useState<number | undefined>();
-  const [amount, setAmount] = useState<number | undefined>();
   const dailySales = useFetch(dispatch, [], client.dashboard.sales.daily, {
     headers: authHeader,
     query: { date: salesDate, roomId: roomId ? roomId : undefined },
@@ -135,23 +134,30 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     setCancelId(undefined);
     setNotice(dispatch, 'キャンセルしました。');
   }), [cancelId]);
+  const handleCloseCheckin = useCallback(() => {
+    setCheckinId(undefined);
+  }, []);
+  const handleCheckin = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
+    headers: authHeader,
+    body: { id: checkinId! },
+  }), () => {
+    refreshTables();
+    refreshSales();
+    setCheckinId(undefined);
+    setNotice(dispatch, '更新しました。');
+  }), [checkinId]);
   const handleCloseCheckout = useCallback(() => {
     setCheckoutId(undefined);
-    setAmount(undefined);
   }, []);
   const handleCheckout = useCallback(async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkout.patch, {
     headers: authHeader,
-    body: { id: checkoutId!, payment: amount },
+    body: { id: checkoutId! },
   }), () => {
     refreshTables();
     refreshSales();
     setCheckoutId(undefined);
-    setAmount(undefined);
     setNotice(dispatch, '更新しました。');
-  }), [checkoutId, amount]);
-  const handleChangeAmount = useCallback(event => {
-    setAmount(Number(event.target.value));
-  }, []);
+  }), [checkoutId]);
 
   const selectDate = <div className={classes.condition} data-testid="select-date">
     <DatePicker
@@ -229,13 +235,9 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
             <Button
               className={classes.button}
               startIcon={<HomeIcon />}
-              onClick={async() => handleRequest(handleAuthError(dispatch, {}, client.dashboard.checkin.patch, {
-                headers: authHeader,
-                body: { id: data.id },
-              }), () => {
-                refreshTables();
-                setNotice(dispatch, '更新しました。');
-              })}
+              onClick={() => {
+                setCheckinId(data.id);
+              }}
             >
               チェックイン
             </Button>
@@ -321,23 +323,6 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       },
     },
     {
-      title: '請求額',
-      sorting: false,
-      // eslint-disable-next-line react/display-name
-      render: data => {
-        if (!data.room) {
-          return data.amount;
-        }
-
-        return <>
-          <div>¥{data.amount}</div>
-          <div style={{
-            whiteSpace: 'nowrap',
-          }}>{`(${getPriceCalc(data.room.price, data.number, data.checkin, data.checkout, data.amount)})`}</div>
-        </>;
-      },
-    },
-    {
       title: 'チェックアウト',
       align: 'center',
       sorting: false,
@@ -354,19 +339,12 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
             startIcon={<HomeIcon />}
             onClick={() => {
               setCheckoutId(data.id);
-              setAmount(data.amount);
             }}
           >
             チェックアウト
           </Button>;
         }
         if (data.status === 'checkout') {
-          if (data.payment !== data.amount) {
-            return <Button className={classes.button} disabled>
-              チェックアウト済み (¥{data.payment})
-            </Button>;
-          }
-
           return <Button className={classes.button} disabled>
             チェックアウト済み
           </Button>;
@@ -475,6 +453,23 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
       </div>
     </DialogContent>
   </Dialog>;
+  const checkinDialog = <Dialog
+    onClose={handleCloseCheckin}
+    maxWidth="xs"
+    open={checkinId !== undefined}
+  >
+    <DialogTitle>チェックイン</DialogTitle>
+    <DialogContent dividers>
+      <div className={classes.buttonGroup}>
+        <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCheckin}>
+          はい
+        </Button>
+        <Button className={clsx(classes.button, classes.cancel, classes.dialogButton)} onClick={handleCloseCheckin}>
+          キャンセル
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>;
   const checkoutDialog = <Dialog
     onClose={handleCloseCheckout}
     maxWidth="xs"
@@ -483,14 +478,11 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <DialogTitle>チェックアウト</DialogTitle>
     <DialogContent dividers>
       <div className={classes.buttonGroup}>
-        <TextField type="number" value={amount ?? ''} onChange={handleChangeAmount} data-testid="checkout-payment" />
         <Button className={clsx(classes.button, classes.dialogButton)} onClick={handleCheckout}>
-          確定
+          はい
         </Button>
-      </div>
-      <div className={classes.buttonGroup}>
         <Button className={clsx(classes.button, classes.cancel, classes.dialogButton)} onClick={handleCloseCheckout}>
-          閉じる
+          キャンセル
         </Button>
       </div>
     </DialogContent>
@@ -498,6 +490,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
 
   return <>
     {cancelDialog}
+    {checkinDialog}
     {checkoutDialog}
     <Card className={classes.card}>
       <CardContent>

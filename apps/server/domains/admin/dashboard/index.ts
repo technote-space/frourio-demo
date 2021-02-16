@@ -176,14 +176,13 @@ export const checkin = depend(
 
 export const checkout = depend(
   { getReservation, updateReservation },
-  async({ getReservation, updateReservation }, id: number, payment?: number): Promise<BodyResponse<Reservation>> => {
+  async({ getReservation, updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id);
     if (reservation.status === 'checkin') {
       return {
         status: 200,
         body: await updateReservation(id, {
           status: 'checkout',
-          payment: payment ?? reservation.amount,
         }),
       };
     }
