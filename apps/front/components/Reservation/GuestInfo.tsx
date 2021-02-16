@@ -67,11 +67,13 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
   };
 
   useEffect(() => {
-    getAddress(reservation.guestZipCode).then(address => {
-      if (!unmountRef.current && address) {
-        props.onChangeAddress(`${address.prefecture_name}${address.city_name}${address.town_name}`);
-      }
-    });
+    if (!reservation.guestAddress) {
+      getAddress(reservation.guestZipCode).then(address => {
+        if (!unmountRef.current && address) {
+          props.onChangeAddress(`${address.prefecture_name}${address.city_name}${address.town_name}`);
+        }
+      });
+    }
   }, [reservation.guestZipCode]);
   useEffect(() => {
     if (hasEmptyField && !reservation.updateInfo) {
