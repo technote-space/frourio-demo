@@ -40,7 +40,7 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
     headers: auth?.authHeader!, // eslint-disable-line @typescript-eslint/no-non-null-asserted-optional-chain
     enabled: !!auth,
   });
-  const defaultPayment = useFetch(dispatch, undefined, client.stripe.method, {
+  const defaultPayment = useFetch(dispatch, {}, client.stripe.method, {
     headers: auth?.authHeader!, // eslint-disable-line @typescript-eslint/no-non-null-asserted-optional-chain
     enabled: !!auth,
   });
@@ -107,7 +107,7 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
     setCreateNewCard(!createNewCard);
   }, [createNewCard]);
 
-  const getCardText = method => `${method.card.brand} ****-****-****-${method.card.last4} ${method.card.exp_month}/${String(method.card.exp_year).substring(2, 4)}`;
+  const getCardText = method => `${method.card.brand} ****-****-****-${method.card.last4} ${`0${method.card.exp_month}`.slice(-2)}/${String(method.card.exp_year).substring(2, 4)}`;
   const changeCardInfo = (id: string) => (event: StripeElementChangeEvent) => {
     const setters = {
       'cardNumber': setCardNumberError,
@@ -122,8 +122,9 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
   };
 
   useEffect(() => {
-    if (defaultPayment.data) {
-      onChangePaymentMethodsId(defaultPayment.data);
+    console.log(defaultPayment.data);
+    if (!reservation.paymentMethodsId && defaultPayment.data?.id) {
+      onChangePaymentMethodsId(defaultPayment.data.id);
     }
   }, [defaultPayment.data]);
 
@@ -184,6 +185,7 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
         <RadioGroup onChange={onChangePaymentMethodsId} value={reservation.paymentMethodsId}>
           <Stack>
             {paymentMethods.data!.map(method => <Radio
+              p={1}
               key={`pm-${method.id}`}
               value={method.id}
               disabled={isSending}
@@ -193,9 +195,11 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
           </Stack>
         </RadioGroup>
       </Box> : null}
-      {isValidPaymentMethods && <Button onClick={handleClickSwitchButton} disabled={isSending}>
-        {createNewCard ? 'カードを選択' : '新しいカード'}
-      </Button>}
+      {isValidPaymentMethods && <Center>
+        <Button m={1} mt={3} onClick={handleClickSwitchButton} disabled={isSending}>
+          {createNewCard ? 'カードを選択' : '新しいカード'}
+        </Button>
+      </Center>}
     </Box>
     <Center>
       <Button m={1} onClick={handleClickConfirm} disabled={isDisabledConfirm || isSending}>
