@@ -31,7 +31,9 @@ describe('account/reservations/paid', () => {
       },
       where: {
         guestId: 1,
-        status: 'checkout',
+        status: {
+          in: ['checkin', 'checkout'],
+        },
       },
       take: 20,
     });

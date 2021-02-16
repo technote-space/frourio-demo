@@ -44,7 +44,9 @@ export const getPaidReservations = depend(
     body: await getReservations({
       where: {
         guestId: user.id,
-        status: 'checkout',
+        status: {
+          in: ['checkin', 'checkout'],
+        },
       },
       orderBy: {
         id: 'desc',
