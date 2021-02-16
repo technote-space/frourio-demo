@@ -34,14 +34,16 @@ const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
     }
   }, [guestInfo.data]);
   useEffect(() => {
-    getAddress(editInfo?.zipCode).then(address => {
-      if (!unmountRef.current && address) {
-        setEditInfo({
-          ...editInfo!,
-          address: `${address.prefecture_name}${address.city_name}${address.town_name}`,
-        });
-      }
-    });
+    if (!editInfo?.address) {
+      getAddress(editInfo?.zipCode).then(address => {
+        if (!unmountRef.current && address) {
+          setEditInfo({
+            ...editInfo!,
+            address: `${address.prefecture_name}${address.city_name}${address.town_name}`,
+          });
+        }
+      });
+    }
   }, [editInfo?.zipCode]);
 
   const handleSave = useCallback(async() => {
