@@ -18,6 +18,8 @@
 <span>|</span>
 <a href="#%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88">フロント</a>
 <span>|</span>
+<a href="#%E9%83%A8%E5%B1%8B%E9%8D%B5">部屋鍵</a>
+<span>|</span>
 <a href="#demo">Demo</a>
 <span>|</span>
 <a href="#%E8%A6%81%E4%BB%B6">要件</a>
