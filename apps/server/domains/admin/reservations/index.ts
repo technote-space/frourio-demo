@@ -57,6 +57,7 @@ export const list = depend(
     const pageSize = query.pageSize;
     const where = getWhere<ListReservation>(query.search, [
       'code',
+      'guestEmail',
       'guestName',
       'guestNameKana',
       'guestPhone',
