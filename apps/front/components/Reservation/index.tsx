@@ -15,13 +15,14 @@ import Detail from './Detail';
 import GuestInfo from './GuestInfo';
 import Confirm from './Confirm';
 import Payment from './Payment';
+import config from '^/stripe.json';
 
 export type ReservationData = Partial<CreateReservationBody>;
 type Props = {
   roomId?: number;
 }
 type ReservationMode = 'account' | 'detail' | 'guest' | 'payment' | 'confirm';
-const stripePromise = loadStripe(process.env.STRIPE_KEY!);
+const stripePromise = loadStripe(config.publicKey);
 
 const Reservation: FC<Props> = memo(({ roomId }: Props) => {
   const initialReservation = {
