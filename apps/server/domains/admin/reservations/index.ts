@@ -62,6 +62,7 @@ export const list = depend(
       'guestNameKana',
       'guestPhone',
       'roomName',
+      'paymentIntents',
     ], [
       'amount',
       'payment',

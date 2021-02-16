@@ -11,7 +11,7 @@ export const list = depend(
   { getGuests, getGuestCount },
   async({ getGuests, getGuestCount }, query: Query<Guest>): Promise<BodyResponse<QueryResult<Guest>>> => {
     const pageSize = query.pageSize;
-    const where = getWhere<Guest>(query.search, ACCOUNT_FIELDS.map(field => field.name), []);
+    const where = getWhere<Guest>(query.search, [...ACCOUNT_FIELDS.map(field => field.name), 'auth0Sub', 'stripe'], []);
     const orderBy = getOrderBy<Guest>(query.orderBy, query.orderDirection);
     const totalCount = await getGuestCount({ where });
     const page = getCurrentPage(pageSize, totalCount, query.page);

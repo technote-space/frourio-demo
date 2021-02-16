@@ -102,6 +102,16 @@ describe('guests', () => {
                 contains: 'test',
               },
             },
+            {
+              auth0Sub: {
+                contains: 'test',
+              },
+            },
+            {
+              stripe: {
+                contains: 'test',
+              },
+            },
           ],
         },
         {
@@ -133,6 +143,16 @@ describe('guests', () => {
             },
             {
               phone: {
+                contains: 'name',
+              },
+            },
+            {
+              auth0Sub: {
+                contains: 'name',
+              },
+            },
+            {
+              stripe: {
                 contains: 'name',
               },
             },

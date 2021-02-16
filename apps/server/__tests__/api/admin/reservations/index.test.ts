@@ -132,6 +132,11 @@ describe('reservations', () => {
                 contains: 'test',
               },
             },
+            {
+              paymentIntents: {
+                contains: 'test',
+              },
+            },
           ],
         },
         {
@@ -169,6 +174,11 @@ describe('reservations', () => {
             },
             {
               roomName: {
+                contains: '2',
+              },
+            },
+            {
+              paymentIntents: {
                 contains: '2',
               },
             },
