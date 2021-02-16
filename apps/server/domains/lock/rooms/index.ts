@@ -10,6 +10,7 @@ import { getReservation, updateReservation } from '$/repositories/reservation';
 import { decryptQrInfo, encryptQrInfo } from '$/utils/reservation';
 import { getValidReservation, isValidCheckinDateRange } from '$/service/reservation';
 import { sendRoomKeyMail } from '$/service/mail';
+import { capturePaymentIntents } from '$/domains/stripe';
 import { MAX_TRIALS } from '@frourio-demo/constants';
 
 export type RoomWithValidReservation = Room & {
@@ -54,16 +55,32 @@ export const checkout = depend(
   },
 );
 
+export const checkinProcess = depend(
+  { capturePaymentIntents },
+  async({ capturePaymentIntents }, reservation: Reservation): Promise<BodyResponse<{
+    result: true,
+    reservation: Reservation;
+  }>> => {
+    return {
+      status: 200,
+      body: {
+        result: true,
+        reservation: await capturePaymentIntents(reservation),
+      },
+    };
+  },
+);
+
 export const validateKey = depend(
-  { getRoomKey, getValidReservation, createRoomKey, updateRoomKey, updateReservation, encryptQrInfo, toDataURL },
+  { getRoomKey, getValidReservation, createRoomKey, updateRoomKey, encryptQrInfo, toDataURL, checkinProcess },
   async({
     getRoomKey,
     getValidReservation,
     createRoomKey,
     updateRoomKey,
-    updateReservation,
     encryptQrInfo,
     toDataURL,
+    checkinProcess,
   }, roomId: number, key: string): Promise<BodyResponse<ValidateRoomKeyResult>> => {
     const reservation = await getValidReservation(roomId, new Date());
     if (!reservation) {
@@ -94,17 +111,8 @@ export const validateKey = depend(
     }
 
     if (roomKey.key === key) {
-      await updateReservation(reservation.id, {
-        status: 'checkin',
-      });
       await updateRoomKey(roomKey.id, { trials: 0 });
-      return {
-        status: 200,
-        body: {
-          result: true,
-          reservation,
-        },
-      };
+      return checkinProcess(reservation);
     }
 
     await updateRoomKey(roomKey.id, {
@@ -123,13 +131,13 @@ export const validateKey = depend(
 );
 
 export const validateQr = depend(
-  { getReservation, getRoomKey, updateReservation, decryptQrInfo, isValidCheckinDateRange },
+  { getReservation, getRoomKey, decryptQrInfo, isValidCheckinDateRange, checkinProcess },
   async({
     getReservation,
     getRoomKey,
-    updateReservation,
     decryptQrInfo,
     isValidCheckinDateRange,
+    checkinProcess,
   }, roomId: number, data: string): Promise<BodyResponse<ValidateRoomQrResult>> => {
     const info = decryptQrInfo(data);
     if (!info) {
@@ -151,16 +159,7 @@ export const validateQr = depend(
 
     const roomKey = await getRoomKey(reservation.id);
     if (roomKey?.key === info.key) {
-      await updateReservation(reservation.id, {
-        status: 'checkin',
-      });
-      return {
-        status: 200,
-        body: {
-          result: true,
-          reservation,
-        },
-      };
+      return checkinProcess(reservation);
     }
 
     return {

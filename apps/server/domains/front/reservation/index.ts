@@ -17,6 +17,7 @@ import { createRoomKey } from '$/repositories/roomKey';
 import { encryptQrInfo } from '$/utils/reservation';
 import { sendReservedMail, sendRoomKeyMail } from '$/service/mail';
 import { getValidReservation } from '$/service/reservation';
+import { createPaymentIntents } from '$/domains/stripe';
 
 export type CheckinNotSelectableEvent = {
   start: string;
@@ -79,11 +80,7 @@ export const getCheckinNotSelectable = depend(
         },
         OR: user ? [
           { roomId },
-          {
-            id: {
-              not: user.id,
-            },
-          },
+          { id: user.id },
         ] : [
           { roomId },
         ],
@@ -141,11 +138,7 @@ export const getCheckoutSelectable = depend(
         },
         OR: user ? [
           { roomId },
-          {
-            id: {
-              not: user.id,
-            },
-          },
+          { id: user.id },
         ] : [
           { roomId },
         ],
@@ -204,9 +197,9 @@ const getReservationGuest = (body: CreateReservationBody, guest: { email?: strin
   guestPhone: body.guestPhone,
 });
 export const reserve = depend(
-  { getRoom, createReservation, getGuest, updateGuest },
+  { getRoom, createReservation, getGuest, updateGuest, createPaymentIntents },
   async(
-    { getRoom, createReservation, getGuest, updateGuest },
+    { getRoom, createReservation, getGuest, updateGuest, createPaymentIntents },
     body: CreateReservationBody,
     user?: GuestAuthorizationPayload,
   ): Promise<BodyResponse<Reservation>> => {
@@ -215,8 +208,12 @@ export const reserve = depend(
     const checkout = new Date(body.checkout);
     const nights = differenceInCalendarDays(checkout, checkin);
     const guest = user?.id ? await getGuest(user.id, {
-      select: Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => ({ [field]: true }))),
+      select: Object.assign({
+        stripe: true,
+      }, ...RESERVATION_GUEST_FIELDS.map(field => ({ [field]: true }))),
     }) : {};
+    const amount = body.number * room.price * nights;
+
     const createData: CreateReservationData = {
       ...(user ? {
         guest: {
@@ -233,19 +230,17 @@ export const reserve = depend(
       },
       roomName: room.name,
       number: body.number,
-      amount: body.number * room.price * nights,
+      amount,
       checkin,
       checkout,
       status: 'reserved',
+      paymentIntents: (await createPaymentIntents(amount, guest, body.paymentMethodsId)).id,
     };
 
     if (user?.id) {
-      RESERVATION_GUEST_FIELDS.forEach(field => {
-        if (body.updateInfo || !guest[field]) {
-          guest[field] = body[`guest${startWithUppercase(field)}`];
-        }
-      });
-      await updateGuest(user.id, guest);
+      await updateGuest(user.id, Object.assign({}, ...RESERVATION_GUEST_FIELDS.map(field => {
+        return { [field]: body.updateInfo || !guest[field] ? body[`guest${startWithUppercase(field)}`] : guest[field] };
+      })));
     }
 
     const reservation = await createReservation(createData);

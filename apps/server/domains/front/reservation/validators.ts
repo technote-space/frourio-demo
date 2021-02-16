@@ -11,7 +11,7 @@ import {
   NotPastDateString,
 } from '$/repositories/utils/validator';
 
-export class CreateReservationBody {
+export class ValidateReservationBody {
   @IsInt({ message: '整数値を指定してください' })
   @IsPositive({ message: '1以上を指定してください' })
   @IsOptional()
@@ -70,4 +70,9 @@ export class CreateReservationBody {
 
   @IsOptional()
   updateInfo?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+}
+
+export class CreateReservationBody extends ValidateReservationBody {
+  @IsNotEmpty({ message: '値を入力してください' })
+  paymentMethodsId: string;
 }

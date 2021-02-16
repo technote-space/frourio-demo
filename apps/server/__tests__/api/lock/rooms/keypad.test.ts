@@ -1,10 +1,11 @@
 import controller from '$/api/lock/rooms/_roomId@number/keypad/controller';
 import { startOfDay, endOfDay } from 'date-fns';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
-import { validateKey } from '$/domains/lock/rooms';
+import { validateKey, checkinProcess } from '$/domains/lock/rooms';
 import { getRoomKey, createRoomKey, updateRoomKey } from '$/repositories/roomKey';
 import { getReservations, updateReservation } from '$/repositories/reservation';
 import { getValidReservation, isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents } from '$/domains/stripe';
 import { MAX_TRIALS } from '@frourio-demo/constants';
 import * as mail from '$/service/mail/utils';
 
@@ -22,7 +23,10 @@ describe('rooms/keypad', () => {
       id: 3,
       key: '1234',
     }));
-    const updateReservationMock = jest.fn();
+    const updateReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 2,
+      status: 'checkin',
+    }));
     const updateRoomKeyMock = jest.fn();
     const injectedController = controller.inject({
       validateKey: validateKey.inject({
@@ -46,12 +50,16 @@ describe('rooms/keypad', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
-            },
-          },
+        checkinProcess: checkinProcess.inject({
+          capturePaymentIntents: capturePaymentIntents.inject({
+            updateReservation: updateReservation.inject({
+              prisma: {
+                reservation: {
+                  update: updateReservationMock,
+                },
+              },
+            }),
+          }),
         }),
         updateRoomKey: updateRoomKey.inject({
           prisma: {
@@ -64,7 +72,7 @@ describe('rooms/keypad', () => {
     })(getFastify());
 
     const res = await injectedController.post({ params: { roomId: 1 }, body: { roomId: 1, key: '1234' } });
-    expect(res.body).toEqual({ result: true, reservation: { id: 2, roomId: 1 } });
+    expect(res.body).toEqual({ result: true, reservation: { id: 2, status: 'checkin' } });
     expect(getReservationsMock).toBeCalledWith({
       where: {
         roomId: 1,

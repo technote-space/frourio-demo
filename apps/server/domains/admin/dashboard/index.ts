@@ -23,6 +23,7 @@ import { getCurrentPage, getSkip } from '$/service/pages';
 import { sendRoomKeyMail } from '$/service/mail';
 import { encryptQrInfo } from '$/utils/reservation';
 import { isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents, cancelPaymentIntents } from '$/domains/stripe';
 
 export type CheckinReservation =
   Pick<Reservation, 'id' | 'guestName' | 'guestNameKana' | 'guestPhone' | 'roomName' | 'checkin' | 'checkout' | 'status'>
@@ -151,15 +152,16 @@ export const getCheckout = depend(
 );
 
 export const checkin = depend(
-  { getReservation, updateReservation },
-  async({ getReservation, updateReservation }, id: number): Promise<BodyResponse<Reservation>> => {
+  { getReservation, capturePaymentIntents },
+  async({
+    getReservation,
+    capturePaymentIntents,
+  }, id: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id);
-    if (reservation && reservation.status === 'reserved') {
+    if (reservation.status === 'reserved') {
       return {
         status: 200,
-        body: await updateReservation(id, {
-          status: 'checkin',
-        }),
+        body: await capturePaymentIntents(reservation),
       };
     }
 
@@ -176,7 +178,7 @@ export const checkout = depend(
   { getReservation, updateReservation },
   async({ getReservation, updateReservation }, id: number, payment?: number): Promise<BodyResponse<Reservation>> => {
     const reservation = await getReservation(id);
-    if (reservation && reservation.status === 'checkin') {
+    if (reservation.status === 'checkin') {
       return {
         status: 200,
         body: await updateReservation(id, {
@@ -195,13 +197,32 @@ export const checkout = depend(
   },
 );
 export const cancel = depend(
-  { updateReservation },
-  async({ updateReservation }, id: number): Promise<BodyResponse<Reservation>> => ({
-    status: 200,
-    body: await updateReservation(id, {
-      status: 'cancelled',
-    }),
-  }),
+  { getReservation, cancelPaymentIntents },
+  async({
+    getReservation,
+    cancelPaymentIntents,
+  }, id: number): Promise<BodyResponse<Reservation>> => {
+    const reservation = await getReservation(id, {
+      where: {
+        status: {
+          not: 'cancelled',
+        },
+      },
+      rejectOnNotFound: false,
+    });
+
+    if (!reservation) {
+      return {
+        status: 400,
+      };
+    }
+
+    const cancelled = await cancelPaymentIntents(reservation);
+    return {
+      status: 200,
+      body: cancelled,
+    };
+  },
 );
 
 export const getSelectableRooms = depend(

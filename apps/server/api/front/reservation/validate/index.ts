@@ -1,9 +1,9 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { CreateReservationBody } from '$/domains/front/reservation/validators';
+import type { ValidateReservationBody } from '$/validators';
 
 export type Methods = {
   post: {
     reqHeaders?: AuthHeader;
-    reqBody: CreateReservationBody;
+    reqBody: ValidateReservationBody;
   }
 }

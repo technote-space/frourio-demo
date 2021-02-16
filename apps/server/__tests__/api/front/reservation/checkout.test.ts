@@ -112,11 +112,7 @@ describe('reservation/calendar/checkout', () => {
         },
         OR: [
           { roomId: 1 },
-          {
-            id: {
-              not: 321,
-            },
-          },
+          { id: 321 },
         ],
       },
     });

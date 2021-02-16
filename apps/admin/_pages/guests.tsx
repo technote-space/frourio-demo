@@ -14,7 +14,8 @@ const Guests: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPagePro
     ...ACCOUNT_FIELDS.map(field => ({
       title: field.label, field: field.name, validate: data => !!data[field.name],
     })),
-    { title: 'auth0', field: 'auth0Sub' },
+    { title: 'auth0', field: 'auth0Sub', editable: 'never' },
+    { title: 'Stripe', field: 'stripe', editable: 'never' },
   ] as DataTableColumn<Model>[], []);
 
   return <DataTable

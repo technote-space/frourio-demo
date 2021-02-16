@@ -130,7 +130,7 @@ describe('Guests', () => {
 
     // input
     const input = container.querySelectorAll('[mode="add"] input');
-    expect(input).toHaveLength(7);
+    expect(input).toHaveLength(6);
     user.type(input[0], 'test@example.com');
     user.type(input[1], 'test-name');
     user.type(input[2], 'テスト');
@@ -178,7 +178,7 @@ describe('Guests', () => {
 
     // input
     const input = container.querySelectorAll('[mode="add"] input');
-    expect(input).toHaveLength(7);
+    expect(input).toHaveLength(6);
     user.type(input[0], 'test@example.com');
     user.type(input[1], 'test-name');
     user.type(input[2], 'テスト');
@@ -292,7 +292,7 @@ describe('Guests', () => {
     // edit
     user.click(container.querySelectorAll('[title="編集"]')[0]);
     const input = container.querySelectorAll('[mode="update"] input');
-    expect(input).toHaveLength(7);
+    expect(input).toHaveLength(6);
     user.clear(input[1]);
     user.type(input[1], 'update-name');
     user.click(container.querySelectorAll('[title="保存"]')[0]);

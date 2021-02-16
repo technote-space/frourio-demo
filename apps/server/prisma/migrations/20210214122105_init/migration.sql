@@ -25,6 +25,7 @@ CREATE TABLE "Guest" (
     "address" TEXT,
     "phone" TEXT,
     "auth0Sub" TEXT,
+    "stripe" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -58,6 +59,7 @@ CREATE TABLE "Reservation" (
     "checkout" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'reserved',
     "payment" INTEGER,
+    "paymentIntents" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     FOREIGN KEY ("guestId") REFERENCES "Guest" ("id") ON DELETE SET NULL ON UPDATE CASCADE,

@@ -15,14 +15,15 @@ import { useDispatchContext, useStoreContext } from '^/store';
 import { ACCOUNT_FIELDS, RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
 type Props = {
+  hidden: boolean;
+  reservation: ReservationData;
   room?: Room;
   nights: number;
-  reservation: ReservationData;
   onCancel: () => void;
   onSubmit: () => void;
 }
 
-const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit }: Props) => {
+const Confirm: FC<Props> = memo(({ hidden, reservation, room, nights, onCancel, onSubmit }: Props) => {
   const unmountRef = useUnmountRef();
   const { dispatch } = useDispatchContext();
   const { guest } = useStoreContext();
@@ -32,6 +33,14 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
   const handleClick = useCallback(async() => {
     setIsSending(true);
     try {
+      if (auth) {
+        await client.stripe.methods.put({
+          headers: auth.authHeader,
+          body: {
+            methodId: reservation.paymentMethodsId!,
+          },
+        });
+      }
       const created = await client.reservation.post({
         body: reservation as CreateReservationBody,
         ...(auth ? {
@@ -52,10 +61,10 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
         setIsSending(false);
       }
     }
-  }, []);
+  }, [hidden]);
   const hasEmptyField = !guest || RESERVATION_GUEST_FIELDS.some(field => !guest[field]);
 
-  return <Box
+  return hidden ? null : <Box
     shadow="md"
     p={[1, 2, 4]}
     m="2"
@@ -76,7 +85,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
       <Grid templateColumns="repeat(1, 1fr)" gap={3} textAlign="right" fontSize="0.9rem">
         <GridItem>お客様の登録情報を更新する</GridItem>
       </Grid>}
-      <Divider/>
+      <Divider />
       <Grid templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
         <GridItem>チェックイン</GridItem>
         <GridItem>{format(new Date(reservation.checkin!), 'yyyy/MM/dd HH:mm')}</GridItem>
@@ -85,7 +94,7 @@ const Confirm: FC<Props> = memo(({ reservation, room, nights, onCancel, onSubmit
         <GridItem>チェックアウト</GridItem>
         <GridItem>{format(new Date(reservation.checkout!), 'yyyy/MM/dd HH:mm')}</GridItem>
       </Grid>
-      <Divider/>
+      <Divider />
       <Grid templateColumns="repeat(2, 1fr)" gap={3} textAlign="right">
         <GridItem>料金</GridItem>
         <GridItem>¥{room!.price.toLocaleString()}/人泊</GridItem>

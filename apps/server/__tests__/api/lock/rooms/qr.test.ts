@@ -1,9 +1,10 @@
 import controller from '$/api/lock/rooms/_roomId@number/qr/controller';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
-import { validateQr } from '$/domains/lock/rooms';
+import { validateQr, checkinProcess } from '$/domains/lock/rooms';
 import { getRoomKey } from '$/repositories/roomKey';
 import { getReservation, updateReservation } from '$/repositories/reservation';
 import { isValidCheckinDateRange } from '$/service/reservation';
+import { capturePaymentIntents } from '$/domains/stripe';
 
 describe('rooms/qr', () => {
   it('should validate qr', async() => {
@@ -15,7 +16,10 @@ describe('rooms/qr', () => {
     const getRoomKeyMock = jest.fn(() => getPromiseLikeItem({
       key: '1234',
     }));
-    const updateReservationMock = jest.fn();
+    const updateReservationMock = jest.fn(() => getPromiseLikeItem({
+      id: 2,
+      status: 'checkin',
+    }));
     const injectedController = controller.inject({
       validateQr: validateQr.inject({
         getReservation: getReservation.inject({
@@ -32,12 +36,16 @@ describe('rooms/qr', () => {
             },
           },
         }),
-        updateReservation: updateReservation.inject({
-          prisma: {
-            reservation: {
-              update: updateReservationMock,
-            },
-          },
+        checkinProcess: checkinProcess.inject({
+          capturePaymentIntents: capturePaymentIntents.inject({
+            updateReservation: updateReservation.inject({
+              prisma: {
+                reservation: {
+                  update: updateReservationMock,
+                },
+              },
+            }),
+          }),
         }),
         decryptQrInfo: decryptQrInfoMock,
         isValidCheckinDateRange: isValidCheckinDateRange.inject({
@@ -48,7 +56,7 @@ describe('rooms/qr', () => {
     })(getFastify());
 
     const res = await injectedController.post({ params: { roomId: 1 }, body: { roomId: 1, data: 'encrypted' } });
-    expect(res.body).toEqual({ result: true, reservation: { id: 2, roomId: 1 } });
+    expect(res.body).toEqual({ result: true, reservation: { id: 2, status: 'checkin' } });
     expect(decryptQrInfoMock).toBeCalledWith('encrypted');
     expect(getReservationMock).toBeCalledWith({
       rejectOnNotFound: true,

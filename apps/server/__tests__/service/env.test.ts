@@ -23,6 +23,7 @@ describe('env', () => {
     process.env.CRYPTO_PASS = 'pass';
     process.env.CRYPTO_SALT = 'salt';
     process.env.CRYPTO_ALGO = 'algo';
+    process.env.STRIPE_SECRET = 'sk_test';
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../../utils/env');
@@ -44,6 +45,7 @@ describe('env', () => {
     expect(env.CRYPTO_PASS).toBe('pass');
     expect(env.CRYPTO_SALT).toBe('salt');
     expect(env.CRYPTO_ALGO).toBe('algo');
+    expect(env.STRIPE_SECRET).toBe('sk_test');
   });
 
   it('should use fallback value', () => {
@@ -65,6 +67,7 @@ describe('env', () => {
     delete process.env.CRYPTO_PASS;
     delete process.env.CRYPTO_SALT;
     delete process.env.CRYPTO_ALGO;
+    delete process.env.STRIPE_SECRET;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require('../../utils/env');
@@ -86,6 +89,7 @@ describe('env', () => {
     expect(env.CRYPTO_PASS).toBe('');
     expect(env.CRYPTO_SALT).toBe('');
     expect(env.CRYPTO_ALGO).toBe('');
+    expect(env.STRIPE_SECRET).toBe('');
   });
 
   it('should return empty URL_PORT', () => {

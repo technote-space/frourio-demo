@@ -12,7 +12,7 @@ import useTableIcons from '~/hooks/useTableIcons';
 import useTableLocalization from '~/hooks/useTableLocalization';
 import { isAxiosError, processUpdateData } from '@frourio-demo/utils/api';
 import { getDataTableApi, handleAuthError } from '~/utils/api';
-import { setNotice } from '~/utils/actions';
+import { setNotice, setError } from '~/utils/actions';
 import { addDisplayName } from '@frourio-demo/utils/component';
 import pages from '~/_pages';
 
@@ -77,13 +77,13 @@ const controlValidationEditField = <T extends Model>(
       error: true,
       helperText: validationErrors[key],
       value: ensureNotNull(props.value),
-    })}/>;
+    })} />;
   }
 
   return <EditField {...getProps({
     ...props,
     value: ensureNotNull(props.value),
-  })}/>;
+  })} />;
 });
 
 const DataTable = memo(<T extends Model, >({
@@ -103,7 +103,7 @@ const DataTable = memo(<T extends Model, >({
     const Icon = pages[model].icon;
     return <Grid container direction="row" alignItems="center" spacing={1} data-testid="table-title">
       <Grid item>
-        <Icon/>
+        <Icon />
       </Grid>
       <Grid item>
         {pages[model].label}
@@ -152,10 +152,14 @@ const DataTable = memo(<T extends Model, >({
   }, api.get, { headers: authHeader, query }), []);
   const handleValidationError = error => {
     if (!unmountRef.current && isAxiosError(error) && error.response?.data) {
-      const validationError = error.response.data as ValidationError[];
-      setValidationErrors(Object.assign({}, ...validationError.map(error => error.constraints ? {
-        [error.property]: Object.values(error.constraints)[0],
-      } : undefined)));
+      if (error.response.data.statusCode === 500) {
+        setError(dispatch, error.response.data.message);
+      } else {
+        const validationError = error.response.data as ValidationError[];
+        setValidationErrors(Object.assign({}, ...validationError.map(error => error.constraints ? {
+          [error.property]: Object.values(error.constraints)[0],
+        } : undefined)));
+      }
     }
     throw error;
   };
