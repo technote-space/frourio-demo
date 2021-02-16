@@ -18,7 +18,7 @@
     "setup:mkcert:linux": "yarn setup:mkcert:linux:brew && yarn setup:mkcert:linux:install",
     "setup:mkcert:linux:brew": "if command -v yum > /dev/null 2>&1; then sudo yum install nss-tools; else sudo apt install libnss3-tools; fi",
     "setup:mkcert:linux:install": "brew install mkcert nss",
-    "setup:cert": "mkcert -install && mkcert 'localhost.frourio-demo.com'",
+    "setup:cert": "mkcert -install && mkcert $npm_package_host",
     "start": "yarn kill && HOST=$npm_package_host PORT=$npm_package_port NODE_ENV=production yarn ts-node ./server.ts",
     "update": "npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
   },
