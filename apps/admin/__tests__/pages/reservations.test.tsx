@@ -434,6 +434,133 @@ describe('Reservations', () => {
     await waitFor(() => expect(del).toBeCalledTimes(1));
   });
 
+  it('should handle validation error (server error)', async() => {
+    const save = jest.fn();
+    mockFullCalendar(
+      startOfMonth(startOfToday()),
+      endOfMonth(startOfToday()),
+      {
+        'checkin': [
+          addDays(startOfMonth(startOfToday()), 4), // click after loading (valid date)
+        ],
+        'checkout': [
+          addDays(startOfMonth(startOfToday()), 6), // click after loading (valid date)
+        ],
+      },
+      {
+        'checkin': [
+          [{ start: startOfMonth(startOfToday()), end: addDays(startOfMonth(startOfToday()), 3) }], // click after loading (valid date)
+        ],
+        'checkout': [
+          [{ start: addDays(startOfMonth(startOfToday()), 4), end: addDays(startOfMonth(startOfToday()), 8) }], // click after loading (valid date)
+        ],
+      },
+    );
+    const {
+      findByText,
+      findAllByText,
+      findByTestId,
+      getByTestId,
+      container,
+    } = await loadPage(
+      'reservations',
+      scope => scope
+        .get(/reservations\?/).reply(200, {
+          'data': [],
+          'page': 0,
+          'totalCount': 0,
+        })
+        .get(/reservations\/search\/guests/).reply(200, {
+          'data': [
+            {
+              'id': 10,
+              'name': '清水 結菜',
+              'nameKana': '山田 大和',
+              'zipCode': '317-0074',
+              'address': 'American Samoa 井上村 蒼空 Loop',
+              'phone': '089-159-0016',
+              'reservations': [],
+            },
+          ],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get(/reservations\/search\/rooms/).reply(200, {
+          'data': [
+            {
+              'id': 5,
+              'name': '杏19119',
+              'number': 4,
+              'price': 37319,
+              'createdAt': '2021-01-04T09:36:28.487Z',
+              'updatedAt': '2021-01-04T09:36:28.487Z',
+            },
+          ],
+          'page': 0,
+          'totalCount': 1,
+        })
+        .get('/reservations/guest?guestId=10').reply(200, { 'id': 10, 'name': '清水 結菜' })
+        .get('/reservations/room?roomId=5').reply(200, { 'id': 5, 'name': '杏19119', 'number': 4, 'price': 37319 })
+        .get(/reservations\/calendar\/checkin/).reply(200, [
+          {
+            'start': format(startOfMonth(startOfToday()), 'yyyy-MM-dd'),
+            'end': format(startOfMonth(addDays(startOfToday(), 3)), 'yyyy-MM-dd'),
+            'allDay': true,
+            'color': '#a99',
+            'textColor': 'black',
+            'display': 'background',
+          },
+        ])
+        .get(/reservations\/calendar\/checkout/).reply(200, [
+          {
+            'start': format(startOfMonth(addDays(startOfToday(), 4)), 'yyyy-MM-dd'),
+            'end': format(startOfMonth(addDays(startOfToday(), 8)), 'yyyy-MM-dd'),
+            'allDay': true,
+            'color': '#a99',
+            'textColor': 'black',
+            'display': 'inverse-background',
+          },
+        ])
+        .post('/reservations', body => {
+          save(body);
+          return body;
+        }).reply(500, {
+          statusCode: 500,
+          message: 'test error'
+        }),
+    );
+
+    const button = container.querySelectorAll('[title="追加"]');
+    expect(button).toHaveLength(1);
+    user.click(button[0]);
+    const select = await findAllByText('選択');
+
+    // select guest
+    user.click(select[0]);
+    await findByText('清水 結菜');
+    user.click(findElement(getByTestId('guests-search-table'), '[title="Select"]'));
+
+    // select room
+    user.click(select[1]);
+    await findByText('杏19119');
+    user.click(findElement(getByTestId('rooms-search-table'), '[title="Select"]'));
+
+    // select checkin
+    user.click(getByTestId('select-checkin-date-link'));
+    await findByTestId('checkin-mock-calendar-not-loading');
+    user.click(await findByTestId('checkin-mock-calendar')); // click after loading (valid date)
+    await findByText(format(addDays(startOfMonth(startOfToday()), 4), 'yyyy-MM-dd'));
+
+    // select checkout
+    user.click(await findByTestId('select-checkout-date-link'));
+    await findByTestId('checkout-mock-calendar-not-loading');
+    user.click(await findByTestId('checkout-mock-calendar')); // click after loading (valid date)
+    await findByText(format(addDays(startOfMonth(startOfToday()), 6), 'yyyy-MM-dd'));
+
+    user.click(container.querySelectorAll('[title="保存"]')[0]);
+    await findByText('test error');
+  });
+
   it('should add reservation', async() => {
     const save = jest.fn();
     mockFullCalendar(
