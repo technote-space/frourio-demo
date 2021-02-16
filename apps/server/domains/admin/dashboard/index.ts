@@ -244,11 +244,13 @@ export const getMonthlySales = depend(
     const reservations = await getReservations({
       select: {
         payment: true,
-        checkout: true,
+        checkin: true,
       },
       where: {
-        status: 'checkout',
-        checkout: {
+        payment: {
+          not: null
+        },
+        checkin: {
           gte: startOfYear(date),
           lt: endOfYear(date),
         },
@@ -263,7 +265,7 @@ export const getMonthlySales = depend(
 
     const sales: Record<string, number> = Object.assign({}, ...months.map(month => ({ [month]: 0 })));
     reservations.forEach(reservation => {
-      const key = format(reservation.checkout, 'yyyy-MM');
+      const key = format(reservation.checkin, 'yyyy-MM');
       sales[key] += reservation.payment ?? 0;
     });
 
@@ -283,11 +285,13 @@ export const getDailySales = depend(
     const reservations = await getReservations({
       select: {
         payment: true,
-        checkout: true,
+        checkin: true,
       },
       where: {
-        status: 'checkout',
-        checkout: {
+        payment: {
+          not: null
+        },
+        checkin: {
           gte: startOfMonth(date),
           lt: endOfMonth(date),
         },
@@ -302,7 +306,7 @@ export const getDailySales = depend(
 
     const sales: Record<string, number> = Object.assign({}, ...days.map(day => ({ [day]: 0 })));
     reservations.forEach(reservation => {
-      const key = format(reservation.checkout, 'yyyy-MM-dd');
+      const key = format(reservation.checkin, 'yyyy-MM-dd');
       sales[key] += reservation.payment ?? 0;
     });
 

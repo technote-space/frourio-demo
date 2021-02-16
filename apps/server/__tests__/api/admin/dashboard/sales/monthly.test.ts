@@ -8,22 +8,22 @@ describe('dashboard/sales/monthly', () => {
   it('should get monthly sales', async() => {
     const getReservationsMock = jest.fn(() => getPromiseLikeItem([
       {
-        checkout: parse('2020-03-01', 'yyyy-MM-dd', new Date()),
+        checkin: parse('2020-03-01', 'yyyy-MM-dd', new Date()),
         payment: 1,
       },
       {
-        checkout: parse('2020-03-02', 'yyyy-MM-dd', new Date()),
+        checkin: parse('2020-03-02', 'yyyy-MM-dd', new Date()),
         payment: 1,
       },
       {
-        checkout: parse('2020-03-02', 'yyyy-MM-dd', new Date()),
+        checkin: parse('2020-03-02', 'yyyy-MM-dd', new Date()),
         payment: 2,
       },
       {
-        checkout: parse('2020-03-03', 'yyyy-MM-dd', new Date()),
+        checkin: parse('2020-03-03', 'yyyy-MM-dd', new Date()),
       },
       {
-        checkout: parse('2020-04-30', 'yyyy-MM-dd', new Date()),
+        checkin: parse('2020-04-30', 'yyyy-MM-dd', new Date()),
         payment: 1,
       },
     ]));
@@ -85,16 +85,18 @@ describe('dashboard/sales/monthly', () => {
     ]));
     expect(getReservationsMock).toBeCalledWith({
       select: {
-        checkout: true,
+        checkin: true,
         payment: true,
       },
       where: {
-        checkout: {
+        checkin: {
           gte: startOfYear(parse('2020-03-01', 'yyyy-MM-dd', new Date())),
           lt: endOfYear(parse('2020-03-01', 'yyyy-MM-dd', new Date())),
         },
         roomId: 123,
-        status: 'checkout',
+        payment: {
+          not: null
+        },
       },
     });
   });
@@ -126,16 +128,18 @@ describe('dashboard/sales/monthly', () => {
     ]));
     expect(getReservationsMock).toBeCalledWith({
       select: {
-        checkout: true,
+        checkin: true,
         payment: true,
       },
       where: {
-        checkout: {
+        checkin: {
           gte: startOfYear(startOfToday()),
           lt: endOfYear(startOfToday()),
         },
         roomId: undefined,
-        status: 'checkout',
+        payment: {
+          not: null
+        },
       },
     });
   });
