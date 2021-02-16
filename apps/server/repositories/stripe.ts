@@ -26,6 +26,21 @@ export const getStripeDefaultPaymentMethod = depend(
   },
 );
 
+export const setDefaultPaymentMethod = depend(
+  { stripe: stripe as { customers: { update: typeof stripe.customers.update } } },
+  async({ stripe }, guest: Guest, methodId: string) => {
+    if (!guest.stripe) {
+      return;
+    }
+
+    return stripe.customers.update(guest.stripe, {
+      'invoice_settings': {
+        'default_payment_method': methodId,
+      },
+    });
+  },
+);
+
 export const listStripeDefaultPaymentMethods = depend(
   { stripe: stripe as { paymentMethods: { list: typeof stripe.paymentMethods.list } } },
   async({ stripe }, guest: Guest): Promise<Stripe.PaymentMethod[]> => guest.stripe ? (await stripe.paymentMethods.list({

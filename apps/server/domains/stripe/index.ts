@@ -6,6 +6,7 @@ import { getGuest, updateGuest } from '$/repositories/guest';
 import { getReservations, updateReservation } from '$/repositories/reservation';
 import {
   getStripeDefaultPaymentMethod,
+  setDefaultPaymentMethod,
   listStripeDefaultPaymentMethods,
   attachPaymentMethodToCustomer,
   detachPaymentMethodFromCustomer,
@@ -36,14 +37,20 @@ export const getPaymentMethods = depend(
 );
 
 export const attachPaymentMethod = depend(
-  { attachPaymentMethodToCustomer, getGuest, updateGuest },
-  async({ attachPaymentMethodToCustomer, getGuest, updateGuest }, methodId: string, guestId: number): Promise<BasicResponse> => {
+  { attachPaymentMethodToCustomer, setDefaultPaymentMethod, getGuest, updateGuest },
+  async({
+    attachPaymentMethodToCustomer,
+    setDefaultPaymentMethod,
+    getGuest,
+    updateGuest,
+  }, methodId: string, guestId: number): Promise<BasicResponse> => {
     logger.info('attachPaymentMethod, id=%s, guest=%d', methodId, guestId);
     const guest = await getGuest(guestId);
     const customer = await attachPaymentMethodToCustomer(methodId, guest);
     if (!guest.stripe) {
       await updateGuest(guest.id, { stripe: customer });
     }
+    await setDefaultPaymentMethod(guest, methodId);
 
     return {
       status: 200,
