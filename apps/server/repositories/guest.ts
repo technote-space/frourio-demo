@@ -2,6 +2,7 @@ import type { Prisma, Guest } from '$/prisma/client';
 import { depend } from 'velona';
 import { dropId, whereId } from '$/repositories/utils';
 import { prisma } from '$/repositories';
+import { normalizeHalfFull } from '@frourio-demo/utils/value';
 
 export type SearchGuestArgs = Prisma.GuestFindManyArgs;
 export type FindGuestArgs = Prisma.GuestFindFirstArgs;
@@ -35,11 +36,16 @@ export const getGuest = depend(
   }) as Guest,
 );
 
+const normalizeOptions = {
+  toFull: ['nameKana', 'address'],
+  toHalf: ['zipCode', 'phone'],
+};
+
 export const createGuest = depend(
   { prisma: prisma as { guest: { create: typeof prisma.guest.create } } },
   async({ prisma }, data: CreateGuestData, args?: Partial<CreateGuestArgs>) => prisma.guest.create({
     ...args,
-    data,
+    data: normalizeHalfFull(data, normalizeOptions),
   }),
 );
 
@@ -48,7 +54,7 @@ export const updateGuest = depend(
   async({ prisma }, id: number, data: UpdateGuestData, args?: Partial<UpdateGuestArgs>) => prisma.guest.update({
     where: { id },
     ...args,
-    data: dropId(data),
+    data: normalizeHalfFull(dropId(data), normalizeOptions),
   }),
 );
 

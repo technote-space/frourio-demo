@@ -5,6 +5,7 @@ import { dropId, whereId } from '$/repositories/utils';
 import { generateCode } from '$/utils/reservation';
 import { getReplaceVariables } from '@frourio-demo/utils/value';
 import { prisma } from '$/repositories';
+import { normalizeHalfFull } from '@frourio-demo/utils/value';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
 export type FindReservationArgs = Prisma.ReservationFindFirstArgs;
@@ -37,14 +38,19 @@ export const getReservation = depend(
   }) as Reservation,
 );
 
+const normalizeOptions = {
+  toFull: ['guestNameKana', 'guestAddress'],
+  toHalf: ['guestZipCode', 'guestPhone'],
+};
+
 export const createReservation = depend(
   { prisma: prisma as { reservation: { create: typeof prisma.reservation.create } } },
   async({ prisma }, data: CreateReservationData, args?: Partial<CreateReservationArgs>) => prisma.reservation.create({
     ...args,
-    data: {
+    data: normalizeHalfFull({
       ...data,
       code: generateCode(),
-    },
+    }, normalizeOptions),
   }),
 );
 
@@ -53,7 +59,7 @@ export const updateReservation = depend(
   async({ prisma }, id: number, data: UpdateReservationData, args?: Partial<UpdateReservationArgs>) => prisma.reservation.update({
     where: { id },
     ...args,
-    data: dropId(data),
+    data: normalizeHalfFull(dropId(data), normalizeOptions),
   }),
 );
 
