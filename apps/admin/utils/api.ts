@@ -66,6 +66,7 @@ export const handleAuthError = async <B, API extends ApiType<B>, F extends Fallb
 
     /* istanbul ignore next */
     setError(dispatch, error.response?.data?.message ?? error.message);
+    /* istanbul ignore next */
     return fallback as MaybeUndefined<F>;
   }
 };
