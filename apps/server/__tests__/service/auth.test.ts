@@ -4,7 +4,7 @@ import { verifyAdmin, getRolesValue, verifyGuest } from '$/service/auth';
 describe('verifyAdmin', () => {
   it('should return true if login api', async() => {
     const jwtVerify = jest.fn();
-    expect(await verifyAdmin({ url: '/api/login', method: 'POST', jwtVerify } as any)).toBe(true);
+    expect(await verifyAdmin({ url: '/api/admin/login', method: 'POST', jwtVerify } as any)).toBe(true);
     expect(jwtVerify).not.toBeCalled();
   });
 
