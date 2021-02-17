@@ -2246,9 +2246,9 @@ ajv@^6.10.0, ajv@^6.11.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     uri-js "^4.2.2"
 
 ajv@^7.0.2:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.1.0.tgz#f982ea7933dc7f1012eae9eec5a86687d805421b"
-  integrity sha512-svS9uILze/cXbH0z2myCK2Brqprx/+JJYK5pHicT/GQiBfzzhUVAIT6MwqJg8y4xV/zoGsUeuPuwtoiKSGE15g==
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.1.1.tgz#1e6b37a454021fa9941713f38b952fc1c8d32a84"
+  integrity sha512-ga/aqDYnUy/o7vbsRTFhhTsNeXiYb5JWDIcRIeZfwRNCefwjNTVYCGdGSUrEmiu3yDK3vFvNbgJxvrQW4JXrYQ==
   dependencies:
     fast-deep-equal "^3.1.1"
     json-schema-traverse "^1.0.0"
@@ -2442,7 +2442,7 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-aspida@^1.3.0, aspida@^1.5.0:
+aspida@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/aspida/-/aspida-1.5.0.tgz#19155d0bd09caa0f31065c5e3def1b3ddfbf0dcc"
   integrity sha512-oec37DtPzR++4v89nRgvoDtKbU6d0Z9hHRbwep6c/93Kul6YHrCfZmbtTSGoxwm8rAmDe1KJuNb7VRw4bzyolA==
@@ -4755,12 +4755,12 @@ fresh@0.5.2:
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
 
-frourio@^0.22.2:
-  version "0.22.2"
-  resolved "https://registry.yarnpkg.com/frourio/-/frourio-0.22.2.tgz#7db67dd0004cd2aa03764db21b57cb6647c1878f"
-  integrity sha512-QcVMFQ6yR8bQG9IT3pr6GChqS4ms8esLxRNboNQ/D7X2rX+c9pCIn8bRp2jjZJVNxmtoDdkWd8f2heADc1hcrQ==
+frourio@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/frourio/-/frourio-0.23.0.tgz#808261ab945430209e4cba4d10b5f6fbd3438650"
+  integrity sha512-1DbQYEZNArHfox7nScFckxTt0DwFsJe67qt2jlYnsZJKoYmVQxsfugkiA8ZmCkd18S+Iy0gzSOKenxTVDmCMJg==
   dependencies:
-    aspida "^1.3.0"
+    aspida "^1.5.0"
     velona "^0.7.0"
 
 fs-constants@^1.0.0:
