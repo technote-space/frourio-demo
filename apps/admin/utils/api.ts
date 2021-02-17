@@ -18,7 +18,6 @@ import { logout, setError, onRefreshToken } from '~/utils/actions';
 const apiClient = api(aspida());
 export const client = {
   ...apiClient.admin,
-  login: apiClient.login.admin,
 };
 
 export const handleAuthError = async <B, API extends ApiType<B>, F extends FallbackType<API>>(
@@ -67,6 +66,7 @@ export const handleAuthError = async <B, API extends ApiType<B>, F extends Fallb
 
     /* istanbul ignore next */
     setError(dispatch, error.response?.data?.message ?? error.message);
+    /* istanbul ignore next */
     return fallback as MaybeUndefined<F>;
   }
 };

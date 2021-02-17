@@ -5,7 +5,7 @@ import { getEventDates } from '@/utils/calendar';
 import { addDisplayName } from '@/utils/component';
 import { ensureString, processLicenses } from '@/utils/license';
 import { startWithUppercase, replaceVariables } from '@/utils/string';
-import { getReplaceVariables } from '@/utils/value';
+import { getReplaceVariables, normalizeHalfFull } from '@/utils/value';
 import { sleep } from '@/utils/misc';
 
 beforeAll(() => {
@@ -182,6 +182,59 @@ describe('getReplaceVariables', () => {
       'test.test2': 'test2',
       'test.test3': undefined,
       'test.test4': null,
+    });
+  });
+});
+
+describe('normalizeHalfFull', () => {
+  it('should normalize half and full', () => {
+    expect(normalizeHalfFull({})).toEqual({});
+    expect(normalizeHalfFull({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+      test4: {},
+    })).toEqual({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+      test4: {},
+    });
+    expect(normalizeHalfFull({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+    }, { toFull: ['test1', 'test2', 'test3'] })).toEqual({
+      test1: 'ｔｅｓｔ１',
+      test2: 'ｔｅｓｔ２',
+      test3: '３',
+    });
+    expect(normalizeHalfFull({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+    }, { toHalf: ['test1', 'test2', 'test3'] })).toEqual({
+      test1: 'test1',
+      test2: 'test2',
+      test3: '3',
+    });
+    expect(normalizeHalfFull({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+    }, { toHalf: ['test1'], toFull: ['test2'] })).toEqual({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+    });
+    expect(normalizeHalfFull({
+      test1: 'test1',
+      test2: 'ｔｅｓｔ２',
+      test3: 3,
+    }, { toHalf: ['test2'], toFull: ['test1'] })).toEqual({
+      test1: 'ｔｅｓｔ１',
+      test2: 'test2',
+      test3: 3,
     });
   });
 });

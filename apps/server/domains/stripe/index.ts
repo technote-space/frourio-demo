@@ -102,7 +102,7 @@ export const capturePaymentIntents = depend(
     const status = isCancel ? 'cancelled' : 'checkin';
     if (result) {
       logger.info('capturePaymentIntents, amount=%d, amount_received=%d', result.amount, result.amount_received);
-      return await updateReservation(reservation.id, {
+      return updateReservation(reservation.id, {
         payment: result.amount_received,
         status,
       });

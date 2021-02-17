@@ -48,6 +48,10 @@ const getRoles = (request: FastifyRequest, domain: string | undefined): string[]
   return [...new Set(roles)];
 };
 export const verifyAdmin = async(request: FastifyRequest, domain?: string): Promise<boolean> => {
+  if (request.url === '/api/admin/login' && request.method === 'POST') {
+    return true;
+  }
+
   const roles = getRoles(request, domain);
   try {
     const payload = await request.jwtVerify() as AdminAuthorizationPayload | null;

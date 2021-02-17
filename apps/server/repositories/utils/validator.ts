@@ -121,9 +121,7 @@ export function IsOptionalWhenUpdate(validationOptions?: ValidationOptions) {
 class IsReservableConstraint implements ValidatorConstraintInterface {
   private reason?: string;
 
-  async validate(value: any, args: ValidationArguments) {
-    const data = args.object as any;
-    const notCheckGuest = !!args.constraints[0];
+  private validateProperty(notCheckGuest: boolean, data: any) {
     if (!('roomId' in data) || typeof data['roomId'] !== 'number') {
       this.reason = '部屋が選択されていません';
       return false;
@@ -138,13 +136,10 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
       return false;
     }
 
-    const checkin = new Date(data['checkin']);
-    const checkout = new Date(data['checkout']);
-    if (!isAfter(startOfDay(checkout), startOfDay(checkin))) {
-      this.reason = 'チェックアウトはチェックインよりも後である必要があります';
-      return false;
-    }
+    return true;
+  }
 
+  private buildWhere(checkin: Date, checkout: Date, notCheckGuest: boolean, data: any) {
     const where = {
       AND: [
         {
@@ -175,8 +170,26 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
         not: Number(data['id']),
       };
     }
+
+    return where;
+  }
+
+  async validate(value: any, args: ValidationArguments) {
+    const data = args.object as any;
+    const notCheckGuest = !!args.constraints[0];
+    if (!this.validateProperty(notCheckGuest, data)) {
+      return false;
+    }
+
+    const checkin = new Date(data['checkin']);
+    const checkout = new Date(data['checkout']);
+    if (!isAfter(startOfDay(checkout), startOfDay(checkin))) {
+      this.reason = 'チェックアウトはチェックインよりも後である必要があります';
+      return false;
+    }
+
     const reservation = await prisma.reservation.findFirst({
-      where,
+      where: this.buildWhere(checkin, checkout, notCheckGuest, data),
     });
     if (reservation) {
       this.reason = 'この期間はすでに予約されています';
@@ -258,7 +271,7 @@ class IsKatakanaConstraint implements ValidatorConstraintInterface {
       return false;
     }
 
-    return /^[ァ-ヴー・　\s]+$/.test(value); // eslint-disable-line no-irregular-whitespace
+    return /^[ァ-ヴｦ-ﾝー・　\s]+$/.test(value); // eslint-disable-line no-irregular-whitespace
   }
 
   defaultMessage() {

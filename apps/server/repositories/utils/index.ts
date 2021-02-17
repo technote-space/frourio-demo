@@ -240,7 +240,7 @@ export const isMultipartFile = (value: any): value is Multipart => {
   return typeof value === 'object' && 'filename' in value && 'toBuffer' in value;
 };
 
-export const parseBody = (body: Record<string, any>) => {
+export const processMultipartFormDataBody = (body: Record<string, any>) => {
   Object.keys(body).forEach(key => {
     if (typeof body[key] === 'string' && /^\{[\s\S]*\}$/.test(body[key])) {
       try {
@@ -249,7 +249,7 @@ export const parseBody = (body: Record<string, any>) => {
         //
       }
     } else if (body[key] && typeof body[key] === 'object' && !isMultipartFile(body[key])) {
-      body[key] = parseBody(body[key]);
+      body[key] = processMultipartFormDataBody(body[key]);
     }
   });
 

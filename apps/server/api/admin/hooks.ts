@@ -1,7 +1,7 @@
 import type { AdminAuthorizationPayload } from '$/types';
 import { defineHooks } from './$relay';
 import { verifyAdmin } from '$/service/auth';
-import { parseQuery, parseBody } from '$/repositories/utils';
+import { parseQuery, processMultipartFormDataBody } from '$/repositories/utils';
 
 export type AdditionalRequest = {
   user: AdminAuthorizationPayload;
@@ -21,7 +21,7 @@ export default defineHooks(() => ({
       request.query = parseQuery(request.query);
     }
     if (typeof request.body === 'object' && request.headers['content-type'] && /^multipart\/form-data/.test(request.headers['content-type'])) {
-      request.body = parseBody(request.body as {});
+      request.body = processMultipartFormDataBody(request.body as {});
     }
 
     done();

@@ -20,7 +20,7 @@ describe('Index', () => {
   it('should fail to login', async() => {
     const login = jest.fn();
     useNock()
-      .post('/login/admin', body => {
+      .post('/admin/login', body => {
         login(body);
         return body;
       }).reply(400);
@@ -44,7 +44,7 @@ describe('Index', () => {
   it('should fail to login (invalid header)', async() => {
     const login = jest.fn();
     useNock()
-      .post('/login/admin', body => {
+      .post('/admin/login', body => {
         login(body);
         return body;
       }).reply(204);
@@ -66,7 +66,7 @@ describe('Index', () => {
   it('should success to login', async() => {
     const login = jest.fn();
     useNock()
-      .post('/login/admin', body => {
+      .post('/admin/login', body => {
         login(body);
         return body;
       }).reply(204, undefined, {

@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { startOfDay, addDays } from 'date-fns';
-import { parseQuery, parseBody, getWhere, getFilterConstraints, createAdminPasswordHash } from '$/repositories/utils';
+import {
+  parseQuery,
+  processMultipartFormDataBody,
+  getWhere,
+  getFilterConstraints,
+  createAdminPasswordHash,
+} from '$/repositories/utils';
 import { includeRoles } from '$/repositories/admin';
 import { processRoleConnections, getAdminFilterConstraints } from '$/domains/admin/admins/utils';
 import { fillCreateReservationData, fillUpdateReservationData } from '$/domains/admin/reservations';
@@ -60,11 +66,17 @@ describe('parseQuery', () => {
   });
 });
 
-describe('parseBody', () => {
-  it('should parse json object', () => {
-    expect(parseBody({})).toEqual({});
-    expect(parseBody({ test1: JSON.stringify({ test2: 3 }), test4: 5 })).toEqual({ test1: { test2: 3 }, test4: 5 });
-    expect(parseBody({ test1: [JSON.stringify({ test2: 3 })], test4: 5 })).toEqual({ test1: [{ test2: 3 }], test4: 5 });
+describe('processMultipartFormDataBody', () => {
+  it('should process json object', () => {
+    expect(processMultipartFormDataBody({})).toEqual({});
+    expect(processMultipartFormDataBody({
+      test1: JSON.stringify({ test2: 3 }),
+      test4: 5,
+    })).toEqual({ test1: { test2: 3 }, test4: 5 });
+    expect(processMultipartFormDataBody({
+      test1: [JSON.stringify({ test2: 3 })],
+      test4: 5,
+    })).toEqual({ test1: [{ test2: 3 }], test4: 5 });
   });
 });
 
