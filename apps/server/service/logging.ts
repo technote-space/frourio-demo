@@ -14,7 +14,7 @@ export const logger = createLogger({
     count: 10,
   }],
   src: true,
-  level: process.env.NODE_ENV === 'development' ? /* istanbul ignore next */ 'debug' : 'warn',
+  level: process.env.NODE_ENV === 'development' ? /* istanbul ignore next */ 'debug' : 'info',
 });
 
 export default logger;
