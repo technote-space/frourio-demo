@@ -38,6 +38,7 @@ const Checkout: FC<Props> = memo(({ room, isSending, setIsSending, revalidate }:
     }).finally(() => {
       revalidate().finally(() => {
         setIsSending(false);
+        setIsOpen(false);
       });
     });
   }, []);
