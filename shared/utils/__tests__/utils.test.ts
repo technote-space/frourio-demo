@@ -4,7 +4,7 @@ import { getPriceCalc } from '@/utils/calc';
 import { getEventDates } from '@/utils/calendar';
 import { addDisplayName } from '@/utils/component';
 import { ensureString, processLicenses } from '@/utils/license';
-import { startWithUppercase, replaceVariables } from '@/utils/string';
+import { startWithUppercase, replaceVariables, katakana } from '@/utils/string';
 import { getReplaceVariables } from '@/utils/value';
 import { sleep } from '@/utils/misc';
 
@@ -153,6 +153,14 @@ describe('replaceVariables', () => {
     expect(replaceVariables('', { test: 1 })).toBe('');
     expect(replaceVariables('${test}abc${test}${test}xyz', { test: 1 })).toBe('1abc11xyz');
     expect(replaceVariables('${test1}abc${test}${test2}', { test1: 1, test2: undefined })).toBe('1abc${test}');
+  });
+});
+
+describe('katakana', () => {
+  it('should covert half to full', () => {
+    expect(katakana('')).toBe('');
+    expect(katakana('ｱｲｳｴｵ')).toBe('アイウエオ');
+    expect(katakana('ｱｲ　ウエオ')).toBe('アイ　ウエオ');
   });
 });
 

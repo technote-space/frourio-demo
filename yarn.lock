@@ -1515,6 +1515,13 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@technote-space/imi-moji-converter@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@technote-space/imi-moji-converter/-/imi-moji-converter-0.1.0.tgz#2c8bb16338268fc1132d5a99af8f26e5427a47fb"
+  integrity sha512-mlcfolFNQQyHyZ4AYFWAk4ChzOrHnCoDN5lnABj+tPepOp8bC2x9A6fg7Mu4fDP8KnH4uD1yyXf67gWCwMwHnQ==
+  dependencies:
+    moji "^0.5.1"
+
 "@technote-space/material-table@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@technote-space/material-table/-/material-table-2.3.0.tgz#c7c3698b270dbb41c8d61ea398c75195236fdc3f"
@@ -6827,6 +6834,13 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.5"
 
+moji@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/moji/-/moji-0.5.1.tgz#088eecd1c22c8f31a240adcf9c95e54f33eb54fb"
+  integrity sha1-CI7s0cIsjzGiQK3PnJXlTzPrVPs=
+  dependencies:
+    object-assign "^3.0.0"
+
 moment@^2.10.2, moment@^2.19.3:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
@@ -7206,6 +7220,11 @@ oauth-sign@~0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
+
+object-assign@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-3.0.0.tgz#9bedd5ca0897949bca47e7ff408062d549f587f2"
+  integrity sha1-m+3VygiXlJvKR+f/QIBi1Un1h/I=
 
 object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"

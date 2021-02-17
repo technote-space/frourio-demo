@@ -6,7 +6,9 @@
   "scripts": {
     "update": "npx npm-check-updates -u --timeout 100000"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@technote-space/imi-moji-converter": "^0.1.0"
+  },
   "devDependencies": {
     "@types/react": "^17.0.2",
     "axios": "^0.21.1",
