@@ -18,7 +18,6 @@ import { logout, setError, onRefreshToken } from '~/utils/actions';
 const apiClient = api(aspida());
 export const client = {
   ...apiClient.admin,
-  login: apiClient.login.admin,
 };
 
 export const handleAuthError = async <B, API extends ApiType<B>, F extends FallbackType<API>>(

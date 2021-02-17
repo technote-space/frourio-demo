@@ -9,7 +9,6 @@ import { logout, setError, onRefreshToken } from '^/utils/actions';
 const apiClient = api(aspida());
 export const client = {
   ...apiClient.front,
-  login: apiClient.login.front,
   stripe: apiClient.stripe,
 };
 

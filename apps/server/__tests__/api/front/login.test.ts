@@ -1,8 +1,8 @@
-import controller from '$/api/login/front/controller';
+import controller from '$/api/front/login/controller';
 import { verifyCode } from '$/service/auth0';
 import { getGuests, createGuest, updateGuest, deleteGuests } from '$/repositories/guest';
 import { getFastify, getPromiseLikeItem } from '$/__tests__/utils';
-import { login } from '$/domains/login/front';
+import { login } from '$/domains/front/login';
 
 describe('login', () => {
   it('should return status 401 if failed to verify code', async() => {
