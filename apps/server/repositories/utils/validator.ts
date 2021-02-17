@@ -121,7 +121,7 @@ export function IsOptionalWhenUpdate(validationOptions?: ValidationOptions) {
 class IsReservableConstraint implements ValidatorConstraintInterface {
   private reason?: string;
 
-  private validateProperty(data: any) {
+  private validateProperty(notCheckGuest: boolean, data: any) {
     if (!('roomId' in data) || typeof data['roomId'] !== 'number') {
       this.reason = '部屋が選択されていません';
       return false;
@@ -177,7 +177,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     const data = args.object as any;
     const notCheckGuest = !!args.constraints[0];
-    if (!this.validateProperty(data)) {
+    if (!this.validateProperty(notCheckGuest, data)) {
       return false;
     }
 
