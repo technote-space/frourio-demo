@@ -19,7 +19,7 @@ export type { RoomKey };
 
 export const getRoomKey = depend(
   { prisma: prisma as { roomKey: { findFirst: typeof prisma.roomKey.findFirst } } },
-  async({ prisma }, reservationId: number, args?: FindRoomKeyArgs): Promise<RoomKey | null> => await prisma.roomKey.findFirst({
+  async({ prisma }, reservationId: number, args?: FindRoomKeyArgs): Promise<RoomKey | null> => prisma.roomKey.findFirst({
     ...args,
     where: {
       reservationId,
