@@ -56,7 +56,7 @@
     "license:check:front": "npx license-checker --excludePrivatePackages --production --start apps/front --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
     "license:check:lock": "npx license-checker --excludePrivatePackages --production --start apps/lock --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
     "license:check:server": "npx license-checker --excludePrivatePackages --production --start apps/server --onlyAllow 'MIT; Apache-2.0; Apache 2.0; ISC; BSD-3-Clause; BSD-2-Clause; 0BSD; CC-BY-4.0; CC0-1.0; MPL-2.0;'",
-    "license:generate": "run-p license:generate:*",
+    "license:generate": "run-s license:generate:*",
     "license:generate:admin": "npx license-checker --excludePrivatePackages --production --start apps/admin --json --customPath license-format.json > apps/admin/license.json",
     "license:generate:front": "npx license-checker --excludePrivatePackages --production --start apps/front --json --customPath license-format.json > apps/front/license.json",
     "license:generate:lock": "npx license-checker --excludePrivatePackages --production --start apps/lock --json --customPath license-format.json > apps/lock/license.json",
