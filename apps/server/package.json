@@ -42,7 +42,7 @@
     "fastify-helmet": "^5.2.0",
     "fastify-jwt": "^2.3.0",
     "fastify-multipart": "^4.0.0",
-    "fastify-static": "^3.4.0",
+    "fastify-static": "^4.0.0",
     "html-to-text": "^7.0.0",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.1",
