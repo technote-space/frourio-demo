@@ -33,6 +33,8 @@
 
 ## 管理画面
 
+`apps/admin`
+
 ![admin](https://raw.githubusercontent.com/technote-space/frourio-demo/images/admin.gif)
 
 1. セットアップ
@@ -53,6 +55,8 @@
 ブラウザで [http://localhost:3000](http://localhost:3000) にアクセス
 
 ## フロント
+
+`apps/front`
 
 ![front](https://raw.githubusercontent.com/technote-space/frourio-demo/images/front.gif)
 
@@ -97,6 +101,9 @@ Windowsは対応していません。
 1. mkcert で証明書を作成
 
 ## 部屋鍵
+
+`apps/lock`
+
 予約当日の１２時に入室用の情報がメール送信されます。  
 QRコード または テンキーの入力でチェックインが完了します。
 
@@ -118,6 +125,12 @@ QRコード または テンキーの入力でチェックインが完了しま�
    ```
 
 ブラウザで [http://localhost:3002](http://localhost:3002) にアクセス
+
+## APIサーバ
+
+`apps/server`
+
+管理画面やフロントで共有
 
 ## Demo
 
@@ -183,6 +196,52 @@ https://technote-space.github.io/frourio-demo/
     * [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0-beta.4/) に基づく次のバージョンの決定自動化 [Release Type Action](https://github.com/technote-space/release-type-action), [Get Next Version Action](https://github.com/technote-space/get-next-version-action)
     * package.json のバージョン更新自動化 [Package Version Check Action](https://github.com/technote-space/package-version-check-action)
     * リリースタグ付与自動化 [actions/github-script](https://github.com/actions/github-script)
+
+## 開発者向け
+
+### Linter
+
+```shell
+yarn lint
+```
+
+#### Fixer
+
+```shell
+yarn lint:fix
+```
+
+### ライセンスチェック
+
+```shell
+yarn license:check
+```
+
+### テスト
+
+#### 全部
+
+```shell
+yarn cover
+```
+
+#### サーバのみ
+
+```shell
+yarn cover:server
+```
+
+#### 管理画面のみ
+
+```shell
+yarn cover:admin
+```
+
+#### 共有ライブラリのみ
+
+```shell
+yarn cover:shared
+```
 
 ## Author
 
