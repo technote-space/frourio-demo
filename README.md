@@ -20,11 +20,15 @@
 <span>|</span>
 <a href="#%E9%83%A8%E5%B1%8B%E9%8D%B5">部屋鍵</a>
 <span>|</span>
+<a href="#api%E3%82%B5%E3%83%BC%E3%83%90">APIサーバ</a>
+<span>|</span>
 <a href="#demo">Demo</a>
 <span>|</span>
 <a href="#%E8%A6%81%E4%BB%B6">要件</a>
 <span>|</span>
 <a href="#%E6%A7%8B%E6%88%90">構成</a>
+<span>|</span>
+<a href="#%E9%96%8B%E7%99%BA%E8%80%85%E5%90%91%E3%81%91">開発者向け</a>
 <span>|</span>
 <a href="#author">Author</a>
 </p>
