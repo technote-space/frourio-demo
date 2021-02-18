@@ -5,11 +5,12 @@ import { memo, useState, useCallback, useEffect } from 'react';
 import { Box, Input, Heading, Checkbox, Center, Button } from '@chakra-ui/react';
 import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { startWithUppercase } from '@frourio-demo/utils/string';
-import { useStoreContext } from '^/store';
+import { useStoreContext, useDispatchContext } from '^/store';
 import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '^/hooks/useUnmountRef';
 import { client, processValidationError } from '^/utils/api';
 import { getAddress } from '^/utils/zipCode';
+import { setError } from '^/utils/actions';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 
@@ -32,6 +33,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
   const unmountRef = useUnmountRef();
   const { guest } = useStoreContext();
   const [auth] = useAuthToken();
+  const { dispatch } = useDispatchContext();
   const [isConfirming, setIsConfirming] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const handleClickConfirm = useCallback(async() => {
@@ -80,6 +82,12 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
       props.onChangeUpdateInfo();
     }
   }, [hasEmptyField, reservation.updateInfo]);
+  useEffect(() => {
+    const keys = ACCOUNT_FIELDS.map(field => getGuestKey(field.name));
+    Object.keys(validationErrors).filter(key => !keys.includes(key)).forEach(key => {
+      setError(dispatch, validationErrors[key]);
+    });
+  }, [validationErrors]);
 
   return <Box
     shadow="md"
