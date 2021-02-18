@@ -8,8 +8,7 @@ export const sendError = async(error: Error) => send({
   'icon_emoji': 'no_entry',
   attachments: [{
     color: 'danger',
-    pretext: error.name,
-    text: error.stack?.split('\n').map(line => `> ${line}`).join('\n'),
+    text: error.stack,
   }],
 });
 

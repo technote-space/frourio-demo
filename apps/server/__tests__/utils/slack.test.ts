@@ -17,7 +17,6 @@ describe('sendError', () => {
       'icon_emoji': 'no_entry',
       attachments: [{
         color: 'danger',
-        pretext: 'Error',
         text: expect.any(String),
       }],
     });
