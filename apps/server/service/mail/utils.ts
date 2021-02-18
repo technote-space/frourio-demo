@@ -43,8 +43,6 @@ export const getTemplateVariables = () => ({
 export const getCommonVariables = () => ({
   'logo_url': `${FRONT_URL}/favicon.png`,
   'top_link': `${FRONT_URL}`,
-  'terms_link': `${FRONT_URL}/terms`,
-  'privacy_link': `${FRONT_URL}/privacy`,
   'contact_link': `${FRONT_URL}/contact`,
 });
 
