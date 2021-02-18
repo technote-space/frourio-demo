@@ -5,4 +5,5 @@ jest.mock('bunyan', () => ({
     info: jest.fn(),
   }),
 }));
+jest.mock('@slack/webhook');
 export {};

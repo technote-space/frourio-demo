@@ -20,11 +20,15 @@
 <span>|</span>
 <a href="#%E9%83%A8%E5%B1%8B%E9%8D%B5">部屋鍵</a>
 <span>|</span>
+<a href="#api%E3%82%B5%E3%83%BC%E3%83%90">APIサーバ</a>
+<span>|</span>
 <a href="#demo">Demo</a>
 <span>|</span>
 <a href="#%E8%A6%81%E4%BB%B6">要件</a>
 <span>|</span>
 <a href="#%E6%A7%8B%E6%88%90">構成</a>
+<span>|</span>
+<a href="#%E9%96%8B%E7%99%BA%E8%80%85%E5%90%91%E3%81%91">開発者向け</a>
 <span>|</span>
 <a href="#author">Author</a>
 </p>
@@ -32,6 +36,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 管理画面
+
+`apps/admin`
 
 ![admin](https://raw.githubusercontent.com/technote-space/frourio-demo/images/admin.gif)
 
@@ -53,6 +59,8 @@
 ブラウザで [http://localhost:3000](http://localhost:3000) にアクセス
 
 ## フロント
+
+`apps/front`
 
 ![front](https://raw.githubusercontent.com/technote-space/frourio-demo/images/front.gif)
 
@@ -97,6 +105,9 @@ Windowsは対応していません。
 1. mkcert で証明書を作成
 
 ## 部屋鍵
+
+`apps/lock`
+
 予約当日の１２時に入室用の情報がメール送信されます。  
 QRコード または テンキーの入力でチェックインが完了します。
 
@@ -118,6 +129,12 @@ QRコード または テンキーの入力でチェックインが完了しま�
    ```
 
 ブラウザで [http://localhost:3002](http://localhost:3002) にアクセス
+
+## APIサーバ
+
+`apps/server`
+
+管理画面やフロントで共有
 
 ## Demo
 
@@ -183,6 +200,52 @@ https://technote-space.github.io/frourio-demo/
     * [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0-beta.4/) に基づく次のバージョンの決定自動化 [Release Type Action](https://github.com/technote-space/release-type-action), [Get Next Version Action](https://github.com/technote-space/get-next-version-action)
     * package.json のバージョン更新自動化 [Package Version Check Action](https://github.com/technote-space/package-version-check-action)
     * リリースタグ付与自動化 [actions/github-script](https://github.com/actions/github-script)
+
+## 開発者向け
+
+### Linter
+
+```shell
+yarn lint
+```
+
+#### Fixer
+
+```shell
+yarn lint:fix
+```
+
+### ライセンスチェック
+
+```shell
+yarn license:check
+```
+
+### テスト
+
+#### 全部
+
+```shell
+yarn cover
+```
+
+#### サーバのみ
+
+```shell
+yarn cover:server
+```
+
+#### 管理画面のみ
+
+```shell
+yarn cover:admin
+```
+
+#### 共有ライブラリのみ
+
+```shell
+yarn cover:shared
+```
 
 ## Author
 

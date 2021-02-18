@@ -1,7 +1,7 @@
 import { schedule } from 'node-cron';
 import { sendRoomKey } from '$/domains/front/reservation';
 import { checkoutReservations } from '$/domains/stripe';
-import { logger } from '$/service/logging';
+import { logger } from '$/utils/logging';
 
 export const setup = () => {
   schedule('0 12 * * *', () => {

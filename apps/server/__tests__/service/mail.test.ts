@@ -89,7 +89,7 @@ describe('sendHtmlMail', () => {
     await sendHtmlMail(
       'to@example.com',
       'test subject',
-      '${logo_url}::${top_link}::${terms_link}::${privacy_link}::${contact_link}::${head}::${header}::${footer}',
+      '${logo_url}::${top_link}::${contact_link}::${head}::${header}::${footer}',
     );
     expect(spyOn).toBeCalledTimes(1);
     expect(mockSend).toBeCalledWith({
@@ -108,8 +108,45 @@ describe('sendHtmlMail', () => {
         to: 'to@example.com',
         bcc: [],
         subject: '【Frourioの宿】test subject',
-        html: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
-        text: 'http://example.com/favicon.png::http://example.com::http://example.com/terms::http://example.com/privacy::http://example.com/contact::Head::Header::Footer',
+        html: 'http://example.com/favicon.png::http://example.com::http://example.com/contact::Head::Header::Footer',
+        text: 'http://example.com/favicon.png::http://example.com::http://example.com/contact::Head::Header::Footer',
+      },
+    });
+  });
+
+  it('should call sendMail method', async() => {
+    Object.defineProperty(env, 'SMTP_FROM', { value: 'from@example.com' });
+    Object.defineProperty(env, 'FRONT_URL', { value: 'http://example.com' });
+    const mockSend = jest.fn();
+    const spyOn = jest.spyOn(childProcess, 'fork').mockImplementation(() => ({
+      send: mockSend,
+    }) as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    await sendHtmlMail(
+      'to@example.com',
+      'test subject',
+      '${logo_url}::${top_link}::${contact_link}::${head}::${header}::${footer}::${test1}::${test2}::${test3}::${test4}',
+      { test1: 1, test2: 'test2', test3: '<script>console.log(1)</script>', test4: undefined },
+    );
+    expect(spyOn).toBeCalledTimes(1);
+    expect(mockSend).toBeCalledWith({
+      options: {
+        host: 'example.com',
+        port: 25,
+        secure: false,
+        auth: {
+          user: 'user',
+          pass: 'pass',
+        },
+        tls: { rejectUnauthorized: false },
+      },
+      settings: {
+        from: 'from@example.com',
+        to: 'to@example.com',
+        bcc: [],
+        subject: '【Frourioの宿】test subject',
+        html: 'http://example.com/favicon.png::http://example.com::http://example.com/contact::Head::Header::Footer::1::test2::::',
+        text: 'http://example.com/favicon.png::http://example.com::http://example.com/contact::Head::Header::Footer::1::test2::::',
       },
     });
   });

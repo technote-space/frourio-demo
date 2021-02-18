@@ -2,6 +2,7 @@ import type { MailOptions, MailSettings, MailAddress } from '$/types';
 import type { Primitive } from '@frourio-demo/types';
 import { htmlToText } from 'html-to-text';
 import { fork } from 'child_process';
+import sanitizeHtml from 'sanitize-html';
 import { FRONT_URL, SMTP_BCC, SMTP_FROM, SMTP_HOST, SMTP_PASS, SMTP_PORT, SMTP_SECURE, SMTP_USER } from '$/utils/env';
 import { replaceVariables } from '@frourio-demo/utils/string';
 import HeadTemplate from './templates/Head.html';
@@ -42,8 +43,6 @@ export const getTemplateVariables = () => ({
 export const getCommonVariables = () => ({
   'logo_url': `${FRONT_URL}/favicon.png`,
   'top_link': `${FRONT_URL}`,
-  'terms_link': `${FRONT_URL}/terms`,
-  'privacy_link': `${FRONT_URL}/privacy`,
   'contact_link': `${FRONT_URL}/contact`,
 });
 
@@ -62,6 +61,9 @@ export const sendHtmlMail = async(to: MailAddress, subject: string, template: st
   subject: `【Frourioの宿】${subject}`,
   html: replaceVariables(replaceVariables(template, getTemplateVariables()), {
     ...getCommonVariables(),
-    ...variables,
+    ...Object.fromEntries(Object.entries(variables ?? {}).map(([key, value]) => [key, typeof value === 'string' ? sanitizeHtml(value, {
+      allowedTags: [],
+      allowedAttributes: {},
+    }) : value])),
   }),
 }));

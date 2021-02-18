@@ -10,7 +10,7 @@
     "kill": "lsof -i:$npm_package_port -t | xargs kill -9",
     "setup": "yarn install --prefer-offline --network-timeout 1000000",
     "start": "yarn kill && next start -p $npm_package_port",
-    "update": "npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
+    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
   },
   "dependencies": {
     "@aspida/axios": "^1.5.0",

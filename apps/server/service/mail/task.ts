@@ -1,6 +1,6 @@
 import type { MailAddress, MailOptions, MailSettings } from '$/types';
 import { createTransport } from 'nodemailer';
-import { logger } from '$/service/logging';
+import { logger } from '$/utils/logging';
 
 const isTestAddress = (to: MailAddress): boolean => {
   if (Array.isArray(to)) {

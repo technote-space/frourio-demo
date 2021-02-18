@@ -1,18 +1,18 @@
 import type { FC } from 'react';
-import type { ReservationData } from './index';
+import type { ReservationData } from '../index';
 import type { StripeElementChangeEvent } from '@stripe/stripe-js';
-import { memo, useState, useEffect, useMemo, useCallback } from 'react';
-import { Box, Button, Center, Heading, Radio, RadioGroup, Stack } from '@chakra-ui/react';
-import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
-import { useColorModeValue } from '@chakra-ui/react';
-import { CardCvcElement, CardExpiryElement, CardNumberElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { memo, useState, useEffect, useCallback } from 'react';
+import { Box, Button, Center, Heading } from '@chakra-ui/react';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
 import useAuthToken from '^/hooks/useAuthToken';
 import { client } from '^/utils/api';
 import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { setError } from '^/utils/actions';
+import NewCard from './NewCard';
+import SelectCard from './SelectCard';
 
-type StripeError = {
+export type StripeError = {
   type: 'validation_error';
   code: string;
   message: string;
@@ -49,28 +49,10 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
   const isDisabledConfirm =
     (isCreateNewCard && (!!cardNumberError || !!cardExpiryError || !!cardCvcError)) ||
     (!isCreateNewCard && !reservation.paymentMethodsId);
-  const stripeIconColor = useColorModeValue('#336', '#c4f0ff');
-  const stripeColor = useColorModeValue('#000', '#fff');
-  const cardOptions = useMemo(() => ({
-    style: {
-      base: {
-        iconColor: stripeIconColor,
-        color: stripeColor,
-        fontWeight: '500',
-        '::placeholder': {
-          color: '#87BBFD',
-        },
-      },
-      invalid: {
-        iconColor: '#FFC7EE',
-        color: '#FFC7EE',
-      },
-    },
-  }), [stripeIconColor, stripeColor]);
 
   const getPaymentMethodId = async() => {
     if (createNewCard || !reservation.paymentMethodsId) {
-      const card = elements?.getElement(CardNumberElement);
+      const card = elements?.getElement('cardNumber');
       if (!card) {
         throw new Error('Stripeは使用できません。時間をおいてから再度お試しください。');
       }
@@ -107,7 +89,6 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
     setCreateNewCard(!createNewCard);
   }, [createNewCard]);
 
-  const getCardText = method => `${method.card.brand} ****-****-****-${method.card.last4} ${`0${method.card.exp_month}`.slice(-2)}/${String(method.card.exp_year).substring(2, 4)}`;
   const changeCardInfo = (id: string) => (event: StripeElementChangeEvent) => {
     const setters = {
       'cardNumber': setCardNumberError,
@@ -128,63 +109,6 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
     }
   }, [defaultPayment.data]);
 
-  const createNewCardView = <Box
-    display={isCreateNewCard ? 'block' : 'none'}
-  >
-    <FormControl
-      id='card-number'
-      isRequired
-      isInvalid={typeof cardNumberError === 'object'}
-      isDisabled={isSending}
-    >
-      <FormLabel htmlFor='card-number'>クレジットカード番号</FormLabel>
-      <Box p={2} my={2} borderRadius="0.375rem" borderWidth={1} borderStyle="solid" borderColor="inherit" height="2.5rem">
-        <CardNumberElement onChange={changeCardInfo('cardNumber')} options={cardOptions} />
-      </Box>
-      <FormErrorMessage mb={2}>{typeof cardNumberError === 'object' && cardNumberError.message}</FormErrorMessage>
-    </FormControl>
-    <FormControl
-      id='card-expiry'
-      isRequired
-      isInvalid={typeof cardExpiryError === 'object'}
-      isDisabled={isSending}
-    >
-      <FormLabel htmlFor='card-expiry'>有効期限（XX月/XX年）</FormLabel>
-      <Box p={2} my={2} borderRadius="0.375rem" borderWidth={1} borderStyle="solid" borderColor="inherit" height="2.5rem">
-        <CardExpiryElement onChange={changeCardInfo('cardExpiry')} options={cardOptions} />
-      </Box>
-      <FormErrorMessage mb={2}>{typeof cardExpiryError === 'object' && cardExpiryError.message}</FormErrorMessage>
-    </FormControl>
-    <FormControl
-      id='card-cvc'
-      isRequired
-      isInvalid={typeof cardCvcError === 'object'}
-      isDisabled={isSending}
-    >
-      <FormLabel htmlFor='card-cvc'>セキュリティーコード（カード裏面）</FormLabel>
-      <Box p={2} my={2} borderRadius="0.375rem" borderWidth={1} borderStyle="solid" borderColor="inherit" height="2.5rem">
-        <CardCvcElement onChange={changeCardInfo('cardCvc')} options={cardOptions} />
-      </Box>
-      <FormErrorMessage mb={2}>{typeof cardCvcError === 'object' && cardCvcError.message}</FormErrorMessage>
-    </FormControl>
-  </Box>;
-  const selectCardView = isValidPaymentMethods ? <Box
-    display={!isCreateNewCard ? 'block' : 'none'}
-  >
-    <RadioGroup onChange={onChangePaymentMethodsId} value={reservation.paymentMethodsId}>
-      <Stack>
-        {paymentMethods.data!.map(method => <Radio
-          p={1}
-          key={`pm-${method.id}`}
-          value={method.id}
-          disabled={isSending}
-        >
-          {getCardText(method)}
-        </Radio>)}
-      </Stack>
-    </RadioGroup>
-  </Box> : null;
-
   return <Box
     shadow="md"
     p={[1, 2, 4]}
@@ -196,8 +120,22 @@ const Payment: FC<Props> = memo(({ reservation, hidden, onChangePaymentMethodsId
   >
     <Heading as="h4" size="lg">お支払い方法</Heading>
     <Box m={1} p={2} height="100%">
-      {createNewCardView}
-      {selectCardView}
+      <NewCard
+        isCreateNewCard={isCreateNewCard}
+        cardNumberError={cardNumberError}
+        cardExpiryError={cardExpiryError}
+        cardCvcError={cardCvcError}
+        isSending={isSending}
+        changeCardInfo={changeCardInfo}
+      />
+      <SelectCard
+        reservation={reservation}
+        paymentMethods={paymentMethods.data!}
+        isValidPaymentMethods={isValidPaymentMethods}
+        isCreateNewCard={isCreateNewCard}
+        isSending={isSending}
+        onChangePaymentMethodsId={onChangePaymentMethodsId}
+      />
       {isValidPaymentMethods && <Center>
         <Button m={1} mt={3} onClick={handleClickSwitchButton} disabled={isSending}>
           {createNewCard ? 'カードを選択' : '新しいカード'}
