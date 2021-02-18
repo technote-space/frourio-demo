@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "update": "npx npm-check-updates -u --timeout 100000"
+    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000"
   },
   "dependencies": {
     "@technote-space/imi-moji-converter": "^0.1.0"
