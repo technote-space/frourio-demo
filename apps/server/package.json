@@ -31,6 +31,7 @@
     "@frourio-demo/types": "*",
     "@frourio-demo/utils": "*",
     "@prisma/client": "^2.17.0",
+    "@slack/webhook": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "bunyan": "^1.8.15",
     "class-validator": "^0.13.1",

@@ -1,7 +1,7 @@
 import type { QrInfo } from '$/types';
 import { randomBytes, randomInt, scryptSync, createCipheriv, createDecipheriv } from 'crypto';
 import { CRYPTO_PASS, CRYPTO_SALT, CRYPTO_ALGO } from '$/utils/env';
-import { logger } from '$/service/logging';
+import { logger } from '$/utils/logging';
 import { ROOM_KEY_DIGITS } from '@frourio-demo/constants';
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.split('');

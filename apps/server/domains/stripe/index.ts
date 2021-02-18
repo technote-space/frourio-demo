@@ -14,7 +14,7 @@ import {
   cancelStripePaymentIntents,
   captureStripePaymentIntents,
 } from '$/repositories/stripe';
-import { logger } from '$/service/logging';
+import { logger } from '$/utils/logging';
 import { sleep } from '@frourio-demo/utils/misc';
 
 export const getDefaultPaymentMethod = depend(
