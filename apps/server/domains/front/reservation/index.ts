@@ -80,7 +80,7 @@ export const getCheckinNotSelectable = depend(
         },
         OR: user ? [
           { roomId },
-          { id: user.id },
+          { guestId: user.id },
         ] : [
           { roomId },
         ],
@@ -138,7 +138,7 @@ export const getCheckoutSelectable = depend(
         },
         OR: user ? [
           { roomId },
-          { id: user.id },
+          { guestId: user.id },
         ] : [
           { roomId },
         ],

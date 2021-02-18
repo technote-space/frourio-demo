@@ -139,7 +139,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
     return true;
   }
 
-  private buildWhere(checkin: Date, checkout: Date, notCheckGuest: boolean, data: any) {
+  private buildWhere(checkin: Date, checkout: Date, data: any) {
     const where = {
       AND: [
         {
@@ -158,7 +158,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
             {
               roomId: Number(data['roomId']),
             },
-            ...(notCheckGuest || !data['guestId'] ? [] : [{
+            ...(!data['guestId'] ? [] : [{
               guestId: Number(data['guestId']),
             }]),
           ],
@@ -189,7 +189,7 @@ class IsReservableConstraint implements ValidatorConstraintInterface {
     }
 
     const reservation = await prisma.reservation.findFirst({
-      where: this.buildWhere(checkin, checkout, notCheckGuest, data),
+      where: this.buildWhere(checkin, checkout, data),
     });
     if (reservation) {
       this.reason = 'この期間はすでに予約されています';
