@@ -2,8 +2,7 @@ import type { FC } from 'react';
 import type { StripeElementChangeEvent } from '@stripe/stripe-js';
 import type { StripeError } from '.';
 import { memo, useMemo } from 'react';
-import { Box } from '@chakra-ui/react';
-import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, FormErrorMessage, Link, Tooltip } from '@chakra-ui/react';
 import { useColorModeValue } from '@chakra-ui/react';
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from '@stripe/react-stripe-js';
 
@@ -46,6 +45,13 @@ const NewCard: FC<Props> = memo(({
   return <Box
     display={isCreateNewCard ? 'block' : 'none'}
   >
+    <Box mb={2} display="inline-block" py={1}>
+      <Tooltip label="例: 4242 4242 4242 4242">
+        <Link href="https://stripe.com/docs/testing#cards" target="_blank" rel="noopener noreferrer">
+          テストカードを利用してください
+        </Link>
+      </Tooltip>
+    </Box>
     <FormControl
       id='card-number'
       isRequired

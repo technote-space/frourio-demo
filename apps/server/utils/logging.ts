@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createLogger } from 'bunyan';
 import { resolve } from 'path';
 import { mkdirSync } from 'fs';
@@ -6,7 +7,7 @@ import { sendError } from '$/utils/slack';
 const dir = resolve(process.cwd(), 'logs');
 mkdirSync(dir, { recursive: true });
 
-const logger = createLogger({
+const bunyanLogger = createLogger({
   name: 'system',
   streams: [{
     type: 'rotating-file',
@@ -17,17 +18,17 @@ const logger = createLogger({
   src: true,
   level: process.env.NODE_ENV === 'development' ? /* istanbul ignore next */ 'debug' : 'info',
 });
-const errorLog = logger.error;
 
 /* istanbul ignore next */
-const _error = (value?: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-  errorLog(value);
-  if (value instanceof Error) {
-    sendError(value);
-  }
-
-  return true;
+const logger = {
+  debug: (...value: [any, ...any[]]) => bunyanLogger.debug(...value),
+  error: (...value: [any, ...any[]]) => {
+    bunyanLogger.error(...value);
+    if (value && value[0] instanceof Error) {
+      sendError(value[0]);
+    }
+  },
+  info: (...value: [any, ...any[]]) => bunyanLogger.info(...value),
 };
-logger.error = _error;
 
 export { logger };

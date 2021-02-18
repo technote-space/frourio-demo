@@ -52,9 +52,13 @@ const Confirm: FC<Props> = memo(({ hidden, reservation, room, nights, onCancel, 
       history.push(`${process.env.BASE_PATH}/reservation/${created.body.code}`);
     } catch (error) {
       if (error.response?.data) {
-        error.response.data.forEach(({ constraints, property }) => {
-          setError(dispatch, Object.values(constraints)[0] as string, property);
-        });
+        if (Array.isArray(error.response.data)) {
+          error.response.data.forEach(({ constraints, property }) => {
+            setError(dispatch, Object.values(constraints)[0] as string, property);
+          });
+        } else {
+          setError(dispatch, error.response.data.message ?? error.message);
+        }
       }
     } finally {
       if (!unmountRef.current) {
