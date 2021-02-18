@@ -21,14 +21,14 @@ const bunyanLogger = createLogger({
 
 /* istanbul ignore next */
 const logger = {
-  debug: (value?: any) => bunyanLogger.debug(value),
-  error: (value?: any) => {
-    bunyanLogger.error(value);
-    if (value instanceof Error) {
-      sendError(value);
+  debug: (...value: [any, ...any[]]) => bunyanLogger.debug(...value),
+  error: (...value: [any, ...any[]]) => {
+    bunyanLogger.error(...value);
+    if (value && value[0] instanceof Error) {
+      sendError(value[0]);
     }
   },
-  info: (value?: any) => bunyanLogger.info(value),
+  info: (...value: [any, ...any[]]) => bunyanLogger.info(...value),
 };
 
 export { logger };
