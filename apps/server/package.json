@@ -55,7 +55,7 @@
     "@technote-space/material-table": "^2.3.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/bunyan": "^1.8.6",
-    "@types/faker": "^5.1.6",
+    "@types/faker": "^5.1.7",
     "@types/html-to-text": "^6.0.0",
     "@types/jest": "^26.0.20",
     "@types/node-cron": "^2.0.3",
