@@ -70,7 +70,7 @@
     "prepare:eslint": "yarn setup:install",
     "prepare:license": "yarn setup:install",
     "prepare:pages": "yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/server build:frourio && aspida && yarn license:generate",
-    "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn license:generate:admin",
+    "prepare:typecheck": "yarn setup:install && yarn setup:config && yarn workspace @frourio-demo/server build:prisma && yarn license:generate:admin",
     "setup": "yarn setup:install && yarn setup:server && yarn setup:admin && yarn setup:lock",
     "setup:admin": "yarn workspace @frourio-demo/admin setup",
     "setup:config": "yarn workspace @frourio-demo/server setup:config",
