@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { reserve } from '$/domains/front/reservation';
+import { container } from 'tsyringe';
+import { ReserveUseCase } from '$/application/usecase/front/reservation/reserve';
 
-export default defineController(({ reserve }), ({ reserve }) => ({
-  post: async({ body, user }) => reserve(body, user),
+export default defineController(() => ({
+  post: async({ body, user }) => container.resolve(ReserveUseCase).execute(body, user),
 }));

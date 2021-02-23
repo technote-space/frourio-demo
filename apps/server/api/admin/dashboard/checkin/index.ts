@@ -1,7 +1,7 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { CheckinReservation } from '$/domains/admin/dashboard';
+import type { CheckinReservation } from '$/application/usecase/admin/dashboard/getCheckin';
 import type { Query, QueryResult } from '@technote-space/material-table';
-import type { Reservation } from '$/repositories/reservation';
+import type { Reservation } from '$/domain/database/reservation';
 import type { CheckinBody, SendRoomKeyBody } from '$/validators';
 
 export type Methods = {

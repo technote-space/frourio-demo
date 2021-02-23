@@ -1,11 +1,11 @@
-import type { RoomWithValidReservation } from '$/domains/lock/rooms';
-import type { Reservation } from '$/repositories/reservation';
+import type { RoomWithValidReservation } from '$/application/usecase/lock/rooms/find';
+import type { Reservation } from '$/domain/database/reservation';
 
 export type Methods = {
   get: {
     resBody: RoomWithValidReservation;
   };
-  delete: {
+  patch: {
     resBody: Reservation;
   }
 }

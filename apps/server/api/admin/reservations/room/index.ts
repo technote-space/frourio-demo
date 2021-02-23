@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { SelectedRoom } from '$/domains/admin/reservations';
+import type { SelectedRoom } from '$/application/usecase/admin/reservations/getSelectedRoom';
 
 export type Methods = {
   get: {

@@ -1,6 +1,10 @@
 import { defineController } from './$relay';
-import { calendar } from '$/domains/front/rooms';
+import { container } from 'tsyringe';
+import { CalendarUseCase } from '$/application/usecase/front/rooms/calendar';
 
-export default defineController(({ calendar }), ({ calendar }) => ({
-  get: async({ params, query: { start, end } }) => calendar(params.roomId, start, end),
+export default defineController(() => ({
+  get: async({
+    params,
+    query: { start, end },
+  }) => container.resolve(CalendarUseCase).execute(params.roomId, start, end),
 }));

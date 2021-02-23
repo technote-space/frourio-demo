@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { validateQr } from '$/domains/lock/rooms';
+import { container } from 'tsyringe';
+import { ValidateQrUseCase } from '$/application/usecase/lock/rooms/validateQr';
 
-export default defineController(({ validateQr }), ({ validateQr }) => ({
-  post: async({ body }) => validateQr(body.roomId, body.data),
+export default defineController(() => ({
+  post: async({ body }) => container.resolve(ValidateQrUseCase).execute(body.roomId, body.data),
 }));

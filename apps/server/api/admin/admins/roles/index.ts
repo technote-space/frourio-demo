@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { ListRole } from '$/domains/admin/admins';
+import type { ListRole } from '$/application/usecase/admin/admins/listRoles';
 
 export type Methods = {
   get: {

@@ -1,6 +1,9 @@
 import { defineController } from './$relay';
-import { getStatusCalendarEvents } from '$/domains/admin/rooms';
+import { container } from 'tsyringe';
+import { GetStatusCalendarEventsUseCase } from '$/application/usecase/admin/rooms/getStatusCalendarEvents';
 
-export default defineController(({ getStatusCalendarEvents }), ({ getStatusCalendarEvents }) => ({
-  get: async({ query: { roomId, start, end } }) => getStatusCalendarEvents(roomId, start, end),
+export default defineController(() => ({
+  get: async({
+    query: { roomId, start, end },
+  }) => container.resolve(GetStatusCalendarEventsUseCase).execute(roomId, start, end),
 }));

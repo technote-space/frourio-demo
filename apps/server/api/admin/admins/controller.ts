@@ -1,8 +1,9 @@
 import { defineController } from './$relay';
-import { list, create } from '$/domains/admin/admins';
-import { processBody } from '$/domains/admin/admins/utils';
+import { container } from 'tsyringe';
+import { ListAdminsUseCase } from '$/application/usecase/admin/admins/list';
+import { CreateAdminUseCase } from '$/application/usecase/admin/admins/create';
 
-export default defineController(({ list, create }), ({ list, create }) => ({
-  get: async({ query }) => list(query),
-  post: async({ body }) => create(await processBody(body)),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(ListAdminsUseCase).execute(query),
+  post: async({ body }) => container.resolve(CreateAdminUseCase).execute(body),
 }));

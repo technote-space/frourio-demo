@@ -1,9 +1,11 @@
+import 'reflect-metadata';
+import '$/config/registry';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { promises, existsSync } from 'fs';
 import server from './server';
 import { setup } from './cron';
-import { SERVER_PORT, SERVER_ADDRESS } from '$/utils/env';
+import { SERVER_PORT, SERVER_ADDRESS } from '$/config/env';
 
 (async() => {
   if (process.platform !== 'win32') {

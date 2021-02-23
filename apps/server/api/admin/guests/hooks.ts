@@ -1,5 +1,5 @@
 import { defineHooks } from './$relay';
-import { verifyAdmin } from '$/service/auth';
+import { verifyAdmin } from '$/application/service/auth';
 
 export default defineHooks(() => ({
   onRequest: async(request, reply) => {

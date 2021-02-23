@@ -1,4 +1,4 @@
-import { Reservation } from '$/repositories/reservation';
+import type { Reservation } from '$/domain/database/reservation';
 
 export type Methods = {
   patch: {

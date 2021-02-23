@@ -1,1 +1,1 @@
-export * from '$/domains/validators';
+export * from '$/application/usecase/validators';

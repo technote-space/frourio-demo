@@ -1,8 +1,11 @@
 import { defineController } from './$relay';
-import { getCheckin, checkin, sendRoomKey } from '$/domains/admin/dashboard';
+import { container } from 'tsyringe';
+import { CheckinUseCase } from '$/application/usecase/admin/dashboard/checkin';
+import { GetCheckinUseCase } from '$/application/usecase/admin/dashboard/getCheckin';
+import { SendRoomKeyUseCase } from '$/application/usecase/admin/dashboard/sendRoomKey';
 
-export default defineController(({ getCheckin, checkin, sendRoomKey }), ({ getCheckin, checkin, sendRoomKey }) => ({
-  get: async({ query }) => getCheckin(query.query, query.date),
-  patch: async({ body }) => checkin(body.id),
-  post: async({ body }) => sendRoomKey(body.id),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(GetCheckinUseCase).execute(query.query, query.date),
+  patch: async({ body }) => container.resolve(CheckinUseCase).execute(body.id),
+  post: async({ body }) => container.resolve(SendRoomKeyUseCase).execute(body.id),
 }));

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { ReservationData } from '../index';
-import type { Room } from '$/repositories/room';
+import type { Room } from '$/domain/database/room';
 import { memo } from 'react';
 import { Box, Heading, Select } from '@chakra-ui/react';
 

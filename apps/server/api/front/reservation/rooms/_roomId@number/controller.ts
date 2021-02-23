@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { getRoomInfo } from '$/domains/front/reservation';
+import { container } from 'tsyringe';
+import { GetRoomInfoUseCase } from '$/application/usecase/front/reservation/getRoomInfo';
 
-export default defineController(({ getRoomInfo }), ({ getRoomInfo }) => ({
-  get: async({ params }) => getRoomInfo(params.roomId),
+export default defineController(() => ({
+  get: async({ params }) => container.resolve(GetRoomInfoUseCase).execute(params.roomId),
 }));

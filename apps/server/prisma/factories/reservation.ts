@@ -1,11 +1,15 @@
-import type { Room } from '$/prisma/client';
+/* istanbul ignore file */
+
+import type { Room, Guest } from '$/prisma/client';
 import type { ReservationStatus } from '@frourio-demo/types';
 import { isBefore } from 'date-fns';
-import { generateCode } from '$/utils/reservation';
+import { generateCode } from '$/infra/database/service';
 import { define } from '../tools/define';
 
 define('reservation', ((faker, params) => {
-  const number = faker.random.number({ min: 1, max: (params[0] as Room).number });
+  const room = params[0] as Room;
+  const guest = params[1] as Guest;
+  const number = faker.random.number({ min: 1, max: room.number });
   const checkin = faker.date.between(faker.date.past(2), faker.date.future(2));
   checkin.setHours(15, 0, 0, 0);
   const nights = faker.random.number({ min: 1, max: 7 });
@@ -13,7 +17,7 @@ define('reservation', ((faker, params) => {
   checkout.setDate(checkin.getDate() + nights);
   checkout.setHours(10, 0, 0, 0);
 
-  const amount = (params[0] as Room).price * number * nights;
+  const amount = room.price * number * nights;
   let status: ReservationStatus;
   let payment: number | undefined;
   const now = new Date();
@@ -38,5 +42,22 @@ define('reservation', ((faker, params) => {
     number,
     amount,
     payment,
+    guestEmail: guest.email ?? '',
+    guestName: guest.name ?? '',
+    guestNameKana: guest.nameKana ?? '',
+    guestZipCode: guest.zipCode ?? '',
+    guestAddress: guest.address ?? '',
+    guestPhone: guest.phone ?? '',
+    roomName: room.name,
+    room: {
+      connect: {
+        id: room.id,
+      },
+    },
+    guest: guest ? {
+      connect: {
+        id: guest.id,
+      },
+    } : undefined,
   };
 }));

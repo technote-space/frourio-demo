@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { MonthlySales } from '$/domains/admin/dashboard/types';
+import type { MonthlySales } from '$/application/usecase/admin/dashboard/types';
 
 export type Methods = {
   get: {

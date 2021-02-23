@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { listRoles } from '$/domains/admin/admins';
+import { container } from 'tsyringe';
+import { ListRolesUseCase } from '$/application/usecase/admin/admins/listRoles';
 
-export default defineController(({ listRoles }), ({ listRoles }) => ({
-  get: async() => listRoles(),
+export default defineController(() => ({
+  get: async() => container.resolve(ListRolesUseCase).execute(),
 }));

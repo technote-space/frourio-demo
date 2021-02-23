@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import { Reservation } from '$/repositories/reservation';
+import type { Reservation } from '$/domain/database/reservation';
 import { CancelBody } from '$/validators';
 
 export type Methods = {
