@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { validate } from '$/domains/front/reservation';
+import { container } from 'tsyringe';
+import { ValidateUseCase } from '$/application/usecase/front/reservation/validate';
 
-export default defineController(({ validate }), ({ validate }) => ({
-  post: () => validate(),
+export default defineController(() => ({
+  post: () => container.resolve(ValidateUseCase).execute(),
 }));

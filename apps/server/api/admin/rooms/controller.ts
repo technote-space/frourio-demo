@@ -1,7 +1,9 @@
 import { defineController } from './$relay';
-import { list, create } from '$/domains/admin/rooms';
+import { container } from 'tsyringe';
+import { ListRoomsUseCase } from '$/application/usecase/admin/rooms/list';
+import { CreateRoomUseCase } from '$/application/usecase/admin/rooms/create';
 
-export default defineController(({ list, create }), ({ list, create }) => ({
-  get: async({ query }) => list(query),
-  post: async({ body }) => create(body),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(ListRoomsUseCase).execute(query),
+  post: async({ body }) => container.resolve(CreateRoomUseCase).execute(body),
 }));

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { define } from '../tools/define';
 
 define('admin', (faker => ({

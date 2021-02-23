@@ -1,7 +1,7 @@
 import { sendError, sendOk } from '$/utils/slack';
 import { getPromiseLikeItem } from '$/__tests__/utils';
 import { IncomingWebhook } from '@slack/webhook';
-import * as env from '$/utils/env';
+import * as env from '$/config/env';
 
 const IncomingWebhookMock = IncomingWebhook as jest.Mock;
 

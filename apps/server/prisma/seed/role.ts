@@ -1,6 +1,6 @@
 import type { PrismaClient } from '$/prisma/client';
 import { Seeder } from '../tools/seeder';
-import { getRolesValue } from '$/service/auth';
+import { getRolesValue } from '$/application/service/auth';
 
 export class RoleSeeder extends Seeder {
   constructor(prisma: PrismaClient) {

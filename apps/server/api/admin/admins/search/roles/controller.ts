@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { searchRole } from '$/domains/admin/admins';
+import { container } from 'tsyringe';
+import { SearchRoleUseCase } from '$/application/usecase/admin/admins/searchRole';
 
-export default defineController(({ searchRole }), ({ searchRole }) => ({
-  get: async({ query }) => searchRole(query),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(SearchRoleUseCase).execute(query),
 }));

@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { getDefaultPaymentMethod } from '$/domains/stripe';
+import { container } from 'tsyringe';
+import { GetDefaultPaymentMethodUseCase } from '$/application/usecase/stripe/getDefaultPaymentMethod';
 
-export default defineController(({ getDefaultPaymentMethod }), ({ getDefaultPaymentMethod }) => ({
-  get: async({ user }) => getDefaultPaymentMethod(user.id),
+export default defineController(() => ({
+  get: async({ user }) => container.resolve(GetDefaultPaymentMethodUseCase).execute(user.id),
 }));

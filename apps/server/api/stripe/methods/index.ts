@@ -1,10 +1,10 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type Stripe from 'stripe';
+import type { PaymentMethod } from '$/domain/payment';
 
 export type Methods = {
   get: {
     reqHeaders: AuthHeader;
-    resBody: Stripe.PaymentMethod[]
+    resBody: PaymentMethod[]
   };
   put: {
     reqHeaders: AuthHeader;

@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { cancel } from '$/domains/admin/dashboard';
+import { container } from 'tsyringe';
+import { CancelUseCase } from '$/application/usecase/admin/dashboard/cancel';
 
-export default defineController(({ cancel }), ({ cancel }) => ({
-  patch: async({ body }) => cancel(body.id),
+export default defineController(() => ({
+  patch: async({ body }) => container.resolve(CancelUseCase).execute(body.id),
 }));

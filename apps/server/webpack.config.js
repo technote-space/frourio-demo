@@ -6,7 +6,7 @@ const path                = require('path');
 module.exports = {
   entry: {
     index: path.resolve(__dirname, 'index.ts'),
-    'tasks/mail': path.resolve(__dirname, 'service/mail/task.ts'),
+    'tasks/mail': path.resolve(__dirname, 'infra/mail/task.ts'),
   },
   target: 'node',
   node: {

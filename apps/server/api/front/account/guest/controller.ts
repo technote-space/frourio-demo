@@ -1,7 +1,9 @@
 import { defineController } from './$relay';
-import { getGuestInfo, updateGuestInfo } from '$/domains/front/account';
+import { container } from 'tsyringe';
+import { GetGuestInfoUseCase } from '$/application/usecase/front/account/getGuestInfo';
+import { UpdateGuestInfoUseCase } from '$/application/usecase/front/account/updateGuestInfo';
 
-export default defineController(({ getGuestInfo, updateGuestInfo }), ({ getGuestInfo, updateGuestInfo }) => ({
-  get: async({ user }) => getGuestInfo(user),
-  patch: async({ user, body }) => updateGuestInfo(user, body),
+export default defineController(() => ({
+  get: async({ user }) => container.resolve(GetGuestInfoUseCase).execute(user),
+  patch: async({ user, body }) => container.resolve(UpdateGuestInfoUseCase).execute(user, body),
 }));

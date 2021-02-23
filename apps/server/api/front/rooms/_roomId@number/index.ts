@@ -1,7 +1,7 @@
-import type { Room } from '$/repositories/room';
+import type { Room } from '$/domain/database/room';
 
 export type Methods = {
   get: {
-    resBody: Room
+    resBody: Room;
   }
 }

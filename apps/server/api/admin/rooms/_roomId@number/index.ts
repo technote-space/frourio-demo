@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { Room } from '$/repositories/room';
+import type { Room } from '$/domain/database/room';
 import type { RoomBody } from '$/validators';
 
 export type Methods = {

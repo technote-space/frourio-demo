@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { RoomStatusEvent } from '$/domains/admin/rooms';
+import type { RoomStatusEvent } from '$/application/usecase/admin/rooms/getStatusCalendarEvents';
 
 export type Methods = {
   get: {
