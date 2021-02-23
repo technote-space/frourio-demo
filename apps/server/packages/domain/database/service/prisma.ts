@@ -1,1 +1,1 @@
-export * from '$/packages/infra/database/prisma/client'
+export * from '$/packages/infra/database/prisma/client';

@@ -5,7 +5,4 @@ out
 **/server/migration
 **/server/index.js
 **/server/tasks
-**/server/prisma/client
-**/electron/index.js
-**/electron/prisma
-**/electron/dist
+**/server/**/prisma/client
