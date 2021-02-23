@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IMailRepository } from '$/domain/mail';
-import type { Reservation } from '$/domain/database/reservation';
+import type { IMailRepository } from '$/packages/domain/mail';
+import type { Reservation } from '$/packages/domain/database/reservation';
 
 export class TestMailRepository implements IMailRepository {
   public constructor(private mock?: (...args: any[]) => Promise<boolean>) {

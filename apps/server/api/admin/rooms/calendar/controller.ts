@@ -1,6 +1,6 @@
 import { defineController } from './$relay';
 import { container } from 'tsyringe';
-import { GetStatusCalendarEventsUseCase } from '$/application/usecase/admin/rooms/getStatusCalendarEvents';
+import { GetStatusCalendarEventsUseCase } from '$/packages/application/usecase/admin/rooms/getStatusCalendarEvents';
 
 export default defineController(() => ({
   get: async({

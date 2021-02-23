@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { FocusableElement } from '@chakra-ui/utils';
-import type { RoomWithValidReservation } from '$/application/usecase/lock/rooms/find';
+import type { RoomWithValidReservation } from '$/packages/application/usecase/lock/rooms/find';
 import { memo, useCallback, useState, useRef } from 'react';
 import { Box, Button } from '@chakra-ui/react';
 import {

@@ -1,4 +1,4 @@
-import type { IPaymentRepository, PaymentCustomer, PaymentMethod, PaymentIntent } from '$/domain/payment';
+import type { IPaymentRepository, PaymentCustomer, PaymentMethod, PaymentIntent } from '$/packages/domain/payment';
 
 type Options = {
   defaultPaymentMethod?: string | null

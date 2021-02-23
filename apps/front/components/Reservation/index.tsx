@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { CreateReservationBody } from '$/application/usecase/front/reservation/validators';
+import type { CreateReservationBody } from '$/packages/application/usecase/front/reservation/validators';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
 import { loadStripe } from '@stripe/stripe-js';

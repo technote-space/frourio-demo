@@ -1,7 +1,7 @@
 import type { PrismaClient } from '$/prisma/client';
 import bcrypt from 'bcryptjs';
 import { Seeder } from '../tools/seeder';
-import { getRolesValue } from '$/application/service/auth';
+import { getRolesValue } from '$/packages/application/service/auth';
 
 export class AdminSeeder extends Seeder {
   constructor(prisma: PrismaClient) {

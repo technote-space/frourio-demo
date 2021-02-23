@@ -3,7 +3,7 @@
 import type {
   IRoleRepository,
   Role,
-} from '$/domain/database/role';
+} from '$/packages/domain/database/role';
 
 export class TestRoleRepository implements IRoleRepository {
   public constructor(private store: Role[] = []) {

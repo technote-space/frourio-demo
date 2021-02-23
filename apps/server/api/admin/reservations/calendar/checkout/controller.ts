@@ -1,6 +1,6 @@
 import { defineController } from './$relay';
 import { container } from 'tsyringe';
-import { GetCheckoutSelectableUseCase } from '$/application/usecase/admin/reservations/getCheckoutSelectable';
+import { GetCheckoutSelectableUseCase } from '$/packages/application/usecase/admin/reservations/getCheckoutSelectable';
 
 export default defineController(() => ({
   get: async({

@@ -7,10 +7,10 @@ import type {
   FindRoomArgs,
   CreateRoomData,
   UpdateRoomData,
-} from '$/domain/database/room';
-import type { Models, Delegate } from '$/domain/database/service/types';
+} from '$/packages/domain/database/room';
+import type { Models, Delegate } from '$/packages/domain/database/service/types';
 import { getDummyData, filterCreateData, dropObjectData } from './factory';
-import { dropId } from '$/infra/database/service';
+import { dropId } from '$/packages/infra/database/service';
 
 export const getDummyRoomData = (override?: Partial<CreateRoomData>): CreateRoomData => getDummyData('room', override) as CreateRoomData;
 

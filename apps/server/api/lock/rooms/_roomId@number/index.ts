@@ -1,5 +1,5 @@
-import type { RoomWithValidReservation } from '$/application/usecase/lock/rooms/find';
-import type { Reservation } from '$/domain/database/reservation';
+import type { RoomWithValidReservation } from '$/packages/application/usecase/lock/rooms/find';
+import type { Reservation } from '$/packages/domain/database/reservation';
 
 export type Methods = {
   get: {

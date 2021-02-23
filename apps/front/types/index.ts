@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Guest } from '$/domain/database/guest';
+import type { Guest } from '$/packages/domain/database/guest';
 
 export type NoticeType = {
   title: string,

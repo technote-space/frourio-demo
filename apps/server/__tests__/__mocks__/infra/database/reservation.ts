@@ -8,12 +8,12 @@ import type {
   SearchReservationArgs,
   CreateReservationData,
   UpdateReservationData,
-} from '$/domain/database/reservation';
-import type { Room, CreateRoomData } from '$/domain/database/room';
-import type { Guest, CreateGuestData } from '$/domain/database/guest';
-import type { Models, Delegate } from '$/domain/database/service/types';
+} from '$/packages/domain/database/reservation';
+import type { Room, CreateRoomData } from '$/packages/domain/database/room';
+import type { Guest, CreateGuestData } from '$/packages/domain/database/guest';
+import type { Models, Delegate } from '$/packages/domain/database/service/types';
 import { getDummyData, filterCreateData, dropObjectData } from './factory';
-import { dropId } from '$/infra/database/service';
+import { dropId } from '$/packages/infra/database/service';
 
 export const getDummyReservationData = (
   room: CreateRoomData | Room,

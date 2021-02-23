@@ -3,7 +3,7 @@
 import type { Room, Guest } from '$/prisma/client';
 import type { ReservationStatus } from '@frourio-demo/types';
 import { isBefore } from 'date-fns';
-import { generateCode } from '$/infra/database/service';
+import { generateCode } from '$/packages/infra/database/service';
 import { define } from '../tools/define';
 
 define('reservation', ((faker, params) => {

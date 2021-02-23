@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { ReservationData } from '../index';
-import type { PaymentMethod } from '$/domain/payment';
+import type { PaymentMethod } from '$/packages/domain/payment';
 import { memo } from 'react';
 import { Box, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 

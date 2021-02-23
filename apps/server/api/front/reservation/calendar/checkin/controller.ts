@@ -1,6 +1,6 @@
 import { defineController } from './$relay';
 import { container } from 'tsyringe';
-import { GetCheckinNotSelectableUseCase } from '$/application/usecase/front/reservation/getCheckinNotSelectable';
+import { GetCheckinNotSelectableUseCase } from '$/packages/application/usecase/front/reservation/getCheckinNotSelectable';
 
 export default defineController(() => ({
   get: async(

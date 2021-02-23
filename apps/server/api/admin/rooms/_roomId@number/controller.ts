@@ -1,8 +1,8 @@
 import { defineController } from './$relay';
 import { container } from 'tsyringe';
-import { FindRoomUseCase } from '$/application/usecase/admin/rooms/find';
-import { UpdateRoomUseCase } from '$/application/usecase/admin/rooms/update';
-import { DeleteRoomUseCase } from '$/application/usecase/admin/rooms/delete';
+import { FindRoomUseCase } from '$/packages/application/usecase/admin/rooms/find';
+import { UpdateRoomUseCase } from '$/packages/application/usecase/admin/rooms/update';
+import { DeleteRoomUseCase } from '$/packages/application/usecase/admin/rooms/delete';
 
 export default defineController(() => ({
   get: async({ params }) => container.resolve(FindRoomUseCase).execute(params.roomId),

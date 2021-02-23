@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { Guest } from '$/domain/database/guest';
+import type { Guest } from '$/packages/domain/database/guest';
 import type { Query, QueryResult } from '@technote-space/material-table';
 import type { GuestBody } from '$/validators';
 

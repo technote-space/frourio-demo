@@ -5,10 +5,10 @@ import type {
   RoomKey,
   CreateRoomKeyData,
   UpdateRoomKeyData,
-} from '$/domain/database/roomKey';
+} from '$/packages/domain/database/roomKey';
 import type { Reservation } from '$/prisma/client';
 import { set } from 'date-fns';
-import { generateRoomKey, dropId } from '$/infra/database/service';
+import { generateRoomKey, dropId } from '$/packages/infra/database/service';
 import { getDummyData, filterCreateData, dropObjectData } from './factory';
 
 export const getDummyRoomKeyData = (override?: Partial<CreateRoomKeyData>): CreateRoomKeyData => getDummyData('roomKey', override) as CreateRoomKeyData;

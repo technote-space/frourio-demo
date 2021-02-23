@@ -1,6 +1,6 @@
 import { defineHooks } from './$relay';
-import { parseQuery } from '$/application/service/table';
-import { processMultipartFormDataBody } from '$/application/service/multipart';
+import { parseQuery } from '$/packages/application/service/table';
+import { processMultipartFormDataBody } from '$/packages/application/service/multipart';
 
 export default defineHooks(() => ({
   preHandler: (request, reply, done) => {

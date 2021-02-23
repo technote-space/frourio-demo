@@ -1,8 +1,8 @@
-import type { AdminAuthorizationPayload } from '$/application/service/auth';
+import type { AdminAuthorizationPayload } from '$/packages/application/service/auth';
 import { defineHooks } from './$relay';
-import { verifyAdmin } from '$/application/service/auth';
-import { parseQuery } from '$/application/service/table';
-import { processMultipartFormDataBody } from '$/application/service/multipart';
+import { verifyAdmin } from '$/packages/application/service/auth';
+import { parseQuery } from '$/packages/application/service/table';
+import { processMultipartFormDataBody } from '$/packages/application/service/multipart';
 
 export type AdditionalRequest = {
   user: AdminAuthorizationPayload;

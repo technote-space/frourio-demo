@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { CheckinNotSelectableEvent } from '$/application/usecase/front/reservation/getCheckinNotSelectable';
+import type { CheckinNotSelectableEvent } from '$/packages/application/usecase/front/reservation/getCheckinNotSelectable';
 
 export type Methods = {
   get: {

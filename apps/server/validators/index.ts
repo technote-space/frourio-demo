@@ -1,1 +1,1 @@
-export * from '$/application/usecase/validators';
+export * from '$/packages/application/usecase/validators';

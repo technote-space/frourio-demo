@@ -1,6 +1,6 @@
 import { defineController } from './$relay';
 import { container } from 'tsyringe';
-import { CalendarUseCase } from '$/application/usecase/front/rooms/calendar';
+import { CalendarUseCase } from '$/packages/application/usecase/front/rooms/calendar';
 
 export default defineController(() => ({
   get: async({

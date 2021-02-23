@@ -6,10 +6,10 @@ import type {
   Admin,
   CreateAdminData,
   UpdateAdminData,
-} from '$/domain/database/admin';
-import type { Models, Delegate } from '$/domain/database/service/types';
+} from '$/packages/domain/database/admin';
+import type { Models, Delegate } from '$/packages/domain/database/service/types';
 import { getDummyData, filterCreateData, dropObjectData } from './factory';
-import { dropId } from '$/infra/database/service';
+import { dropId } from '$/packages/infra/database/service';
 
 export const getDummyAdminData = (override?: Partial<CreateAdminData>): CreateAdminData => getDummyData('admin', override) as CreateAdminData;
 

@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { PaymentMethod } from '$/domain/payment';
+import type { PaymentMethod } from '$/packages/domain/payment';
 
 export type Methods = {
   get: {
