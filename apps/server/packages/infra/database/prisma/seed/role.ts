@@ -1,4 +1,4 @@
-import type { PrismaClient } from '$/prisma/client';
+import type { PrismaClient } from '../client';
 import { Seeder } from '../tools/seeder';
 import { getRolesValue } from '$/packages/application/service/auth';
 

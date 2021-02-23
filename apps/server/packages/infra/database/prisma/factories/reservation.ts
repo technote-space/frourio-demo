@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import type { Room, Guest } from '$/prisma/client';
+import type { Room, Guest } from '../client';
 import type { ReservationStatus } from '@frourio-demo/types';
 import { isBefore } from 'date-fns';
 import { generateCode } from '$/packages/infra/database/service';

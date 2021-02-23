@@ -1,4 +1,4 @@
-import type { Prisma, Room } from '$/prisma/client';
+import type { Prisma, Room } from '$/packages/domain/database/service/prisma';
 import type { IValidatable } from '$/packages/domain/database/service/validatable';
 
 export type SearchRoomArgs = Prisma.RoomFindManyArgs;

@@ -6,7 +6,7 @@ import type {
   CreateRoomKeyData,
   UpdateRoomKeyData,
 } from '$/packages/domain/database/roomKey';
-import type { Reservation } from '$/prisma/client';
+import type { Reservation } from '$/packages/domain/database/reservation';
 import { set } from 'date-fns';
 import { generateRoomKey, dropId } from '$/packages/infra/database/service';
 import { getDummyData, filterCreateData, dropObjectData } from './factory';

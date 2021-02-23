@@ -6,7 +6,7 @@ import type {
   Role,
   Prisma,
   PrismaClient,
-} from '$/prisma/client';
+} from '../client';
 import { factory, Factory } from './factory';
 
 export abstract class Seeder {

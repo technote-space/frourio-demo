@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
-import type { Prisma, PrismaClient } from '$/prisma/client';
+import type { Prisma, PrismaClient } from '$/packages/domain/database/service/prisma';
 
 export type Models = {
   [key in keyof PrismaClient]: PrismaClient[key] extends {

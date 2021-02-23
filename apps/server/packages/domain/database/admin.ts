@@ -1,4 +1,4 @@
-import type { Prisma, Admin as _Admin } from '$/prisma/client';
+import type { Prisma, Admin as _Admin } from '$/packages/domain/database/service/prisma';
 import type { Role } from '$/packages/domain/database/role';
 import type { IValidatable } from '$/packages/domain/database/service/validatable';
 

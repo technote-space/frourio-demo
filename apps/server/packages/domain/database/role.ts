@@ -1,4 +1,4 @@
-import type { Prisma, Role } from '$/prisma/client';
+import type { Prisma, Role } from '$/packages/domain/database/service/prisma';
 
 export type SearchRoleArgs = Prisma.RoleFindManyArgs;
 export type { Role };

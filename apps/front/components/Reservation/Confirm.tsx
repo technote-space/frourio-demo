@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Room } from '$/prisma/client';
+import type { Room } from '$/packages/domain/database/room';
 import type { ReservationData } from '^/components/Reservation/index';
 import type { CreateReservationBody } from '$/packages/application/usecase/front/reservation/validators';
 import { memo, useCallback, useState } from 'react';

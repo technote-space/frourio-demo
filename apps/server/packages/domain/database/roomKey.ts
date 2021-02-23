@@ -1,4 +1,4 @@
-import type { Prisma, RoomKey } from '$/prisma/client';
+import type { Prisma, RoomKey } from '$/packages/domain/database/service/prisma';
 import type { Reservation } from '$/packages/domain/database/reservation';
 
 export type FindRoomKeyArgs = Prisma.RoomKeyFindFirstArgs;

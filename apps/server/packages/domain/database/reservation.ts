@@ -1,4 +1,4 @@
-import type { Prisma, Reservation } from '$/prisma/client';
+import type { Prisma, Reservation } from '$/packages/domain/database/service/prisma';
 import type { IValidatable } from '$/packages/domain/database/service/validatable';
 
 export type SearchReservationArgs = Prisma.ReservationFindManyArgs;
