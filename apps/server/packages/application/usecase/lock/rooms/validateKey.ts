@@ -3,13 +3,21 @@ import type { IReservationRepository } from '$/packages/domain/database/reservat
 import type { IPaymentRepository } from '$/packages/domain/payment';
 import type { IResponseRepository } from '$/packages/domain/http/response';
 import type { IMailRepository } from '$/packages/domain/mail';
-import type { ValidateRoomKeyResult } from '@frourio-demo/types';
+import type { Reservation } from '$/packages/domain/database/reservation';
 import { singleton, inject } from 'tsyringe';
 import { depend } from 'velona';
 import { toDataURL } from 'qrcode';
 import { getValidReservation, encryptQrInfo } from '$/packages/application/service/reservation';
 import { capturePaymentIntents } from '$/packages/application/usecase/stripe/service';
 import { MAX_TRIALS } from '@frourio-demo/constants';
+
+export type ValidateRoomKeyResult = {
+  result: false;
+  message: string;
+} | {
+  result: true,
+  reservation: Reservation;
+}
 
 @singleton()
 export class ValidateKeyUseCase {
