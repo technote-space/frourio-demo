@@ -1,6 +1,6 @@
 import type { IncomingWebhookSendArguments } from '@slack/webhook';
 import { IncomingWebhook } from '@slack/webhook';
-import { SLACK_WEBHOOK_URL } from '$/utils/env';
+import { SLACK_WEBHOOK_URL } from '$/config/env';
 
 export const sendError = async(error: Error) => send({
   username: 'Slack Bot',

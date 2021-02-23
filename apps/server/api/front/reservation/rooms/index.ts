@@ -1,4 +1,4 @@
-import type { Room } from '$/repositories/room';
+import type { Room } from '$/packages/domain/database/room';
 
 export type Methods = {
   get: {

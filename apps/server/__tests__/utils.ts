@@ -1,7 +1,10 @@
-import Fastify from 'fastify';
-import fastifyJwt from 'fastify-jwt';
+/* istanbul ignore file */
+
 import type { FastifyInstance } from 'fastify';
 import type { SignPayloadType } from 'fastify-jwt';
+import type { Query } from '@technote-space/material-table';
+import Fastify from 'fastify';
+import fastifyJwt from 'fastify-jwt';
 
 export const getFastify = (): FastifyInstance => {
   const fastify = Fastify();
@@ -34,4 +37,41 @@ export const testEnv = (): void => {
   afterEach(() => {
     process.env = OLD_ENV;
   });
+};
+
+type GetQueryOptions = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filters?: Record<string, any>;
+  page?: number;
+  pageSize?: number;
+  totalCount?: number;
+  search?: string;
+  orderBy: string;
+  orderDirection?: 'asc' | 'desc';
+}
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const getQuery = <RowData extends object>({
+  filters,
+  page,
+  pageSize,
+  totalCount,
+  search,
+  orderBy,
+  orderDirection,
+}: GetQueryOptions): Query<RowData> => {
+  return {
+    filters: Object.entries(filters ?? {}).map(([field, value]) => ({
+      column: { field },
+      operator: '=',
+      value,
+    })),
+    page: page ?? 1,
+    pageSize: pageSize ?? 10,
+    totalCount: totalCount ?? 100,
+    search: search ?? 'test',
+    orderBy: {
+      field: orderBy,
+    },
+    orderDirection: orderDirection ?? 'asc',
+  };
 };

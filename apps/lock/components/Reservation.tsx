@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { RoomWithValidReservation } from '$/domains/lock/rooms';
+import type { RoomWithValidReservation } from '$/packages/application/usecase/lock/rooms/find';
 import { memo } from 'react';
 import { format } from 'date-fns';
 import { Box, Heading } from '@chakra-ui/react';

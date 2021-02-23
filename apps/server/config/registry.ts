@@ -1,0 +1,20 @@
+import { container } from 'tsyringe';
+import { AdminRepository } from '$/packages/infra/database/admin';
+import { GuestRepository } from '$/packages/infra/database/guest';
+import { ReservationRepository } from '$/packages/infra/database/reservation';
+import { RoleRepository } from '$/packages/infra/database/role';
+import { RoomRepository } from '$/packages/infra/database/room';
+import { RoomKeyRepository } from '$/packages/infra/database/roomKey';
+import { ResponseRepository } from '$/packages/infra/http/response';
+import { MailRepository } from '$/packages/infra/mail';
+import { PaymentRepository } from '$/packages/infra/payment';
+
+container.registerSingleton('IAdminRepository', AdminRepository);
+container.registerSingleton('IGuestRepository', GuestRepository);
+container.registerSingleton('IReservationRepository', ReservationRepository);
+container.registerSingleton('IRoleRepository', RoleRepository);
+container.registerSingleton('IRoomRepository', RoomRepository);
+container.registerSingleton('IRoomKeyRepository', RoomKeyRepository);
+container.registerSingleton('IResponseRepository', ResponseRepository);
+container.registerSingleton('IMailRepository', MailRepository);
+container.registerSingleton('IPaymentRepository', PaymentRepository);

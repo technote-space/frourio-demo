@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Room } from '$/repositories/room';
+import type { Room } from '$/packages/domain/database/room';
 import { memo, useState, useCallback } from 'react';
 import { Box, Wrap, Grid, GridItem, Center, Button, Image, Heading, Link } from '@chakra-ui/react';
 import {

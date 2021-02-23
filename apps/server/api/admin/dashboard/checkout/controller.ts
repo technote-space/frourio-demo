@@ -1,7 +1,9 @@
 import { defineController } from './$relay';
-import { getCheckout, checkout } from '$/domains/admin/dashboard';
+import { container } from 'tsyringe';
+import { CheckoutUseCase } from '$/packages/application/usecase/admin/dashboard/checkout';
+import { GetCheckoutUseCase } from '$/packages/application/usecase/admin/dashboard/getCheckout';
 
-export default defineController(({ getCheckout, checkout }), ({ getCheckout, checkout }) => ({
-  get: async({ query }) => getCheckout(query.query, query.date),
-  patch: async({ body }) => checkout(body.id),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(GetCheckoutUseCase).execute(query.query, query.date),
+  patch: async({ body }) => container.resolve(CheckoutUseCase).execute(body.id),
 }));

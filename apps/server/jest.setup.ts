@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 jest.mock('bunyan', () => ({
   createLogger: () => ({
     debug: jest.fn(),

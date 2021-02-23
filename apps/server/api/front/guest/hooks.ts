@@ -1,6 +1,6 @@
-import type { GuestAuthorizationPayload } from '$/types';
+import type { GuestAuthorizationPayload } from '$/packages/application/service/auth';
 import { defineHooks } from './$relay';
-import { verifyGuest } from '$/service/auth';
+import { verifyGuest } from '$/packages/application/service/auth';
 
 export type AdditionalRequest = {
   user: GuestAuthorizationPayload;

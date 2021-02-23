@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import type { Room } from '$/prisma/client';
+import type { Room } from '$/packages/domain/database/room';
 import type { ReservationData } from '^/components/Reservation/index';
-import type { CreateReservationBody } from '$/domains/front/reservation/validators';
+import type { CreateReservationBody } from '$/packages/application/usecase/front/reservation/validators';
 import { memo, useCallback, useState } from 'react';
 import { format } from 'date-fns';
 import { Flex, Box, Center, Grid, GridItem, Divider, Button } from '@chakra-ui/react';

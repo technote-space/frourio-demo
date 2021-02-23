@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import type { ReservationData } from '../index';
+import type { PaymentMethod } from '$/packages/domain/payment';
 import { memo } from 'react';
 import { Box, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 
 type Props = {
   reservation: ReservationData;
-  paymentMethods: { id: string; card?: { brand: string; last4: string; 'exp_month': number; 'exp_year': number; } }[];
+  paymentMethods: PaymentMethod[];
   isValidPaymentMethods: boolean;
   isCreateNewCard: boolean;
   isSending: boolean;
@@ -20,7 +21,7 @@ const SelectCard: FC<Props> = memo(({
   isSending,
   onChangePaymentMethodsId,
 }: Props) => {
-  const getCardText = method => `${method.card.brand} ****-****-****-${method.card.last4} ${`0${method.card.exp_month}`.slice(-2)}/${String(method.card.exp_year).substring(2, 4)}`;
+  const getCardText = (method: PaymentMethod) => `${method.card.brand} ****-****-****-${method.card.last4} ${`0${method.card.expMonth}`.slice(-2)}/${String(method.card.expYear).substring(2, 4)}`;
   return isValidPaymentMethods ? <Box
     display={!isCreateNewCard ? 'block' : 'none'}
   >

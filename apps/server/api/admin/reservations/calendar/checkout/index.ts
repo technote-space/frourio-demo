@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { CheckoutSelectableEvent } from '$/domains/admin/reservations';
+import type { CheckoutSelectableEvent } from '$/packages/application/usecase/admin/reservations/getCheckoutSelectable';
 
 export type Methods = {
   get: {

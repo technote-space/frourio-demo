@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { SwrApiType, SwrApiOptions } from '@frourio-demo/types';
-import type { Reservation } from '$/repositories/reservation';
+import type { Reservation } from '$/packages/domain/database/reservation';
 import { memo } from 'react';
 import { Flex, Wrap, Box, Heading, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';

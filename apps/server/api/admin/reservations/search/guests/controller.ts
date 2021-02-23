@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { searchGuest } from '$/domains/admin/reservations';
+import { container } from 'tsyringe';
+import { SearchGuestUseCase } from '$/packages/application/usecase/admin/reservations/searchGuest';
 
-export default defineController(({ searchGuest }), ({ searchGuest }) => ({
-  get: async({ query }) => searchGuest(query),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(SearchGuestUseCase).execute(query),
 }));

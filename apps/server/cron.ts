@@ -1,12 +1,13 @@
 import { schedule } from 'node-cron';
-import { sendRoomKey } from '$/domains/front/reservation';
-import { checkoutReservations } from '$/domains/stripe';
-import { logger } from '$/utils/logging';
+import { SendRoomKeyUseCase } from '$/packages/application/usecase/front/reservation/sendRoomKey';
+import { CheckoutReservationsUseCase } from '$/packages/application/usecase/stripe/checkoutReservations';
+import { container } from 'tsyringe';
+import { logger } from '$/utils/logger';
 
 export const setup = () => {
   schedule('0 12 * * *', () => {
     logger.info('start send room key');
-    sendRoomKey().finally(() => {
+    container.resolve(SendRoomKeyUseCase).execute().finally(() => {
       logger.info('finish send room key');
     });
   }, {
@@ -14,7 +15,7 @@ export const setup = () => {
   });
   schedule('30 12 * * *', () => {
     logger.info('start checkout check');
-    checkoutReservations().finally(() => {
+    container.resolve(CheckoutReservationsUseCase).execute().finally(() => {
       logger.info('finish checkout check');
     });
   }, {

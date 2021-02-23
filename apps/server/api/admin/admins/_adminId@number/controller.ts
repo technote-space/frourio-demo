@@ -1,9 +1,11 @@
 import { defineController } from './$relay';
-import { get, update, remove } from '$/domains/admin/admins';
-import { processBody } from '$/domains/admin/admins/utils';
+import { container } from 'tsyringe';
+import { FindAdminUseCase } from '$/packages/application/usecase/admin/admins/find';
+import { UpdateAdminUseCase } from '$/packages/application/usecase/admin/admins/update';
+import { DeleteAdminUseCase } from '$/packages/application/usecase/admin/admins/delete';
 
-export default defineController(({ get, update, remove }), ({ get, update, remove }) => ({
-  get: async({ params }) => get(params.adminId),
-  patch: async({ params, body }) => update(params.adminId, await processBody(body)),
-  delete: async({ params }) => remove(params.adminId),
+export default defineController(() => ({
+  get: async({ params }) => container.resolve(FindAdminUseCase).execute(params.adminId),
+  patch: async({ params, body }) => container.resolve(UpdateAdminUseCase).execute(params.adminId, body),
+  delete: async({ params }) => container.resolve(DeleteAdminUseCase).execute(params.adminId),
 }));

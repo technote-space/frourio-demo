@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { get } from '$/domains/front/guest';
+import { container } from 'tsyringe';
+import { FindGuestUseCase } from '$/packages/application/usecase/front/guest/find';
 
-export default defineController(({ get }), ({ get }) => ({
-  get: async({ user }) => get(user),
+export default defineController(() => ({
+  get: async({ user }) => container.resolve(FindGuestUseCase).execute(user),
 }));

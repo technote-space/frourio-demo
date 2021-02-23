@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { getMonthlySales } from '$/domains/admin/dashboard';
+import { container } from 'tsyringe';
+import { GetMonthlySalesUseCase } from '$/packages/application/usecase/admin/dashboard/getMonthlySales';
 
-export default defineController(({ getMonthlySales }), ({ getMonthlySales }) => ({
-  get: async({ query }) => getMonthlySales(query?.date ?? new Date(), query?.roomId),
+export default defineController(() => ({
+  get: async({ query }) => container.resolve(GetMonthlySalesUseCase).execute(query?.date ?? new Date(), query?.roomId),
 }));

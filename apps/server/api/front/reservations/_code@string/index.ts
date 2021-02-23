@@ -1,4 +1,4 @@
-import type { ReservationDetail } from '$/domains/front/reservations';
+import type { ReservationDetail } from '$/packages/application/usecase/front/reservations/getReservationDetail';
 
 export type Methods = {
   get: {

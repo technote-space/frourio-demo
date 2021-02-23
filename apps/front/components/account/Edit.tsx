@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { AuthHeader } from '@frourio-demo/types';
-import type { Guest } from '$/repositories/guest';
+import type { Guest } from '$/packages/domain/database/guest';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { Box, Input, Button, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import useUnmountRef from '^/hooks/useUnmountRef';

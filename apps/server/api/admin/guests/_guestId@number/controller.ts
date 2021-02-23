@@ -1,8 +1,11 @@
 import { defineController } from './$relay';
-import { get, update, remove } from '$/domains/admin/guests';
+import { container } from 'tsyringe';
+import { FindGuestUseCase } from '$/packages/application/usecase/admin/guests/find';
+import { UpdateGuestUseCase } from '$/packages/application/usecase/admin/guests/update';
+import { DeleteGuestUseCase } from '$/packages/application/usecase/admin/guests/delete';
 
-export default defineController(({ get, update, remove }), ({ get, update, remove }) => ({
-  get: async({ params }) => get(params.guestId),
-  patch: async({ params, body }) => update(params.guestId, body),
-  delete: async({ params }) => remove(params.guestId),
+export default defineController(() => ({
+  get: async({ params }) => container.resolve(FindGuestUseCase).execute(params.guestId),
+  patch: async({ params, body }) => container.resolve(UpdateGuestUseCase).execute(params.guestId, body),
+  delete: async({ params }) => container.resolve(DeleteGuestUseCase).execute(params.guestId),
 }));

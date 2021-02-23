@@ -1,6 +1,12 @@
 import { defineController } from './$relay';
-import { getCheckoutSelectable } from '$/domains/front/reservation';
+import { container } from 'tsyringe';
+import { GetCheckoutSelectableUseCase } from '$/packages/application/usecase/front/reservation/getCheckoutSelectable';
 
-export default defineController(({ getCheckoutSelectable }), ({ getCheckoutSelectable }) => ({
-  get: async({ query: { roomId, end, checkin }, user }) => getCheckoutSelectable(roomId, end, checkin, user),
+export default defineController(() => ({
+  get: async(
+    {
+      query: { roomId, end, checkin },
+      user,
+    },
+  ) => container.resolve(GetCheckoutSelectableUseCase).execute(roomId, end, checkin, user),
 }));

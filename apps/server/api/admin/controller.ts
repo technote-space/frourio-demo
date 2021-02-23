@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { get } from '$/domains/admin';
+import { container } from 'tsyringe';
+import { GetAdminUseCase } from '$/packages/application/usecase/admin/getAdmin';
 
-export default defineController(({ get }), ({ get }) => ({
-  get: async({ user }) => get(user),
+export default defineController(() => ({
+  get: async({ user }) => container.resolve(GetAdminUseCase).execute(user),
 }));

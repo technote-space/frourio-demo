@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { validateKey } from '$/domains/lock/rooms';
+import { container } from 'tsyringe';
+import { ValidateKeyUseCase } from '$/packages/application/usecase/lock/rooms/validateKey';
 
-export default defineController(({ validateKey }), ({ validateKey }) => ({
-  post: async({ body }) => validateKey(body.roomId, body.key),
+export default defineController(() => ({
+  post: async({ body }) => container.resolve(ValidateKeyUseCase).execute(body.roomId, body.key),
 }));

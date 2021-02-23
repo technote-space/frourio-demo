@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { list } from '$/domains/lock/rooms';
+import { container } from 'tsyringe';
+import { ListRoomsUseCase } from '$/packages/application/usecase/lock/rooms/list';
 
-export default defineController(({ list }), ({ list }) => ({
-  get: async() => list(),
+export default defineController(() => ({
+  get: async() => container.resolve(ListRoomsUseCase).execute(),
 }));

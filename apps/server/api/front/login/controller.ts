@@ -1,6 +1,7 @@
 import { defineController } from './$relay';
-import { login } from '$/domains/front/login';
+import { container } from 'tsyringe';
+import { LoginUseCase } from '$/packages/application/usecase/front/login/login';
 
-export default defineController(({ login }), ({ login }, fastify) => ({
-  post: ({ body }) => login(body, fastify),
+export default defineController((fastify) => ({
+  post: ({ body }) => container.resolve(LoginUseCase).execute(body, fastify),
 }));

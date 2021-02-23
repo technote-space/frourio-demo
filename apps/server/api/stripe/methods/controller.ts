@@ -1,12 +1,11 @@
 import { defineController } from './$relay';
-import { getPaymentMethods, attachPaymentMethod, detachPaymentMethod } from '$/domains/stripe';
+import { container } from 'tsyringe';
+import { GetPaymentMethodsUseCase } from '$/packages/application/usecase/stripe/getPaymentMethods';
+import { AttachPaymentMethodUseCase } from '$/packages/application/usecase/stripe/attachPaymentMethod';
+import { DetachPaymentMethodUseCase } from '$/packages/application/usecase/stripe/detachPaymentMethod';
 
-export default defineController(({ getPaymentMethods, attachPaymentMethod, detachPaymentMethod }), ({
-  getPaymentMethods,
-  attachPaymentMethod,
-  detachPaymentMethod,
-}) => ({
-  get: async({ user }) => getPaymentMethods(user.id),
-  put: async({ user, body }) => attachPaymentMethod(body.methodId, user.id),
-  delete: async({ body }) => detachPaymentMethod(body.methodId),
+export default defineController(() => ({
+  get: async({ user }) => container.resolve(GetPaymentMethodsUseCase).execute(user.id),
+  put: async({ user, body }) => container.resolve(AttachPaymentMethodUseCase).execute(body.methodId, user.id),
+  delete: async({ body }) => container.resolve(DetachPaymentMethodUseCase).execute(body.methodId),
 }));

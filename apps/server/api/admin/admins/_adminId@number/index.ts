@@ -1,5 +1,5 @@
 import type { AuthHeader } from '@frourio-demo/types';
-import type { Admin } from '$/repositories/admin';
+import type { Admin } from '$/packages/domain/database/admin';
 import type { AdminBody } from '$/validators';
 
 export type Methods = {

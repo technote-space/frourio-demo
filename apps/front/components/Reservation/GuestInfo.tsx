@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { ReservationData } from './index';
-import type { CreateReservationBody } from '$/domains/front/reservation/validators';
+import type { CreateReservationBody } from '$/packages/application/usecase/front/reservation/validators';
 import { memo, useState, useCallback, useEffect } from 'react';
 import { Box, Input, Heading, Checkbox, Center, Button } from '@chakra-ui/react';
 import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';

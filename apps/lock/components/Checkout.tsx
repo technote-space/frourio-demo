@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { FocusableElement } from '@chakra-ui/utils';
-import type { RoomWithValidReservation } from '$/domains/lock/rooms';
+import type { RoomWithValidReservation } from '$/packages/application/usecase/lock/rooms/find';
 import { memo, useCallback, useState, useRef } from 'react';
 import { Box, Button } from '@chakra-ui/react';
 import {
@@ -31,7 +31,7 @@ const Checkout: FC<Props> = memo(({ room, isSending, setIsSending, revalidate }:
   const cancelRef = useRef<FocusableElement>(null);
   const handleCheckout = useCallback(() => {
     setIsSending(true);
-    client.rooms._roomId(room.id).delete().then(() => {
+    client.rooms._roomId(room.id).patch().then(() => {
       setNotice(dispatch, 'チェックアウトが完了しました。', 'チェックアウト');
     }).catch(error => {
       setError(dispatch, error.message);
