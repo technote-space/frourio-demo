@@ -40,6 +40,7 @@ export const testEnv = (): void => {
 };
 
 type GetQueryOptions = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filters?: Record<string, any>;
   page?: number;
   pageSize?: number;
@@ -48,6 +49,7 @@ type GetQueryOptions = {
   orderBy: string;
   orderDirection?: 'asc' | 'desc';
 }
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const getQuery = <RowData extends object>({
   filters,
   page,
@@ -56,18 +58,20 @@ export const getQuery = <RowData extends object>({
   search,
   orderBy,
   orderDirection,
-}: GetQueryOptions): Query<RowData> => ({
-  filters: Object.entries(filters ?? {}).map(([field, value]) => ({
-    column: { field },
-    operator: '=',
-    value,
-  })),
-  page: page ?? 1,
-  pageSize: pageSize ?? 10,
-  totalCount: totalCount ?? 100,
-  search: search ?? 'test',
-  orderBy: {
-    field: orderBy,
-  },
-  orderDirection: orderDirection ?? 'asc',
-});
+}: GetQueryOptions): Query<RowData> => {
+  return {
+    filters: Object.entries(filters ?? {}).map(([field, value]) => ({
+      column: { field },
+      operator: '=',
+      value,
+    })),
+    page: page ?? 1,
+    pageSize: pageSize ?? 10,
+    totalCount: totalCount ?? 100,
+    search: search ?? 'test',
+    orderBy: {
+      field: orderBy,
+    },
+    orderDirection: orderDirection ?? 'asc',
+  };
+};

@@ -9,7 +9,8 @@ import { TestPaymentRepository } from '$/__tests__/__mocks__/infra/payment';
 
 describe('fillCreateReservationData', () => {
   it('should return create data', async() => {
-    expect(await fillCreateReservationData({
+    expect(await fillCreateReservationData(
+      {
         guestId: 1,
         roomId: 1,
         checkin: '2020-01-01',
@@ -78,7 +79,8 @@ describe('fillCreateReservationData', () => {
 
 describe('fillUpdateReservationData', () => {
   it('should return update data', async() => {
-    expect(await fillUpdateReservationData({
+    expect(await fillUpdateReservationData(
+      {
         roomId: 1,
         checkin: '2020-01-01',
         checkout: '2020-01-10',

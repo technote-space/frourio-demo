@@ -7,7 +7,7 @@ import { addDays, subDays } from 'date-fns';
 
 describe('FindRoomUseCase', () => {
   it('should find room', async() => {
-    const roomRepository = new TestRoomRepository([getDummyRoomData()])
+    const roomRepository = new TestRoomRepository([getDummyRoomData()]);
     expect(await (new FindRoomUseCase(
       new TestReservationRepository([getDummyReservationData(await roomRepository.find(1), await getGuest(), {
         status: 'checkin',
@@ -45,7 +45,7 @@ describe('FindRoomUseCase', () => {
           'checkout': expect.any(Date),
           'createdAt': expect.any(Date),
           'updatedAt': expect.any(Date),
-        }
+        },
       },
     });
   });

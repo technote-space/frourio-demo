@@ -74,5 +74,5 @@ describe('LoginUseCase', () => {
     }, getFastify())).toEqual({
       status: 401,
     });
-  })
+  });
 });

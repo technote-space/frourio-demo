@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IMailRepository } from '$/domain/mail';
 import type { Reservation } from '$/domain/database/reservation';
 
