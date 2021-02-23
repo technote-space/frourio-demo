@@ -1,10 +1,12 @@
 import type { AdminBody } from './validators';
 import type { IAdminRepository } from '$/packages/domain/database/admin';
 import type { IResponseRepository } from '$/packages/domain/http/response';
+import { singleton, inject } from 'tsyringe';
 import { processBody } from './service';
 
+@singleton()
 export class UpdateAdminUseCase {
-  public constructor(private repository: IAdminRepository, private response: IResponseRepository) {
+  public constructor(@inject('IAdminRepository') private repository: IAdminRepository, @inject('IResponseRepository') private response: IResponseRepository) {
   }
 
   public async execute(id: number, data: AdminBody) {
