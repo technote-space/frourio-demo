@@ -140,18 +140,6 @@ QRコード または テンキーの入力でチェックインが完了しま�
 
 `apps/server/.env`
 
-### Auth0
-
-Application を作成し Domain を設定します。
-
-![auth0](https://raw.githubusercontent.com/technote-space/frourio-demo/images/auth0.png)
-
-設定例
-
-```dotenv
-AUTH0_DOMAIN=xxxxxxxxxxxxxxxx.auth0.com
-```
-
 ### Stripe
 
 `sk_test_` から始まるテスト用のシークレットキーを設定します。
