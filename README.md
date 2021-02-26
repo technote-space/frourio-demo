@@ -136,6 +136,50 @@ QRコード または テンキーの入力でチェックインが完了しま�
 
 管理画面やフロントで共有
 
+環境変数で以下の設定が必要です。
+
+`apps/server/.env`
+
+### Auth0
+
+Application を作成し Domain を設定します。
+
+![auth0](https://raw.githubusercontent.com/technote-space/frourio-demo/images/auth0.png)
+
+設定例
+
+```dotenv
+AUTH0_DOMAIN=xxxxxxxxxxxxxxxx.auth0.com
+```
+
+### Stripe
+
+`sk_test_` から始まるテスト用のシークレットキーを設定します。
+
+![stripe](https://raw.githubusercontent.com/technote-space/frourio-demo/images/stripe.png)
+
+設定例
+
+```dotenv
+STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+### SMTPサーバ
+
+設定例
+
+```dotenv
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=1
+SMTP_USER=xxxxxxxxxxxxxxxx@gmail.com
+SMTP_PASS=xxxxxxxxxxxxxxxx(Application Password)
+SMTP_FROM=
+SMTP_BCC=
+```
+
+[Application Password](https://support.google.com/accounts/answer/185833?hl=ja)
+
 ## Demo
 
 https://technote-space.github.io/frourio-demo/
