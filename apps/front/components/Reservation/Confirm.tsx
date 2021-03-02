@@ -8,7 +8,7 @@ import { Flex, Box, Center, Grid, GridItem, Divider, Button } from '@chakra-ui/r
 import { useHistory } from 'react-router';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import useAuthToken from '^/hooks/useAuthToken';
-import useUnmountRef from '^/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import { client } from '^/utils/api';
 import { setNotice, setError } from '^/utils/actions';
 import { useDispatchContext, useStoreContext } from '^/store';

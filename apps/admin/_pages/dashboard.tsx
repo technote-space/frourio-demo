@@ -18,7 +18,7 @@ import { red } from '@material-ui/core/colors';
 import { Bar } from 'react-chartjs-2';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import useFetch from '~/hooks/useFetch';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
 import { setNotice } from '~/utils/actions';

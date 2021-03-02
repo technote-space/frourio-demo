@@ -4,7 +4,7 @@ import type { Column } from '@technote-space/material-table';
 import type { AuthHeader } from '@frourio-demo/types';
 import { memo, useMemo, useCallback } from 'react';
 import useFetch from '~/hooks/useFetch';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import SearchTable from '~/components/SearchTable';
 import { client } from '~/utils/api';
 import { useDispatchContext } from '~/store';

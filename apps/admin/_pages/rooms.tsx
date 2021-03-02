@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Model, DataTableColumn } from '~/components/DataTable';
 import { useMemo } from 'react';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 import RoomStatusCalendar from '~/components/rooms/RoomStatusCalendar';

@@ -1575,6 +1575,11 @@
     react-beautiful-dnd "^13.0.0"
     react-double-scrollbar "0.0.15"
 
+"@technote-space/use-unmount-ref@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@technote-space/use-unmount-ref/-/use-unmount-ref-0.1.0.tgz#326df6cef1520d7651c84f42e8c227cc265c3bb7"
+  integrity sha512-9rXRu4N6I4H5h87NhJNjhL4obTvF0fkhbInp9IaYnlia2lvsqc9qn2uiudxuYPBoTuZG1fKt81xKq23XWILCug==
+
 "@testing-library/dom@^7.28.1":
   version "7.29.6"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.29.6.tgz#eb37844fb431186db7960a7ff6749ea65a19617c"
