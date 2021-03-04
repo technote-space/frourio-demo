@@ -8,7 +8,7 @@ import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client, handleAuthError, processValidationError } from '^/utils/api';
 import { setNotice } from '^/utils/actions';
-import { getAddress } from '^/utils/zipCode';
+import { getAddress } from '@technote-space/zipcode2address-jp';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 
 type EditGuest = {
@@ -39,7 +39,7 @@ const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
         if (!unmountRef.current && address) {
           setEditInfo({
             ...editInfo!,
-            address: `${address.prefecture_name}${address.city_name}${address.town_name}`,
+            address: `${address.prefectureName}${address.cityName}${address.townName}`,
           });
         }
       });

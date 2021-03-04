@@ -9,7 +9,7 @@ import { useStoreContext, useDispatchContext } from '^/store';
 import useAuthToken from '^/hooks/useAuthToken';
 import useUnmountRef from '@technote-space/use-unmount-ref';
 import { client, processValidationError } from '^/utils/api';
-import { getAddress } from '^/utils/zipCode';
+import { getAddress } from '@technote-space/zipcode2address-jp';
 import { setError } from '^/utils/actions';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
@@ -72,7 +72,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
     if (!reservation.guestAddress) {
       getAddress(reservation.guestZipCode).then(address => {
         if (!unmountRef.current && address) {
-          props.onChangeAddress(`${address.prefecture_name}${address.city_name}${address.town_name}`);
+          props.onChangeAddress(`${address.prefectureName}${address.cityName}${address.townName}`);
         }
       });
     }

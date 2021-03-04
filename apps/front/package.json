@@ -40,6 +40,7 @@
     "@stripe/stripe-js": "^1.13.0",
     "@technote-space/use-local-storage": "^0.1.1",
     "@technote-space/use-unmount-ref": "^0.1.0",
+    "@technote-space/zipcode2address-jp": "^0.1.0",
     "aspida": "^1.5.0",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",

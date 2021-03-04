@@ -1585,6 +1585,13 @@
   resolved "https://registry.yarnpkg.com/@technote-space/use-unmount-ref/-/use-unmount-ref-0.1.0.tgz#326df6cef1520d7651c84f42e8c227cc265c3bb7"
   integrity sha512-9rXRu4N6I4H5h87NhJNjhL4obTvF0fkhbInp9IaYnlia2lvsqc9qn2uiudxuYPBoTuZG1fKt81xKq23XWILCug==
 
+"@technote-space/zipcode2address-jp@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@technote-space/zipcode2address-jp/-/zipcode2address-jp-0.1.0.tgz#a79eec5de6e3a935de132fa6f35e8c27a85b5c9c"
+  integrity sha512-kTX+0pGde0D9gDP84l3x9vIi/XzXLu3suJzri89clsQLCxv+/08ytR8nQa3aAntPQNw5Z2JfDj6u67sllB0Mow==
+  dependencies:
+    axios "^0.21.1"
+
 "@testing-library/dom@^7.28.1":
   version "7.29.6"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.29.6.tgz#eb37844fb431186db7960a7ff6749ea65a19617c"
