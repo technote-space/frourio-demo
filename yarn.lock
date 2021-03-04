@@ -1575,6 +1575,11 @@
     react-beautiful-dnd "^13.0.0"
     react-double-scrollbar "0.0.15"
 
+"@technote-space/use-local-storage@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@technote-space/use-local-storage/-/use-local-storage-0.1.1.tgz#756580756d76726efb11f7dd31acc730c91d473e"
+  integrity sha512-usmJ05nMPnqRJkZHIGZPodbSAtSw7tgM/D4vCetCjUSgItwdFhJQHZlVVH954kF16MSfpjJv2AcHMbaoaIwEgg==
+
 "@technote-space/use-unmount-ref@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@technote-space/use-unmount-ref/-/use-unmount-ref-0.1.0.tgz#326df6cef1520d7651c84f42e8c227cc265c3bb7"

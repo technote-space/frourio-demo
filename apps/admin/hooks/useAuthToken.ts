@@ -1,6 +1,7 @@
 import type { AuthHeader } from '@frourio-demo/types';
 import { useCallback, useState, useEffect } from 'react';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useStoreContext, useDispatchContext } from '~/store';
+import useLocalStorage from '@technote-space/use-local-storage';
 
 type AuthValue = {
   authToken: string;
@@ -9,7 +10,14 @@ type AuthValue = {
 
 const useAuthToken = (): [AuthValue | undefined, (value: string) => void, () => void] => {
   const getAuth = token => token ? { authToken: token, authHeader: { authorization: `Bearer ${token}` } } : undefined;
-  const [token, setToken] = useLocalStorage('auth-token-admin', '');
+  const { dispatch } = useDispatchContext();
+  const { localStorage } = useStoreContext();
+  const [token, setToken] = useLocalStorage('auth-token-admin', '', {
+    storage: localStorage,
+    onChanged: (key, value) => {
+      dispatch({ type: 'LOCAL_STORAGE_CHANGED', key, value });
+    },
+  });
   const [auth, setAuth] = useState<AuthValue | undefined>(getAuth(token));
   const removeToken = useCallback(() => {
     setToken('');

@@ -27,6 +27,7 @@
     "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.11.3",
     "@technote-space/material-table": "^2.3.1",
+    "@technote-space/use-local-storage": "^0.1.1",
     "@technote-space/use-unmount-ref": "^0.1.0",
     "aspida": "^1.5.0",
     "axios": "^0.21.1",
