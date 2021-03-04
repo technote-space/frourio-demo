@@ -9,9 +9,7 @@ export type CreateAdminArgs = Prisma.AdminCreateArgs;
 export type UpdateAdminData = Prisma.AdminUpdateInput;
 export type UpdateAdminArgs = Prisma.AdminUpdateArgs;
 export type DeleteAdminArgs = Prisma.AdminDeleteArgs;
-export type Admin = {
-  [key in keyof _Admin]: key extends 'password' ? never : _Admin[key]
-} & {
+export type Admin = Omit<_Admin, 'password'> & {
   roles: Role[]
 };
 
