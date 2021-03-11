@@ -41,7 +41,7 @@ export class TestAdminRepository implements IAdminRepository {
   }
 
   create(data: CreateAdminData): Promise<Admin> {
-    const admin = filterCreateData({ ...data, id: this.id++ }) as Admin;
+    const admin = filterCreateData({ ...data, roles: [], id: this.id++ }) as Admin;
     this.store.push(admin);
     return Promise.resolve(admin);
   }
