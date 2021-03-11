@@ -1,15 +1,15 @@
 import type { PrismaClient } from '../client';
 import bcrypt from 'bcryptjs';
-import { Seeder } from '../tools/seeder';
+import { Seeder } from '@technote-space/prisma-seeder-tools/dist/seeder';
 import { getRolesValue } from '$/packages/application/service/auth';
 
-export class AdminSeeder extends Seeder {
+export class AdminSeeder extends Seeder<PrismaClient> {
   constructor(prisma: PrismaClient) {
     super(prisma);
   }
 
   public async run(): Promise<void> {
-    await this.adminFactory.create({
+    await this.factory('admin').create({
       name: 'Admin',
       email: 'admin@example.com',
       password: bcrypt.hashSync('test1234', 10),
@@ -24,7 +24,7 @@ export class AdminSeeder extends Seeder {
         ]).map(role => ({ role: role.role })),
       },
     });
-    await this.adminFactory.create({
+    await this.factory('admin').create({
       name: 'Test User',
       email: 'test@example.com',
       password: bcrypt.hashSync('test1234', 10),
@@ -38,7 +38,7 @@ export class AdminSeeder extends Seeder {
         ]).map(role => ({ role: role.role })),
       },
     });
-    await this.adminFactory.create({
+    await this.factory('admin').create({
       name: 'Only rooms',
       email: 'rooms@example.com',
       password: bcrypt.hashSync('test1234', 10),
@@ -49,7 +49,7 @@ export class AdminSeeder extends Seeder {
         ]).map(role => ({ role: role.role })),
       },
     });
-    await this.adminFactory.create({
+    await this.factory('admin').create({
       name: 'No edit',
       email: 'read@example.com',
       password: bcrypt.hashSync('test1234', 10),

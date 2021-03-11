@@ -1573,6 +1573,13 @@
     react-beautiful-dnd "^13.0.0"
     react-double-scrollbar "0.0.15"
 
+"@technote-space/prisma-seeder-tools@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@technote-space/prisma-seeder-tools/-/prisma-seeder-tools-0.2.0.tgz#b1f6ef8c2c10499eac692c98949a939a2629417a"
+  integrity sha512-7TdGd1l6QrpVruUljkvnBrxlUWQpxdi+ac6jJXr9jfaK4qJ0t6C+2mbnt4DrYrgY51Qw+Ib8kc93s45eqawMvw==
+  dependencies:
+    faker "^5.4.0"
+
 "@technote-space/use-local-storage@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@technote-space/use-local-storage/-/use-local-storage-0.1.1.tgz#756580756d76726efb11f7dd31acc730c91d473e"
@@ -4457,10 +4464,10 @@ fastify-jwt@^2.3.0:
     jsonwebtoken "^8.5.1"
     steed "^1.1.3"
 
-fastify-multipart@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/fastify-multipart/-/fastify-multipart-4.0.0.tgz#9e444c6ba3f0cb2545b0ede566fd4155e909acdd"
-  integrity sha512-i2GFbKWjLCaQxpMZHweslF6ma8VTwgdmii87VexYi0Fxass0CPFKIs+z7wp0zVIdTMv0F5EFNQnimyzXcPcHcg==
+fastify-multipart@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/fastify-multipart/-/fastify-multipart-4.0.1.tgz#f8122813870e64e8844453ab331ea742347142e2"
+  integrity sha512-luo/b2/LuYZcktwOu7mh72ipVUBQ5gTEq3aCY5EiZJBOkP+0/iIA/Ttjr+7N4X5k4wu28zhf22xgwvQYldZI/Q==
   dependencies:
     busboy "^0.3.1"
     deepmerge "^4.2.2"

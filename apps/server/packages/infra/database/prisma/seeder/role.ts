@@ -1,8 +1,8 @@
 import type { PrismaClient } from '../client';
-import { Seeder } from '../tools/seeder';
+import { Seeder } from '@technote-space/prisma-seeder-tools/dist/seeder';
 import { getRolesValue } from '$/packages/application/service/auth';
 
-export class RoleSeeder extends Seeder {
+export class RoleSeeder extends Seeder<PrismaClient> {
   constructor(prisma: PrismaClient) {
     super(prisma);
   }
@@ -16,7 +16,7 @@ export class RoleSeeder extends Seeder {
       { domain: 'reservations', targets: ['create', 'read', 'update', 'delete'] },
     ]).reduce(async(prev, role) => {
       await prev;
-      await this.roleFactory.create(role);
+      await this.factory('role').create(role);
     }, Promise.resolve());
   }
 }
