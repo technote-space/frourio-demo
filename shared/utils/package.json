@@ -7,7 +7,7 @@
     "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000"
   },
   "dependencies": {
-    "@technote-space/imi-moji-converter": "^0.1.2"
+    "@technote-space/imi-moji-converter": "^0.1.3"
   },
   "devDependencies": {
     "@types/react": "^17.0.3",
