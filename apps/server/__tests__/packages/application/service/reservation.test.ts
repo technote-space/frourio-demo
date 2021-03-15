@@ -1,10 +1,6 @@
 import { getPromiseLikeItem } from '$/__tests__/utils';
-import {
-  isValidCheckinDateRange,
-  getValidReservation,
-  encryptQrInfo,
-  decryptQrInfo,
-} from '$/packages/application/service/reservation';
+import { isValidCheckinDateRange, getValidReservation } from '$/packages/application/service/reservation';
+import { encryptQrInfo, decryptQrInfo } from '$/packages/application/service/qr';
 import * as env from '$/config/env';
 
 describe('isValidCheckinDateRange', () => {

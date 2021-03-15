@@ -5,7 +5,7 @@ import type { IResponseRepository } from '$/packages/domain/http/response';
 import type { Reservation } from '$/packages/domain/database/reservation';
 import { singleton, inject } from 'tsyringe';
 import { depend } from 'velona';
-import { decryptQrInfo } from '$/packages/application/service/reservation';
+import { decryptQrInfo } from '$/packages/application/service/qr';
 import { capturePaymentIntents } from '$/packages/application/usecase/stripe/service';
 import { isValidCheckinDateRange } from '$/packages/application/service/reservation';
 

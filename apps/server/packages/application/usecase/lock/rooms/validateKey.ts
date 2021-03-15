@@ -7,7 +7,8 @@ import type { Reservation } from '$/packages/domain/database/reservation';
 import { singleton, inject } from 'tsyringe';
 import { depend } from 'velona';
 import { toDataURL } from 'qrcode';
-import { getValidReservation, encryptQrInfo } from '$/packages/application/service/reservation';
+import { getValidReservation } from '$/packages/application/service/reservation';
+import { encryptQrInfo } from '$/packages/application/service/qr';
 import { capturePaymentIntents } from '$/packages/application/usecase/stripe/service';
 import { MAX_TRIALS } from '@frourio-demo/constants';
 
