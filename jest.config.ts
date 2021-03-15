@@ -54,7 +54,7 @@ const config: { projects: Config.InitialOptions[] } = {
       },
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
-        '<rootDir>/apps/server/prisma/client/',
+        '<rootDir>/apps/server/packages/infra/database/prisma/',
       ],
       globalSetup: './jest.global.setup.ts',
       setupFilesAfterEnv: ['./jest.setup.ts', './apps/server/jest.setup.ts'],
