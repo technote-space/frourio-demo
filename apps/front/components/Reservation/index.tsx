@@ -7,6 +7,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import useAuthToken from '^/hooks/useAuthToken';
+import { onRefreshToken } from '^/utils/actions';
 import { client } from '^/utils/api';
 import { getNights } from '@frourio-demo/utils/calc';
 import { startWithUppercase } from '@frourio-demo/utils/string';
@@ -102,6 +103,7 @@ const Reservation: FC<Props> = memo(({ roomId }: Props) => {
     setMode('account');
     setReservation(initialReservation);
     guestInfo.revalidate().then();
+    onRefreshToken(dispatch);
   }, []);
 
   useEffect(() => {
