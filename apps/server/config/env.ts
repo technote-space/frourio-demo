@@ -4,7 +4,6 @@ import { resolve } from 'path';
 dotenv.config({ path: resolve(process.cwd(), '.env') });
 
 const JWT_SECRET = process.env.JWT_SECRET ?? '';
-const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN ?? '';
 const CRYPTO_PASS = process.env.CRYPTO_PASS ?? '';
 const CRYPTO_SALT = process.env.CRYPTO_SALT ?? '';
 const CRYPTO_ALGO = process.env.CRYPTO_ALGO ?? '';
@@ -28,7 +27,7 @@ const SMTP_FROM = process.env.SMTP_FROM ?? SMTP_USER;
 const SMTP_BCC = (process.env.SMTP_BCC ?? '').split(',').filter(value => value);
 
 export {
-  JWT_SECRET, AUTH0_DOMAIN, CRYPTO_PASS, CRYPTO_SALT, CRYPTO_ALGO, STRIPE_SECRET, SLACK_WEBHOOK_URL,
+  JWT_SECRET, CRYPTO_PASS, CRYPTO_SALT, CRYPTO_ALGO, STRIPE_SECRET, SLACK_WEBHOOK_URL,
   SERVER_PORT, SERVER_ADDRESS, BASE_PATH, API_ORIGIN, URL_PORT, API_URL, FRONT_URL,
   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, SMTP_BCC,
 };

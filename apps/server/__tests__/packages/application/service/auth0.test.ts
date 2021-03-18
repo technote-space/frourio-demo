@@ -1,10 +1,14 @@
 import { getPromiseLikeItem } from '$/__tests__/utils';
 import { verifyCode } from '$/packages/application/service/auth0';
-import * as env from '$/config/env';
+
+jest.mock('@frourio-demo/config', () => ({
+  auth0: {
+    domain: 'example.com',
+  },
+}));
 
 describe('verifyCode', () => {
   it('should return auth info', async() => {
-    Object.defineProperty(env, 'AUTH0_DOMAIN', { value: 'example.com' });
     const mock = jest.fn(() => getPromiseLikeItem({
       ok: true, json: () => getPromiseLikeItem({
         email: 'test@example.com',
@@ -25,7 +29,6 @@ describe('verifyCode', () => {
   });
 
   it('should return false', async() => {
-    Object.defineProperty(env, 'AUTH0_DOMAIN', { value: 'example.com' });
     expect(await verifyCode.inject({
       fetch: () => getPromiseLikeItem({ ok: false, json: () => '' }),
     })('token')).toBe(false);

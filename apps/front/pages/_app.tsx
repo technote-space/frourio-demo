@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom';
 import Head from '^/components/Head';
 import { StoreContextProvider } from '^/store';
 import history from '^/utils/history';
-import config from '^/auth0.json';
+import { auth0 } from '@frourio-demo/config';
 
 const getRedirectUri = () => typeof window === 'undefined' ? '' : `${window.location.origin}${process.env.BASE_PATH}`;
 const theme = extendTheme({
@@ -56,12 +56,12 @@ const MyApp = ({ Component, pageProps }: PropsWithChildren<AppProps>) => <SafeHy
   <ChakraProvider theme={theme}>
     <StoreContextProvider>
       <Auth0Provider
-        {...config}
+        {...auth0}
         redirectUri={getRedirectUri()}
         onRedirectCallback={onRedirectCallback}
       >
         <Router history={history}>
-          <Head />
+          <Head/>
           <Component {...pageProps} />
         </Router>
       </Auth0Provider>

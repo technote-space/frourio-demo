@@ -1,0 +1,16 @@
+{
+  "name": "@frourio-demo/config",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  },
+  "engines": {
+    "yarn": "1.x"
+  }
+}
