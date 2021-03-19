@@ -1555,6 +1555,11 @@
   dependencies:
     moji "^0.5.1"
 
+"@technote-space/material-table-localization-jp@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@technote-space/material-table-localization-jp/-/material-table-localization-jp-0.1.1.tgz#f740d459ba9e19b7b79276a3a0885084c6c94e6c"
+  integrity sha512-zi0MQ0JD89q68I8UjhSmn1Fp2+tnhtBRLRmHUwPOfWOziKEq5o6vKD5bMptxvK259DTxFmC+1O01IVTBMsPvZA==
+
 "@technote-space/material-table@^2.3.4":
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/@technote-space/material-table/-/material-table-2.3.4.tgz#203eb0aaf39ee238f3f0491d6df1a6734dcf42e4"
@@ -1584,6 +1589,11 @@
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@technote-space/use-local-storage/-/use-local-storage-0.1.1.tgz#756580756d76726efb11f7dd31acc730c91d473e"
   integrity sha512-usmJ05nMPnqRJkZHIGZPodbSAtSw7tgM/D4vCetCjUSgItwdFhJQHZlVVH954kF16MSfpjJv2AcHMbaoaIwEgg==
+
+"@technote-space/use-material-table-icons@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@technote-space/use-material-table-icons/-/use-material-table-icons-0.1.0.tgz#121acd8e09f97a6d2211d07df9b8222179da0a5c"
+  integrity sha512-7gxuj+HQxjE6fp9lMMdDRf6ZltB7bL4Qpr2VVT4l/UNiE25/DBFzZkGGYHyBSVMZTEV02sWUo3nFNkyQgwlGyw==
 
 "@technote-space/use-unmount-ref@^0.1.2":
   version "0.1.2"

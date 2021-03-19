@@ -22,8 +22,8 @@ import useUnmountRef from '@technote-space/use-unmount-ref';
 import { useDispatchContext } from '~/store';
 import { client, handleAuthError } from '~/utils/api';
 import { setNotice } from '~/utils/actions';
-import useTableIcons from '~/hooks/useTableIcons';
-import useTableLocalization from '~/hooks/useTableLocalization';
+import useTableIcons from '@technote-space/use-material-table-icons';
+import useTableLocalization from '@technote-space/material-table-localization-jp';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
