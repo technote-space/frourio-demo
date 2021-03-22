@@ -238,7 +238,7 @@ describe('Admins', () => {
     user.type(input[0], 'test-name');
     user.type(input[1], 'test@example.com');
     user.type(input[2], 'test1234');
-    user.upload(await findByTestId('select-icon-file'), new File([], 'test.png', { type: 'image/png' }));
+    user.upload(await findByTestId('select-icon-file') as HTMLInputElement, new File([], 'test.png', { type: 'image/png' }));
     user.click(findElement(await findByTestId('edit-roles'), '[role="button"]'));
     user.click(findElement(await findByRole('presentation'), '[data-value="dashboard"]'));
     user.tab();

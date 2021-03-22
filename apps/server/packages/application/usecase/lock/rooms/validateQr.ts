@@ -1,6 +1,7 @@
 import type { IRoomKeyRepository } from '$/packages/domain/database/roomKey';
 import type { IReservationRepository } from '$/packages/domain/database/reservation';
 import type { IPaymentRepository } from '$/packages/domain/payment';
+import type { IMailRepository } from '$/packages/domain/mail';
 import type { IResponseRepository } from '$/packages/domain/http/response';
 import type { Reservation } from '$/packages/domain/database/reservation';
 import { singleton, inject } from 'tsyringe';
@@ -23,6 +24,7 @@ export class ValidateQrUseCase {
     @inject('IReservationRepository') private reservationRepository: IReservationRepository,
     @inject('IRoomKeyRepository') private roomKeyRepository: IRoomKeyRepository,
     @inject('IPaymentRepository') private payment: IPaymentRepository,
+    @inject('IMailRepository') private mail: IMailRepository,
     @inject('IResponseRepository') private response: IResponseRepository,
   ) {
   }
@@ -47,7 +49,7 @@ export class ValidateQrUseCase {
       if (roomKey?.key === info.key) {
         return this.response.success({
           result: true,
-          reservation: await capturePaymentIntents(this.reservationRepository, this.payment, reservation),
+          reservation: await capturePaymentIntents(this.reservationRepository, this.payment, this.mail, reservation),
         } as ValidateRoomQrResult);
       }
 

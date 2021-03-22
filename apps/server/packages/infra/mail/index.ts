@@ -4,6 +4,7 @@ import { sendHtmlMail } from '$/packages/infra/mail/service';
 import { getReservationVariables } from '$/packages/infra/mail/service';
 import ReservedTemplate from './templates/Reserved.html';
 import CancelledTemplate from './templates/Cancelled.html';
+import PaidTemplate from './templates/Paid.html';
 import RoomKeyTemplate from './templates/RoomKey.html';
 
 export class MailRepository implements IMailRepository {
@@ -13,6 +14,13 @@ export class MailRepository implements IMailRepository {
 
   public async sendCancelledMail(reservation: Reservation) {
     return sendHtmlMail(reservation.guestEmail, '予約キャンセル', CancelledTemplate, getReservationVariables(reservation));
+  }
+
+  public async sendPaidMail(reservation: Reservation, paid: string) {
+    return sendHtmlMail(reservation.guestEmail, '支払い完了', PaidTemplate, getReservationVariables({
+      ...reservation,
+      paid,
+    }));
   }
 
   public async sendRoomKeyMail(reservation: Reservation, key: string, qr: string) {

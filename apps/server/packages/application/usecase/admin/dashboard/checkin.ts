@@ -1,5 +1,6 @@
 import type { IReservationRepository } from '$/packages/domain/database/reservation';
 import type { IPaymentRepository } from '$/packages/domain/payment';
+import type { IMailRepository } from '$/packages/domain/mail';
 import type { IResponseRepository } from '$/packages/domain/http/response';
 import { depend } from 'velona';
 import { singleton, inject } from 'tsyringe';
@@ -10,6 +11,7 @@ export class CheckinUseCase {
   public constructor(
     @inject('IReservationRepository') private repository: IReservationRepository,
     @inject('IPaymentRepository') private payment: IPaymentRepository,
+    @inject('IMailRepository') private mail: IMailRepository,
     @inject('IResponseRepository') private response: IResponseRepository,
   ) {
   }
@@ -19,7 +21,7 @@ export class CheckinUseCase {
     async({ capturePaymentIntents }, id: number) => {
       const reservation = await this.repository.find(id);
       if (reservation.status === 'reserved') {
-        return this.response.success(await capturePaymentIntents(this.repository, this.payment, reservation));
+        return this.response.success(await capturePaymentIntents(this.repository, this.payment, this.mail, reservation));
       }
 
       return this.response.badRequest('Not found or invalid status.');

@@ -57,7 +57,7 @@ export class ValidateKeyUseCase {
       }
 
       if (roomKey.key === key) {
-        const captured = await capturePaymentIntents(this.reservationRepository, this.payment, reservation);
+        const captured = await capturePaymentIntents(this.reservationRepository, this.payment, this.mail, reservation);
         await this.roomKeyRepository.update(roomKey.id, { trials: 0 });
         return this.response.success({
           result: true,

@@ -18,5 +18,7 @@ export interface IMailRepository {
 
   sendCancelledMail(reservation: Reservation): Promise<boolean>;
 
+  sendPaidMail(reservation: Reservation, paid: string): Promise<boolean>;
+
   sendRoomKeyMail(reservation: Reservation, key: string, qr: string): Promise<boolean>;
 }
