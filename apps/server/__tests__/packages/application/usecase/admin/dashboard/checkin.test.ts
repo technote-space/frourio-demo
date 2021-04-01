@@ -3,6 +3,7 @@ import { TestReservationRepository, getDummyReservationData } from '$/__tests__/
 import { getDummyRoomData } from '$/__tests__/__mocks__/infra/database/room';
 import { getDummyGuestData } from '$/__tests__/__mocks__/infra/database/guest';
 import { TestPaymentRepository } from '$/__tests__/__mocks__/infra/payment';
+import { TestMailRepository } from '$/__tests__/__mocks__/infra/mail';
 import { ResponseRepository } from '$/packages/infra/http/response';
 import { getPromiseLikeItem } from '$/__tests__/utils';
 
@@ -11,6 +12,7 @@ describe('CheckinUseCase', () => {
     expect(await (new CheckinUseCase(
       new TestReservationRepository([getDummyReservationData(getDummyRoomData(), getDummyGuestData(), { status: 'reserved' })]),
       new TestPaymentRepository(),
+      new TestMailRepository(),
       new ResponseRepository(),
     )).execute.inject({
       capturePaymentIntents: () => getPromiseLikeItem({ id: 1, status: 'checkin' }),
@@ -27,6 +29,7 @@ describe('CheckinUseCase', () => {
     expect(await (new CheckinUseCase(
       new TestReservationRepository([getDummyReservationData(getDummyRoomData(), getDummyGuestData(), { status: 'checkin' })]),
       new TestPaymentRepository(),
+      new TestMailRepository(),
       new ResponseRepository(),
     )).execute(1)).toEqual({
       status: 400,
