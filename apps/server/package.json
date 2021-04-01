@@ -50,7 +50,7 @@
     "qrcode": "^1.4.4",
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^2.3.3",
-    "stripe": "^8.140.0",
+    "stripe": "^8.141.0",
     "tsyringe": "^4.5.0"
   },
   "devDependencies": {
@@ -65,7 +65,7 @@
     "@types/node-fetch": "^2.5.8",
     "@types/nodemailer": "^6.4.1",
     "@types/qrcode": "^1.4.0",
-    "@types/sanitize-html": "^1.27.1",
+    "@types/sanitize-html": "^1.27.2",
     "aspida": "^1.6.3",
     "cross-blob": "^2.0.0",
     "cross-env": "^7.0.3",

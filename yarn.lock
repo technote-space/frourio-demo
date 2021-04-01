@@ -1979,10 +1979,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/sanitize-html@^1.27.1":
-  version "1.27.1"
-  resolved "https://registry.yarnpkg.com/@types/sanitize-html/-/sanitize-html-1.27.1.tgz#1fc4b67edd6296eeb366960d13cd01f5d6bffdcd"
-  integrity sha512-TW5gfZYplKQYO8003WrxaDgwyJsEG74920S+Ei7zB9mbUFgm7l2NvFAumXzxL+1fOwM2I9A+G/1rgiEebQOxcQ==
+"@types/sanitize-html@^1.27.2":
+  version "1.27.2"
+  resolved "https://registry.yarnpkg.com/@types/sanitize-html/-/sanitize-html-1.27.2.tgz#f7bf16ca4b1408278f97ae737f0377a08a10b35c"
+  integrity sha512-DrH26m7CV6PB4YVckjbSIx+xloB7HBolr9Ctm0gZBffSu5dDV4yJKFQGPquJlReVW+xmg59gx+b/8/qYHxZEuw==
   dependencies:
     htmlparser2 "^4.1.0"
 
@@ -2366,9 +2366,9 @@ ajv@^6.10.0, ajv@^6.11.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     uri-js "^4.2.2"
 
 ajv@^8.0.1:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.0.2.tgz#1396e27f208ed56dd5638ab5a251edeb1c91d402"
-  integrity sha512-V0HGxJd0PiDF0ecHYIesTOqfd1gJguwQUOYfMfAWnRsWQEXfc5ifbUFhD3Wjc+O+y7VAqL+g07prq9gHQ/JOZQ==
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.0.3.tgz#81f1b07003b329f000b7912e59a24f52392867b6"
+  integrity sha512-Df6NAivu9KpZw+q8ySijAgLvr1mUA5ihkRvCLCxpdYR21ann5yIuN+PpFxmweSj7i3yjJ0x5LN5KVs0RRzskAQ==
   dependencies:
     fast-deep-equal "^3.1.1"
     json-schema-traverse "^1.0.0"
@@ -3228,10 +3228,15 @@ class-validator@^0.13.1:
     libphonenumber-js "^1.9.7"
     validator "^13.5.2"
 
-classnames@2.2.6, classnames@^2.2.5, classnames@^2.2.6:
+classnames@2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
+
+classnames@^2.2.5, classnames@^2.2.6:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.0.tgz#19524334bad47ccd99793936b67f9be0860fe835"
+  integrity sha512-UUf/S3eeczXBjHPpSnrZ1ZyxH3KmLW8nVYFUWIZA/dixYMIQr7l94yYKxaAkmPk7HO9dlT6gFqAPZC02tTdfQw==
 
 cli-boxes@^2.2.0:
   version "2.2.1"
@@ -3967,9 +3972,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.634, electron-to-chromium@^1.3.649:
-  version "1.3.703"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.703.tgz#6d9b9a75c42a40775f5930329e642b22b227317f"
-  integrity sha512-SVBVhNB+4zPL+rvtWLw7PZQkw/Eqj1HQZs22xtcqW36+xoifzEOEEDEpkxSMfB6RFeSIOcG00w6z5mSqLr1Y6w==
+  version "1.3.704"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.704.tgz#894205a237cbe0097d63da8f6d19e605dd13ab51"
+  integrity sha512-6cz0jvawlUe4h5AbfQWxPzb+8LzVyswGAWiGc32EJEmfj39HTQyNPkLXirc7+L4x5I6RgRkzua8Ryu5QZqc8cA==
 
 elliptic@^6.5.3:
   version "6.5.4"
@@ -4810,23 +4815,23 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-4.0.3.tgz#e20a32c6825dc08c98e130640cb6441ec2920b7d"
-  integrity sha512-5p9VPpgPctMJuNW8CqHSk9k/v3xAUpReWzlgKl1a1fsvqzcFgNGENZPfBwHuukanvMmh3trzO5jZNX0Kc8/pAA==
+framer-motion@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-4.1.0.tgz#a3f92e8d499d046697279730eabe00d845796ead"
+  integrity sha512-DVBYKTvtSpiZwENxTgZWrxKuf0FGU8blUfw9Ov/17QfCenxhaZM+ub4h5TrlrjbfHlF92TW0HDu69u4l2POtYA==
   dependencies:
-    framesync "5.2.3"
+    framesync "5.3.0"
     hey-listen "^1.0.8"
-    popmotion "9.3.4"
+    popmotion "9.3.5"
     style-value-types "4.1.4"
     tslib "^2.1.0"
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 
-framesync@5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/framesync/-/framesync-5.2.3.tgz#73e26c83e108fb95f05515ee5c6fdf20c9fd47ab"
-  integrity sha512-5PxjYm5RxvsT68a9trOOL/61POxL7DcHrbx+j/50CR33mvBdp0aUTI+EfrMeVXprx3XOZ37NWg6r5ZQQOA2arA==
+framesync@5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/framesync/-/framesync-5.3.0.tgz#0ecfc955e8f5a6ddc8fdb0cc024070947e1a0d9b"
+  integrity sha512-oc5m68HDO/tuK2blj7ZcdEBRx3p1PjrgHazL8GYEpvULhrtGIFbQArN6cQS2QhW8mitffaB+VYzMjDqBxxQeoA==
   dependencies:
     tslib "^2.1.0"
 
@@ -7702,12 +7707,12 @@ pnp-webpack-plugin@1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
-popmotion@9.3.4:
-  version "9.3.4"
-  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-9.3.4.tgz#9dea29e752491396b0beebc360d9837598f24c7c"
-  integrity sha512-CwUJwVEkhXZg7ZCtWLrO2lK40g/J+cEwAV0bPxOq83g2UNrvN2HTcUDnlf/rq6QeMKJPwDvXd6R8SsJO5BjDXg==
+popmotion@9.3.5:
+  version "9.3.5"
+  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-9.3.5.tgz#e821aff3424a021b0f2c93922db31c55cfe64149"
+  integrity sha512-Lr2rq8OP0j8D7CO2/6eO17ALeFCxjx1hfTGbMg+TLqFj+KZSGOoj6gRBVTzDINGqo6LQrORQSSSDaCL5OrB3bw==
   dependencies:
-    framesync "5.2.3"
+    framesync "5.3.0"
     hey-listen "^1.0.8"
     style-value-types "4.1.4"
     tslib "^2.1.0"
@@ -7803,9 +7808,9 @@ promise-polyfill@^8.2.0:
   integrity sha512-k/TC0mIcPVF6yHhUvwAp7cvL6I2fFV7TzF1DuGPI8mBh4QQazf36xCKEHKTZKRysEoTQoQdKyP25J8MPJp7j5g==
 
 prompts@^2.0.1:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.4.0.tgz#4aa5de0723a231d1ee9121c40fdf663df73f61d7"
-  integrity sha512-awZAKrk3vN6CroQukBL+R9051a4R3zCZBlJm/HBfrSZ8iTpYix3VX1vU4mveiLpiwmOJT4wokTF9m6HUk4KqWQ==
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.4.1.tgz#befd3b1195ba052f9fd2fde8a486c4e82ee77f61"
+  integrity sha512-EQyfIuO2hPDsX1L/blblV+H7I0knhgAd82cVneCwcdND9B8AuCDuRcBH6yIcG4dFzlOUqbazQqwGjx5xmsNLuQ==
   dependencies:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
@@ -9190,10 +9195,10 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-stripe@^8.140.0:
-  version "8.140.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-8.140.0.tgz#58ceffdac7bd0ba0abc8f5670f8f79cba0d8d7fc"
-  integrity sha512-p2Ak/ZSQiStR93MmW3VUESP07ZOAtvZxSA34YglKeRyokaj7/ruRzeVxmoD0Yr6Eh2w2uZWp42ps7ZoYxWskPg==
+stripe@^8.141.0:
+  version "8.141.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-8.141.0.tgz#a0c27f7255e00ebb47af3a0c1849e0c431f0fd30"
+  integrity sha512-CRGmx1WYENj16L37TujJg+KscGn8LbYbXqRCPdaepr7BzHIdAFJfQhNfdFkShW5Z9rbmo6mA2fiAOf1S3FIoSw==
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.6.0"
