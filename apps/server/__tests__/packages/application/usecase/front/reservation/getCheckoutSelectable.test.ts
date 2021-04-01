@@ -3,7 +3,7 @@ import { TestReservationRepository, getDummyReservationData } from '$/__tests__/
 import { getDummyGuestData } from '$/__tests__/__mocks__/infra/database/guest';
 import { getDummyRoomData } from '$/__tests__/__mocks__/infra/database/room';
 import { ResponseRepository } from '$/packages/infra/http/response';
-import { format, addDays,addMonths, startOfDay } from 'date-fns';
+import { format, addDays, addMonths, startOfDay } from 'date-fns';
 
 describe('GetCheckoutSelectableUseCase', () => {
   it('should get checkout selectable events', async() => {
