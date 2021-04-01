@@ -3,12 +3,12 @@ import type { AuthHeader } from '@frourio-demo/types';
 import type { Guest } from '$/packages/domain/database/guest';
 import { memo, useState, useEffect, useCallback } from 'react';
 import { Box, Input, Button, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
-import useUnmountRef from '^/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import { useDispatchContext } from '^/store';
 import useFetch from '^/hooks/useFetch';
 import { client, handleAuthError, processValidationError } from '^/utils/api';
 import { setNotice } from '^/utils/actions';
-import { getAddress } from '^/utils/zipCode';
+import { getAddress } from '@technote-space/zipcode2address-jp';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 
 type EditGuest = {
@@ -39,7 +39,7 @@ const Edit: FC<Props> = memo(({ authHeader, setEdit }: Props) => {
         if (!unmountRef.current && address) {
           setEditInfo({
             ...editInfo!,
-            address: `${address.prefecture_name}${address.city_name}${address.town_name}`,
+            address: `${address.prefectureName}${address.cityName}${address.townName}`,
           });
         }
       });

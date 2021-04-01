@@ -713,7 +713,7 @@ describe('Dashboard', () => {
     await findByText(format(startOfToday(), 'M月 yyyy'));
     user.click(await findByText('17'));
 
-    await waitFor(() => expect(sales.mock.calls.length).toBeGreaterThanOrEqual(3));
+    await waitFor(() => expect(sales.mock.calls.length).toBeGreaterThanOrEqual(2));
   });
 
   it('should fail to checkin', async() => {

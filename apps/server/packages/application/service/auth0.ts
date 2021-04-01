@@ -1,6 +1,6 @@
 import { depend } from 'velona';
 import fetch from 'node-fetch';
-import { AUTH0_DOMAIN } from '$/config/env';
+import { auth0 } from '@frourio-demo/config';
 
 type Info = {
   email: string;
@@ -10,7 +10,7 @@ export const verifyCode = depend(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { fetch: fetch as (url: string, init: { headers: Record<string, string> }) => Promise<{ ok: boolean; json: () => Promise<any> }> },
   async({ fetch }, accessToken: string): Promise<Info | false> => {
-    const response = await fetch(`https://${AUTH0_DOMAIN}/userinfo`, {
+    const response = await fetch(`https://${auth0.domain}/userinfo`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

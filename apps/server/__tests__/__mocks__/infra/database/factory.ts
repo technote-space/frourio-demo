@@ -1,13 +1,12 @@
 /* istanbul ignore file */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { DelegateTypes } from '$/packages/infra/database/prisma/tools/factory';
+import type { DelegateTypes } from '$/packages/infra/database/prisma/runner';
 import Faker from 'faker';
-import '$/packages/infra/database/prisma/factories';
-import { getDefines } from '$/packages/infra/database/prisma/tools/define';
+import { runner } from '$/packages/infra/database/prisma/runner';
 
 export const getDummyData = <T>(type: DelegateTypes, override?: Partial<T>, ...params: any[]) => ({
-  ...getDefines()[type](Faker, params),
+  ...runner.getDefine(type)(Faker, params),
   ...override,
 });
 

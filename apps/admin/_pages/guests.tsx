@@ -3,7 +3,7 @@ import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Model, DataTableColumn } from '~/components/DataTable';
 import { useMemo } from 'react';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@frourio-demo/types",
+  "name": "@frourio-demo/config",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -8,9 +8,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/react": "^17.0.3",
-    "aspida": "^1.6.3",
-    "react": "^17.0.2",
     "typescript": "^4.2.3"
   },
   "engines": {

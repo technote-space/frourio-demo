@@ -14,6 +14,10 @@ export class TestMailRepository implements IMailRepository {
     return this.mock ? this.mock(reservation) as any : Promise.resolve(true);
   }
 
+  sendPaidMail(reservation: Reservation, paid: string): Promise<boolean> {
+    return this.mock ? this.mock(reservation, paid) as any : Promise.resolve(true);
+  }
+
   sendRoomKeyMail(reservation: Reservation, key: string, qr: string): Promise<boolean> {
     return this.mock ? this.mock(reservation, key, qr) as any : Promise.resolve(true);
   }

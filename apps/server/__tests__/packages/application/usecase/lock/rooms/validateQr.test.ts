@@ -4,6 +4,7 @@ import { getGuest } from '$/__tests__/__mocks__/infra/database/guest';
 import { getRoom } from '$/__tests__/__mocks__/infra/database/room';
 import { TestRoomKeyRepository } from '$/__tests__/__mocks__/infra/database/roomKey';
 import { TestPaymentRepository } from '$/__tests__/__mocks__/infra/payment';
+import { TestMailRepository } from '$/__tests__/__mocks__/infra/mail';
 import { ResponseRepository } from '$/packages/infra/http/response';
 import { addDays, subDays } from 'date-fns';
 
@@ -20,6 +21,7 @@ describe('ValidateQrUseCase', () => {
       reserveRepository,
       roomKeyRepository,
       new TestPaymentRepository(),
+      new TestMailRepository(),
       new ResponseRepository(),
     )).execute.inject({
       decryptQrInfo: () => ({ reservationId: 1, roomId: 1, key: 'test key' }),
@@ -57,6 +59,7 @@ describe('ValidateQrUseCase', () => {
       new TestReservationRepository(),
       new TestRoomKeyRepository(),
       new TestPaymentRepository(),
+      new TestMailRepository(),
       new ResponseRepository(),
     )).execute.inject({
       decryptQrInfo: () => undefined,
@@ -77,6 +80,7 @@ describe('ValidateQrUseCase', () => {
       reserveRepository,
       roomKeyRepository,
       new TestPaymentRepository(),
+      new TestMailRepository(),
       new ResponseRepository(),
     )).execute.inject({
       decryptQrInfo: () => ({ reservationId: 1, roomId: 1, key: 'test key' }),
@@ -101,6 +105,7 @@ describe('ValidateQrUseCase', () => {
       reserveRepository,
       roomKeyRepository,
       new TestPaymentRepository(),
+      new TestMailRepository(),
       new ResponseRepository(),
     )).execute.inject({
       decryptQrInfo: () => ({ reservationId: 1, roomId: 1, key: 'invalid key' }),

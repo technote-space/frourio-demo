@@ -4,7 +4,7 @@ import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Model, EditComponentPropsWithError, DataTableColumn } from '~/components/DataTable';
 import { useMemo } from 'react';
 import { format } from 'date-fns';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import DataTable from '~/components/DataTable';
 import SelectGuest from '~/components/reservations/SelectGuest';

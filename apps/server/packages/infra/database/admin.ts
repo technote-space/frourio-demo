@@ -26,14 +26,11 @@ const convertToIconUrl = <T extends { icon: string | null }>(admin: T) => {
 
   return admin;
 };
-type DropPassword<T extends Record<string, any>> = {
-  [key in keyof T]: key extends 'password' ? never : T[key]
-}
-const removePassword = <T extends Record<string, any> & { password?: string }>(admin: T): DropPassword<T> => {
+const removePassword = <T extends Record<string, any> & { password?: string }>(admin: T): Omit<T, 'password'> => {
   delete admin.password;
-  return admin as Exclude<T, 'password'>;
+  return admin as Omit<T, 'password'>;
 };
-const processRoles = <T extends Record<string, any> & DropPassword<Omit<Admin, 'roles'>>>(admin: T): Admin => {
+const processRoles = <T extends Record<string, any> & Omit<Admin, 'roles' | 'password'>>(admin: T): Admin => {
   if ('roles' in admin && admin.roles) {
     return {
       ...admin,
@@ -46,7 +43,7 @@ const processRoles = <T extends Record<string, any> & DropPassword<Omit<Admin, '
     roles: [] as Role[],
   };
 };
-const filterAdmin = <T extends Omit<Admin, 'roles' | 'password'> & { password: string }>(admin: T): Admin | never => processRoles(removePassword(convertToIconUrl(admin)));
+const filterAdmin = <T extends Omit<Admin, 'roles'> & { password: string }>(admin: T): Admin | never => processRoles(removePassword(convertToIconUrl(admin)));
 const includeRoles = <T extends Record<string, any> & { include?: any; select?: any; }>(args: T | undefined): any => {
   if (!args) {
     return {
@@ -96,11 +93,11 @@ export class AdminRepository implements IAdminRepository {
 
   find = depend(
     { prisma: prisma as { admin: { findFirst: typeof prisma.admin.findFirst } } },
-    async({ prisma }, id: number, args?: FindAdminArgs) => filterAdmin(await prisma.admin.findFirst(includeRoles({
+    async({ prisma }, id: number, args?: FindAdminArgs) => filterAdmin((await prisma.admin.findFirst(includeRoles({
       where: { id },
       rejectOnNotFound: true,
       ...args,
-    })) as Omit<Admin, 'roles'>),
+    })))!),
   );
 
   create = depend(

@@ -8,7 +8,7 @@ import { Flex, Box, Center, Grid, GridItem, Divider, Button } from '@chakra-ui/r
 import { useHistory } from 'react-router';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import useAuthToken from '^/hooks/useAuthToken';
-import useUnmountRef from '^/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import { client } from '^/utils/api';
 import { setNotice, setError } from '^/utils/actions';
 import { useDispatchContext, useStoreContext } from '^/store';
@@ -66,7 +66,9 @@ const Confirm: FC<Props> = memo(({ hidden, reservation, room, nights, onCancel, 
       }
     }
   }, [hidden]);
+  const getGuestKey = (name: string): string => `guest${startWithUppercase(name)}`;
   const hasEmptyField = !guest || RESERVATION_GUEST_FIELDS.some(field => !guest[field]);
+  const willChangeInfo = !hasEmptyField && RESERVATION_GUEST_FIELDS.some(field => guest![field] !== (reservation[getGuestKey(field)] ?? ''));
 
   return hidden ? null : <Box
     shadow="md"
@@ -85,7 +87,7 @@ const Confirm: FC<Props> = memo(({ hidden, reservation, room, nights, onCancel, 
           <GridItem>{reservation[`guest${key}`]}</GridItem>
         </Grid>;
       })}
-      {!hasEmptyField && reservation.updateInfo &&
+      {willChangeInfo && reservation.updateInfo &&
       <Grid templateColumns="repeat(1, 1fr)" gap={3} textAlign="right" fontSize="0.9rem">
         <GridItem>お客様の登録情報を更新する</GridItem>
       </Grid>}

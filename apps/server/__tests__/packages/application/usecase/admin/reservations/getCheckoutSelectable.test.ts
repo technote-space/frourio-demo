@@ -3,7 +3,7 @@ import { TestReservationRepository, getDummyReservationData } from '$/__tests__/
 import { getGuest } from '$/__tests__/__mocks__/infra/database/guest';
 import { getRoom } from '$/__tests__/__mocks__/infra/database/room';
 import { ResponseRepository } from '$/packages/infra/http/response';
-import { format, addDays, endOfMonth, startOfDay } from 'date-fns';
+import { format, addDays, addMonths, startOfDay } from 'date-fns';
 
 describe('GetCheckoutSelectableUseCase', () => {
   it('should get checkout selectable events', async() => {
@@ -25,7 +25,7 @@ describe('GetCheckoutSelectableUseCase', () => {
         }),
       ]),
       new ResponseRepository(),
-    )).execute(1, startOfDay(endOfMonth(new Date())), new Date())).toEqual({
+    )).execute(1, startOfDay(addMonths(new Date(), 1)), new Date())).toEqual({
       status: 200,
       body: expect.arrayContaining([{
         start: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
@@ -42,11 +42,11 @@ describe('GetCheckoutSelectableUseCase', () => {
     expect(await (new GetCheckoutSelectableUseCase(
       new TestReservationRepository([]),
       new ResponseRepository(),
-    )).execute(1, startOfDay(endOfMonth(new Date())), new Date(), 1)).toEqual({
+    )).execute(1, startOfDay(addMonths(new Date(), 1)), new Date(), 1)).toEqual({
       status: 200,
       body: [{
         start: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
-        end: format(startOfDay(endOfMonth(new Date())), 'yyyy-MM-dd'),
+        end: format(startOfDay(addMonths(new Date(), 1)), 'yyyy-MM-dd'),
         allDay: true,
         color: '#a99',
         textColor: 'black',

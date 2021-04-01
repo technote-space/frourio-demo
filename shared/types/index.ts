@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Dispatch as _Dispatch } from 'react';
 import type { AspidaResponse } from 'aspida';
-import type { responseInterface, ConfigInterface } from 'swr';
+import type { SWRResponse, SWRConfiguration } from 'swr';
 import { RESERVATION_STATUS } from '@frourio-demo/constants';
 
 export type Primitive = string | number | undefined | null;
@@ -40,12 +40,12 @@ export type DataTableApi = {
   };
 };
 
-type Options<T extends (option: any) => Promise<any>> = Parameters<Parameters<T> extends [Parameters<T>[0]] ? (option: Parameters<T>[0] & ConfigInterface<ReturnType<T> extends Promise<infer S> ? S : never> & {
+type Options<T extends (option: any) => Promise<any>> = Parameters<Parameters<T> extends [Parameters<T>[0]] ? (option: Parameters<T>[0] & SWRConfiguration<ReturnType<T> extends Promise<infer S> ? S : never> & {
   enabled?: boolean;
-}) => void : (option?: Parameters<T>[0] & ConfigInterface<ReturnType<T> extends Promise<infer S> ? S : never> & {
+}) => void : (option?: Parameters<T>[0] & SWRConfiguration<ReturnType<T> extends Promise<infer S> ? S : never> & {
   enabled?: boolean;
 }) => void>;
-type Res<T extends (option: any) => Promise<any>> = responseInterface<ReturnType<T> extends Promise<infer S> ? S : never, any>;
+type Res<T extends (option: any) => Promise<any>> = SWRResponse<ReturnType<T> extends Promise<infer S> ? S : never, any>;
 export type ApiType<B> = (option?: any) => Promise<AspidaResponse<B, any, any>>;
 export type ApiOptions<API extends ApiType<any>> = Options<API>;
 export type ApiResponse<API extends ApiType<any>> = API extends ApiType<infer B> ? B : never;

@@ -7,9 +7,9 @@ import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { startWithUppercase } from '@frourio-demo/utils/string';
 import { useStoreContext, useDispatchContext } from '^/store';
 import useAuthToken from '^/hooks/useAuthToken';
-import useUnmountRef from '^/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import { client, processValidationError } from '^/utils/api';
-import { getAddress } from '^/utils/zipCode';
+import { getAddress } from '@technote-space/zipcode2address-jp';
 import { setError } from '^/utils/actions';
 import { ACCOUNT_FIELDS } from '@frourio-demo/constants';
 import { RESERVATION_GUEST_FIELDS } from '@frourio-demo/constants';
@@ -59,6 +59,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
   const getGuestKey = (name: string): string => `guest${startWithUppercase(name)}`;
   const isValidGuest = !RESERVATION_GUEST_FIELDS.some(field => !reservation[getGuestKey(field)]);
   const hasEmptyField = !guest || RESERVATION_GUEST_FIELDS.some(field => !guest[field]);
+  const willChangeInfo = !hasEmptyField && RESERVATION_GUEST_FIELDS.some(field => guest![field] !== (reservation[getGuestKey(field)] ?? ''));
 
   const handleEditChange = (name: string) => event => {
     props[`onChange${startWithUppercase(name)}`](event.target.value);
@@ -72,7 +73,7 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
     if (!reservation.guestAddress) {
       getAddress(reservation.guestZipCode).then(address => {
         if (!unmountRef.current && address) {
-          props.onChangeAddress(`${address.prefecture_name}${address.city_name}${address.town_name}`);
+          props.onChangeAddress(`${address.prefectureName}${address.cityName}${address.townName}`);
         }
       });
     }
@@ -119,8 +120,8 @@ const GuestInfo: FC<Props> = memo((props: Props) => {
           <FormErrorMessage>{validationErrors[getGuestKey(field.name)]}</FormErrorMessage>
         </FormControl>;
       })}
-      {!hasEmptyField && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
-        お客様の登録情報を更新する
+      {willChangeInfo && <Checkbox my={2} isChecked={reservation.updateInfo} onChange={handleEditChange('updateInfo')}>
+          お客様の登録情報を更新する
       </Checkbox>}
     </Box>
     <Center>

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { sleep } from '@frourio-demo/utils/misc';
 import useAuthToken from '~/hooks/useAuthToken';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import { useDispatchContext, useStoreContext } from '~/store';
 import { changePage, logout, offRefreshToken, setAdmin, tokenRemoved } from '~/utils/actions';
 import { client, handleAuthError } from '~/utils/api';

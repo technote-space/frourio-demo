@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { AuthenticatedPageProps } from '~/components/AuthenticatedPage';
 import type { Model, EditComponentPropsWithError, DataTableColumn } from '~/components/DataTable';
 import { useMemo, useCallback } from 'react';
-import useUnmountRef from '~/hooks/useUnmountRef';
+import useUnmountRef from '@technote-space/use-unmount-ref';
 import AuthenticatedPage from '~/components/AuthenticatedPage';
 import { Avatar } from '@material-ui/core';
 import DataTable from '~/components/DataTable';

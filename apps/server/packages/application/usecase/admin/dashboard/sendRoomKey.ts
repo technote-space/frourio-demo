@@ -5,7 +5,7 @@ import type { IMailRepository } from '$/packages/domain/mail';
 import { singleton, inject } from 'tsyringe';
 import { depend } from 'velona';
 import { toDataURL } from 'qrcode';
-import { encryptQrInfo } from '$/packages/application/service/reservation';
+import { encryptQrInfo } from '$/packages/application/service/qr';
 
 @singleton()
 export class SendRoomKeyUseCase {

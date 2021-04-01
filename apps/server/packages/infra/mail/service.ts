@@ -13,7 +13,6 @@ import HeadTemplate from './templates/Head.html';
 import HeaderTemplate from './templates/Header.html';
 import FooterTemplate from './templates/Footer.html';
 
-
 export const getSmtpOptions = (): MailOptions => ({
   host: SMTP_HOST,
   port: SMTP_PORT,
