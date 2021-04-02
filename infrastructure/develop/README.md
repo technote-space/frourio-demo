@@ -2,14 +2,18 @@
 
 ## セットアップ
 
-`bin/setup.sh`
+プロジェクトルートに移動し以下を実行
 
-* `.env` の用意
-* nvm のインストール
+```shell
+./infrastructure/develop/bin/setup.sh
+nvm use
+```
 
 ## スタート
 
-`bin/start.sh`
+```shell
+./infrastructure/develop/bin/bin/start.sh
+```
 
 ### メール
 
@@ -19,4 +23,6 @@ http://localhost:1080/
 
 ## ストップ
 
-`bin/stop.sh`
+```shell
+./infrastructure/develop/bin/bin/stop.sh
+```
