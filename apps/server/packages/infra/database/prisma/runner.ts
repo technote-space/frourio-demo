@@ -14,11 +14,11 @@ const prisma = new PrismaClient();
 export const runner = new Runner(prisma, [
   createDefinition('admin', faker => ({
     name: `${faker.name.findName()} ${faker.name.lastName()}`,
-    email: `${faker.random.number()}${faker.random.number()}@example.com`,
+    email: `${faker.datatype.number()}${faker.datatype.number()}@example.com`,
     password: faker.random.alpha(),
   })),
   createDefinition('guest', faker => ({
-    email: `${faker.random.number()}${faker.random.number()}@example.com`,
+    email: `${faker.datatype.number()}${faker.datatype.number()}@example.com`,
     name: `${faker.name.lastName()} ${faker.name.firstName()}`,
     nameKana: 'テスト テスト',
     zipCode: faker.address.zipCode(),
@@ -27,17 +27,17 @@ export const runner = new Runner(prisma, [
   })),
   createDefinition('role', () => ({})),
   createDefinition('room', faker => ({
-    name: faker.name.firstName() + faker.random.number(),
-    number: faker.random.number({ min: 1, max: 10 }),
-    price: faker.random.number({ min: 1000, max: 100000 }),
+    name: faker.name.firstName() + faker.datatype.number(),
+    number: faker.datatype.number({ min: 1, max: 10 }),
+    price: faker.datatype.number({ min: 1000, max: 100000 }),
   })),
   createDefinition('reservation', (faker, params) => {
     const room = params[0] as Room;
     const guest = params[1] as Guest;
-    const number = faker.random.number({ min: 1, max: room.number });
+    const number = faker.datatype.number({ min: 1, max: room.number });
     const checkin = faker.date.between(faker.date.past(2), faker.date.future(2));
     checkin.setHours(15, 0, 0, 0);
-    const nights = faker.random.number({ min: 1, max: 7 });
+    const nights = faker.datatype.number({ min: 1, max: 7 });
     const checkout = new Date(checkin.valueOf());
     checkout.setDate(checkin.getDate() + nights);
     checkout.setHours(10, 0, 0, 0);
@@ -46,7 +46,7 @@ export const runner = new Runner(prisma, [
     let status: ReservationStatus;
     let payment: number | undefined;
     const now = new Date();
-    if (faker.random.number(1000) < 50) {
+    if (faker.datatype.number(1000) < 50) {
       status = 'cancelled';
     } else {
       if (isBefore(now, checkin)) {
