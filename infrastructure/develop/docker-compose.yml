@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - db-store:/var/lib/mysql
+      - ../../logs:/var/log/mysql
+      - ../docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ../docker/mysql/entrypoint:/docker-entrypoint-initdb.d
+    ports:
+      - ${DB_PORT}:3306
+    restart: always
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
+
+volumes:
+  db-store:
