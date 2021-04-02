@@ -18,5 +18,11 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - TZ=${TZ}
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:80"
+      - "1025:25"
+
 volumes:
   db-store:
