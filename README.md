@@ -14,6 +14,8 @@
 <!-- param::isCustomMode::true:: -->
 
 <p align="center">
+<a href="#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97">開発環境のセットアップ</a>
+<span>|</span>
 <a href="#%E7%AE%A1%E7%90%86%E7%94%BB%E9%9D%A2">管理画面</a>
 <span>|</span>
 <a href="#%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88">フロント</a>
