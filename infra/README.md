@@ -5,7 +5,7 @@
 プロジェクトルートに移動し以下を実行
 
 ```shell
-./infrastructure/develop/bin/setup.sh
+./infra/bin/setup.sh
 nvm use
 ```
 
@@ -14,7 +14,7 @@ nvm use
 ## スタート
 
 ```shell
-./infrastructure/develop/bin/bin/start.sh
+./infra/bin/start.sh
 ```
 
 * MySQL
@@ -32,5 +32,5 @@ http://localhost:1080/
 ## ストップ
 
 ```shell
-./infrastructure/develop/bin/bin/stop.sh
+./infra/bin/stop.sh
 ```

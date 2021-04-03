@@ -5,9 +5,9 @@ services:
     image: mysql:8.0
     volumes:
       - db-store:/var/lib/mysql
-      - ../../logs:/var/log/mysql
-      - ../docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ../docker/mysql/entrypoint:/docker-entrypoint-initdb.d
+      - ../logs:/var/log/mysql
+      - ./docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/mysql/entrypoint:/docker-entrypoint-initdb.d
     ports:
       - ${DB_PORT}:3306
     restart: always
