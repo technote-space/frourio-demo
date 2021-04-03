@@ -13,8 +13,8 @@ const config: { projects: Config.InitialOptions[] } = {
       moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
         prefix: '<rootDir>/',
       }),
-      globalSetup: './jest.global.setup.ts',
-      setupFilesAfterEnv: ['./jest.setup.ts'],
+      globalSetup: '<rootDir>/config/jest.global.setup.ts',
+      setupFilesAfterEnv: ['<rootDir>/config/jest.setup.ts'],
     },
     {
       displayName: 'admin',
@@ -35,8 +35,8 @@ const config: { projects: Config.InitialOptions[] } = {
       coveragePathIgnorePatterns: [
         '\\$.+\\.ts',
       ],
-      globalSetup: './jest.global.setup.ts',
-      setupFilesAfterEnv: ['./jest.setup.ts', 'jest-canvas-mock'],
+      globalSetup: '<rootDir>/config/jest.global.setup.ts',
+      setupFilesAfterEnv: ['<rootDir>/config/jest.setup.ts', 'jest-canvas-mock'],
       globals: { Blob: {} },
     },
     {
@@ -56,8 +56,8 @@ const config: { projects: Config.InitialOptions[] } = {
         '\\$.+\\.ts',
         '<rootDir>/apps/server/packages/infra/database/prisma/',
       ],
-      globalSetup: './jest.global.setup.ts',
-      setupFilesAfterEnv: ['./jest.setup.ts', './apps/server/jest.setup.ts'],
+      globalSetup: '<rootDir>/config/jest.global.setup.ts',
+      setupFilesAfterEnv: ['<rootDir>/config/jest.setup.ts', './apps/server/jest.setup.ts'],
       globals: { Blob: {} },
     },
   ],
