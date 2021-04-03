@@ -45,7 +45,7 @@
 * MySQL
 * MailDev
 
-[セットアップ](./infrastructure/develop/README.md)
+[セットアップ](./infra/README.md)
 
 ## 管理画面
 
