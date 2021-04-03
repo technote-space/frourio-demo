@@ -37,6 +37,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 開発環境のセットアップ
+
+* Node.js
+* MySQL
+* MailDev
+
+[セットアップ](./infrastructure/develop/README.md)
+
 ## 管理画面
 
 `apps/admin`

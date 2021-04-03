@@ -9,11 +9,19 @@
 nvm use
 ```
 
+環境変数の用意と [NVM](https://github.com/nvm-sh/nvm) のインストール
+
 ## スタート
 
 ```shell
 ./infrastructure/develop/bin/bin/start.sh
 ```
+
+* MySQL
+* MailDev
+
+Docker Compose が動作する環境が必要  
+[Docker Compose のインストール](https://docs.docker.jp/compose/install.html#docker-compose)
 
 ### メール
 
