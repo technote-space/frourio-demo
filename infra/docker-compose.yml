@@ -4,7 +4,7 @@ services:
   db:
     image: mysql:8.0
     volumes:
-      - db-store:/var/lib/mysql
+      - frourio_demo_db:/var/lib/mysql
       - ../logs:/var/log/mysql
       - ./docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./docker/mysql/entrypoint:/docker-entrypoint-initdb.d
@@ -25,4 +25,4 @@ services:
       - "1025:25"
 
 volumes:
-  db-store:
+  frourio_demo_db:

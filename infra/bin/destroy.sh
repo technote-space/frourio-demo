@@ -9,4 +9,4 @@ current=$(
 cd "${current}/.."
 
 docker-compose down
-docker volume rm develop_db-store
+docker volume rm infra_frourio_demo_db
