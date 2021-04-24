@@ -39,6 +39,7 @@
     "build:lock": "yarn workspace @frourio-demo/lock build",
     "build:server": "yarn workspace @frourio-demo/server build",
     "build:types": "aspida -c config/aspida.config.js && yarn workspace @frourio-demo/server build:types",
+    "build:pages": "yarn build:admin && yarn build:front && yarn build:lock && mkdir out && mv ./apps/admin/out out/admin && mv ./apps/front/out out/front && mv ./apps/lock/out out/lock && mv ./gh-pages/* out/ && cp out/front/index.html out/404.html && cp ./apps/front/license.json out/front/ && cp ./apps/lock/license.json out/lock/",
     "cover": "cross-env NODE_OPTIONS=--max_old_space_size=4096 jest --coverage --verbose -i --bail",
     "cover:admin": "cross-env NODE_OPTIONS=--max_old_space_size=4096 jest --coverage --verbose -i --bail --selectProjects admin",
     "cover:server": "cross-env NODE_OPTIONS=--max_old_space_size=4096 jest --coverage --verbose --bail --selectProjects server",
