@@ -10,7 +10,7 @@
     "@technote-space/imi-moji-converter": "^0.1.7"
   },
   "devDependencies": {
-    "@types/react": "^17.0.3",
+    "@types/react": "^17.0.4",
     "axios": "^0.21.1",
     "date-fns": "^2.21.1",
     "react": "^17.0.2",
