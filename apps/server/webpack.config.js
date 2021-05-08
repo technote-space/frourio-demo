@@ -41,5 +41,6 @@ module.exports = {
       modulesDir: path.resolve(__dirname, '../../node_modules'),
       allowlist: [/@frourio-demo/],
     }),
+    {'_http_common': 'var ""'},
   ],
 };
