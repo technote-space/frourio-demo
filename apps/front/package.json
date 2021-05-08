@@ -20,7 +20,7 @@
     "setup:mkcert:linux:install": "brew install mkcert nss",
     "setup:cert": "mkcert -install && mkcert $npm_package_host",
     "start": "yarn kill && HOST=$npm_package_host PORT=$npm_package_port NODE_ENV=production yarn ts-node ./server.ts",
-    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
+    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000 -x next-transpile-modules,framer-motion"
   },
   "dependencies": {
     "@aspida/axios": "^1.7.0",
@@ -45,7 +45,7 @@
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "date-fns": "^2.21.3",
-    "framer-motion": "^4.1.13",
+    "framer-motion": "4.1.11",
     "next": "^10.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

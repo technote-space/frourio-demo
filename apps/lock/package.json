@@ -10,7 +10,7 @@
     "kill": "lsof -i:$npm_package_port -t | xargs kill -9",
     "setup": "yarn install --prefer-offline --network-timeout 1000000",
     "start": "yarn kill && next start -p $npm_package_port",
-    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000 -x next-transpile-modules"
+    "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000 -x next-transpile-modules,framer-motion"
   },
   "dependencies": {
     "@aspida/axios": "^1.7.0",
@@ -25,6 +25,7 @@
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "date-fns": "^2.21.3",
+    "framer-motion": "4.1.11",
     "next": "^10.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
