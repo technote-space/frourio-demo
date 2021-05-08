@@ -405,6 +405,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <Bar
       data={dailySalesData}
       options={dailySalesOptions}
+      type={'bar'}
     />
   </div>;
   const monthlySalesData = useMemo(() => ({
@@ -434,6 +435,7 @@ const Dashboard: FC<AuthenticatedPageProps> = ({ authHeader }: AuthenticatedPage
     <Bar
       data={monthlySalesData}
       options={monthlySalesOptions}
+      type={'bar'}
     />
   </div>;
   const cancelDialog = <Dialog
