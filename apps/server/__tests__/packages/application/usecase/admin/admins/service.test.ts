@@ -2,10 +2,10 @@ import { processRoleConnections, checkIcon } from '$/packages/application/usecas
 
 describe('processRoleConnections', () => {
   it('should contains roles property', () => {
-    expect(processRoleConnections({})).toEqual({ roles: { connect: [] } });
+    expect(processRoleConnections({}, true)).toEqual({ roles: { connect: [] } });
     expect(processRoleConnections({
       roles: [{ role: 'test1', name: 'test1' }, { role: 'test2', name: 'test2' }],
-    })).toEqual({ roles: { connect: [{ role: 'test1' }, { role: 'test2' }] } });
+    }, false)).toEqual({ roles: { set: [{ role: 'test1' }, { role: 'test2' }] } });
   });
 });
 

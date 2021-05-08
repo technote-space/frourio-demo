@@ -12,8 +12,7 @@ import type {
 } from '$/packages/domain/database/guest';
 import type { Delegate, Models } from '$/packages/domain/database/service/types';
 import { depend } from 'velona';
-import { dropId } from './service';
-import { whereId } from '$/packages/infra/database/service';
+import { dropId, whereId } from './service';
 import { prisma } from '$/packages/infra/database';
 import { normalizeHalfFull } from '@frourio-demo/utils/value';
 

@@ -10,6 +10,6 @@ export class UpdateAdminUseCase {
   }
 
   public async execute(id: number, data: AdminBody) {
-    return this.response.success(await this.repository.update(id, await processBody(data)));
+    return this.response.success(await this.repository.update(id, await processBody(data, false)));
   }
 }

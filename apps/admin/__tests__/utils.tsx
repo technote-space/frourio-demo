@@ -175,6 +175,14 @@ export const setup = () => {
   setupTimers();
   mockStdout();
   mockCreateObjectUrl();
+
+  window.ResizeObserver =
+    window.ResizeObserver ||
+    jest.fn().mockImplementation(() => ({
+      disconnect: jest.fn(),
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+    }));
 };
 
 export * from '@testing-library/react';

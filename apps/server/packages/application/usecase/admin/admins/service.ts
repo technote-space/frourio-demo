@@ -13,11 +13,12 @@ export type ProcessRoleType<T extends Record<string, any> & { roles?: Role[] }> 
   [key in keyof T]: key extends 'roles' ? { connect: { role: string }[] } : T[key]
 };
 
-export const processRoleConnections = <T extends Record<string, any> & { roles?: Role[] }>(data: T): ProcessRoleType<T> => {
+export const processRoleConnections = <T extends Record<string, any> & { roles?: Role[] }>(data: T, isCreate: boolean): ProcessRoleType<T> => {
+  const reference = isCreate ? 'connect' : 'set';
   return {
     ...data,
     roles: {
-      connect: (data.roles ?? []).map(role => ({ role: role.role })),
+      [reference]: (data.roles ?? []).map(role => ({ role: role.role })),
     },
   };
 };
@@ -33,5 +34,5 @@ export const checkIcon = <T extends Record<string, any> & { icon?: Blob | string
   return data;
 };
 
-export const processBody = <T extends Record<string, any> & { roles?: Role[]; icon?: Blob | string }>(body: T) =>
-  saveFile(processRoleConnections(checkIcon(body))) as Promise<CheckPassword<SavedFileType<ProcessRoleType<ProcessIconType<T>>>>>;
+export const processBody = <T extends Record<string, any> & { roles?: Role[]; icon?: Blob | string }>(body: T, isCreate: boolean) =>
+  saveFile(processRoleConnections(checkIcon(body), isCreate)) as Promise<CheckPassword<SavedFileType<ProcessRoleType<ProcessIconType<T>>>>>;
