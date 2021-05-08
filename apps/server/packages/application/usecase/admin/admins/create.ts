@@ -10,6 +10,6 @@ export class CreateAdminUseCase {
   }
 
   public async execute(data: AdminBody) {
-    return this.response.created(await this.repository.create(await processBody(data)));
+    return this.response.created(await this.repository.create(await processBody(data, true)));
   }
 }
