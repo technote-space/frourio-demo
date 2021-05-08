@@ -47,11 +47,8 @@ jobs:
         run: yarn prepare:eslint
         if: env.RUNNING
       - name: Check code style
-        run: yarn eslint ${{ env.GIT_DIFF_FILTERED }}
-        if: env.RUNNING && !env.MATCHED_FILES
-      - name: Check code style
         run: yarn lint
-        if: env.RUNNING && env.MATCHED_FILES
+        if: env.RUNNING
 
   typecheck:
     name: Typecheck
@@ -215,10 +212,19 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 15
+      - run: |
+          if [ -n "$DEPLOY_SERVER_SSH_KEY" ]; then
+            echo "RUNNING=1" >> $GITHUB_ENV
+          fi
+        env:
+          DEPLOY_SERVER_SSH_KEY: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
+
       - uses: actions/checkout@v2
+        if: env.RUNNING
       - name: Get Yarn Cache Directory
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
+        if: env.RUNNING
       - name: Cache node dependencies
         uses: actions/cache@v2
         with:
@@ -226,18 +232,21 @@ jobs:
           key: ${{ runner.os }}-15-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-15-yarn-
-
+        if: env.RUNNING
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
           known_hosts: ${{ secrets.DEPLOY_SERVER_KNOWN_HOSTS }}
+        if: env.RUNNING
       - name: Prepare
         run: yarn prepare:server
+        if: env.RUNNING
       - name: Deploy
         run: |
           scp -P ${{ secrets.DEPLOY_SERVER_PORT }} apps/server/index.js ${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_IP }}:${{ secrets.DEPLOY_SERVER_DIR }}
           ssh -p ${{ secrets.DEPLOY_SERVER_PORT }} ${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_IP }} "${{ secrets.DEPLOY_SERVER_COMMAND }}"
+        if: env.RUNNING
 
   pages:
     name: Publish GitHub Pages
