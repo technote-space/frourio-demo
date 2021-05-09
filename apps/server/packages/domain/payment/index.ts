@@ -41,5 +41,6 @@ export interface IPaymentRepository {
 
   capturePaymentIntents(reservation: Pick<Reservation, 'id' | 'amount' | 'payment' | 'paymentIntents'>, isCancel?: boolean): Promise<PaymentIntent | null>;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleWebhook(body: any, sig: string): Promise<{ received: boolean }>;
 }

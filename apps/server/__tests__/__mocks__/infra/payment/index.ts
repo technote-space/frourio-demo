@@ -54,7 +54,7 @@ export class TestPaymentRepository implements IPaymentRepository {
     return Promise.resolve(undefined);
   }
 
-  handleWebhook(body: any, sig: string): Promise<{ received: boolean }> {
+  handleWebhook(): Promise<{ received: boolean }> {
     return Promise.resolve({ received: true });
   }
 }

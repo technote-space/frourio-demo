@@ -30,12 +30,11 @@ fastify.addHook('onError', (req, reply, error, done) => {
 fastify.addContentTypeParser(
   'application/json',
   { parseAs: 'buffer' },
-  function (req, body, done) {
+  (req, body, done) => {
     try {
-      var newBody = {
+      done(null, {
         raw: body,
-      };
-      done(null, newBody);
+      });
     } catch (error) {
       error.statusCode = 400;
       done(error, undefined);

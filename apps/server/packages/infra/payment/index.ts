@@ -166,12 +166,14 @@ export class PaymentRepository implements IPaymentRepository {
 
   handleWebhook = depend(
     { stripe: stripe as { webhooks: { constructEvent: typeof stripe.webhooks.constructEvent } } },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async({ stripe }, body: any, sig: string) => {
       try {
         const event = stripe.webhooks.constructEvent(body.raw, sig, STRIPE_WEBHOOK_SECRET);
         if (event.type === 'invoice.payment_failed') {
           const reservation = await this.repository.find(undefined, {
             where: {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               paymentIntents: (event.data.object as any).payment_intent,
             },
           });

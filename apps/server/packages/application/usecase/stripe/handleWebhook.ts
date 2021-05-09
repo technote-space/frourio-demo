@@ -10,6 +10,7 @@ export class HandleWebhookUseCase {
   ) {
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute(body: any, sig: string) {
     return this.response.success(await this.payment.handleWebhook(body, sig));
   }
