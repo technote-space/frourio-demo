@@ -30,7 +30,7 @@
     "@technote-space/material-table-localization-jp": "^0.1.6",
     "@technote-space/use-local-storage": "^0.1.4",
     "@technote-space/use-material-table-icons": "^0.1.6",
-    "@technote-space/use-unmount-ref": "^0.1.8",
+    "@technote-space/use-unmount-ref": "^0.1.9",
     "aspida": "^1.7.0",
     "axios": "^0.21.1",
     "chart.js": "^3.2.1",
