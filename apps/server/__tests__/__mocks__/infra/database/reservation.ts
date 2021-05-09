@@ -81,6 +81,12 @@ export class TestReservationRepository implements IReservationRepository {
           return Promise.resolve(reservation);
         }
       }
+      if (args?.where?.paymentIntents) {
+        const reservation = this.store.find(item => item.paymentIntents === args.where?.paymentIntents);
+        if (reservation) {
+          return Promise.resolve(reservation);
+        }
+      }
       if (args?.rejectOnNotFound === false) {
         return Promise.resolve(null) as any;
       }

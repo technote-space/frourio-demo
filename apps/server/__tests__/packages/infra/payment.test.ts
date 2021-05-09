@@ -1,8 +1,8 @@
 import { getPromiseLikeItem } from '$/__tests__/utils';
 import { TestReservationRepository } from '$/__tests__/__mocks__/infra/database/reservation';
 import { PaymentRepository } from '$/packages/infra/payment';
+import Stripe from 'stripe';
 
-const repository = new PaymentRepository(new TestReservationRepository());
 const card1 = {
   brand: 'visa',
   'exp_month': 2,
@@ -18,6 +18,7 @@ const card2 = {
 };
 
 describe('getDefaultPaymentMethod', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should get default payment method 1', async() => {
     const mock = jest.fn(() => getPromiseLikeItem({
       id: 'cus_test',
@@ -111,6 +112,7 @@ describe('getDefaultPaymentMethod', () => {
 });
 
 describe('setDefaultPaymentMethod', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should set default payment method', async() => {
     const mock = jest.fn(() => getPromiseLikeItem({
       id: 'cus_test',
@@ -157,6 +159,7 @@ describe('setDefaultPaymentMethod', () => {
 });
 
 describe('listPaymentMethods', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should return payment methods', async() => {
     const mock = jest.fn(() => getPromiseLikeItem({
       data: [
@@ -214,6 +217,7 @@ describe('listPaymentMethods', () => {
 });
 
 describe('attachPaymentMethod', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should attach payment method', async() => {
     const paymentMethodsRetrieveMock = jest.fn(() => getPromiseLikeItem({
       id: 'pm_test',
@@ -314,6 +318,7 @@ describe('attachPaymentMethod', () => {
 });
 
 describe('detachPaymentMethod', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should detach payment method', async() => {
     const mock = jest.fn(() => getPromiseLikeItem({ id: 'pi_test', card: card2 }));
     const injected = repository.detachPaymentMethod.inject({
@@ -339,6 +344,7 @@ describe('detachPaymentMethod', () => {
 });
 
 describe('createPaymentIntents', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should create payment intents', async() => {
     const mock = jest.fn(() => getPromiseLikeItem({ id: 'test' }));
     const injected = repository.createPaymentIntents.inject({
@@ -387,6 +393,7 @@ describe('createPaymentIntents', () => {
 });
 
 describe('cancelPaymentIntents', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should cancel payment intents', async() => {
     const mock = jest.fn();
     const injected = repository.cancelPaymentIntents.inject({
@@ -417,6 +424,7 @@ describe('cancelPaymentIntents', () => {
 });
 
 describe('capturePaymentIntents', () => {
+  const repository = new PaymentRepository(new TestReservationRepository());
   it('should capture payment intents', async() => {
     const mock = jest.fn(() => getPromiseLikeItem({
       id: 'pi_test',
@@ -480,5 +488,145 @@ describe('capturePaymentIntents', () => {
       payment: null,
       paymentIntents: null,
     })).toBeNull();
+  });
+});
+
+describe('handleWebhook', () => {
+  it('should handle payment failed event', async() => {
+    const reservationRepository = new TestReservationRepository([
+      {
+        guestEmail: '',
+        guestName: '',
+        guestNameKana: '',
+        guestZipCode: '',
+        guestAddress: '',
+        guestPhone: '',
+        roomName: '',
+        number: 1,
+        amount: 1000,
+        checkin: '',
+        checkout: '',
+        status: 'reserved',
+        paymentIntents: 'pi_00000000000000',
+      },
+    ]);
+    const repository = new PaymentRepository(reservationRepository);
+    const mock = jest.fn(() => ({
+      type: 'invoice.payment_failed',
+      data: {
+        object: {
+          'payment_intent': 'pi_00000000000000',
+        },
+      },
+      id: 'evt_00000000000000',
+      object: 'event',
+      request: null,
+      'pending_webhooks': 0,
+      livemode: false,
+      created: Date.now(),
+      'api_version': '',
+    } as Stripe.Event));
+    const injected = repository.handleWebhook.inject({
+      stripe: {
+        webhooks: {
+          constructEvent: mock,
+        },
+      },
+    });
+
+    expect(await injected({}, '')).toEqual({ received: true });
+    expect((await reservationRepository.find(undefined, {
+      where: {
+        paymentIntents: 'pi_00000000000000',
+      },
+    })).status).toBe('paymentFailed');
+  });
+
+  it('should failed to verify header', async() => {
+    const reservationRepository = new TestReservationRepository([
+      {
+        guestEmail: '',
+        guestName: '',
+        guestNameKana: '',
+        guestZipCode: '',
+        guestAddress: '',
+        guestPhone: '',
+        roomName: '',
+        number: 1,
+        amount: 1000,
+        checkin: '',
+        checkout: '',
+        status: 'reserved',
+        paymentIntents: 'pi_00000000000000',
+      },
+    ]);
+    const repository = new PaymentRepository(reservationRepository);
+    const mock = jest.fn(() => {
+      throw new Error();
+    });
+    const injected = repository.handleWebhook.inject({
+      stripe: {
+        webhooks: {
+          constructEvent: mock,
+        },
+      },
+    });
+
+    expect(await injected({}, '')).toEqual({ received: true });
+    expect((await reservationRepository.find(undefined, {
+      where: {
+        paymentIntents: 'pi_00000000000000',
+      },
+    })).status).toBe('reserved');
+  });
+
+  it('should do nothing', async() => {
+    const reservationRepository = new TestReservationRepository([
+      {
+        guestEmail: '',
+        guestName: '',
+        guestNameKana: '',
+        guestZipCode: '',
+        guestAddress: '',
+        guestPhone: '',
+        roomName: '',
+        number: 1,
+        amount: 1000,
+        checkin: '',
+        checkout: '',
+        status: 'reserved',
+        paymentIntents: 'pi_00000000000000',
+      },
+    ]);
+    const repository = new PaymentRepository(reservationRepository);
+    const mock = jest.fn(() => ({
+      type: 'customer.subscription.created',
+      data: {
+        object: {
+          'payment_intent': 'pi_00000000000000',
+        },
+      },
+      id: 'evt_00000000000000',
+      object: 'event',
+      request: null,
+      'pending_webhooks': 0,
+      livemode: false,
+      created: Date.now(),
+      'api_version': '',
+    } as Stripe.Event));
+    const injected = repository.handleWebhook.inject({
+      stripe: {
+        webhooks: {
+          constructEvent: mock,
+        },
+      },
+    });
+
+    expect(await injected({}, '')).toEqual({ received: true });
+    expect((await reservationRepository.find(undefined, {
+      where: {
+        paymentIntents: 'pi_00000000000000',
+      },
+    })).status).toBe('reserved');
   });
 });
