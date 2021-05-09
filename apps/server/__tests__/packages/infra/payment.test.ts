@@ -1,7 +1,8 @@
 import { getPromiseLikeItem } from '$/__tests__/utils';
+import { TestReservationRepository } from '$/__tests__/__mocks__/infra/database/reservation';
 import { PaymentRepository } from '$/packages/infra/payment';
 
-const repository = new PaymentRepository();
+const repository = new PaymentRepository(new TestReservationRepository());
 const card1 = {
   brand: 'visa',
   'exp_month': 2,
