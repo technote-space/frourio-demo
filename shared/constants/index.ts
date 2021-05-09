@@ -14,6 +14,7 @@ export const RESERVATION_STATUS = {
   cancelled: 'キャンセル',
   checkin: 'チェックイン',
   checkout: 'チェックアウト',
+  paymentFailed: '支払い失敗',
 } as const;
 
 export const ROOM_KEY_DIGITS = 6;

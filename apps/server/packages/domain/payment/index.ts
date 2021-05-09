@@ -40,4 +40,6 @@ export interface IPaymentRepository {
   cancelPaymentIntents(reservation: { id: number, paymentIntents: string | null }): Promise<boolean>;
 
   capturePaymentIntents(reservation: Pick<Reservation, 'id' | 'amount' | 'payment' | 'paymentIntents'>, isCancel?: boolean): Promise<PaymentIntent | null>;
+
+  handleWebhook(body: any, sig: string): Promise<{ received: boolean }>;
 }
