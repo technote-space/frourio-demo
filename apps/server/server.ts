@@ -27,4 +27,19 @@ fastify.addHook('onError', (req, reply, error, done) => {
   done();
 });
 
+fastify.addContentTypeParser(
+  'application/json',
+  { parseAs: 'buffer' },
+  (req, body, done) => {
+    try {
+      done(null, {
+        raw: body,
+      });
+    } catch (error) {
+      error.statusCode = 400;
+      done(error, undefined);
+    }
+  },
+);
+
 export default fastify;

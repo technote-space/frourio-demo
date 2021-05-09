@@ -53,4 +53,8 @@ export class TestPaymentRepository implements IPaymentRepository {
   setDefaultPaymentMethod(): Promise<PaymentCustomer | undefined> {
     return Promise.resolve(undefined);
   }
+
+  handleWebhook(): Promise<{ received: boolean }> {
+    return Promise.resolve({ received: true });
+  }
 }
