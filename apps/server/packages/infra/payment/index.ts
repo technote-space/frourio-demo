@@ -3,8 +3,11 @@ import type { Guest } from '$/packages/domain/database/guest';
 import type { IPaymentRepository, PaymentCustomer, PaymentMethod, PaymentIntent } from '$/packages/domain/payment';
 import { depend } from 'velona';
 import Stripe from 'stripe';
-import { STRIPE_SECRET } from '$/config/env';
+import { singleton, inject } from 'tsyringe';
+import { logger } from '$/utils/logger';
+import { STRIPE_SECRET, STRIPE_WEBHOOK_SECRET } from '$/config/env';
 import { CANCEL_PAYMENT_RATE } from '@frourio-demo/constants';
+import { IReservationRepository } from '$/packages/domain/database/reservation';
 
 const stripe = new Stripe(STRIPE_SECRET, {
   apiVersion: '2020-08-27',
@@ -35,7 +38,11 @@ const convertPaymentIntent = (paymentIntent: Stripe.PaymentIntent): PaymentInten
   canceledAt: paymentIntent.canceled_at ?? undefined,
 });
 
+@singleton()
 export class PaymentRepository implements IPaymentRepository {
+  public constructor(@inject('IReservationRepository') private repository: IReservationRepository) {
+  }
+
   getDefaultPaymentMethod = depend(
     { stripe: stripe as { customers: { retrieve: typeof stripe.customers.retrieve } } },
     async({ stripe }, guest: Pick<Guest, 'paymentId'>) => {
@@ -154,6 +161,31 @@ export class PaymentRepository implements IPaymentRepository {
           'amount_to_capture': Math.ceil(reservation.amount * CANCEL_PAYMENT_RATE),
         } : {}),
       }));
+    },
+  );
+
+  handleWebhook = depend(
+    { stripe: stripe as { webhooks: { constructEvent: typeof stripe.webhooks.constructEvent } } },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async({ stripe }, body: any, sig: string) => {
+      try {
+        const event = stripe.webhooks.constructEvent(body.raw, sig, STRIPE_WEBHOOK_SECRET);
+        if (event.type === 'invoice.payment_failed') {
+          const reservation = await this.repository.find(undefined, {
+            where: {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              paymentIntents: (event.data.object as any).payment_intent,
+            },
+          });
+          await this.repository.update(reservation.id, {
+            status: 'paymentFailed',
+          });
+        }
+      } catch (err) {
+        logger.error(err);
+      }
+
+      return { received: true };
     },
   );
 }
