@@ -8,8 +8,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/react": "^17.0.8",
-    "aspida": "^1.7.0",
+    "@types/react": "^17.0.9",
+    "aspida": "^1.7.1",
     "react": "^17.0.2",
     "typescript": "^4.3.2"
   },
