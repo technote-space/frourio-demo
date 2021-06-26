@@ -52,11 +52,11 @@
     "qrcode": "^1.4.4",
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^2.4.0",
-    "stripe": "^8.156.0",
+    "stripe": "^8.157.0",
     "tsyringe": "^4.5.0"
   },
   "devDependencies": {
-    "@technote-space/material-table": "^2.3.11",
+    "@technote-space/material-table": "^2.3.12",
     "@technote-space/prisma-seeder-tools": "^0.3.7",
     "@types/bcryptjs": "^2.4.2",
     "@types/bunyan": "^1.8.6",
@@ -69,7 +69,7 @@
     "@types/qrcode": "^1.4.0",
     "@types/sanitize-html": "^2.3.1",
     "aspida": "^1.7.1",
-    "cross-blob": "^2.0.0",
+    "cross-blob": "^3.0.0",
     "cross-env": "^7.0.3",
     "encoding": "^0.1.13",
     "faker": "^5.5.3",
