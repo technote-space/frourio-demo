@@ -8,6 +8,7 @@ const config: { projects: Config.InitialOptions[] } = {
       displayName: 'shared',
       clearMocks: true,
       testRunner: 'jest-circus/runner',
+      testEnvironment: 'jsdom',
       preset: 'ts-jest',
       testMatch: ['<rootDir>/shared/**/__tests__/**/*.test.ts?(x)'],
       moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
@@ -20,6 +21,7 @@ const config: { projects: Config.InitialOptions[] } = {
       displayName: 'admin',
       clearMocks: true,
       testRunner: 'jest-circus/runner',
+      testEnvironment: 'jsdom',
       testMatch: ['<rootDir>/apps/admin/__tests__/**/*.test.ts?(x)'],
       transform: {
         '^.+\\.tsx$': ['babel-jest', { configFile: './apps/admin/babel.config.js' }],
@@ -37,7 +39,6 @@ const config: { projects: Config.InitialOptions[] } = {
       ],
       globalSetup: '<rootDir>/config/jest.global.setup.ts',
       setupFilesAfterEnv: ['<rootDir>/config/jest.setup.ts', 'jest-canvas-mock'],
-      globals: { Blob: {} },
     },
     {
       displayName: 'server',
@@ -58,7 +59,6 @@ const config: { projects: Config.InitialOptions[] } = {
       ],
       globalSetup: '<rootDir>/config/jest.global.setup.ts',
       setupFilesAfterEnv: ['<rootDir>/config/jest.setup.ts', './apps/server/jest.setup.ts'],
-      globals: { Blob: {} },
     },
   ],
 };
