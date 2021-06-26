@@ -7,6 +7,7 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer(withTranspileModules({
+  webpack5: false,
   assetPrefix: process.env.CI ? '/frourio-demo/admin' : '',
   env: {
     FRONT_URL: process.env.FRONT_URL,
@@ -25,7 +26,7 @@ module.exports = withBundleAnalyzer(withTranspileModules({
     // https://github.com/mbrn/material-table/issues/2164#issuecomment-692525181
     config.module.rules.push({
       test: /jspdf|moment/, // material-table => jspdf, chart.js => moment
-      use: 'null-loader',
+      loader: 'null-loader',
     });
 
     return config;
