@@ -6,6 +6,7 @@ const withBundleAnalyzer   = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer(withTranspileModules({
+  webpack5: false,
   assetPrefix: process.env.CI ? '/frourio-demo/lock' : '',
   env: {
     BASE_PATH: process.env.CI ? '/frourio-demo/lock' : '',

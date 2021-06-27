@@ -31,13 +31,17 @@ fastify.addContentTypeParser(
   'application/json',
   { parseAs: 'buffer' },
   (req, body, done) => {
-    try {
-      done(null, {
-        raw: body,
-      });
-    } catch (error) {
-      error.statusCode = 400;
-      done(error, undefined);
+    if (/^\/api\/webhook/.test(req.url)) {
+      try {
+        done(null, {
+          raw: body,
+        });
+      } catch (error) {
+        error.statusCode = 400;
+        done(error, undefined);
+      }
+    } else {
+      done(null, JSON.parse((body as Buffer).toString()));
     }
   },
 );

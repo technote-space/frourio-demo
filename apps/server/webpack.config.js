@@ -9,15 +9,6 @@ module.exports = {
     'tasks/mail': path.resolve(__dirname, 'packages/infra/mail/task.ts'),
   },
   target: 'node',
-  node: {
-    /*
-    * for prisma client
-    *
-    * const dirnamePolyfill = path.join(process.cwd(), "prisma/client")
-    * const dirname = __dirname.length === 1 ? dirnamePolyfill : __dirname
-    * */
-    __dirname: 'mock',
-  },
   output: {
     filename: '[name].js',
     path: __dirname,
@@ -41,6 +32,7 @@ module.exports = {
       modulesDir: path.resolve(__dirname, '../../node_modules'),
       allowlist: [/@frourio-demo/],
     }),
+    {'./client/index': 'commonjs2 ./packages/infra/database/prisma/client/index'},
     {'_http_common': 'var ""'},
   ],
 };
