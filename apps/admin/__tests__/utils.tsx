@@ -112,12 +112,7 @@ export const mockFullCalendar = (start: Date, end: Date, dates: Record<string, D
 };
 
 export const setupTimers = () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-  afterEach(() => {
-    jest.useRealTimers();
-  });
+  Object.assign(window, { clearImmediate: jest.fn() });
 };
 
 export const findElement = (node: ParentNode, selectors: string): HTMLElement | never => {
