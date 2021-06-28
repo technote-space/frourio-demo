@@ -6,7 +6,6 @@
 
 ```shell
 make setup
-nvm use
 ```
 
 環境変数の用意と [NVM](https://github.com/nvm-sh/nvm) のインストール
