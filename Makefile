@@ -4,7 +4,7 @@ setup:
 	. ${NVM_DIR}/nvm.sh && nvm use
 	yarn setup
 up:
-	docker-compose -f infra/docker-compose.yml up -d
+	docker-compose -f infra/docker-compose.yml --env-file infra/.env up -d
 stop:
 	docker-compose -f infra/docker-compose.yml stop
 down:
