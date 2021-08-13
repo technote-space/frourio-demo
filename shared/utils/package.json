@@ -7,10 +7,10 @@
     "update": "npm_config_yes=true npx npm-check-updates -u --timeout 100000"
   },
   "dependencies": {
-    "@technote-space/imi-moji-converter": "^0.1.15"
+    "@technote-space/imi-moji-converter": "^0.1.16"
   },
   "devDependencies": {
-    "@types/react": "^17.0.16",
+    "@types/react": "^17.0.17",
     "axios": "^0.21.1",
     "date-fns": "^2.23.0",
     "react": "^17.0.2",
